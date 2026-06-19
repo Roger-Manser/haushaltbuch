@@ -1,15 +1,24 @@
-const CACHE = 'haushaltbuch-v3';
+const CACHE = 'haushaltbuch-v4';
 const ASSETS = [
-  './',
   './index.html',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',
+  './icons/icon-512-maskable.png',
 ];
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(ASSETS)).catch(()=>{})
+    caches.open(CACHE).then(cache => {
+      // Cache each asset independently so one missing file doesn't fail the whole install.
+      return Promise.all(
+        ASSETS.map(url =>
+          fetch(url).then(res => {
+            if (res && res.ok) return cache.put(url, res);
+          }).catch(() => {})
+        )
+      );
+    })
   );
   self.skipWaiting();
 });
@@ -18,32 +27,40 @@ self.addEventListener('activate', e => {
   e.waitUntil(
     caches.keys().then(keys =>
       Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-    )
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
 self.addEventListener('fetch', e => {
-  // Network-first for navigation/HTML so updates are picked up; cache as fallback for offline.
+  if (e.request.method !== 'GET') return;
+
+  // Network-first for navigation/HTML so updates are picked up; cache as offline fallback.
   if (e.request.mode === 'navigate') {
     e.respondWith(
-      fetch(e.request).then(r => {
-        const copy = r.clone();
-        caches.open(CACHE).then(c => c.put(e.request, copy)).catch(()=>{});
-        return r;
-      }).catch(() => caches.match(e.request).then(r => r || caches.match('./index.html')))
+      fetch(e.request).then(res => {
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
+        return res;
+      }).catch(() =>
+        caches.match(e.request).then(res => res || caches.match('./index.html'))
+      )
     );
     return;
   }
-  // Cache-first for same-origin static assets (icons, manifest)
-  if (e.request.url.startsWith(self.location.origin)) {
+
+  // Cache-first for same-origin static assets (icons, manifest, css/js if any).
+  const url = new URL(e.request.url);
+  if (url.origin === self.location.origin) {
     e.respondWith(
-      caches.match(e.request).then(cached => cached || fetch(e.request).then(r => {
-        const copy = r.clone();
-        caches.open(CACHE).then(c => c.put(e.request, copy)).catch(()=>{});
-        return r;
-      }).catch(() => cached))
+      caches.match(e.request).then(cached => {
+        if (cached) return cached;
+        return fetch(e.request).then(res => {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
+          return res;
+        }).catch(() => cached);
+      })
     );
   }
-  // External requests (GitHub API, Open Food Facts, etc.) always go to network untouched.
+  // Cross-origin requests (GitHub API, Open Food Facts, ZXing CDN, etc.) go straight to network.
 });
