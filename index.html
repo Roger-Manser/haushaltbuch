@@ -63,6 +63,15 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .bn{font-size:17px;font-weight:700}
 .bn.ok{color:var(--ok)}.bn.wn{color:var(--wn)}.bn.lo{color:var(--dg)}
 .bu{font-size:11px;color:var(--t3)}
+.exp-badge{font-size:10px;padding:2px 7px;border-radius:8px;margin-top:2px;display:inline-block;white-space:nowrap}
+.exp-badge.fresh{background:var(--ol);color:var(--ok)}
+.exp-badge.soon{background:var(--wl);color:var(--wn)}
+.exp-badge.over{background:var(--dl);color:var(--dg)}
+.sort-bar{display:flex;gap:6px;padding:0 16px 8px;overflow-x:auto;scrollbar-width:none;flex-shrink:0}
+.sort-bar::-webkit-scrollbar{display:none}
+.sort-btn{padding:5px 12px;border-radius:8px;border:1px solid var(--bd);font-size:12px;background:var(--sf);color:var(--t2);white-space:nowrap;cursor:pointer;display:flex;align-items:center;gap:4px}
+.sort-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.sort-btn.on{background:var(--al);border-color:var(--am);color:var(--ac);font-weight:500}
 #bnav{background:var(--sf);border-top:1px solid var(--bd);display:flex;height:var(--nh);padding-bottom:env(safe-area-inset-bottom);flex-shrink:0}
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:none;color:var(--t3);font-size:10px;font-weight:500;cursor:pointer;padding:6px 0}
 .nb svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.75}
@@ -207,12 +216,28 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
     <input type="text" id="lager-search" placeholder="Artikel suchen..." oninput="renderLager()"/>
   </div></div>
   <div class="chips" id="lager-chips"></div>
+  <div class="sort-bar" id="sort-bar"></div>
   <div class="scroll" id="lager-list"></div>
-  <button class="add-btn" onclick="openForm()">
-    <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-    Neuer Artikel
-  </button>
+  <div style="display:flex;gap:8px;margin:10px 16px 4px">
+    <button class="add-btn" style="margin:0;flex:1" onclick="openEingang()">
+      <svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
+      Eingang
+    </button>
+    <button class="add-btn" style="margin:0;flex:1;background:var(--sf);color:var(--ac);border:1px solid var(--am)" onclick="openForm()">
+      <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Neuer Artikel
+    </button>
+  </div>
   <div id="bnav"></div>
+</div>
+
+<div class="sc" id="s-eingang" style="overflow-y:auto">
+  <div class="ftp">
+    <button class="bkb" onclick="closeEingang()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <span class="ftl">Wareneingang</span>
+    <div style="width:36px"></div>
+  </div>
+  <div class="fb" id="eingang-body"></div>
 </div>
 
 <div class="sc" id="s-rezepte">
@@ -295,11 +320,14 @@ chk:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;hei
 dl:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:18px;height:18px;stroke:currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
 ul:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:18px;height:18px;stroke:currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>',
 gh:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:18px;height:18px;stroke:currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>',
+cal:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:15px;height:15px;stroke:currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+calx:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:15px;height:15px;stroke:currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="15" x2="15" y2="19"/><line x1="15" y1="15" x2="9" y2="19"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
-const KATS=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
-const EINS=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
+const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
+const ED=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
+const KICON='<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:13px;height:13px;stroke:currentColor"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>';
 
 function licon(n){
   const k=n.replace(/[äöü]/g,c=>({ä:'ae',ö:'oe',ü:'ue'}[c]||c)).replace(/\s/g,'');
@@ -308,12 +336,12 @@ function licon(n){
 function lsm(n){return licon(n).replace('width:20px;height:20px','width:13px;height:13px');}
 
 /* ── State ────────────────────────────────────────────────────────── */
-let S={a:[],lo:[...LD],ek:[],nid:1,rz:[]};
+let S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ek:[],nid:1,rz:[]};
 let gh={tok:'',own:'',repo:'',br:'main'};
 let dirty=false;
 
 function loadL(){
-  try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ek=d.ek||[];S.rz=d.rz||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);}}catch(e){}
+  try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ek=d.ek||[];S.rz=d.rz||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);}}catch(e){}
   try{const r=localStorage.getItem('hbgh');if(r)gh=JSON.parse(r);}catch(e){}
 }
 function saveL(){try{localStorage.setItem('hb3',JSON.stringify(S));}catch(e){}dirty=true;sdot('dt');}
@@ -359,7 +387,7 @@ async function doSync(){
   ldr('Synchronisiere mit GitHub...');sdot('sy');
   try{
     const ex=await ghGet('haushaltbuch.json');
-    const exp={artikel:S.a.map(a=>({...a})),lagerorte:S.lo,einkauf:S.ek,aktualisiert:new Date().toISOString()};
+    const exp={artikel:S.a.map(a=>({...a})),lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,einkauf:S.ek,aktualisiert:new Date().toISOString()};
     await ghPut('haushaltbuch.json',JSON.stringify(exp,null,2),'Haushaltbuch Update',ex?ex.sha:undefined);
     // Load rezepte.json
     const rzf=await ghGet('rezepte.json');
@@ -381,7 +409,7 @@ async function loadFromGH(){
     const f=await ghGet('haushaltbuch.json');
     if(f&&f.content){
       const d=JSON.parse(atob(f.content.replace(/\n/g,'')));
-      S.a=d.artikel||[];S.lo=d.lagerorte||[...LD];S.ek=d.einkauf||[];
+      S.a=d.artikel||[];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];
       S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;
       saveL();
     }
@@ -414,7 +442,7 @@ function nav(){
     {id:'s-einkauf',l:'Einkauf',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',b:wc},
   ];
   const h=tabs.map(t=>{
-    const on=cur===t.id||(cur==='s-detail'&&t.id==='s-lager')||(cur==='s-form'&&t.id==='s-lager');
+    const on=cur===t.id||((cur==='s-detail'||cur==='s-form'||cur==='s-eingang')&&t.id==='s-lager');
     const bdg=t.b?'<span class="nbb">'+t.b+'</span>':'';
     return '<button class="nb'+(on?' on':'')+'" onclick="goScreen(\''+t.id+'\')" ><div class="nbw">'+t.s+bdg+'</div><span>'+t.l+'</span></button>';
   }).join('');
@@ -423,7 +451,20 @@ function nav(){
 
 /* ── Lager ────────────────────────────────────────────────────────── */
 let lf='alle';
+let sortMode='ablauf'; // 'ablauf' | 'name' | 'bestand'
+
+function renderSortBar(){
+  const modes=[
+    {id:'ablauf',l:'Nach Ablaufdatum',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'},
+    {id:'name',l:'Nach Name (A-Z)',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="9" y2="18"/></svg>'},
+    {id:'bestand',l:'Nach Bestand',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>'},
+  ];
+  document.getElementById('sort-bar').innerHTML=modes.map(m=>'<button class="sort-btn'+(sortMode===m.id?' on':'')+'" onclick="setSortMode(\''+m.id+'\')">'+m.s+' '+m.l+'</button>').join('');
+}
+function setSortMode(m){sortMode=m;renderLager();}
+
 function renderLager(){
+  renderSortBar();
   const bar=document.getElementById('lager-chips');
   const used=[...new Set(S.a.map(x=>x.lager))];
   const tabs=['alle',...S.lo.filter(l=>used.includes(l))];
@@ -437,17 +478,26 @@ function renderLager(){
     return mq&&ml;
   });
   if(!fil.length){list.innerHTML='<div class="empty">'+I.pkg.replace('20px;height:20px','48px;height:48px')+'<p>'+(S.a.length?'Keine Artikel gefunden':'Noch keine Artikel')+'</p><small>'+(S.a.length?'Suchbegriff anpassen':'Tippe auf Neuer Artikel')+'</small></div>';nav();return;}
-  const byL={};fil.forEach(a=>{if(!byL[a.lager])byL[a.lager]=[];byL[a.lager].push(a);});
-  list.innerHTML=Object.entries(byL).map(([lg,arts])=>{
-    const wc=arts.filter(a=>a.menge<a.mindest).length;
-    const rows=arts.map(a=>{
-      const bc=a.menge===0?'lo':a.menge<a.mindest?'wn':'ok';
-      const th=a.foto?'<div class="at"><img src="'+esc(a.foto)+'" loading="lazy"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div>';
-      return '<div class="ar" onclick="showDet('+a.id+')">'+th+'<div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+esc(a.marke||a.kat||'')+'</div></div><div class="abs"><div class="bn '+bc+'">'+a.menge+'</div><div class="bu">'+esc(a.einheit||'Stk')+'</div></div></div>';
-    }).join('');
-    return '<div class="lgs"><div class="lgh open" onclick="togSec(this)"><div class="lgh-l">'+licon(lg)+' '+esc(lg)+'</div><div class="lgh-r">'+(wc?'<span class="bdg w">'+I.alert.replace('15px;height:15px','11px;height:11px')+' '+wc+'</span>':'')+'<span class="bdg">'+arts.length+'</span><svg class="chv" viewBox="0 0 24 24" fill="none" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg></div></div><div class="lgi">'+rows+'</div></div>';
-  }).join('');
+
+  if(sortMode==='ablauf'){
+    const withDate=fil.filter(a=>a.ablaufdatum).sort((a,b)=>a.ablaufdatum.localeCompare(b.ablaufdatum));
+    const withoutDate=fil.filter(a=>!a.ablaufdatum).sort((a,b)=>a.name.localeCompare(b.name,'de'));
+    fil=[...withDate,...withoutDate];
+  }else if(sortMode==='name'){
+    fil=[...fil].sort((a,b)=>a.name.localeCompare(b.name,'de'));
+  }else if(sortMode==='bestand'){
+    fil=[...fil].sort((a,b)=>(a.menge-a.mindest)-(b.menge-b.mindest));
+  }
+  const rows=fil.map(a=>arRow(a)).join('');
+  list.innerHTML='<div class="lgi" style="border-radius:var(--r)">'+rows+'</div>';
   nav();
+}
+function arRow(a){
+  const bc=a.menge===0?'lo':a.menge<a.mindest?'wn':'ok';
+  const th=a.foto?'<div class="at"><img src="'+esc(a.foto)+'" loading="lazy"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div>';
+  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'');
+  const eb=a.ablaufdatum?expBadge(a.ablaufdatum):'';
+  return '<div class="ar" onclick="showDet('+a.id+')">'+th+'<div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+meta+'</div>'+eb+'</div><div class="abs"><div class="bn '+bc+'">'+a.menge+'</div><div class="bu">'+esc(a.einheit||'Stk')+'</div></div></div>';
 }
 function setLF(f){lf=f;renderLager();}
 function togSec(h){const it=h.nextElementSibling;const op=h.classList.toggle('open');it.classList.toggle('hide',!op);}
@@ -461,7 +511,12 @@ function showDet(id){
   document.getElementById('d-back').onclick=()=>goScreen('s-lager');
   const bc=a.menge===0?'lo':a.menge<a.mindest?'wn':'ok';
   const hero=a.foto?'<div class="dh" style="padding:0"><img src="'+esc(a.foto)+'" style="width:100%;height:100%;object-fit:cover"/></div>':'<div class="dh">'+I.pkg.replace('20px;height:20px','64px;height:64px')+'</div>';
-  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div><div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+esc(a.barcode||'—')+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div><div class="acr"><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>'+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
+  const expDays=a.ablaufdatum?daysUntil(a.ablaufdatum):null;
+  const expBanner=(expDays!==null&&expDays<=3)?'<div style="margin-bottom:14px;padding:11px 14px;background:'+(expDays<0?'var(--dl)':'var(--wl)')+';color:'+(expDays<0?'var(--dg)':'var(--wn)')+';border-radius:var(--rs);font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px;">'+I.calx.replace('15px;height:15px','18px;height:18px')+' '+(expDays<0?'Abgelaufen — seit '+Math.abs(expDays)+' Tag'+(Math.abs(expDays)===1?'':'en'):expDays===0?'Läuft heute ab':expDays===1?'Läuft morgen ab':'Läuft in '+expDays+' Tagen ab')+'</div>':'';
+  const preisRow=a.preis?'<div class="ir"><span class="ik">'+I.cart+' Preis/Einheit</span><span class="iv">CHF '+a.preis.toFixed(2)+'</span></div>':'';
+  const hist=(a.preisHistorie||[]).slice().reverse();
+  const histHtml=hist.length?'<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);font-weight:600">Preisverlauf</div>'+hist.map(h=>'<div class="ir"><span class="ik">'+fmtDateCH(h.datum)+'</span><span class="iv">CHF '+h.preis.toFixed(2)+' · +'+h.menge+' '+esc(a.einheit||'Stk')+'</span></div>').join('')+'</div>':'';
+  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+esc(a.barcode||'—')+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span><span class="iv">'+(a.ablaufdatum?fmtDateCH(a.ablaufdatum)+' '+expBadge(a.ablaufdatum):'—')+'</span></div>'+preisRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+histHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>'+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
   goScreen('s-detail');
 }
 function chgB(id,d){
@@ -490,20 +545,43 @@ function openForm(id){
   const a=id?S.a.find(x=>x.id===id):null;
   document.getElementById('form-title').textContent=a?'Artikel bearbeiten':'Neuer Artikel';
   const lc=S.lo.map(l=>'<div class="chip'+(a&&a.lager===l?' on':'')+'" data-lager="'+esc(l)+'" onclick="plager(this)">'+lsm(l)+' '+esc(l)+'</div>').join('')+'<div class="chip" onclick="addLF()" style="border-style:dashed"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" style="width:12px;height:12px;stroke:currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Neu...</div>';
-  const ko=KATS.map(k=>'<option'+(a&&a.kat===k?' selected':'')+'>'+esc(k)+'</option>').join('');
-  const eo=EINS.map(u=>'<option'+(a&&a.einheit===u?' selected':'')+'>'+esc(u)+'</option>').join('');
+  const kc=S.ka.map(k=>'<div class="chip'+(a&&a.kat===k?' on':'')+'" data-kat="'+esc(k)+'" onclick="pkat(this)">'+KICON+' '+esc(k)+'</div>').join('')+'<div class="chip" onclick="addKF()" style="border-style:dashed"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" style="width:12px;height:12px;stroke:currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Neu...</div>';
+  const eo=S.ei.map(u=>'<option'+(a&&a.einheit===u?' selected':'')+'>'+esc(u)+'</option>').join('');
   document.getElementById('form-body').innerHTML=
   '<div class="fd"><label>Barcode</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="f-bc" placeholder="7610200071017" inputmode="numeric" value="'+(a?esc(a.barcode||''):'')+'" /></div><button class="scb" onclick="togSUI()">'+I.scan+' Scannen</button></div><div class="sui" id="sui"><p>Kamera aktiv — Barcode halten</p><div class="sln">||||| ||||| |||||</div><button style="margin-top:10px;padding:6px 14px;border:1px solid var(--bd);border-radius:6px;background:var(--sf);cursor:pointer;font-size:13px" onclick="simScan()">Simulieren: 7610200071017</button></div><div class="sok" id="sok">'+I.chk+' Barcode erfasst: <strong id="sokv"></strong></div></div>'+
   '<div class="fd"><label>Foto</label><div id="pz" class="pz" onclick="document.getElementById(\'fph\').click()">'+I.cam+'<span>Von Kamera oder Galerie</span><small>Wird auf GitHub gespeichert</small><input type="file" id="fph" accept="image/*" capture="environment" style="display:none" onchange="onPh(event)"/></div><div id="ppw" class="ppw" style="'+(a&&a.foto?'display:block':'')+'"><img id="ppi" src="'+(a?esc(a.foto||''):'')+'" alt=""/><button class="rph" onclick="rmPh()">&#x2715;</button></div></div>'+
   '<div class="fd"><label>Bezeichnung *</label><input type="text" id="f-nm" placeholder="z.B. Vollmilch 3.5%" value="'+(a?esc(a.name):'')+'"/></div>'+
-  '<div class="tc"><div class="fd"><label>Marke</label><input type="text" id="f-mk" placeholder="z.B. Emmi" value="'+(a?esc(a.marke||''):'')+'"/></div><div class="fd"><label>Kategorie</label><select id="f-kt">'+ko+'</select></div></div>'+
-  '<div class="tc"><div class="fd"><label>Anfangsbestand</label><div class="ur"><input type="number" id="f-mg" min="0" value="'+(a?a.menge:1)+'"/><select id="f-ei">'+eo+'</select></div></div><div class="fd"><label>Mindestbestand</label><input type="number" id="f-mn" min="0" value="'+(a?a.mindest:1)+'"/></div></div>'+
+  '<div class="fd"><label>Marke</label><input type="text" id="f-mk" placeholder="z.B. Emmi" value="'+(a?esc(a.marke||''):'')+'"/></div>'+
+  '<div class="fd"><label>Kategorie</label><div class="lcw" id="f-ka">'+kc+'</div></div>'+
+  '<div class="tc"><div class="fd"><label>Anfangsbestand</label><div class="ur"><input type="number" id="f-mg" min="0" value="'+(a?a.menge:1)+'"/><select id="f-ei" onchange="if(this.value===\'__add__\')addEinheit(this)">'+eo+'<option value="__add__">+ Neue Einheit...</option></select></div></div><div class="fd"><label>Mindestbestand</label><input type="number" id="f-mn" min="0" value="'+(a?a.mindest:1)+'"/></div></div>'+
+  '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="number" id="f-pr" min="0" step="0.05" placeholder="z.B. 1.95" value="'+(a?esc(a.preis||''):'')+'"/></div>'+
   '<div class="fd"><label>Lagerort</label><div class="lcw" id="f-lo">'+lc+'</div></div>'+
+  '<div class="tc"><div class="fd"><label>Kaufdatum</label><input type="date" id="f-kd" value="'+(a?esc(a.kaufdatum||todayISO()):todayISO())+'"/></div><div class="fd"><label>Ablaufdatum (MHD)</label><input type="date" id="f-ad" value="'+(a?esc(a.ablaufdatum||''):'')+'"/></div></div>'+
   '<div class="fd"><label>Notiz</label><textarea id="f-nt" placeholder="z.B. Bio, Lieblingsmarke...">'+(a?esc(a.notiz||''):'')+'</textarea></div>'+
   '<div class="br"><button class="bg2" onclick="closeForm()">Abbrechen</button><button class="bp" onclick="saveForm()">'+(a?'Speichern':'Hinzufügen')+'</button></div>';
   goScreen('s-form');
 }
+function addEinheit(sel){
+  const n=prompt('Neue Einheit (z.B. Sack, Karton):');
+  if(!n||!n.trim()){sel.value=S.ei[0]||'Stk';return;}
+  const nm=n.trim();
+  if(!S.ei.includes(nm)){S.ei.push(nm);saveL();}
+  const opt=document.createElement('option');opt.value=nm;opt.textContent=nm;
+  sel.insertBefore(opt,sel.lastElementChild);
+  sel.value=nm;
+}
 function plager(el){document.querySelectorAll('#f-lo .chip[data-lager]').forEach(c=>c.classList.remove('on'));el.classList.add('on');}
+function pkat(el){document.querySelectorAll('#f-ka .chip[data-kat]').forEach(c=>c.classList.remove('on'));el.classList.add('on');}
+function addKF(){
+  const n=prompt('Neue Kategorie:');if(!n||!n.trim())return;
+  const nm=n.trim();if(!S.ka.includes(nm))S.ka.push(nm);
+  const wrap=document.getElementById('f-ka');
+  const ab=wrap.querySelector('[onclick="addKF()"]');
+  const ch=document.createElement('div');ch.className='chip on';ch.dataset.kat=nm;ch.setAttribute('onclick','pkat(this)');
+  ch.innerHTML=KICON+' '+esc(nm);
+  document.querySelectorAll('#f-ka .chip[data-kat]').forEach(c=>c.classList.remove('on'));
+  wrap.insertBefore(ch,ab);saveL();
+}
 function addLF(){
   const n=prompt('Neuer Lagerort:');if(!n||!n.trim())return;
   const nm=n.trim();if(!S.lo.includes(nm))S.lo.push(nm);
@@ -535,6 +613,8 @@ async function saveForm(){
   if(!name){alert('Bitte eine Bezeichnung eingeben.');return;}
   const lc=document.querySelector('#f-lo .chip.on[data-lager]');
   if(!lc){alert('Bitte einen Lagerort wählen.');return;}
+  const kc=document.querySelector('#f-ka .chip.on[data-kat]');
+  if(!kc){alert('Bitte eine Kategorie wählen.');return;}
   ldr('Speichert...');
   let furl='',fpth='';
   if(fb64&&gh.tok&&gh.own&&gh.repo){
@@ -542,12 +622,77 @@ async function saveForm(){
     catch(e){hideLdr();toast('Foto-Upload fehlgeschlagen: '+e.message.slice(0,40));furl=fb64;fpth=ffn;}
   }else if(fb64){furl=fb64;fpth=ffn;}
   else if(editId){const ex=S.a.find(x=>x.id===editId);if(ex){furl=ex.foto||'';fpth=ex.fotoPath||'';}}
-  const d={name,marke:document.getElementById('f-mk').value.trim(),kat:document.getElementById('f-kt').value,lager:lc.dataset.lager,menge:parseInt(document.getElementById('f-mg').value)||0,einheit:document.getElementById('f-ei').value,mindest:parseInt(document.getElementById('f-mn').value)||1,barcode:document.getElementById('f-bc').value.trim(),notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
+  const preis=parseFloat(document.getElementById('f-pr').value)||0;
+  const kaufdatum=document.getElementById('f-kd').value||todayISO();
+  const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,menge:parseInt(document.getElementById('f-mg').value)||0,einheit:document.getElementById('f-ei').value,mindest:parseInt(document.getElementById('f-mn').value)||1,barcode:document.getElementById('f-bc').value.trim(),preis,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
+  if(!editId&&preis>0){d.preisHistorie=[{datum:kaufdatum,preis,menge:d.menge}];}
+  else if(editId){const ex=S.a.find(x=>x.id===editId);d.preisHistorie=ex&&ex.preisHistorie?ex.preisHistorie:[];}
   if(editId){const i=S.a.findIndex(x=>x.id===editId);if(i>=0)S.a[i]={...S.a[i],...d};}
   else S.a.push({id:S.nid++,...d});
   fb64='';ffn='';saveL();hideLdr();closeForm();toast(editId?'Artikel aktualisiert':'Artikel hinzugefügt');
 }
 function closeForm(){editId=null;fb64='';ffn='';goScreen('s-lager');}
+
+/* ── Eingang (Wareneingang per Barcode) ──────────────────────────── */
+function openEingang(){
+  document.getElementById('eingang-body').innerHTML=
+  '<div class="fd"><label>Barcode scannen oder eingeben</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="e-bc" placeholder="7610200071017" inputmode="numeric" onkeydown="if(event.key===\'Enter\')lookupBarcode()"/></div><button class="scb" onclick="togSUIeg()">'+I.scan+' Scannen</button></div><div class="sui" id="sui-eg"><p>Kamera aktiv — Barcode halten</p><div class="sln">||||| ||||| |||||</div><button style="margin-top:10px;padding:6px 14px;border:1px solid var(--bd);border-radius:6px;background:var(--sf);cursor:pointer;font-size:13px" onclick="simScanEg()">Simulieren: 7610200071017</button></div></div>'+
+  '<button class="bp" style="width:100%;margin-bottom:6px" onclick="lookupBarcode()">Suchen</button>'+
+  '<p style="font-size:12px;color:var(--t3);text-align:center;margin-bottom:10px">Barcode eingeben/scannen und Enter drücken, oder Suchen tippen</p>'+
+  '<div id="eingang-result"></div>';
+  goScreen('s-eingang');
+}
+function closeEingang(){goScreen('s-lager');}
+function togSUIeg(){const u=document.getElementById('sui-eg');u.style.display=u.style.display==='block'?'none':'block';}
+function simScanEg(){
+  document.getElementById('e-bc').value='7610200071017';
+  document.getElementById('sui-eg').style.display='none';
+  lookupBarcode();
+}
+function lookupBarcode(){
+  const bc=document.getElementById('e-bc').value.trim();
+  if(!bc){toast('Bitte Barcode eingeben');return;}
+  const found=S.a.find(a=>a.barcode&&a.barcode===bc);
+  const res=document.getElementById('eingang-result');
+  if(found){
+    const th=found.foto?'<div class="at" style="width:52px;height:52px"><img src="'+esc(found.foto)+'"/></div>':'<div class="at" style="width:52px;height:52px">'+I.pkg.replace('20px;height:20px','26px;height:26px')+'</div>';
+    res.innerHTML=
+    '<div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--ol);border:1px solid color-mix(in srgb,var(--ok) 30%,transparent);border-radius:var(--r);margin-bottom:14px">'+th+'<div><div style="font-weight:600;font-size:15px">'+esc(found.name)+'</div><div style="font-size:13px;color:var(--t2)">'+esc(found.lager)+' · aktuell '+found.menge+' '+esc(found.einheit||'Stk')+'</div></div></div>'+
+    '<div class="fd"><label>Menge hinzufügen</label><div class="ur"><input type="number" id="e-mg" min="1" value="1"/><span style="display:flex;align-items:center;padding:0 10px;color:var(--t2);font-size:14px">'+esc(found.einheit||'Stk')+'</span></div></div>'+
+    '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="number" id="e-pr" min="0" step="0.05" placeholder="z.B. 1.95" value="'+(found.preis||'')+'"/></div>'+
+    '<div class="tc"><div class="fd"><label>Kaufdatum</label><input type="date" id="e-kd" value="'+todayISO()+'"/></div><div class="fd"><label>Neues Ablaufdatum</label><input type="date" id="e-ad" value=""/></div></div>'+
+    '<div class="fd"><label>Lagerort</label><div class="lcw"><div class="chip on">'+lsm(found.lager)+' '+esc(found.lager)+' (übernommen)</div></div></div>'+
+    '<button class="bp" style="width:100%" onclick="confirmEingang('+found.id+')">Eingang bestätigen</button>';
+  }else{
+    res.innerHTML='<div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--wl);border:1px solid color-mix(in srgb,var(--wn) 30%,transparent);border-radius:var(--r);margin-bottom:14px;font-size:14px;color:var(--wn)">'+I.alert.replace('15px;height:15px','18px;height:18px')+' Kein Artikel mit diesem Barcode gefunden — neu erfassen</div>'+
+    '<button class="bp" style="width:100%" onclick="newFromBarcode(\''+esc(bc)+'\')">Neuen Artikel mit diesem Barcode anlegen</button>';
+  }
+}
+function confirmEingang(id){
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  const addMenge=parseInt(document.getElementById('e-mg').value)||1;
+  const preis=parseFloat(document.getElementById('e-pr').value)||0;
+  const kaufdatum=document.getElementById('e-kd').value||todayISO();
+  const ablaufdatum=document.getElementById('e-ad').value;
+  a.menge+=addMenge;
+  a.kaufdatum=kaufdatum;
+  if(ablaufdatum)a.ablaufdatum=ablaufdatum;
+  if(preis>0){
+    a.preis=preis;
+    if(!a.preisHistorie)a.preisHistorie=[];
+    a.preisHistorie.push({datum:kaufdatum,preis,menge:addMenge});
+  }
+  saveL();
+  toast('+'+addMenge+' '+(a.einheit||'Stk')+' eingelagert: '+a.name);
+  goScreen('s-lager');
+}
+function newFromBarcode(bc){
+  openForm();
+  setTimeout(()=>{
+    const f=document.getElementById('f-bc');
+    if(f)f.value=bc;
+  },0);
+}
 
 /* ── Rezepte ──────────────────────────────────────────────────────── */
 function renderRezepte(){
@@ -587,9 +732,18 @@ function renderUeb(){
   const nm=S.a.map(a=>a.name.toLowerCase());
   const rzsrc=S.rz.length?S.rz:[{zutaten:['Eier','Butter']}];
   const k=rzsrc.filter(r=>(r.zutaten||[]).every(z=>nm.some(n=>n.includes((typeof z==='string'?z:(z.zutat||'')).toLowerCase())))).length;
-  let h='<div class="stg"><div class="stc"><div class="stl">Artikel total</div><div class="stn a">'+t+'</div></div><div class="stc"><div class="stl">Kochbar heute</div><div class="stn ok">'+k+'</div></div><div class="stc"><div class="stl">Warnungen</div><div class="stn w">'+w.length+'</div></div><div class="stc"><div class="stl">Leer (0)</div><div class="stn'+(l?' w':' ok')+'">'+l+'</div></div></div>';
+  const expSoon=S.a.filter(a=>a.ablaufdatum&&daysUntil(a.ablaufdatum)<=3).sort((a,b)=>a.ablaufdatum.localeCompare(b.ablaufdatum));
+  let h='<div class="stg"><div class="stc"><div class="stl">Artikel total</div><div class="stn a">'+t+'</div></div><div class="stc"><div class="stl">Kochbar heute</div><div class="stn ok">'+k+'</div></div><div class="stc"><div class="stl">Warnungen</div><div class="stn w">'+w.length+'</div></div><div class="stc"><div class="stl">Bald/abgelaufen</div><div class="stn'+(expSoon.length?' w':' ok')+'">'+expSoon.length+'</div></div></div>';
+  if(expSoon.length){
+    h+='<div class="sh">Bald ablaufend / abgelaufen</div>';
+    h+=expSoon.map(a=>{
+      const d=daysUntil(a.ablaufdatum);
+      const cls=expClass(d);
+      return '<div class="ar" style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:6px" onclick="showDet('+a.id+')"><div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div><div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+esc(a.lager)+'</div></div><div class="abs"><span class="exp-badge '+cls+'" style="margin-top:0">'+expLabel(d)+'</span></div></div>';
+    }).join('');
+  }
   if(w.length){h+='<div class="sh">Unter Mindestbestand</div>'+w.map(a=>'<div class="ar" style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:6px" onclick="showDet('+a.id+')"><div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div><div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+esc(a.lager)+'</div></div><div class="abs"><div class="bn wn">'+a.menge+'/'+a.mindest+'</div><div class="bu">'+esc(a.einheit||'Stk')+'</div></div></div>').join('');}
-  else h+='<div style="text-align:center;padding:28px;color:var(--ok);font-size:14px;font-weight:500">Alle Artikel über Mindestbestand</div>';
+  else if(!expSoon.length) h+='<div style="text-align:center;padding:28px;color:var(--ok);font-size:14px;font-weight:500">Alle Artikel über Mindestbestand</div>';
   document.getElementById('ub-body').innerHTML=h;
 }
 
@@ -624,15 +778,29 @@ function renderSt(){
   '<button class="db-btn" onclick="doSync()"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:18px;height:18px;stroke:var(--ac)"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.21-4.45"/></svg> Jetzt synchronisieren</button>'+
   '<p style="font-size:12px;color:var(--t3);margin-top:6px;line-height:1.6">Token braucht <strong>repo</strong> Scope. Fotos &rarr; <code>bilder/</code>. Daten &rarr; <code>haushaltbuch.json</code>. Rezepte &larr; <code>rezepte.json</code> im selben Repo.</p></div>'+
   '<div class="ss"><div class="ssl">Lagerorte</div><div>'+S.lo.map((l,i)=>'<div class="lmi">'+licon(l).replace('20px;height:20px','18px;height:18px')+' '+esc(l)+(i>=LD.length?'<button onclick="delLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addLo()">+ Neuer Lagerort</button></div>'+
+  '<div class="ss"><div class="ssl">Kategorien</div><div>'+S.ka.map((k,i)=>'<div class="lmi">'+KICON.replace('13px;height:13px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(k)+'</span><button onclick="editKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=KD.length?'<button onclick="delKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addKat()">+ Neue Kategorie</button></div>'+
+  '<div class="ss"><div class="ssl">Einheiten</div><div>'+S.ei.map((u,i)=>'<div class="lmi"><span style="flex:1">'+esc(u)+'</span>'+(i>=ED.length?'<button onclick="delEinheit(\''+esc(u)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addEinheitSettings()">+ Neue Einheit</button></div>'+
   '<div class="ss"><div class="ssl">Daten</div><button class="db-btn" onclick="expJ()">'+I.dl+' Lokaler Export (JSON)</button><button class="db-btn" onclick="document.getElementById(\'imp\').click()">'+I.ul+' Lokaler Import (JSON)<input type="file" id="imp" accept=".json" style="display:none" onchange="impJ(event)"/></button><button class="db-btn d" onclick="resetAll()">'+I.trash+' Alle Daten löschen</button></div>'+
-  '<p style="font-size:12px;color:var(--t3);padding:4px 0 20px">Haushaltbuch v2.0 · GitHub Storage</p>';
+  '<p style="font-size:12px;color:var(--t3);padding:4px 0 20px">Haushaltbuch v2.2 · GitHub Storage</p>';
 }
 function saveGHcfg(){gh={tok:document.getElementById('gh-t').value.trim(),own:document.getElementById('gh-o').value.trim(),repo:document.getElementById('gh-r').value.trim(),br:document.getElementById('gh-b').value.trim()||'main'};saveGH();toast('GitHub gespeichert');renderSt();}
 function addLo(){const n=prompt('Neuer Lagerort:');if(!n||!n.trim())return;const nm=n.trim();if(!S.lo.includes(nm)){S.lo.push(nm);saveL();}renderSt();}
 function delLo(n){if(S.a.some(a=>a.lager===n)){alert('Lagerort «'+n+'» wird noch verwendet.');return;}S.lo=S.lo.filter(l=>l!==n);saveL();renderSt();}
-function expJ(){const b=new Blob([JSON.stringify({artikel:S.a,lagerorte:S.lo,einkauf:S.ek,exportiert:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='haushaltbuch_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Export abgeschlossen');}
-function impJ(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=r=>{try{const d=JSON.parse(r.target.result);if(!d.artikel)throw new Error('Kein gültiges Format');if(confirm(d.artikel.length+' Artikel importieren? Bestehende Daten überschreiben.')){S.a=d.artikel;S.lo=d.lagerorte||[...LD];S.ek=d.einkauf||[];S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;saveL();goScreen('s-lager');toast(d.artikel.length+' Artikel importiert');}}catch(e){alert('Import-Fehler: '+e.message);}};rd.readAsText(f);ev.target.value='';}
-function resetAll(){if(!confirm('Alle Daten wirklich löschen?'))return;S={a:[],lo:[...LD],ek:[],nid:1,rz:[]};saveL();goScreen('s-lager');toast('Daten gelöscht');}
+function addKat(){const n=prompt('Neue Kategorie:');if(!n||!n.trim())return;const nm=n.trim();if(!S.ka.includes(nm)){S.ka.push(nm);saveL();}renderSt();}
+function delKat(k){if(S.a.some(a=>a.kat===k)){alert('Kategorie «'+k+'» wird noch verwendet.');return;}S.ka=S.ka.filter(x=>x!==k);saveL();renderSt();}
+function addEinheitSettings(){const n=prompt('Neue Einheit (z.B. Sack, Karton):');if(!n||!n.trim())return;const nm=n.trim();if(!S.ei.includes(nm)){S.ei.push(nm);saveL();}renderSt();}
+function delEinheit(u){if(S.a.some(a=>a.einheit===u)){alert('Einheit «'+u+'» wird noch verwendet.');return;}S.ei=S.ei.filter(x=>x!==u);saveL();renderSt();}
+function editKat(k){
+  const n=prompt('Kategorie umbenennen:',k);if(!n||!n.trim()||n.trim()===k)return;
+  const nm=n.trim();
+  if(S.ka.includes(nm)){alert('Kategorie «'+nm+'» existiert bereits.');return;}
+  S.ka=S.ka.map(x=>x===k?nm:x);
+  S.a.forEach(a=>{if(a.kat===k)a.kat=nm;});
+  saveL();renderSt();toast('Kategorie umbenannt');
+}
+function expJ(){const b=new Blob([JSON.stringify({artikel:S.a,lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,einkauf:S.ek,exportiert:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='haushaltbuch_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Export abgeschlossen');}
+function impJ(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=r=>{try{const d=JSON.parse(r.target.result);if(!d.artikel)throw new Error('Kein gültiges Format');if(confirm(d.artikel.length+' Artikel importieren? Bestehende Daten überschreiben.')){S.a=d.artikel;S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;saveL();goScreen('s-lager');toast(d.artikel.length+' Artikel importiert');}}catch(e){alert('Import-Fehler: '+e.message);}};rd.readAsText(f);ev.target.value='';}
+function resetAll(){if(!confirm('Alle Daten wirklich löschen?'))return;S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ek:[],nid:1,rz:[]};saveL();goScreen('s-lager');toast('Daten gelöscht');}
 
 /* ── Toast & Loader ───────────────────────────────────────────────── */
 let tT;
@@ -642,19 +810,54 @@ function hideLdr(){document.getElementById('ldr').classList.remove('on');}
 
 /* ── Utils ────────────────────────────────────────────────────────── */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function daysUntil(iso){
+  if(!iso)return null;
+  const today=new Date();today.setHours(0,0,0,0);
+  const d=new Date(iso+'T00:00:00');
+  return Math.round((d-today)/86400000);
+}
+function fmtDateCH(iso){
+  if(!iso)return '—';
+  const p=iso.split('-');if(p.length!==3)return iso;
+  return p[2]+'.'+p[1]+'.'+p[0];
+}
+function expClass(days){
+  if(days===null)return '';
+  if(days<0)return 'over';
+  if(days<=3)return 'over';
+  if(days<=7)return 'soon';
+  return 'fresh';
+}
+function expLabel(days){
+  if(days===null)return '';
+  if(days<0)return 'abgelaufen seit '+Math.abs(days)+' Tag'+(Math.abs(days)===1?'':'en');
+  if(days===0)return 'läuft heute ab';
+  if(days===1)return 'läuft morgen ab';
+  return 'noch '+days+' Tage';
+}
+function expBadge(iso){
+  if(!iso)return '';
+  const d=daysUntil(iso);
+  const cls=expClass(d);
+  return '<span class="exp-badge '+cls+'">'+expLabel(d)+'</span>';
+}
 
 /* ── Init ─────────────────────────────────────────────────────────── */
 loadL();
 if(!S.a.length){
+  const t=todayISO();
+  const addDays=n=>{const d=new Date();d.setDate(d.getDate()+n);return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');};
   const seed=[
-    {name:'Vollmilch 3.5%',marke:'Emmi',kat:'Milchprodukte',lager:'Kühlschrank',menge:2,einheit:'l',mindest:1,barcode:'7610200071017',notiz:'',foto:'',fotoPath:''},
-    {name:'Mozzarella',marke:'Galbani',kat:'Milchprodukte',lager:'Kühlschrank',menge:1,einheit:'Stk',mindest:2,barcode:'',notiz:'',foto:'',fotoPath:''},
-    {name:'Pasta Rigatoni',marke:'Barilla',kat:'Konserven & Trockenware',lager:'Vorratsschrank',menge:3,einheit:'Pkg',mindest:1,barcode:'8076800195057',notiz:'',foto:'',fotoPath:''},
-    {name:'Tomatensauce',marke:'Mutti',kat:'Konserven & Trockenware',lager:'Vorratsschrank',menge:0,einheit:'Dose',mindest:2,barcode:'',notiz:'',foto:'',fotoPath:''},
-    {name:'Pouletbrust',marke:'',kat:'Fleisch & Fisch',lager:'Gefrierschrank',menge:4,einheit:'Stk',mindest:2,barcode:'',notiz:'tiefgefroren',foto:'',fotoPath:''},
-    {name:'Eier',marke:'',kat:'Milchprodukte',lager:'Kühlschrank',menge:8,einheit:'Stk',mindest:6,barcode:'',notiz:'',foto:'',fotoPath:''},
-    {name:'Olivenöl',marke:'Sélection',kat:'Gewürze & Saucen',lager:'Vorratsschrank',menge:1,einheit:'Flasche',mindest:1,barcode:'',notiz:'',foto:'',fotoPath:''},
-    {name:'Rotwein Gamaret',marke:'Rimuss',kat:'Getränke',lager:'Keller',menge:6,einheit:'Flasche',mindest:2,barcode:'',notiz:'',foto:'',fotoPath:''},
+    {name:'Vollmilch 3.5%',marke:'Emmi',kat:'Milchprodukte',lager:'Kühlschrank',menge:2,einheit:'l',mindest:1,barcode:'7610200071017',preis:1.95,kaufdatum:addDays(-2),ablaufdatum:addDays(5),notiz:'',foto:'',fotoPath:''},
+    {name:'Mozzarella',marke:'Galbani',kat:'Milchprodukte',lager:'Kühlschrank',menge:1,einheit:'Stk',mindest:2,barcode:'',preis:2.40,kaufdatum:addDays(-4),ablaufdatum:addDays(1),notiz:'',foto:'',fotoPath:''},
+    {name:'Pasta Rigatoni',marke:'Barilla',kat:'Konserven & Trockenware',lager:'Vorratsschrank',menge:3,einheit:'Pkg',mindest:1,barcode:'8076800195057',preis:2.80,kaufdatum:addDays(-30),ablaufdatum:addDays(300),notiz:'',foto:'',fotoPath:''},
+    {name:'Tomatensauce',marke:'Mutti',kat:'Konserven & Trockenware',lager:'Vorratsschrank',menge:0,einheit:'Dose',mindest:2,barcode:'',preis:1.50,kaufdatum:addDays(-60),ablaufdatum:addDays(180),notiz:'',foto:'',fotoPath:''},
+    {name:'Pouletbrust',marke:'',kat:'Fleisch & Fisch',lager:'Gefrierschrank',menge:4,einheit:'Stk',mindest:2,barcode:'',preis:4.50,kaufdatum:addDays(-10),ablaufdatum:addDays(90),notiz:'tiefgefroren',foto:'',fotoPath:''},
+    {name:'Eier',marke:'',kat:'Milchprodukte',lager:'Kühlschrank',menge:8,einheit:'Stk',mindest:6,barcode:'',preis:0.45,kaufdatum:addDays(-3),ablaufdatum:addDays(12),notiz:'',foto:'',fotoPath:''},
+    {name:'Olivenöl',marke:'Sélection',kat:'Gewürze & Saucen',lager:'Vorratsschrank',menge:1,einheit:'Flasche',mindest:1,barcode:'',preis:6.90,kaufdatum:addDays(-90),ablaufdatum:addDays(400),notiz:'',foto:'',fotoPath:''},
+    {name:'Rotwein Gamaret',marke:'Rimuss',kat:'Getränke',lager:'Keller',menge:6,einheit:'Flasche',mindest:2,barcode:'',preis:12.50,kaufdatum:addDays(-200),ablaufdatum:'',notiz:'',foto:'',fotoPath:''},
+    {name:'Rahm 35%',marke:'Emmi',kat:'Milchprodukte',lager:'Kühlschrank',menge:1,einheit:'dl',mindest:1,barcode:'',preis:0.95,kaufdatum:addDays(-6),ablaufdatum:addDays(-1),notiz:'',foto:'',fotoPath:''},
   ];
   seed.forEach(s=>S.a.push({id:S.nid++,...s}));saveL();
 }
