@@ -4,12 +4,17 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
-<meta name="theme-color" content="#F4F4F0"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#2563EB"/>
+<link rel="manifest" href="manifest.json"/>
+<link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
 <title>Haushaltbuch</title>
 <style>
-:root{--ac:#3E7C4F;--al:#E7F0E9;--am:#BFD8C6;--ad:#2F6140;--wn:#C9821A;--wl:#F8EEDC;--dg:#8A4A5E;--dl:#F3E6EA;--ok:#3E7C4F;--ol:#E7F0E9;--bg:#F4F4F0;--sf:#FFFFFF;--bd:#DFE2DA;--b2:#C9CFC3;--tx:#22301F;--t2:#5F6B5C;--t3:#8A9385;--r:12px;--rs:8px;--nh:64px;--th:56px}
-@media(prefers-color-scheme:dark){:root{--ac:#5FA873;--al:#1C2A1F;--am:#2F4A36;--ad:#7BC192;--wn:#D99B3C;--wl:#332308;--dg:#C17A92;--dl:#341F26;--ok:#5FA873;--ol:#1C2A1F;--bg:#161D17;--sf:#1F2A22;--bd:#2E3A30;--b2:#3D4A3F;--tx:#EDF1EB;--t2:#A8B5A3;--t3:#76836F}}
+:root{--ac:#2563EB;--al:#EFF6FF;--am:#BFDBFE;--ad:#1D4ED8;--wn:#D97706;--wl:#FFFBEB;--dg:#DC2626;--dl:#FEF2F2;--ok:#059669;--ol:#ECFDF5;--bg:#F8F9FA;--sf:#FFFFFF;--bd:#E5E7EB;--b2:#D1D5DB;--tx:#111827;--t2:#6B7280;--t3:#9CA3AF;--r:12px;--rs:8px;--nh:64px;--th:56px}
+@media(prefers-color-scheme:dark){:root{--ac:#3B82F6;--al:#1E3A5F;--am:#1E40AF;--ad:#60A5FA;--wn:#F59E0B;--wl:#2D1F00;--dg:#EF4444;--dl:#3B0A0A;--ok:#10B981;--ol:#022C1A;--bg:#111827;--sf:#1F2937;--bd:#374151;--b2:#4B5563;--tx:#F9FAFB;--t2:#9CA3AF;--t3:#6B7280}}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--tx);-webkit-tap-highlight-color:transparent}
 button,input,select,textarea{font-family:inherit;font-size:inherit}
@@ -247,6 +252,13 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 #toast{position:fixed;bottom:calc(var(--nh) + 12px);left:50%;transform:translateX(-50%) translateY(20px);background:#111;color:#fff;padding:9px 18px;border-radius:20px;font-size:14px;opacity:0;transition:all .2s;pointer-events:none;z-index:999;white-space:nowrap;max-width:90vw;text-align:center}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 #ldr{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;pointer-events:none;transition:opacity .2s}
+#lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:10000;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+#lightbox.show{opacity:1;pointer-events:all}
+#lightbox img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;display:block}
+#lightbox-close{position:fixed;top:calc(14px + env(safe-area-inset-top));right:calc(14px + env(safe-area-inset-right));width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.15);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10001}
+#lightbox-close svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2}
+.dh{cursor:zoom-in}
+.at.has-photo{cursor:zoom-in}
 #ldr.on{opacity:1;pointer-events:all}
 .ldb{background:var(--sf);border-radius:var(--r);padding:24px 32px;display:flex;flex-direction:column;align-items:center;gap:12px}
 .spn{width:32px;height:32px;border:3px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .7s linear infinite}
@@ -376,6 +388,10 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 </div></div>
 <div id="toast"></div>
 <div id="ldr"><div class="ldb"><div class="spn"></div><div class="ldm" id="ldr-msg">Lädt...</div></div></div>
+<div id="lightbox" onclick="closeLightbox()">
+  <button id="lightbox-close" onclick="closeLightbox()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()"/>
+</div>
 
 <script>
 /* ── SVGs ─────────────────────────────────────────────────────────── */
@@ -417,6 +433,7 @@ function lsm(n){return licon(n).replace('width:20px;height:20px','width:13px;hei
 
 /* ── State ────────────────────────────────────────────────────────── */
 let S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ek:[],nid:1,rz:[],log:[]};
+let deferredInstallPrompt=null;
 let gh={tok:'',own:'',repo:'',br:'main'};
 let dirty=false;
 
@@ -737,7 +754,7 @@ function renderLager(){
 }
 function arRow(a){
   const bc=a.menge===0?'lo':a.menge<a.mindest?'wn':'ok';
-  const th=a.foto?'<div class="at"><img src="'+esc(a.foto)+'" loading="lazy"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div>';
+  const th=a.foto?'<div class="at has-photo" data-thumb-id="'+a.id+'"><img src="'+esc(a.foto)+'" loading="lazy"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div>';
   const pinfo=packInfo(a);
   const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'');
   const eb=a.ablaufdatum?expBadge(a.ablaufdatum):'';
@@ -755,13 +772,19 @@ function showDet(id){
   document.getElementById('d-edit').onclick=()=>openForm(id);
   document.getElementById('d-back').onclick=()=>goScreen('s-lager');
   const bc=a.menge===0?'lo':a.menge<a.mindest?'wn':'ok';
-  const hero=a.foto?'<div class="dh" style="padding:0"><img src="'+esc(a.foto)+'" style="width:100%;height:100%;object-fit:cover"/></div>':'<div class="dh">'+I.pkg.replace('20px;height:20px','64px;height:64px')+'</div>';
+  const hero=a.foto?'<div class="dh" style="padding:0" id="dh-hero-img"><img src="'+esc(a.foto)+'" style="width:100%;height:100%;object-fit:cover"/></div>':'<div class="dh">'+I.pkg.replace('20px;height:20px','64px;height:64px')+'</div>';
   const expDays=a.ablaufdatum?daysUntil(a.ablaufdatum):null;
   const expBanner=(expDays!==null&&expDays<=3)?'<div style="margin-bottom:14px;padding:11px 14px;background:'+(expDays<0?'var(--dl)':'var(--wl)')+';color:'+(expDays<0?'var(--dg)':'var(--wn)')+';border-radius:var(--rs);font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px;">'+I.calx.replace('15px;height:15px','18px;height:18px')+' '+(expDays<0?'Abgelaufen — seit '+Math.abs(expDays)+' Tag'+(Math.abs(expDays)===1?'':'en'):expDays===0?'Läuft heute ab':expDays===1?'Läuft morgen ab':'Läuft in '+expDays+' Tagen ab')+'</div>':'';
   const preisRow=a.preis?'<div class="ir"><span class="ik">'+I.cart+' Preis/Einheit</span><span class="iv">CHF '+a.preis.toFixed(2)+'</span></div>':'';
+  const pinfo=packInfo(a);
+  const ptotal=packTotal(a);
+  const packRow=pinfo?'<div class="ir"><span class="ik">'+I.stack+' Packungsgrösse</span><span class="iv">'+esc(pinfo.split('/')[0])+' pro '+esc(a.einheit||'Stk')+'</span></div>':'';
   const hist=(a.preisHistorie||[]).slice().reverse();
   const histHtml=hist.length?'<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);font-weight:600">Preisverlauf</div>'+hist.map(h=>'<div class="ir"><span class="ik">'+fmtDateCH(h.datum)+'</span><span class="iv">CHF '+h.preis.toFixed(2)+' · +'+h.menge+' '+esc(a.einheit||'Stk')+'</span></div>').join('')+'</div>':'';
-  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+esc(a.barcode||'—')+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span><span class="iv">'+(a.ablaufdatum?fmtDateCH(a.ablaufdatum)+' '+expBadge(a.ablaufdatum):'—')+'</span></div>'+preisRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+histHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>'+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
+  const totalHint=ptotal?'<div style="font-size:11px;color:var(--t2);text-align:right;margin-top:4px">≈ '+esc(ptotal)+'</div>':'';
+  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+esc(a.barcode||'—')+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span><span class="iv">'+(a.ablaufdatum?fmtDateCH(a.ablaufdatum)+' '+expBadge(a.ablaufdatum):'—')+'</span></div>'+preisRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+histHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>'+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
+  const heroEl=document.getElementById('dh-hero-img');
+  if(heroEl)heroEl.addEventListener('click',()=>openLightbox(a.foto));
   goScreen('s-detail');
 }
 function chgB(id,d){
@@ -930,8 +953,10 @@ function lookupBarcode(){
   const res=document.getElementById('eingang-result');
   if(found){
     const th=found.foto?'<div class="at" style="width:52px;height:52px"><img src="'+esc(found.foto)+'"/></div>':'<div class="at" style="width:52px;height:52px">'+I.pkg.replace('20px;height:20px','26px;height:26px')+'</div>';
+    const pinfo=packInfo(found);
+    const packStr=pinfo?' · à '+esc(pinfo.split('/')[0]):'';
     res.innerHTML=
-    '<div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--ol);border:1px solid color-mix(in srgb,var(--ok) 30%,transparent);border-radius:var(--r);margin-bottom:14px">'+th+'<div><div style="font-weight:600;font-size:15px">'+esc(found.name)+'</div><div style="font-size:13px;color:var(--t2)">'+esc(found.lager)+' · aktuell '+found.menge+' '+esc(found.einheit||'Stk')+'</div></div></div>'+
+    '<div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--ol);border:1px solid color-mix(in srgb,var(--ok) 30%,transparent);border-radius:var(--r);margin-bottom:14px">'+th+'<div><div style="font-weight:600;font-size:15px">'+esc(found.name)+'</div><div style="font-size:13px;color:var(--t2)">'+esc(found.lager)+' · aktuell '+found.menge+' '+esc(found.einheit||'Stk')+packStr+'</div></div></div>'+
     '<div class="fd"><label>Menge hinzufügen</label><div class="ur"><input type="number" id="e-mg" min="1" value="1"/><span style="display:flex;align-items:center;padding:0 10px;color:var(--t2);font-size:14px">'+esc(found.einheit||'Stk')+'</span></div></div>'+
     '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="number" id="e-pr" min="0" step="0.05" placeholder="z.B. 1.95" value="'+(found.preis||'')+'"/></div>'+
     '<div class="tc"><div class="fd"><label>Kaufdatum</label><input type="date" id="e-kd" value="'+todayISO()+'"/></div><div class="fd"><label>Neues Ablaufdatum</label><input type="date" id="e-ad" value=""/></div></div>'+
@@ -1200,7 +1225,18 @@ function clearCk(){S.ek=S.ek.filter(x=>!x.checked);saveL();renderEk();toast('Erl
 /* ── Settings ─────────────────────────────────────────────────────── */
 function renderSt(){
   const con=gh.tok&&gh.own&&gh.repo;
+  const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone=window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+  let installSection='';
+  if(isStandalone){
+    installSection='<div class="ss"><div class="ssl">App</div><div class="ghs ok">'+I.chk+' Haushaltbuch ist als App installiert</div></div>';
+  }else if(isIOS){
+    installSection='<div class="ss"><div class="ssl">App installieren</div><div class="ghs info">Auf dem iPhone: Teilen-Symbol '+'\u2191'+' antippen, dann <strong>«Zum Home-Bildschirm»</strong> wählen.</div></div>';
+  }else{
+    installSection='<div class="ss"><div class="ssl">App installieren</div><button class="db-btn" id="install-app-btn" style="display:'+(deferredInstallPrompt?'flex':'none')+'" onclick="installApp()">'+I.dl+' Haushaltbuch installieren</button><p style="font-size:12px;color:var(--t3);margin-top:2px">Installiert die App mit eigenem Icon auf dem Startbildschirm. Falls der Button nicht erscheint: Browser-Menü → «App installieren» / «Zum Startbildschirm hinzufügen».</p></div>';
+  }
   document.getElementById('st-body').innerHTML=
+  installSection+
   '<div class="ss"><div class="ssl">GitHub-Verbindung</div>'+
   (con?'<div class="ghs ok">'+I.chk+' Verbunden mit '+esc(gh.own)+'/'+esc(gh.repo)+'</div>':'<div class="ghs info">Noch nicht konfiguriert</div>')+
   '<div class="ghf"><label>Personal Access Token (repo Scope)</label><input type="password" id="gh-t" placeholder="ghp_..." value="'+esc(gh.tok||'')+'"/></div>'+
@@ -1239,6 +1275,24 @@ function resetAll(){if(!confirm('Alle Daten wirklich löschen?'))return;S={a:[],
 /* ── Toast & Loader ───────────────────────────────────────────────── */
 let tT;
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('on'),2300);}
+function openLightbox(src){
+  if(!src)return;
+  document.getElementById('lightbox-img').src=src;
+  document.getElementById('lightbox').classList.add('show');
+}
+function closeLightbox(){
+  document.getElementById('lightbox').classList.remove('show');
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox();});
+document.addEventListener('click',e=>{
+  const thumb=e.target.closest('.at.has-photo[data-thumb-id]');
+  if(thumb){
+    e.stopPropagation();
+    const id=parseInt(thumb.dataset.thumbId);
+    const art=S.a.find(x=>x.id===id);
+    if(art&&art.foto)openLightbox(art.foto);
+  }
+},true);
 function ldr(m){document.getElementById('ldr-msg').textContent=m||'Lädt...';document.getElementById('ldr').classList.add('on');}
 function hideLdr(){document.getElementById('ldr').classList.remove('on');}
 
@@ -1302,7 +1356,7 @@ if(!S.a.length){
     {name:'Eier',marke:'',kat:'Milchprodukte',lager:'Kühlschrank',menge:8,einheit:'Stk',mindest:6,barcode:'',preis:0.45,kaufdatum:addDays(-3),ablaufdatum:addDays(12),notiz:'',foto:'',fotoPath:''},
     {name:'Olivenöl',marke:'Sélection',kat:'Gewürze & Saucen',lager:'Vorratsschrank',menge:1,einheit:'Flasche',mindest:1,barcode:'',preis:6.90,kaufdatum:addDays(-90),ablaufdatum:addDays(400),notiz:'',foto:'',fotoPath:''},
     {name:'Rotwein Gamaret',marke:'Rimuss',kat:'Getränke',lager:'Keller',menge:6,einheit:'Flasche',mindest:2,barcode:'',preis:12.50,kaufdatum:addDays(-200),ablaufdatum:'',notiz:'',foto:'',fotoPath:''},
-    {name:'Rahm 35%',marke:'Emmi',kat:'Milchprodukte',lager:'Kühlschrank',menge:1,einheit:'dl',mindest:1,barcode:'',preis:0.95,kaufdatum:addDays(-6),ablaufdatum:addDays(-1),notiz:'',foto:'',fotoPath:''},
+    {name:'Rahm 35%',marke:'Emmi',kat:'Milchprodukte',lager:'Kühlschrank',menge:1,einheit:'Stk',mindest:1,barcode:'',preis:0.95,packMenge:2.5,packEinheit:'dl',kaufdatum:addDays(-6),ablaufdatum:addDays(-1),notiz:'',foto:'',fotoPath:''},
   ];
   seed.forEach(s=>S.a.push({id:S.nid++,...s}));
   // Demo-Log generieren, damit Statistik direkt etwas zeigt
@@ -1321,11 +1375,40 @@ if(!S.a.length){
     {t:'ein',aid:S.a[6].id,name:'Olivenöl',lager:'Vorratsschrank',kat:'Gewürze & Saucen',menge:1,einheit:'Flasche',preis:6.90,datum:addDays(-90),zeit:daysAgoTs(90)},
     {t:'ein',aid:S.a[7].id,name:'Rotwein Gamaret',lager:'Keller',kat:'Getränke',menge:6,einheit:'Flasche',preis:12.50,datum:addDays(-200),zeit:daysAgoTs(200)},
     {t:'aus',aid:S.a[7].id,name:'Rotwein Gamaret',lager:'Keller',kat:'Getränke',menge:1,einheit:'Flasche',preis:0,datum:addDays(-5),zeit:daysAgoTs(5)},
-    {t:'ein',aid:S.a[8].id,name:'Rahm 35%',lager:'Kühlschrank',kat:'Milchprodukte',menge:1,einheit:'dl',preis:0.95,datum:addDays(-6),zeit:daysAgoTs(6)},
+    {t:'ein',aid:S.a[8].id,name:'Rahm 35%',lager:'Kühlschrank',kat:'Milchprodukte',menge:1,einheit:'Stk',preis:0.95,datum:addDays(-6),zeit:daysAgoTs(6)},
   ];
   saveL();
 }
 nav();sdot(gh.tok?'dt':'ok');renderLager();
+
+/* ── PWA: Service Worker + Install-Prompt ────────────────────────── */
+if('serviceWorker' in navigator){
+  window.addEventListener('load',()=>{
+    navigator.serviceWorker.register('sw.js').catch(()=>{});
+  });
+}
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();
+  deferredInstallPrompt=e;
+  const btn=document.getElementById('install-app-btn');
+  if(btn)btn.style.display='flex';
+});
+window.addEventListener('appinstalled',()=>{
+  deferredInstallPrompt=null;
+  const btn=document.getElementById('install-app-btn');
+  if(btn)btn.style.display='none';
+  toast('Haushaltbuch wurde installiert');
+});
+async function installApp(){
+  if(!deferredInstallPrompt){
+    toast('Installation über Browser-Menü: "Zum Startbildschirm hinzufügen"');
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  const choice=await deferredInstallPrompt.userChoice;
+  if(choice.outcome==='accepted')toast('Wird installiert…');
+  deferredInstallPrompt=null;
+}
 </script>
 </body>
 </html>
