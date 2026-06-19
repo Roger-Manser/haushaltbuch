@@ -204,6 +204,26 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .log-amt{font-size:13px;font-weight:600;flex-shrink:0}
 .log-amt.ein{color:var(--ac)}
 .log-amt.aus{color:var(--dg)}
+
+/* Etikett / Label printing */
+.label-format-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.label-format-opt{border:1px solid var(--bd);border-radius:var(--rs);padding:10px;cursor:pointer;text-align:center;background:var(--sf)}
+.label-format-opt.on{border-color:var(--ac);background:var(--al)}
+.label-format-opt .lf-name{font-size:13px;font-weight:600}
+.label-format-opt .lf-dim{font-size:11px;color:var(--t2);margin-top:2px}
+.label-preview-wrap{display:flex;justify-content:center;padding:20px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:14px;overflow-x:auto}
+#label-sheet{background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,.15);padding:6px;box-sizing:border-box}
+#label-sheet .lbl-name{font-weight:700;color:#000;text-align:center;line-height:1.15;width:100%;overflow:hidden}
+#label-sheet .lbl-sub{color:#000;text-align:center;line-height:1.2;width:100%;overflow:hidden}
+#label-sheet svg{display:block}
+.own-code-box{background:var(--al);border:1px solid var(--am);border-radius:var(--rs);padding:11px 13px;margin-bottom:14px;font-size:13px;color:var(--ac)}
+.own-code-box strong{font-family:monospace;font-size:14px}
+@media print{
+  body *{visibility:hidden !important}
+  #label-sheet,#label-sheet *{visibility:visible !important}
+  #label-sheet{position:fixed;top:0;left:0;box-shadow:none !important;margin:0 !important}
+  @page{margin:0}
+}
 .lcw{display:flex;flex-wrap:wrap;gap:7px}
 .br{display:flex;gap:10px;margin-top:20px}
 .bp{flex:1;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer}
@@ -267,6 +287,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 </style>
 <script src="https://unpkg.com/@zxing/library@0.20.0"></script>
 <script src="https://unpkg.com/@zxing/browser@0.1.5"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.12.1/JsBarcode.all.min.js"></script>
 </head>
 <body>
 <div id="app">
@@ -327,6 +348,15 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
     <div style="width:36px"></div>
   </div>
   <div class="fb" id="ausgang-body"></div>
+</div>
+
+<div class="sc" id="s-etikett" style="overflow-y:auto">
+  <div class="ftp">
+    <button class="bkb" onclick="goScreen('s-detail')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <span class="ftl">Etikett drucken</span>
+    <div style="width:36px"></div>
+  </div>
+  <div class="fb" id="etikett-body"></div>
 </div>
 
 <div class="sc" id="s-rezepte">
@@ -702,7 +732,7 @@ function nav(){
     {id:'s-einkauf',l:'Einkauf',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',b:wc},
   ];
   const h=tabs.map(t=>{
-    const on=cur===t.id||((cur==='s-detail'||cur==='s-form'||cur==='s-eingang'||cur==='s-ausgang')&&t.id==='s-lager');
+    const on=cur===t.id||((cur==='s-detail'||cur==='s-form'||cur==='s-eingang'||cur==='s-ausgang'||cur==='s-etikett')&&t.id==='s-lager');
     const bdg=t.b?'<span class="nbb">'+t.b+'</span>':'';
     return '<button class="nb'+(on?' on':'')+'" onclick="goScreen(\''+t.id+'\')" ><div class="nbw">'+t.s+bdg+'</div><span>'+t.l+'</span></button>';
   }).join('');
@@ -782,7 +812,8 @@ function showDet(id){
   const hist=(a.preisHistorie||[]).slice().reverse();
   const histHtml=hist.length?'<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);font-weight:600">Preisverlauf</div>'+hist.map(h=>'<div class="ir"><span class="ik">'+fmtDateCH(h.datum)+'</span><span class="iv">CHF '+h.preis.toFixed(2)+' · +'+h.menge+' '+esc(a.einheit||'Stk')+'</span></div>').join('')+'</div>':'';
   const totalHint=ptotal?'<div style="font-size:11px;color:var(--t2);text-align:right;margin-top:4px">≈ '+esc(ptotal)+'</div>':'';
-  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+esc(a.barcode||'—')+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span><span class="iv">'+(a.ablaufdatum?fmtDateCH(a.ablaufdatum)+' '+expBadge(a.ablaufdatum):'—')+'</span></div>'+preisRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+histHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>'+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
+  const codeDisplay=a.barcode?esc(a.barcode):(a.ownCode?esc(a.ownCode)+' <span style="font-size:11px;color:var(--t2)">(eigener Code)</span>':'—');
+  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span><span class="iv">'+(a.ablaufdatum?fmtDateCH(a.ablaufdatum)+' '+expBadge(a.ablaufdatum):'—')+'</span></div>'+preisRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+histHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>'+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
   const heroEl=document.getElementById('dh-hero-img');
   if(heroEl)heroEl.addEventListener('click',()=>openLightbox(a.foto));
   goScreen('s-detail');
@@ -949,7 +980,7 @@ function onScanEingang(code){
 function lookupBarcode(){
   const bc=document.getElementById('e-bc').value.trim();
   if(!bc){toast('Bitte Barcode eingeben');return;}
-  const found=S.a.find(a=>a.barcode&&a.barcode===bc);
+  const found=S.a.find(a=>(a.barcode&&a.barcode===bc)||(a.ownCode&&a.ownCode===bc));
   const res=document.getElementById('eingang-result');
   if(found){
     const th=found.foto?'<div class="at" style="width:52px;height:52px"><img src="'+esc(found.foto)+'"/></div>':'<div class="at" style="width:52px;height:52px">'+I.pkg.replace('20px;height:20px','26px;height:26px')+'</div>';
@@ -1024,7 +1055,7 @@ function toggleAusgangScan(){
 function processAusgangScan(code){
   if(!code)return;
   const list=document.getElementById('ausgang-list');
-  const found=S.a.find(a=>a.barcode&&a.barcode===code);
+  const found=S.a.find(a=>(a.barcode&&a.barcode===code)||(a.ownCode&&a.ownCode===code));
   if(!found){
     if(list.children.length===1&&list.children[0].textContent.includes('Noch keine'))list.innerHTML='';
     const div=document.createElement('div');
@@ -1045,6 +1076,100 @@ function processAusgangScan(code){
   div.innerHTML=th+'<div class="ai"><div class="an">'+esc(found.name)+'</div><div class="am">'+esc(found.lager)+' · noch '+found.menge+' '+esc(found.einheit||'Stk')+'</div></div><div class="ausgang-badge">−1</div>';
   list.insertBefore(div,list.firstChild);
   toast('−1 entnommen: '+found.name+' (noch '+found.menge+')');
+}
+
+/* ── Eigene Barcodes & Etiketten-Druck ────────────────────────────── */
+let etikettArtikelId=null;
+const DK_FORMATS=[
+  {id:'dk2205',name:'DK-2205 / DK-2251',wmm:62,hmm:29,kind:'continuous'},
+  {id:'dk1201',name:'DK-1201 Adress',wmm:29,hmm:90,kind:'die-cut'},
+  {id:'dk1209',name:'DK-1209 klein',wmm:29,hmm:62,kind:'die-cut'},
+  {id:'dk2210',name:'DK-2210 schmal',wmm:29,hmm:0,kind:'continuous'},
+  {id:'dk2243',name:'DK-2243 breit',wmm:102,hmm:0,kind:'continuous'},
+];
+let labelFormatId='dk2205';
+
+function genOwnCode(){
+  // Eigenes internes Code-Format: HB-000123 (6-stellig, fortlaufend)
+  const used=new Set(S.a.filter(a=>a.ownCode).map(a=>a.ownCode));
+  let n=S.a.length+1;
+  let code;
+  do{ code='HB-'+String(n).padStart(6,'0'); n++; }while(used.has(code));
+  return code;
+}
+
+function openEtikett(artikelId){
+  const a=S.a.find(x=>x.id===artikelId);
+  if(!a)return;
+  etikettArtikelId=artikelId;
+  // Falls kein Barcode vorhanden, eigenen Code zuweisen (einmalig, dauerhaft)
+  if(!a.barcode&&!a.ownCode){
+    a.ownCode=genOwnCode();
+    saveL();
+  }
+  renderEtikettScreen();
+  goScreen('s-etikett');
+}
+
+function renderEtikettScreen(){
+  const a=S.a.find(x=>x.id===etikettArtikelId);
+  if(!a)return;
+  const code=a.barcode||a.ownCode;
+  const isOwn=!a.barcode&&!!a.ownCode;
+
+  const fmtChips=DK_FORMATS.map(f=>'<div class="label-format-opt'+(labelFormatId===f.id?' on':'')+'" onclick="setLabelFormat(\''+f.id+'\')"><div class="lf-name">'+esc(f.name)+'</div><div class="lf-dim">'+f.wmm+'×'+(f.hmm||'∞')+' mm</div></div>').join('');
+
+  document.getElementById('etikett-body').innerHTML=
+    (isOwn?'<div class="own-code-box">'+I.tag+' Dieser Artikel hat keinen Barcode. Eigener interner Code wurde vergeben: <strong>'+esc(code)+'</strong></div>':'')+
+    '<div class="fd"><label>Etikettenformat (Brother DK)</label><div class="label-format-grid">'+fmtChips+'</div></div>'+
+    '<div class="label-preview-wrap"><div id="label-sheet"></div></div>'+
+    '<div class="field" style="margin-bottom:14px"><label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><input type="checkbox" id="lbl-show-price" '+(a.preis?'checked':'')+' style="width:16px;height:16px" onchange="renderLabelPreview()"/> Preis anzeigen</label></div>'+
+    '<button class="bp" style="width:100%;margin-bottom:8px" onclick="printLabel()">'+I.scan.replace('18px;height:18px','20px;height:20px')+' Etikett drucken</button>'+
+    '<p style="font-size:12px;color:var(--t3);text-align:center;line-height:1.6">Öffnet den Druckdialog deines Handys.<br>iPhone: über AirPrint direkt zum Brother-Drucker. Android: «Drucken» wählen, dann Brother iPrint&amp;Label oder den Mopria-Druckdienst auswählen.</p>';
+
+  renderLabelPreview();
+}
+
+function setLabelFormat(id){ labelFormatId=id; renderLabelPreview(); }
+
+function mmToPx(mm){ return Math.round(mm*3.7795); } // 96dpi screen approx for preview only
+
+function renderLabelPreview(){
+  const a=S.a.find(x=>x.id===etikettArtikelId);
+  if(!a)return;
+  const fmt=DK_FORMATS.find(f=>f.id===labelFormatId)||DK_FORMATS[0];
+  const code=a.barcode||a.ownCode;
+  const showPrice=document.getElementById('lbl-show-price')&&document.getElementById('lbl-show-price').checked;
+
+  const wmm=fmt.wmm;
+  const hmm=fmt.kind==='die-cut'?fmt.hmm:Math.max(20,fmt.hmm||29);
+  const sheet=document.getElementById('label-sheet');
+  sheet.style.width=mmToPx(wmm)+'px';
+  sheet.style.height=mmToPx(hmm)+'px';
+
+  const nameSize=wmm>=50?14:11;
+  const subSize=wmm>=50?10:8;
+  sheet.innerHTML=
+    '<div class="lbl-name" style="font-size:'+nameSize+'px">'+esc(a.name)+'</div>'+
+    '<div class="lbl-sub" style="font-size:'+subSize+'px">'+esc(a.lager)+(showPrice&&a.preis?' · CHF '+a.preis.toFixed(2):'')+'</div>'+
+    '<svg id="lbl-barcode-svg"></svg>';
+
+  try{
+    JsBarcode('#lbl-barcode-svg',code,{
+      format:'CODE128',
+      width:wmm>=50?2:1.4,
+      height:wmm>=50?42:30,
+      fontSize:wmm>=50?12:9,
+      margin:4,
+      displayValue:true,
+    });
+  }catch(e){
+    document.getElementById('lbl-barcode-svg').outerHTML='<div style="font-size:11px;color:var(--dg)">Barcode konnte nicht erzeugt werden</div>';
+  }
+}
+
+function printLabel(){
+  window.print();
 }
 
 /* ── Rezepte ──────────────────────────────────────────────────────── */
