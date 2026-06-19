@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
-<meta name="theme-color" content="#ffffff"/>
+<meta name="theme-color" content="#F4F4F0"/>
 <title>Haushaltbuch</title>
 <style>
-:root{--ac:#2563EB;--al:#EFF6FF;--am:#BFDBFE;--ad:#1D4ED8;--wn:#D97706;--wl:#FFFBEB;--dg:#DC2626;--dl:#FEF2F2;--ok:#059669;--ol:#ECFDF5;--bg:#F8F9FA;--sf:#FFFFFF;--bd:#E5E7EB;--b2:#D1D5DB;--tx:#111827;--t2:#6B7280;--t3:#9CA3AF;--r:12px;--rs:8px;--nh:64px;--th:56px}
-@media(prefers-color-scheme:dark){:root{--ac:#3B82F6;--al:#1E3A5F;--am:#1E40AF;--ad:#60A5FA;--wn:#F59E0B;--wl:#2D1F00;--dg:#EF4444;--dl:#3B0A0A;--ok:#10B981;--ol:#022C1A;--bg:#111827;--sf:#1F2937;--bd:#374151;--b2:#4B5563;--tx:#F9FAFB;--t2:#9CA3AF;--t3:#6B7280}}
+:root{--ac:#3E7C4F;--al:#E7F0E9;--am:#BFD8C6;--ad:#2F6140;--wn:#C9821A;--wl:#F8EEDC;--dg:#8A4A5E;--dl:#F3E6EA;--ok:#3E7C4F;--ol:#E7F0E9;--bg:#F4F4F0;--sf:#FFFFFF;--bd:#DFE2DA;--b2:#C9CFC3;--tx:#22301F;--t2:#5F6B5C;--t3:#8A9385;--r:12px;--rs:8px;--nh:64px;--th:56px}
+@media(prefers-color-scheme:dark){:root{--ac:#5FA873;--al:#1C2A1F;--am:#2F4A36;--ad:#7BC192;--wn:#D99B3C;--wl:#332308;--dg:#C17A92;--dl:#341F26;--ok:#5FA873;--ol:#1C2A1F;--bg:#161D17;--sf:#1F2A22;--bd:#2E3A30;--b2:#3D4A3F;--tx:#EDF1EB;--t2:#A8B5A3;--t3:#76836F}}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--tx);-webkit-tap-highlight-color:transparent}
 button,input,select,textarea{font-family:inherit;font-size:inherit}
@@ -168,6 +168,37 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .scan-toggle{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;background:var(--dg);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:600;cursor:pointer;margin-bottom:12px}
 .scan-toggle svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75}
 .scan-toggle.active{background:var(--t2)}
+.stat-chart-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:14px;margin-bottom:12px}
+.stat-chart-title{font-size:13px;font-weight:600;color:var(--tx);margin-bottom:2px}
+.stat-chart-sub{font-size:11px;color:var(--t2);margin-bottom:10px}
+.bar-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.bar-label{font-size:12px;color:var(--t2);width:78px;flex-shrink:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bar-track{flex:1;height:18px;background:var(--bg);border-radius:4px;overflow:hidden;position:relative}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
+.bar-fill.ein{background:var(--ac)}
+.bar-fill.aus{background:var(--dg)}
+.bar-val{font-size:10px;color:#fff;font-weight:600;white-space:nowrap}
+.bar-val.outside{color:var(--t2);position:absolute;left:calc(100% + 6px)}
+.legend-row{display:flex;gap:14px;font-size:11px;color:var(--t2);margin-top:8px}
+.legend-dot{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:4px}
+.kw-spark{display:flex;align-items:flex-end;gap:3px;height:60px;margin-top:6px}
+.kw-bar-pair{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.kw-bars{display:flex;align-items:flex-end;gap:2px;height:48px;width:100%;justify-content:center}
+.kw-bar{width:7px;border-radius:2px 2px 0 0}
+.kw-bar.ein{background:var(--ac)}
+.kw-bar.aus{background:var(--dg)}
+.kw-lbl{font-size:9px;color:var(--t3)}
+.log-entry{display:flex;align-items:center;gap:10px;padding:8px 12px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:5px;font-size:13px}
+.log-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.log-icon.ein{background:var(--ol);color:var(--ac)}
+.log-icon.aus{background:var(--dl);color:var(--dg)}
+.log-icon svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.5}
+.log-info{flex:1;min-width:0}
+.log-name{font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.log-meta{font-size:11px;color:var(--t2)}
+.log-amt{font-size:13px;font-weight:600;flex-shrink:0}
+.log-amt.ein{color:var(--ac)}
+.log-amt.aus{color:var(--dg)}
 .lcw{display:flex;flex-wrap:wrap;gap:7px}
 .br{display:flex;gap:10px;margin-top:20px}
 .bp{flex:1;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer}
@@ -298,6 +329,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 <div class="sc" id="s-uebersicht">
   <div class="tb"><span class="tb-t">Übersicht</span></div>
+  <div class="chips" id="stat-period-chips"></div>
   <div class="scroll" id="ub-body"></div>
   <div id="bnav3"></div>
 </div>
@@ -384,16 +416,21 @@ function licon(n){
 function lsm(n){return licon(n).replace('width:20px;height:20px','width:13px;height:13px');}
 
 /* ── State ────────────────────────────────────────────────────────── */
-let S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ek:[],nid:1,rz:[]};
+let S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ek:[],nid:1,rz:[],log:[]};
 let gh={tok:'',own:'',repo:'',br:'main'};
 let dirty=false;
 
 function loadL(){
-  try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ek=d.ek||[];S.rz=d.rz||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);}}catch(e){}
+  try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ek=d.ek||[];S.rz=d.rz||[];S.log=d.log||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);}}catch(e){}
   try{const r=localStorage.getItem('hbgh');if(r)gh=JSON.parse(r);}catch(e){}
 }
 function saveL(){try{localStorage.setItem('hb3',JSON.stringify(S));}catch(e){}dirty=true;sdot('dt');}
 function saveGH(){try{localStorage.setItem('hbgh',JSON.stringify(gh));}catch(e){};}
+function addLogEntry(type,artikelId,name,lager,kat,menge,einheit,preis){
+  if(!S.log)S.log=[];
+  S.log.push({t:type,aid:artikelId,name,lager,kat,menge,einheit,preis:preis||0,datum:todayISO(),zeit:Date.now()});
+  if(S.log.length>2000)S.log=S.log.slice(-2000); // cap log size
+}
 function sdot(s){const d=document.getElementById('sdot');if(d)d.className='sdot'+(s==='ok'?' ok':s==='dt'?' dt':s==='sy'?' sy':'');}
 
 /* ── GitHub API ───────────────────────────────────────────────────── */
@@ -435,7 +472,7 @@ async function doSync(){
   ldr('Synchronisiere mit GitHub...');sdot('sy');
   try{
     const ex=await ghGet('haushaltbuch.json');
-    const exp={artikel:S.a.map(a=>({...a})),lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,einkauf:S.ek,aktualisiert:new Date().toISOString()};
+    const exp={artikel:S.a.map(a=>({...a})),lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,einkauf:S.ek,log:S.log||[],aktualisiert:new Date().toISOString()};
     await ghPut('haushaltbuch.json',JSON.stringify(exp,null,2),'Haushaltbuch Update',ex?ex.sha:undefined);
     // Load rezepte.json
     const rzf=await ghGet('rezepte.json');
@@ -457,7 +494,7 @@ async function loadFromGH(){
     const f=await ghGet('haushaltbuch.json');
     if(f&&f.content){
       const d=JSON.parse(atob(f.content.replace(/\n/g,'')));
-      S.a=d.artikel||[];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];
+      S.a=d.artikel||[];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.log=d.log||[];
       S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;
       saveL();
     }
@@ -701,9 +738,11 @@ function renderLager(){
 function arRow(a){
   const bc=a.menge===0?'lo':a.menge<a.mindest?'wn':'ok';
   const th=a.foto?'<div class="at"><img src="'+esc(a.foto)+'" loading="lazy"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div>';
-  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'');
+  const pinfo=packInfo(a);
+  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'');
   const eb=a.ablaufdatum?expBadge(a.ablaufdatum):'';
-  return '<div class="ar" onclick="showDet('+a.id+')">'+th+'<div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+meta+'</div>'+eb+'</div><div class="abs"><div class="bn '+bc+'">'+a.menge+'</div><div class="bu">'+esc(a.einheit||'Stk')+'</div></div></div>';
+  const unitLabel=a.packMenge>0?esc(a.einheit||'Stk'):esc(a.einheit||'Stk');
+  return '<div class="ar" onclick="showDet('+a.id+')">'+th+'<div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+meta+'</div>'+eb+'</div><div class="abs"><div class="bn '+bc+'">'+a.menge+'</div><div class="bu">'+unitLabel+'</div></div></div>';
 }
 function setLF(f){lf=f;renderLager();}
 function togSec(h){const it=h.nextElementSibling;const op=h.classList.toggle('open');it.classList.toggle('hide',!op);}
@@ -727,7 +766,10 @@ function showDet(id){
 }
 function chgB(id,d){
   const a=S.a.find(x=>x.id===id);if(!a)return;
+  const before=a.menge;
   a.menge=Math.max(0,a.menge+d);
+  const actualDelta=a.menge-before;
+  if(actualDelta!==0)addLogEntry(actualDelta>0?'ein':'aus',a.id,a.name,a.lager,a.kat,Math.abs(actualDelta),a.einheit,0);
   const el=document.getElementById('sv-'+id);
   if(el){el.textContent=a.menge;el.className='spv '+(a.menge===0?'lo':a.menge<a.mindest?'wn':'ok');}
   saveL();toast(d>0?'+1 eingelagert':'−1 entnommen');
@@ -753,6 +795,9 @@ function openForm(id){
   const lc=S.lo.map(l=>'<div class="chip'+(a&&a.lager===l?' on':'')+'" data-lager="'+esc(l)+'" onclick="plager(this)">'+lsm(l)+' '+esc(l)+'</div>').join('')+'<div class="chip" onclick="addLF()" style="border-style:dashed"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" style="width:12px;height:12px;stroke:currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Neu...</div>';
   const kc=S.ka.map(k=>'<div class="chip'+(a&&a.kat===k?' on':'')+'" data-kat="'+esc(k)+'" onclick="pkat(this)">'+KICON+' '+esc(k)+'</div>').join('')+'<div class="chip" onclick="addKF()" style="border-style:dashed"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" style="width:12px;height:12px;stroke:currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Neu...</div>';
   const eo=S.ei.map(u=>'<option'+(a&&a.einheit===u?' selected':'')+'>'+esc(u)+'</option>').join('');
+  const PACK_EINS=['dl','ml','g','kg','l'];
+  const packEinheiten=[...new Set([...PACK_EINS,...S.ei])];
+  const epo=packEinheiten.map(u=>'<option'+(a&&a.packEinheit===u?' selected':(!a&&u==='dl'?' selected':''))+'>'+esc(u)+'</option>').join('');
   document.getElementById('form-body').innerHTML=
   '<div class="fd"><label>Barcode</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="f-bc" placeholder="7610200071017" inputmode="numeric" value="'+(a?esc(a.barcode||''):'')+'" /></div><button class="scb" onclick="openScanner(\'f-bc\')">'+I.scan+' Scannen</button></div>'+camScannerHTML('f-bc')+'<div style="display:flex;gap:8px;margin-top:8px"><button type="button" class="lookup-btn" style="flex:1" onclick="doLookupForm()">'+I.globe+' Produktdaten online suchen</button></div><div class="lookup-status" id="lookup-status-f"></div></div>'+
   '<div class="fd"><label>Foto</label><div id="pz" class="pz" onclick="document.getElementById(\'fph\').click()">'+I.cam+'<span>Von Kamera oder Galerie</span><small>Wird auf GitHub gespeichert</small><input type="file" id="fph" accept="image/*" capture="environment" style="display:none" onchange="onPh(event)"/></div><div id="ppw" class="ppw" style="'+(a&&a.foto?'display:block':'')+'"><img id="ppi" src="'+(a?esc(a.foto||''):'')+'" alt=""/><button class="rph" onclick="rmPh()">&#x2715;</button></div></div>'+
@@ -760,6 +805,7 @@ function openForm(id){
   '<div class="fd"><label>Marke</label><input type="text" id="f-mk" placeholder="z.B. Emmi" value="'+(a?esc(a.marke||''):'')+'"/></div>'+
   '<div class="fd"><label>Kategorie</label><div class="lcw" id="f-ka">'+kc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Anfangsbestand</label><div class="ur"><input type="number" id="f-mg" min="0" value="'+(a?a.menge:1)+'"/><select id="f-ei" onchange="if(this.value===\'__add__\')addEinheit(this)">'+eo+'<option value="__add__">+ Neue Einheit...</option></select></div></div><div class="fd"><label>Mindestbestand</label><input type="number" id="f-mn" min="0" value="'+(a?a.mindest:1)+'"/></div></div>'+
+  '<div class="fd"><label>Packungsgrösse <span style="color:var(--t3);font-weight:400">(optional, z.B. 2.5 dl pro Stück)</span></label><div class="ur"><input type="number" id="f-pg" min="0" step="0.1" placeholder="z.B. 2.5" value="'+(a&&a.packMenge?esc(a.packMenge):'')+'"/><select id="f-pe">'+epo+'</select></div></div>'+
   '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="number" id="f-pr" min="0" step="0.05" placeholder="z.B. 1.95" value="'+(a?esc(a.preis||''):'')+'"/></div>'+
   '<div class="fd"><label>Lagerort</label><div class="lcw" id="f-lo">'+lc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Kaufdatum</label><input type="date" id="f-kd" value="'+(a?esc(a.kaufdatum||todayISO()):todayISO())+'"/></div><div class="fd"><label>Ablaufdatum (MHD)</label><input type="date" id="f-ad" value="'+(a?esc(a.ablaufdatum||''):'')+'"/></div></div>'+
@@ -848,11 +894,17 @@ async function saveForm(){
   else if(editId){const ex=S.a.find(x=>x.id===editId);if(ex){furl=ex.foto||'';fpth=ex.fotoPath||'';}}
   const preis=parseFloat(document.getElementById('f-pr').value)||0;
   const kaufdatum=document.getElementById('f-kd').value||todayISO();
-  const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,menge:parseInt(document.getElementById('f-mg').value)||0,einheit:document.getElementById('f-ei').value,mindest:parseInt(document.getElementById('f-mn').value)||1,barcode:document.getElementById('f-bc').value.trim(),preis,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
+  const packMenge=parseFloat(document.getElementById('f-pg').value)||0;
+  const packEinheit=document.getElementById('f-pe').value;
+  const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,menge:parseInt(document.getElementById('f-mg').value)||0,einheit:document.getElementById('f-ei').value,mindest:parseInt(document.getElementById('f-mn').value)||1,barcode:document.getElementById('f-bc').value.trim(),preis,packMenge,packEinheit,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
   if(!editId&&preis>0){d.preisHistorie=[{datum:kaufdatum,preis,menge:d.menge}];}
   else if(editId){const ex=S.a.find(x=>x.id===editId);d.preisHistorie=ex&&ex.preisHistorie?ex.preisHistorie:[];}
   if(editId){const i=S.a.findIndex(x=>x.id===editId);if(i>=0)S.a[i]={...S.a[i],...d};}
-  else S.a.push({id:S.nid++,...d});
+  else{
+    const newId=S.nid++;
+    S.a.push({id:newId,...d});
+    if(d.menge>0)addLogEntry('ein',newId,d.name,d.lager,d.kat,d.menge,d.einheit,preis);
+  }
   fb64='';ffn='';saveL();hideLdr();closeForm();toast(editId?'Artikel aktualisiert':'Artikel hinzugefügt');
 }
 function closeForm(){editId=null;fb64='';ffn='';goScreen('s-lager');}
@@ -904,6 +956,7 @@ function confirmEingang(id){
     if(!a.preisHistorie)a.preisHistorie=[];
     a.preisHistorie.push({datum:kaufdatum,preis,menge:addMenge});
   }
+  addLogEntry('ein',a.id,a.name,a.lager,a.kat,addMenge,a.einheit,preis);
   saveL();
   toast('+'+addMenge+' '+(a.einheit||'Stk')+' eingelagert: '+a.name);
   goScreen('s-lager');
@@ -957,6 +1010,7 @@ function processAusgangScan(code){
     return;
   }
   found.menge=Math.max(0,found.menge-1);
+  addLogEntry('aus',found.id,found.name,found.lager,found.kat,1,found.einheit,0);
   saveL();
   ausgangLog.unshift({id:found.id,name:found.name,foto:found.foto,lager:found.lager,einheit:found.einheit,zeit:Date.now()});
   if(list.children.length===1&&list.children[0].textContent.includes('Noch keine'))list.innerHTML='';
@@ -1001,7 +1055,15 @@ function rcCard(r){
 }
 
 /* ── Übersicht ────────────────────────────────────────────────────── */
+let statPeriod=30; // days
+function renderStatPeriodChips(){
+  const opts=[{d:7,l:'7 Tage'},{d:30,l:'30 Tage'},{d:90,l:'90 Tage'},{d:365,l:'1 Jahr'},{d:99999,l:'Alle'}];
+  document.getElementById('stat-period-chips').innerHTML=opts.map(o=>'<button class="chip'+(statPeriod===o.d?' on':'')+'" onclick="setStatPeriod('+o.d+')">'+esc(o.l)+'</button>').join('');
+}
+function setStatPeriod(d){statPeriod=d;renderUeb();}
+
 function renderUeb(){
+  renderStatPeriodChips();
   const t=S.a.length,w=S.a.filter(a=>a.menge<a.mindest),l=S.a.filter(a=>a.menge===0).length;
   const nm=S.a.map(a=>a.name.toLowerCase());
   const rzsrc=S.rz.length?S.rz:[{zutaten:['Eier','Butter']}];
@@ -1018,7 +1080,105 @@ function renderUeb(){
   }
   if(w.length){h+='<div class="sh">Unter Mindestbestand</div>'+w.map(a=>'<div class="ar" style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:6px" onclick="showDet('+a.id+')"><div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div><div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+esc(a.lager)+'</div></div><div class="abs"><div class="bn wn">'+a.menge+'/'+a.mindest+'</div><div class="bu">'+esc(a.einheit||'Stk')+'</div></div></div>').join('');}
   else if(!expSoon.length) h+='<div style="text-align:center;padding:28px;color:var(--ok);font-size:14px;font-weight:500">Alle Artikel über Mindestbestand</div>';
+
+  // ── Statistik aus Log ──
+  h+=renderStatisticsHTML();
+
   document.getElementById('ub-body').innerHTML=h;
+}
+
+function renderStatisticsHTML(){
+  const log=S.log||[];
+  if(!log.length)return '<div class="sh">Statistik</div><div style="text-align:center;padding:24px;color:var(--t3);font-size:13px">Noch keine Eingänge/Ausgänge erfasst.<br>Statistik füllt sich automatisch.</div>';
+
+  const cutoff=Date.now()-statPeriod*86400000;
+  const filtered=log.filter(e=>e.zeit>=cutoff);
+  if(!filtered.length)return '<div class="sh">Statistik</div><div style="text-align:center;padding:24px;color:var(--t3);font-size:13px">Keine Bewegungen im gewählten Zeitraum.</div>';
+
+  const totalEin=filtered.filter(e=>e.t==='ein').reduce((s,e)=>s+e.menge,0);
+  const totalAus=filtered.filter(e=>e.t==='aus').reduce((s,e)=>s+e.menge,0);
+  const totalAusgaben=filtered.filter(e=>e.t==='ein').reduce((s,e)=>s+(e.preis||0)*e.menge,0);
+
+  let h='<div class="sh">Statistik</div>';
+  h+='<div class="stg"><div class="stc"><div class="stl">Eingänge</div><div class="stn ok">'+totalEin+'</div></div><div class="stc"><div class="stl">Ausgänge</div><div class="stn" style="color:var(--dg)">'+totalAus+'</div></div></div>';
+  if(totalAusgaben>0){
+    h+='<div class="stat-chart-card"><div class="stat-chart-title">Ausgaben im Zeitraum</div><div style="font-size:24px;font-weight:700;color:var(--ac)">CHF '+totalAusgaben.toFixed(2)+'</div></div>';
+  }
+
+  // Weekly bars (last up to 8 ISO weeks within period)
+  h+=renderWeeklyChart(filtered);
+
+  // Top consumed items (Ausgänge)
+  h+=renderTopItemsChart(filtered.filter(e=>e.t==='aus'),'Meistverbrauchte Artikel','aus');
+
+  // Spending by category (Eingänge with price)
+  h+=renderCategorySpendChart(filtered.filter(e=>e.t==='ein'&&e.preis>0));
+
+  // Recent log entries
+  h+='<div class="sh">Letzte Bewegungen</div>';
+  const recent=filtered.slice().reverse().slice(0,25);
+  h+=recent.map(e=>{
+    const icon=e.t==='ein'?'<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>':'<svg viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>';
+    const dt=new Date(e.zeit);
+    const timeStr=fmtDateCH(e.datum)+' '+String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0');
+    const priceStr=e.preis>0?' · CHF '+(e.preis*e.menge).toFixed(2):'';
+    return '<div class="log-entry"><div class="log-icon '+e.t+'">'+icon+'</div><div class="log-info"><div class="log-name">'+esc(e.name)+'</div><div class="log-meta">'+timeStr+' · '+esc(e.lager||'')+priceStr+'</div></div><div class="log-amt '+e.t+'">'+(e.t==='ein'?'+':'−')+e.menge+' '+esc(e.einheit||'Stk')+'</div></div>';
+  }).join('');
+  if(filtered.length>25)h+='<div style="text-align:center;padding:8px;color:var(--t3);font-size:12px">… und '+(filtered.length-25)+' weitere</div>';
+
+  return h;
+}
+
+function isoWeekKey(ts){
+  const d=new Date(ts);
+  d.setHours(0,0,0,0);
+  d.setDate(d.getDate()+3-((d.getDay()+6)%7));
+  const week1=new Date(d.getFullYear(),0,4);
+  const wk=1+Math.round(((d-week1)/86400000-3+((week1.getDay()+6)%7))/7);
+  return d.getFullYear()+'-W'+String(wk).padStart(2,'0');
+}
+function renderWeeklyChart(filtered){
+  const byWeek={};
+  filtered.forEach(e=>{
+    const wk=isoWeekKey(e.zeit);
+    if(!byWeek[wk])byWeek[wk]={ein:0,aus:0};
+    byWeek[wk][e.t]+=e.menge;
+  });
+  const weeks=Object.keys(byWeek).sort().slice(-8);
+  if(!weeks.length)return '';
+  const max=Math.max(1,...weeks.map(w=>Math.max(byWeek[w].ein,byWeek[w].aus)));
+  const bars=weeks.map(w=>{
+    const d=byWeek[w];
+    const hEin=Math.round(d.ein/max*48);
+    const hAus=Math.round(d.aus/max*48);
+    const lbl=w.split('-W')[1];
+    return '<div class="kw-bar-pair"><div class="kw-bars"><div class="kw-bar ein" style="height:'+Math.max(hEin,d.ein>0?2:0)+'px" title="Eingang KW'+lbl+': '+d.ein+'"></div><div class="kw-bar aus" style="height:'+Math.max(hAus,d.aus>0?2:0)+'px" title="Ausgang KW'+lbl+': '+d.aus+'"></div></div><div class="kw-lbl">KW'+lbl+'</div></div>';
+  }).join('');
+  return '<div class="stat-chart-card"><div class="stat-chart-title">Eingänge / Ausgänge pro Woche</div><div class="stat-chart-sub">Letzte '+weeks.length+' Wochen mit Bewegungen</div><div class="kw-spark">'+bars+'</div><div class="legend-row"><span><span class="legend-dot" style="background:var(--ac)"></span>Eingang</span><span><span class="legend-dot" style="background:var(--dg)"></span>Ausgang</span></div></div>';
+}
+function renderTopItemsChart(entries,title,cls){
+  if(!entries.length)return '';
+  const byName={};
+  entries.forEach(e=>{byName[e.name]=(byName[e.name]||0)+e.menge;});
+  const sorted=Object.entries(byName).sort((a,b)=>b[1]-a[1]).slice(0,6);
+  const max=sorted[0][1];
+  const rows=sorted.map(([name,menge])=>{
+    const pct=Math.max(8,Math.round(menge/max*100));
+    return '<div class="bar-row"><div class="bar-label" title="'+esc(name)+'">'+esc(name)+'</div><div class="bar-track"><div class="bar-fill '+cls+'" style="width:'+pct+'%"><span class="bar-val">'+menge+'</span></div></div></div>';
+  }).join('');
+  return '<div class="stat-chart-card"><div class="stat-chart-title">'+title+'</div><div class="stat-chart-sub">Im gewählten Zeitraum</div>'+rows+'</div>';
+}
+function renderCategorySpendChart(entries){
+  if(!entries.length)return '';
+  const byKat={};
+  entries.forEach(e=>{const k=e.kat||'Ohne Kategorie';byKat[k]=(byKat[k]||0)+(e.preis||0)*e.menge;});
+  const sorted=Object.entries(byKat).sort((a,b)=>b[1]-a[1]).slice(0,8);
+  const max=sorted[0][1];
+  const rows=sorted.map(([kat,sum])=>{
+    const pct=Math.max(8,Math.round(sum/max*100));
+    return '<div class="bar-row"><div class="bar-label" title="'+esc(kat)+'">'+esc(kat)+'</div><div class="bar-track"><div class="bar-fill ein" style="width:'+pct+'%"><span class="bar-val">CHF '+sum.toFixed(0)+'</span></div></div></div>';
+  }).join('');
+  return '<div class="stat-chart-card"><div class="stat-chart-title">Ausgaben nach Kategorie</div><div class="stat-chart-sub">Basierend auf erfassten Kaufpreisen</div>'+rows+'</div>';
 }
 
 /* ── Einkauf ──────────────────────────────────────────────────────── */
@@ -1072,9 +1232,9 @@ function editKat(k){
   S.a.forEach(a=>{if(a.kat===k)a.kat=nm;});
   saveL();renderSt();toast('Kategorie umbenannt');
 }
-function expJ(){const b=new Blob([JSON.stringify({artikel:S.a,lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,einkauf:S.ek,exportiert:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='haushaltbuch_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Export abgeschlossen');}
-function impJ(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=r=>{try{const d=JSON.parse(r.target.result);if(!d.artikel)throw new Error('Kein gültiges Format');if(confirm(d.artikel.length+' Artikel importieren? Bestehende Daten überschreiben.')){S.a=d.artikel;S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;saveL();goScreen('s-lager');toast(d.artikel.length+' Artikel importiert');}}catch(e){alert('Import-Fehler: '+e.message);}};rd.readAsText(f);ev.target.value='';}
-function resetAll(){if(!confirm('Alle Daten wirklich löschen?'))return;S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ek:[],nid:1,rz:[]};saveL();goScreen('s-lager');toast('Daten gelöscht');}
+function expJ(){const b=new Blob([JSON.stringify({artikel:S.a,lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,einkauf:S.ek,log:S.log||[],exportiert:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='haushaltbuch_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Export abgeschlossen');}
+function impJ(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=r=>{try{const d=JSON.parse(r.target.result);if(!d.artikel)throw new Error('Kein gültiges Format');if(confirm(d.artikel.length+' Artikel importieren? Bestehende Daten überschreiben.')){S.a=d.artikel;S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.log=d.log||[];S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;saveL();goScreen('s-lager');toast(d.artikel.length+' Artikel importiert');}}catch(e){alert('Import-Fehler: '+e.message);}};rd.readAsText(f);ev.target.value='';}
+function resetAll(){if(!confirm('Alle Daten wirklich löschen?'))return;S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ek:[],nid:1,rz:[],log:[]};saveL();goScreen('s-lager');toast('Daten gelöscht');}
 
 /* ── Toast & Loader ───────────────────────────────────────────────── */
 let tT;
@@ -1084,6 +1244,17 @@ function hideLdr(){document.getElementById('ldr').classList.remove('on');}
 
 /* ── Utils ────────────────────────────────────────────────────────── */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function packInfo(a){
+  if(!a.packMenge||a.packMenge<=0)return '';
+  const pm=a.packMenge%1===0?a.packMenge:a.packMenge.toFixed(1);
+  return pm+' '+(a.packEinheit||'dl')+'/'+(a.einheit==='Stk'?'Stk':a.einheit||'Stk');
+}
+function packTotal(a){
+  if(!a.packMenge||a.packMenge<=0)return '';
+  const total=a.menge*a.packMenge;
+  const tot=total%1===0?total:total.toFixed(1);
+  return tot+' '+(a.packEinheit||'dl')+' gesamt';
+}
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function daysUntil(iso){
   if(!iso)return null;
@@ -1133,7 +1304,26 @@ if(!S.a.length){
     {name:'Rotwein Gamaret',marke:'Rimuss',kat:'Getränke',lager:'Keller',menge:6,einheit:'Flasche',mindest:2,barcode:'',preis:12.50,kaufdatum:addDays(-200),ablaufdatum:'',notiz:'',foto:'',fotoPath:''},
     {name:'Rahm 35%',marke:'Emmi',kat:'Milchprodukte',lager:'Kühlschrank',menge:1,einheit:'dl',mindest:1,barcode:'',preis:0.95,kaufdatum:addDays(-6),ablaufdatum:addDays(-1),notiz:'',foto:'',fotoPath:''},
   ];
-  seed.forEach(s=>S.a.push({id:S.nid++,...s}));saveL();
+  seed.forEach(s=>S.a.push({id:S.nid++,...s}));
+  // Demo-Log generieren, damit Statistik direkt etwas zeigt
+  const daysAgoTs=n=>Date.now()-n*86400000;
+  S.log=[
+    {t:'ein',aid:S.a[0].id,name:'Vollmilch 3.5%',lager:'Kühlschrank',kat:'Milchprodukte',menge:2,einheit:'l',preis:1.95,datum:addDays(-2),zeit:daysAgoTs(2)},
+    {t:'ein',aid:S.a[1].id,name:'Mozzarella',lager:'Kühlschrank',kat:'Milchprodukte',menge:2,einheit:'Stk',preis:2.40,datum:addDays(-4),zeit:daysAgoTs(4)},
+    {t:'aus',aid:S.a[1].id,name:'Mozzarella',lager:'Kühlschrank',kat:'Milchprodukte',menge:1,einheit:'Stk',preis:0,datum:addDays(-3),zeit:daysAgoTs(3)},
+    {t:'ein',aid:S.a[2].id,name:'Pasta Rigatoni',lager:'Vorratsschrank',kat:'Konserven & Trockenware',menge:3,einheit:'Pkg',preis:2.80,datum:addDays(-30),zeit:daysAgoTs(30)},
+    {t:'aus',aid:S.a[2].id,name:'Pasta Rigatoni',lager:'Vorratsschrank',kat:'Konserven & Trockenware',menge:1,einheit:'Pkg',preis:0,datum:addDays(-9),zeit:daysAgoTs(9)},
+    {t:'ein',aid:S.a[3].id,name:'Tomatensauce',lager:'Vorratsschrank',kat:'Konserven & Trockenware',menge:2,einheit:'Dose',preis:1.50,datum:addDays(-60),zeit:daysAgoTs(60)},
+    {t:'aus',aid:S.a[3].id,name:'Tomatensauce',lager:'Vorratsschrank',kat:'Konserven & Trockenware',menge:2,einheit:'Dose',preis:0,datum:addDays(-12),zeit:daysAgoTs(12)},
+    {t:'ein',aid:S.a[4].id,name:'Pouletbrust',lager:'Gefrierschrank',kat:'Fleisch & Fisch',menge:4,einheit:'Stk',preis:4.50,datum:addDays(-10),zeit:daysAgoTs(10)},
+    {t:'ein',aid:S.a[5].id,name:'Eier',lager:'Kühlschrank',kat:'Milchprodukte',menge:12,einheit:'Stk',preis:0.45,datum:addDays(-9),zeit:daysAgoTs(9)},
+    {t:'aus',aid:S.a[5].id,name:'Eier',lager:'Kühlschrank',kat:'Milchprodukte',menge:4,einheit:'Stk',preis:0,datum:addDays(-3),zeit:daysAgoTs(3)},
+    {t:'ein',aid:S.a[6].id,name:'Olivenöl',lager:'Vorratsschrank',kat:'Gewürze & Saucen',menge:1,einheit:'Flasche',preis:6.90,datum:addDays(-90),zeit:daysAgoTs(90)},
+    {t:'ein',aid:S.a[7].id,name:'Rotwein Gamaret',lager:'Keller',kat:'Getränke',menge:6,einheit:'Flasche',preis:12.50,datum:addDays(-200),zeit:daysAgoTs(200)},
+    {t:'aus',aid:S.a[7].id,name:'Rotwein Gamaret',lager:'Keller',kat:'Getränke',menge:1,einheit:'Flasche',preis:0,datum:addDays(-5),zeit:daysAgoTs(5)},
+    {t:'ein',aid:S.a[8].id,name:'Rahm 35%',lager:'Kühlschrank',kat:'Milchprodukte',menge:1,einheit:'dl',preis:0.95,datum:addDays(-6),zeit:daysAgoTs(6)},
+  ];
+  saveL();
 }
 nav();sdot(gh.tok?'dt':'ok');renderLager();
 </script>
