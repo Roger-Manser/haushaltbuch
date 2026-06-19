@@ -222,7 +222,8 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 @keyframes spin{to{transform:rotate(360deg)}}
 .ldm{font-size:14px;color:var(--t2)}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/zxing-library/0.20.0/index.min.js"></script>
+<script src="https://unpkg.com/@zxing/library@0.20.0"></script>
+<script src="https://unpkg.com/@zxing/browser@0.1.5"></script>
 </head>
 <body>
 <div id="app">
@@ -474,8 +475,29 @@ let zxStream=null;
 let zxTargetInputId=null; // which input field receives the scanned code
 let zxOnResult=null; // optional callback(code) after scan
 
+function getZXing(){
+  // @zxing/browser exposes window.ZXingBrowser (has BrowserMultiFormatReader).
+  // @zxing/library alone exposes window.ZXing (core only, no browser reader in older builds).
+  if(window.ZXingBrowser&&window.ZXingBrowser.BrowserMultiFormatReader)return window.ZXingBrowser;
+  if(window.ZXing&&window.ZXing.BrowserMultiFormatReader)return window.ZXing;
+  return null;
+}
+function cameraApiAvailable(){
+  return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
+}
+function httpsOk(){
+  return location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1';
+}
+async function waitForZXing(timeoutMs){
+  const start=Date.now();
+  while(Date.now()-start<timeoutMs){
+    if(getZXing())return getZXing();
+    await new Promise(r=>setTimeout(r,150));
+  }
+  return null;
+}
 function scannerSupported(){
-  return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.ZXingBrowser);
+  return cameraApiAvailable()&&httpsOk()&&!!getZXing();
 }
 
 let zxContinuous=false;
@@ -488,22 +510,38 @@ async function openScanner(targetInputId,onResult,continuous){
   zxContinuous=!!continuous;
   zxLastCode='';zxLastTime=0;
   const wrap=document.getElementById('cam-'+targetInputId);
-  const err=document.getElementById('camerr-'+targetInputId);
   if(!wrap)return;
-  if(!scannerSupported()){
-    showCamErr(targetInputId,'Kamera-Scanner wird von diesem Browser nicht unterstützt. Bitte Barcode manuell eingeben.');
+
+  if(!httpsOk()){
+    showCamErr(targetInputId,'Kamera benötigt eine sichere Verbindung (https://). Diese Seite läuft nicht über HTTPS.');
     return;
   }
+  if(!cameraApiAvailable()){
+    showCamErr(targetInputId,'Dieser Browser unterstützt keinen Kamerazugriff (getUserMedia fehlt). Bitte Barcode manuell eingeben.');
+    return;
+  }
+  let ZX=getZXing();
+  if(!ZX){
+    showCamErr(targetInputId,'Scanner-Modul lädt noch…');
+    ZX=await waitForZXing(4000);
+  }
+  if(!ZX){
+    showCamErr(targetInputId,'Scanner-Bibliothek konnte nicht geladen werden (evtl. Internetverbindung oder Werbeblocker prüfen). Bitte Barcode manuell eingeben.');
+    return;
+  }
+
   wrap.style.display='block';
   hideCamErr(targetInputId);
   try{
     const video=document.getElementById('camv-'+targetInputId);
-    const { BrowserMultiFormatReader } = ZXingBrowser;
+    const BrowserMultiFormatReader=ZX.BrowserMultiFormatReader;
     zxReader=new BrowserMultiFormatReader();
-    const devices=await BrowserMultiFormatReader.listVideoInputDevices();
     let deviceId=undefined;
-    const back=devices.find(d=>/back|rear|environment/i.test(d.label));
-    if(back)deviceId=back.deviceId;
+    try{
+      const devices=await BrowserMultiFormatReader.listVideoInputDevices();
+      const back=devices.find(d=>/back|rear|environment/i.test(d.label));
+      if(back)deviceId=back.deviceId;
+    }catch(de){/* device listing can fail before permission is granted; continue with default */}
     await zxReader.decodeFromVideoDevice(deviceId,video,(result,error)=>{
       if(result){
         const code=result.getText();
@@ -521,7 +559,11 @@ async function openScanner(targetInputId,onResult,continuous){
       }
     });
   }catch(e){
-    showCamErr(targetInputId,'Kein Kamerazugriff: '+(e.message||'unbekannter Fehler')+'. Bitte Berechtigung erteilen oder Barcode manuell eingeben.');
+    let msg='Kein Kamerazugriff: '+(e.message||'unbekannter Fehler')+'.';
+    if(e.name==='NotAllowedError')msg='Kamera-Berechtigung wurde verweigert. Bitte in den Browser-/Website-Einstellungen erlauben.';
+    else if(e.name==='NotFoundError')msg='Keine Kamera gefunden.';
+    else if(e.name==='NotReadableError')msg='Kamera wird bereits von einer anderen App verwendet.';
+    showCamErr(targetInputId,msg+' Bitte Barcode manuell eingeben.');
   }
 }
 function closeScanner(){
