@@ -1,4 +1,4 @@
-const CACHE = 'haushaltbuch-v5';
+const CACHE = 'haushaltbuch-v6';
 const ASSETS = [
   './index.html',
   './manifest.json',
@@ -13,14 +13,21 @@ self.addEventListener('install', e => {
       // Cache each asset independently so one missing file doesn't fail the whole install.
       return Promise.all(
         ASSETS.map(url =>
-          fetch(url).then(res => {
+          fetch(url, { cache: 'no-cache' }).then(res => {
             if (res && res.ok) return cache.put(url, res);
           }).catch(() => {})
         )
       );
     })
   );
-  self.skipWaiting();
+  // Do NOT auto-activate. Wait for the page to explicitly request the update
+  // via postMessage({type:'SKIP_WAITING'}) so the user controls when the reload happens.
+});
+
+self.addEventListener('message', e => {
+  if (e.data && e.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 self.addEventListener('activate', e => {
@@ -37,7 +44,7 @@ self.addEventListener('fetch', e => {
   // Network-first for navigation/HTML so updates are picked up; cache as offline fallback.
   if (e.request.mode === 'navigate') {
     e.respondWith(
-      fetch(e.request).then(res => {
+      fetch(e.request, { cache: 'no-cache' }).then(res => {
         const copy = res.clone();
         caches.open(CACHE).then(c => c.put(e.request, copy)).catch(() => {});
         return res;

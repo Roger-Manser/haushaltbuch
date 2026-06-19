@@ -270,6 +270,9 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .empty p{font-size:15px;font-weight:500;color:var(--t2);margin-bottom:4px}
 .empty small{font-size:13px}
 #toast{position:fixed;bottom:calc(var(--nh) + 12px);left:50%;transform:translateX(-50%) translateY(20px);background:#111;color:#fff;padding:9px 18px;border-radius:20px;font-size:14px;opacity:0;transition:all .2s;pointer-events:none;z-index:999;white-space:nowrap;max-width:90vw;text-align:center}
+#update-banner{position:fixed;top:0;left:0;right:0;background:var(--ac);color:#fff;display:none;align-items:center;justify-content:center;gap:12px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;font-size:13px;font-weight:500;z-index:10500}
+#update-banner.show{display:flex}
+#update-banner button{background:rgba(255,255,255,.22);color:#fff;border:none;border-radius:6px;padding:5px 12px;font-size:13px;font-weight:600;cursor:pointer}
 #toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 #ldr{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;z-index:9999;opacity:0;pointer-events:none;transition:opacity .2s}
 #lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:10000;display:none;align-items:center;justify-content:center;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
@@ -295,7 +298,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 <div class="sc on" id="s-lager">
   <div class="tb">
-    <span class="tb-t">Haushaltbuch</span>
+    <span class="tb-t">Haushaltbuch <span id="app-version-badge" style="font-size:10px;font-weight:500;color:var(--t3);vertical-align:middle;"></span></span>
     <div class="tb-r">
       <button class="ib" id="sync-btn" title="GitHub Sync" onclick="doSync()">
         <span class="sdot" id="sdot"></span>
@@ -418,6 +421,10 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 </div></div>
 <div id="toast"></div>
 <div id="ldr"><div class="ldb"><div class="spn"></div><div class="ldm" id="ldr-msg">Lädt...</div></div></div>
+<div id="update-banner">
+  <span>Neue Version verfügbar</span>
+  <button onclick="applyUpdate()">Aktualisieren</button>
+</div>
 <div id="lightbox" onclick="closeLightbox()">
   <button id="lightbox-close" onclick="closeLightbox()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()"/>
@@ -450,6 +457,8 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
+const APP_VERSION='2.3';
+const APP_BUILD='2026-06-19';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
 const ED=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
@@ -1375,8 +1384,8 @@ function renderSt(){
   '<div class="ss"><div class="ssl">Lagerorte</div><div>'+S.lo.map((l,i)=>'<div class="lmi">'+licon(l).replace('20px;height:20px','18px;height:18px')+' '+esc(l)+(i>=LD.length?'<button onclick="delLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addLo()">+ Neuer Lagerort</button></div>'+
   '<div class="ss"><div class="ssl">Kategorien</div><div>'+S.ka.map((k,i)=>'<div class="lmi">'+KICON.replace('13px;height:13px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(k)+'</span><button onclick="editKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=KD.length?'<button onclick="delKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addKat()">+ Neue Kategorie</button></div>'+
   '<div class="ss"><div class="ssl">Einheiten</div><div>'+S.ei.map((u,i)=>'<div class="lmi"><span style="flex:1">'+esc(u)+'</span>'+(i>=ED.length?'<button onclick="delEinheit(\''+esc(u)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addEinheitSettings()">+ Neue Einheit</button></div>'+
-  '<div class="ss"><div class="ssl">Daten</div><button class="db-btn" onclick="expJ()">'+I.dl+' Lokaler Export (JSON)</button><button class="db-btn" onclick="document.getElementById(\'imp\').click()">'+I.ul+' Lokaler Import (JSON)<input type="file" id="imp" accept=".json" style="display:none" onchange="impJ(event)"/></button><button class="db-btn d" onclick="resetAll()">'+I.trash+' Alle Daten löschen</button></div>'+
-  '<p style="font-size:12px;color:var(--t3);padding:4px 0 20px">Haushaltbuch v2.2 · GitHub Storage</p>';
+  '<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong>v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button></div>'+
+  '<div class="ss"><div class="ssl">Daten</div><button class="db-btn" onclick="expJ()">'+I.dl+' Lokaler Export (JSON)</button><button class="db-btn" onclick="document.getElementById(\'imp\').click()">'+I.ul+' Lokaler Import (JSON)<input type="file" id="imp" accept=".json" style="display:none" onchange="impJ(event)"/></button><button class="db-btn d" onclick="resetAll()">'+I.trash+' Alle Daten löschen</button></div>';
 }
 function saveGHcfg(){gh={tok:document.getElementById('gh-t').value.trim(),own:document.getElementById('gh-o').value.trim(),repo:document.getElementById('gh-r').value.trim(),br:document.getElementById('gh-b').value.trim()||'main'};saveGH();toast('GitHub gespeichert');renderSt();}
 function addLo(){const n=prompt('Neuer Lagerort:');if(!n||!n.trim())return;const nm=n.trim();if(!S.lo.includes(nm)){S.lo.push(nm);saveL();}renderSt();}
@@ -1508,16 +1517,67 @@ if(!S.a.length){
   saveL();
 }
 nav();sdot(gh.tok?'dt':'ok');renderLager();
+const vBadge=document.getElementById('app-version-badge');
+if(vBadge)vBadge.textContent='v'+APP_VERSION;
 
-/* ── PWA: Service Worker + Install-Prompt ────────────────────────── */
+/* ── PWA: Service Worker + Install-Prompt + Update-Erkennung ─────── */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('./sw.js',{scope:'./'}).then(reg=>{
       console.log('Service Worker registriert:',reg.scope);
+      // Beim Laden direkt nach Updates fragen
+      reg.update().catch(()=>{});
+      reg.addEventListener('updatefound',()=>{
+        const newWorker=reg.installing;
+        if(!newWorker)return;
+        newWorker.addEventListener('statechange',()=>{
+          if(newWorker.state==='installed'&&navigator.serviceWorker.controller){
+            showUpdateBanner();
+          }
+        });
+      });
     }).catch(err=>{
       console.error('Service Worker Fehler:',err);
     });
+    // Periodisch (alle 60s) prüfen, ob eine neuere Version auf dem Server liegt
+    setInterval(()=>{
+      navigator.serviceWorker.getRegistration().then(reg=>{ if(reg)reg.update().catch(()=>{}); });
+    },60000);
   });
+  let reloadingForUpdate=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(reloadingForUpdate)return;
+    reloadingForUpdate=true;
+    window.location.reload();
+  });
+}
+function showUpdateBanner(){
+  const b=document.getElementById('update-banner');
+  if(b)b.classList.add('show');
+}
+function checkForUpdate(){
+  if(!('serviceWorker' in navigator)){toast('Service Worker nicht unterstützt');return;}
+  toast('Suche nach Updates…');
+  navigator.serviceWorker.getRegistration().then(reg=>{
+    if(!reg){toast('Kein Service Worker registriert');return;}
+    reg.update().then(()=>{
+      setTimeout(()=>{
+        if(reg.waiting){showUpdateBanner();}
+        else{toast('Du hast bereits die neueste Version');}
+      },800);
+    }).catch(()=>toast('Update-Prüfung fehlgeschlagen'));
+  });
+}
+function applyUpdate(){
+  navigator.serviceWorker.getRegistration().then(reg=>{
+    if(reg&&reg.waiting){
+      reg.waiting.postMessage({type:'SKIP_WAITING'});
+    }else{
+      window.location.reload();
+    }
+  });
+  const b=document.getElementById('update-banner');
+  if(b)b.classList.remove('show');
 }
 window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();
