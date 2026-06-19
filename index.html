@@ -139,6 +139,35 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 .sok{display:none;align-items:center;gap:7px;font-size:13px;color:var(--ok);background:var(--ol);border-radius:var(--rs);padding:7px 10px;margin-top:6px}
 .sok svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
+.cam-wrap{position:relative;background:#000;border-radius:var(--rs);overflow:hidden;margin-top:8px;display:none}
+.cam-wrap video{width:100%;display:block;max-height:280px;object-fit:cover}
+.cam-frame{position:absolute;inset:20% 12%;border:2px solid var(--ac);border-radius:8px;box-shadow:0 0 0 999px rgba(0,0,0,.35);pointer-events:none}
+.cam-frame::before,.cam-frame::after{content:'';position:absolute;width:100%;height:2px;background:var(--ac);left:0;animation:camscan 1.8s ease-in-out infinite}
+.cam-frame::before{top:0}
+.cam-frame::after{display:none}
+@keyframes camscan{0%{top:0}50%{top:100%}100%{top:0}}
+.cam-close{position:absolute;top:8px;right:8px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.6);border:none;color:#fff;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2}
+.cam-close svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+.cam-hint{position:absolute;bottom:10px;left:0;right:0;text-align:center;color:#fff;font-size:12px;background:rgba(0,0,0,.4);padding:4px 0}
+.cam-err{display:none;font-size:13px;color:var(--dg);background:var(--dl);border-radius:var(--rs);padding:9px 12px;margin-top:8px}
+.lookup-btn{height:42px;padding:0 14px;background:var(--ol);color:var(--ok);border:1px solid color-mix(in srgb,var(--ok) 40%,transparent);border-radius:var(--rs);font-size:14px;font-weight:500;display:flex;align-items:center;gap:6px;cursor:pointer;white-space:nowrap;flex-shrink:0}
+.lookup-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.75}
+.lookup-btn:disabled{opacity:.5;cursor:default}
+.lookup-status{font-size:13px;padding:8px 11px;border-radius:var(--rs);margin-top:8px;display:none;align-items:center;gap:7px}
+.lookup-status.ok{background:var(--ol);color:var(--ok);display:flex}
+.lookup-status.err{background:var(--wl);color:var(--wn);display:flex}
+.lookup-status.busy{background:var(--al);color:var(--ac);display:flex}
+.ausgang-log{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:6px;animation:logIn .25s ease}
+@keyframes logIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.ausgang-log .at{width:36px;height:36px}
+.ausgang-log .ai{flex:1;min-width:0}
+.ausgang-log .an{font-size:13px}
+.ausgang-log .am{font-size:11px}
+.ausgang-badge{font-size:13px;font-weight:700;color:var(--dg);background:var(--dl);padding:2px 9px;border-radius:8px;flex-shrink:0}
+.ausgang-notfound{display:flex;align-items:center;gap:10px;padding:9px 12px;background:var(--wl);border:1px solid color-mix(in srgb,var(--wn) 30%,transparent);border-radius:var(--rs);margin-bottom:6px;font-size:13px;color:var(--wn);animation:logIn .25s ease}
+.scan-toggle{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;background:var(--dg);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:600;cursor:pointer;margin-bottom:12px}
+.scan-toggle svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75}
+.scan-toggle.active{background:var(--t2)}
 .lcw{display:flex;flex-wrap:wrap;gap:7px}
 .br{display:flex;gap:10px;margin-top:20px}
 .bp{flex:1;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer}
@@ -193,6 +222,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 @keyframes spin{to{transform:rotate(360deg)}}
 .ldm{font-size:14px;color:var(--t2)}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/zxing-library/0.20.0/index.min.js"></script>
 </head>
 <body>
 <div id="app">
@@ -223,7 +253,13 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
       <svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="7" y1="12" x2="17" y2="12"/></svg>
       Eingang
     </button>
-    <button class="add-btn" style="margin:0;flex:1;background:var(--sf);color:var(--ac);border:1px solid var(--am)" onclick="openForm()">
+    <button class="add-btn" style="margin:0;flex:1;background:var(--dl);color:var(--dg)" onclick="openAusgang()">
+      <svg viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/><line x1="17" y1="12" x2="7" y2="12"/></svg>
+      Ausgang
+    </button>
+  </div>
+  <div style="margin:0 16px 4px">
+    <button class="add-btn" style="margin:0;width:100%;background:var(--sf);color:var(--ac);border:1px solid var(--am)" onclick="openForm()">
       <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Neuer Artikel
     </button>
@@ -238,6 +274,15 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
     <div style="width:36px"></div>
   </div>
   <div class="fb" id="eingang-body"></div>
+</div>
+
+<div class="sc" id="s-ausgang" style="overflow-y:auto">
+  <div class="ftp">
+    <button class="bkb" onclick="closeAusgang()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <span class="ftl">Warenausgang</span>
+    <div style="width:36px"></div>
+  </div>
+  <div class="fb" id="ausgang-body"></div>
 </div>
 
 <div class="sc" id="s-rezepte">
@@ -322,6 +367,8 @@ ul:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:18px;h
 gh:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:18px;height:18px;stroke:currentColor"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>',
 cal:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:15px;height:15px;stroke:currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
 calx:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:15px;height:15px;stroke:currentColor"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="9" y1="15" x2="15" y2="19"/><line x1="15" y1="15" x2="9" y2="19"/></svg>',
+globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17px;height:17px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
@@ -421,9 +468,126 @@ async function loadFromGH(){
   }catch(err){hideLdr();toast('Fehler: '+err.message.slice(0,50));}
 }
 
+/* ── Live-Kamera-Scanner (ZXing) ──────────────────────────────────── */
+let zxReader=null;
+let zxStream=null;
+let zxTargetInputId=null; // which input field receives the scanned code
+let zxOnResult=null; // optional callback(code) after scan
+
+function scannerSupported(){
+  return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia&&window.ZXingBrowser);
+}
+
+let zxContinuous=false;
+let zxLastCode='';
+let zxLastTime=0;
+
+async function openScanner(targetInputId,onResult,continuous){
+  zxTargetInputId=targetInputId;
+  zxOnResult=onResult||null;
+  zxContinuous=!!continuous;
+  zxLastCode='';zxLastTime=0;
+  const wrap=document.getElementById('cam-'+targetInputId);
+  const err=document.getElementById('camerr-'+targetInputId);
+  if(!wrap)return;
+  if(!scannerSupported()){
+    showCamErr(targetInputId,'Kamera-Scanner wird von diesem Browser nicht unterstützt. Bitte Barcode manuell eingeben.');
+    return;
+  }
+  wrap.style.display='block';
+  hideCamErr(targetInputId);
+  try{
+    const video=document.getElementById('camv-'+targetInputId);
+    const { BrowserMultiFormatReader } = ZXingBrowser;
+    zxReader=new BrowserMultiFormatReader();
+    const devices=await BrowserMultiFormatReader.listVideoInputDevices();
+    let deviceId=undefined;
+    const back=devices.find(d=>/back|rear|environment/i.test(d.label));
+    if(back)deviceId=back.deviceId;
+    await zxReader.decodeFromVideoDevice(deviceId,video,(result,error)=>{
+      if(result){
+        const code=result.getText();
+        const now=Date.now();
+        if(code===zxLastCode&&(now-zxLastTime)<2500)return; // debounce duplicate scans
+        zxLastCode=code;zxLastTime=now;
+        if(navigator.vibrate)navigator.vibrate(80);
+        if(!zxContinuous){
+          closeScanner();
+          const input=document.getElementById(targetInputId);
+          if(input)input.value=code;
+        }
+        if(zxOnResult)zxOnResult(code);
+        else flashScanOk(targetInputId,code);
+      }
+    });
+  }catch(e){
+    showCamErr(targetInputId,'Kein Kamerazugriff: '+(e.message||'unbekannter Fehler')+'. Bitte Berechtigung erteilen oder Barcode manuell eingeben.');
+  }
+}
+function closeScanner(){
+  try{if(zxReader){zxReader.reset();zxReader=null;}}catch(e){}
+  document.querySelectorAll('.cam-wrap').forEach(w=>w.style.display='none');
+}
+function showCamErr(id,msg){
+  const e=document.getElementById('camerr-'+id);
+  if(e){e.textContent=msg;e.style.display='block';}
+  const w=document.getElementById('cam-'+id);
+  if(w)w.style.display='none';
+}
+function hideCamErr(id){const e=document.getElementById('camerr-'+id);if(e)e.style.display='none';}
+function flashScanOk(id,code){
+  toast('Barcode erkannt: '+code);
+}
+function camScannerHTML(id){
+  return '<div class="cam-wrap" id="cam-'+id+'"><button class="cam-close" onclick="closeScanner()">'+I.xc+'</button><video id="camv-'+id+'" autoplay playsinline muted></video><div class="cam-frame"></div><div class="cam-hint">Barcode ins Feld halten</div></div><div class="cam-err" id="camerr-'+id+'"></div>';
+}
+
+/* ── Open Food Facts Lookup ───────────────────────────────────────── */
+async function lookupOFF(barcode,statusElId){
+  const statusEl=document.getElementById(statusElId);
+  if(!barcode){if(statusEl){statusEl.className='lookup-status err';statusEl.innerHTML='Bitte zuerst einen Barcode eingeben.';}return null;}
+  if(statusEl){statusEl.className='lookup-status busy';statusEl.innerHTML='<span class="spn" style="width:14px;height:14px;border-width:2px"></span> Suche Produktdaten...';}
+  try{
+    const r=await fetch('https://world.openfoodfacts.org/api/v2/product/'+encodeURIComponent(barcode)+'.json');
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const data=await r.json();
+    if(data.status!==1||!data.product){
+      if(statusEl){statusEl.className='lookup-status err';statusEl.innerHTML=I.xc+' Kein Produkt zu diesem Barcode gefunden.';}
+      return null;
+    }
+    const p=data.product;
+    const result={
+      name:p.product_name_de||p.product_name||p.generic_name||'',
+      marke:p.brands?p.brands.split(',')[0].trim():'',
+      foto:p.image_front_url||p.image_url||'',
+      kat:mapOFFCategory(p.categories_tags||[]),
+    };
+    if(statusEl){statusEl.className='lookup-status ok';statusEl.innerHTML=I.chk+' Produkt gefunden: '+esc(result.name||barcode);}
+    return result;
+  }catch(e){
+    if(statusEl){statusEl.className='lookup-status err';statusEl.innerHTML=I.xc+' Online-Suche fehlgeschlagen (keine Verbindung?).';}
+    return null;
+  }
+}
+function mapOFFCategory(tags){
+  const t=tags.join(' ').toLowerCase();
+  if(/milk|dairy|cheese|yogurt|cream/.test(t))return 'Milchprodukte';
+  if(/meat|fish|poultry|sausage/.test(t))return 'Fleisch & Fisch';
+  if(/vegetable|fruit/.test(t))return 'Gemüse & Früchte';
+  if(/frozen/.test(t))return 'Tiefkühl';
+  if(/beverage|drink|water|juice|soda|wine|beer/.test(t))return 'Getränke';
+  if(/canned|pasta|rice|cereal|flour/.test(t))return 'Konserven & Trockenware';
+  if(/bread|bakery|pastry/.test(t))return 'Backwaren & Brot';
+  if(/spice|sauce|condiment|oil|vinegar/.test(t))return 'Gewürze & Saucen';
+  if(/sweet|chocolate|candy|snack/.test(t))return 'Süsswaren';
+  if(/clean|hygiene|detergent/.test(t))return 'Reinigung & Pflege';
+  return '';
+}
+
 /* ── Routing ──────────────────────────────────────────────────────── */
 let cur='s-lager';
 function goScreen(id){
+  if(cur!==id&&(cur==='s-eingang'||cur==='s-ausgang')&&zxReader){closeScanner();}
   document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
   document.getElementById(id).classList.add('on');
   cur=id;nav();
@@ -442,7 +606,7 @@ function nav(){
     {id:'s-einkauf',l:'Einkauf',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',b:wc},
   ];
   const h=tabs.map(t=>{
-    const on=cur===t.id||((cur==='s-detail'||cur==='s-form'||cur==='s-eingang')&&t.id==='s-lager');
+    const on=cur===t.id||((cur==='s-detail'||cur==='s-form'||cur==='s-eingang'||cur==='s-ausgang')&&t.id==='s-lager');
     const bdg=t.b?'<span class="nbb">'+t.b+'</span>':'';
     return '<button class="nb'+(on?' on':'')+'" onclick="goScreen(\''+t.id+'\')" ><div class="nbw">'+t.s+bdg+'</div><span>'+t.l+'</span></button>';
   }).join('');
@@ -548,7 +712,7 @@ function openForm(id){
   const kc=S.ka.map(k=>'<div class="chip'+(a&&a.kat===k?' on':'')+'" data-kat="'+esc(k)+'" onclick="pkat(this)">'+KICON+' '+esc(k)+'</div>').join('')+'<div class="chip" onclick="addKF()" style="border-style:dashed"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" style="width:12px;height:12px;stroke:currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Neu...</div>';
   const eo=S.ei.map(u=>'<option'+(a&&a.einheit===u?' selected':'')+'>'+esc(u)+'</option>').join('');
   document.getElementById('form-body').innerHTML=
-  '<div class="fd"><label>Barcode</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="f-bc" placeholder="7610200071017" inputmode="numeric" value="'+(a?esc(a.barcode||''):'')+'" /></div><button class="scb" onclick="togSUI()">'+I.scan+' Scannen</button></div><div class="sui" id="sui"><p>Kamera aktiv — Barcode halten</p><div class="sln">||||| ||||| |||||</div><button style="margin-top:10px;padding:6px 14px;border:1px solid var(--bd);border-radius:6px;background:var(--sf);cursor:pointer;font-size:13px" onclick="simScan()">Simulieren: 7610200071017</button></div><div class="sok" id="sok">'+I.chk+' Barcode erfasst: <strong id="sokv"></strong></div></div>'+
+  '<div class="fd"><label>Barcode</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="f-bc" placeholder="7610200071017" inputmode="numeric" value="'+(a?esc(a.barcode||''):'')+'" /></div><button class="scb" onclick="openScanner(\'f-bc\')">'+I.scan+' Scannen</button></div>'+camScannerHTML('f-bc')+'<div style="display:flex;gap:8px;margin-top:8px"><button type="button" class="lookup-btn" style="flex:1" onclick="doLookupForm()">'+I.globe+' Produktdaten online suchen</button></div><div class="lookup-status" id="lookup-status-f"></div></div>'+
   '<div class="fd"><label>Foto</label><div id="pz" class="pz" onclick="document.getElementById(\'fph\').click()">'+I.cam+'<span>Von Kamera oder Galerie</span><small>Wird auf GitHub gespeichert</small><input type="file" id="fph" accept="image/*" capture="environment" style="display:none" onchange="onPh(event)"/></div><div id="ppw" class="ppw" style="'+(a&&a.foto?'display:block':'')+'"><img id="ppi" src="'+(a?esc(a.foto||''):'')+'" alt=""/><button class="rph" onclick="rmPh()">&#x2715;</button></div></div>'+
   '<div class="fd"><label>Bezeichnung *</label><input type="text" id="f-nm" placeholder="z.B. Vollmilch 3.5%" value="'+(a?esc(a.name):'')+'"/></div>'+
   '<div class="fd"><label>Marke</label><input type="text" id="f-mk" placeholder="z.B. Emmi" value="'+(a?esc(a.marke||''):'')+'"/></div>'+
@@ -592,13 +756,31 @@ function addLF(){
   document.querySelectorAll('#f-lo .chip[data-lager]').forEach(c=>c.classList.remove('on'));
   wrap.insertBefore(ch,ab);saveL();
 }
-function togSUI(){const u=document.getElementById('sui');u.style.display=u.style.display==='block'?'none':'block';}
-function simScan(){
-  document.getElementById('f-bc').value='7610200071017';
-  document.getElementById('sui').style.display='none';
-  document.getElementById('sokv').textContent='7610200071017';
-  const ok=document.getElementById('sok');ok.style.display='flex';
-  setTimeout(()=>ok.style.display='none',2500);
+async function doLookupForm(){
+  const bc=document.getElementById('f-bc').value.trim();
+  const result=await lookupOFF(bc,'lookup-status-f');
+  if(!result)return;
+  if(result.name&&!document.getElementById('f-nm').value.trim())document.getElementById('f-nm').value=result.name;
+  if(result.marke&&!document.getElementById('f-mk').value.trim())document.getElementById('f-mk').value=result.marke;
+  if(result.kat){
+    const kc=document.querySelector('#f-ka .chip[data-kat="'+result.kat+'"]');
+    if(kc){document.querySelectorAll('#f-ka .chip[data-kat]').forEach(c=>c.classList.remove('on'));kc.classList.add('on');}
+  }
+  if(result.foto&&!fb64){
+    try{
+      const imgR=await fetch(result.foto);
+      const blob=await imgR.blob();
+      const reader=new FileReader();
+      reader.onload=ev=>{
+        fb64=ev.target.result;
+        ffn=Date.now()+'_off.jpg';
+        document.getElementById('ppi').src=fb64;
+        document.getElementById('pz').style.display='none';
+        document.getElementById('ppw').style.display='block';
+      };
+      reader.readAsDataURL(blob);
+    }catch(e){}
+  }
 }
 function onPh(ev){
   const file=ev.target.files[0];if(!file)return;
@@ -636,17 +818,15 @@ function closeForm(){editId=null;fb64='';ffn='';goScreen('s-lager');}
 /* ── Eingang (Wareneingang per Barcode) ──────────────────────────── */
 function openEingang(){
   document.getElementById('eingang-body').innerHTML=
-  '<div class="fd"><label>Barcode scannen oder eingeben</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="e-bc" placeholder="7610200071017" inputmode="numeric" onkeydown="if(event.key===\'Enter\')lookupBarcode()"/></div><button class="scb" onclick="togSUIeg()">'+I.scan+' Scannen</button></div><div class="sui" id="sui-eg"><p>Kamera aktiv — Barcode halten</p><div class="sln">||||| ||||| |||||</div><button style="margin-top:10px;padding:6px 14px;border:1px solid var(--bd);border-radius:6px;background:var(--sf);cursor:pointer;font-size:13px" onclick="simScanEg()">Simulieren: 7610200071017</button></div></div>'+
+  '<div class="fd"><label>Barcode scannen oder eingeben</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="e-bc" placeholder="7610200071017" inputmode="numeric" onkeydown="if(event.key===\'Enter\')lookupBarcode()"/></div><button class="scb" onclick="openScanner(\'e-bc\',onScanEingang)">'+I.scan+' Scannen</button></div>'+camScannerHTML('e-bc')+'</div>'+
   '<button class="bp" style="width:100%;margin-bottom:6px" onclick="lookupBarcode()">Suchen</button>'+
   '<p style="font-size:12px;color:var(--t3);text-align:center;margin-bottom:10px">Barcode eingeben/scannen und Enter drücken, oder Suchen tippen</p>'+
   '<div id="eingang-result"></div>';
   goScreen('s-eingang');
 }
-function closeEingang(){goScreen('s-lager');}
-function togSUIeg(){const u=document.getElementById('sui-eg');u.style.display=u.style.display==='block'?'none':'block';}
-function simScanEg(){
-  document.getElementById('e-bc').value='7610200071017';
-  document.getElementById('sui-eg').style.display='none';
+function closeEingang(){closeScanner();goScreen('s-lager');}
+function onScanEingang(code){
+  document.getElementById('e-bc').value=code;
   lookupBarcode();
 }
 function lookupBarcode(){
@@ -692,6 +872,58 @@ function newFromBarcode(bc){
     const f=document.getElementById('f-bc');
     if(f)f.value=bc;
   },0);
+}
+
+/* ── Ausgang (Warenausgang per Dauerscan) ────────────────────────── */
+let ausgangLog=[];
+function openAusgang(){
+  ausgangLog=[];
+  document.getElementById('ausgang-body').innerHTML=
+  '<button class="scan-toggle" id="ausgang-toggle" onclick="toggleAusgangScan()">'+I.scan+' Scanner starten</button>'+
+  camScannerHTML('ausgang-dummy')+
+  '<div class="fd" style="margin-top:4px"><label>Oder Barcode manuell eingeben</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="ausgang-manual" placeholder="7610200071017" inputmode="numeric" onkeydown="if(event.key===\'Enter\'){processAusgangScan(this.value.trim());this.value=\'\'}"/></div><button class="bp" style="width:auto;padding:0 16px" onclick="processAusgangScan(document.getElementById(\'ausgang-manual\').value.trim());document.getElementById(\'ausgang-manual\').value=\'\'">OK</button></div></div>'+
+  '<p style="font-size:12px;color:var(--t3);text-align:center;margin:10px 0">Jeder erkannte Barcode zieht automatisch 1 Stück vom Lager ab</p>'+
+  '<div class="sh">Erfasste Ausgänge</div>'+
+  '<div id="ausgang-list"><div style="text-align:center;padding:20px;color:var(--t3);font-size:13px">Noch keine Ausgänge erfasst</div></div>';
+  goScreen('s-ausgang');
+}
+function closeAusgang(){closeScanner();goScreen('s-lager');}
+function toggleAusgangScan(){
+  const btn=document.getElementById('ausgang-toggle');
+  const isActive=btn.classList.contains('active');
+  if(isActive){
+    closeScanner();
+    btn.classList.remove('active');
+    btn.innerHTML=I.scan+' Scanner starten';
+  }else{
+    btn.classList.add('active');
+    btn.innerHTML=I.xc+' Scanner stoppen';
+    openScanner('ausgang-dummy',processAusgangScan,true);
+  }
+}
+function processAusgangScan(code){
+  if(!code)return;
+  const list=document.getElementById('ausgang-list');
+  const found=S.a.find(a=>a.barcode&&a.barcode===code);
+  if(!found){
+    if(list.children.length===1&&list.children[0].textContent.includes('Noch keine'))list.innerHTML='';
+    const div=document.createElement('div');
+    div.className='ausgang-notfound';
+    div.innerHTML=I.alert+' Unbekannter Barcode: '+esc(code);
+    list.insertBefore(div,list.firstChild);
+    toast('Barcode nicht gefunden: '+code);
+    return;
+  }
+  found.menge=Math.max(0,found.menge-1);
+  saveL();
+  ausgangLog.unshift({id:found.id,name:found.name,foto:found.foto,lager:found.lager,einheit:found.einheit,zeit:Date.now()});
+  if(list.children.length===1&&list.children[0].textContent.includes('Noch keine'))list.innerHTML='';
+  const th=found.foto?'<div class="at"><img src="'+esc(found.foto)+'"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','18px;height:18px')+'</div>';
+  const div=document.createElement('div');
+  div.className='ausgang-log';
+  div.innerHTML=th+'<div class="ai"><div class="an">'+esc(found.name)+'</div><div class="am">'+esc(found.lager)+' · noch '+found.menge+' '+esc(found.einheit||'Stk')+'</div></div><div class="ausgang-badge">−1</div>';
+  list.insertBefore(div,list.firstChild);
+  toast('−1 entnommen: '+found.name+' (noch '+found.menge+')');
 }
 
 /* ── Rezepte ──────────────────────────────────────────────────────── */
