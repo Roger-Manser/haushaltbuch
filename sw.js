@@ -1,7 +1,7 @@
-const CACHE = 'haushaltbuch-v7';
+const CACHE = 'haushaltbuch-v8';
 const ASSETS = [
   './index.html',
-  './manifest.json?v=7',
+  './manifest.json?v=8',
   './icons/icon-192.png',
   './icons/icon-512.png',
   './icons/icon-512-maskable.png',
