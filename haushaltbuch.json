@@ -1,11 +1,39 @@
 {
-  "artikel": [],
+  "artikel": [
+    {
+      "id": 2,
+      "name": "Grüner Veltliner",
+      "marke": "Landi",
+      "kat": "Genussmittel",
+      "lager": "Kühlschrank unten",
+      "menge": 4,
+      "einheit": "Kiste",
+      "mindest": 2,
+      "barcode": "7611703611962",
+      "preis": 50.2,
+      "packMenge": 6,
+      "packEinheit": "Flasche",
+      "kaufdatum": "2026-06-20",
+      "ablaufdatum": "",
+      "notiz": "2014",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781961050047_17819610415813603007309454437529.jpg",
+      "fotoPath": "1781961050047_17819610415813603007309454437529.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-20",
+          "preis": 50.2,
+          "menge": 4
+        }
+      ]
+    }
+  ],
   "lagerorte": [
     "Kühlschrank",
     "Gefrierschrank",
     "Vorratsschrank",
     "Keller",
-    "Küche"
+    "Küche",
+    "Kühlschrank unten"
   ],
   "kategorien": [
     "Milchprodukte",
@@ -18,7 +46,8 @@
     "Gewürze & Saucen",
     "Süsswaren",
     "Reinigung & Pflege",
-    "Diverses"
+    "Diverses",
+    "Genussmittel"
   ],
   "einheiten": [
     "Stk",
@@ -30,7 +59,8 @@
     "Pkg",
     "Bund",
     "Dose",
-    "Flasche"
+    "Flasche",
+    "Kiste"
   ],
   "einkauf": [],
   "log": [
@@ -45,7 +75,19 @@
       "preis": 0,
       "datum": "2026-06-20",
       "zeit": 1781960316022
+    },
+    {
+      "t": "ein",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Kühlschrank unten",
+      "kat": "Genussmittel",
+      "menge": 4,
+      "einheit": "Kiste",
+      "preis": 50.2,
+      "datum": "2026-06-20",
+      "zeit": 1781961235793
     }
   ],
-  "aktualisiert": "2026-06-20T13:09:23.443Z"
+  "aktualisiert": "2026-06-20T13:14:02.435Z"
 }
