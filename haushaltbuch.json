@@ -1,0 +1,38 @@
+{
+  "artikel": [],
+  "lagerorte": [
+    "Kühlschrank",
+    "Gefrierschrank",
+    "Vorratsschrank",
+    "Keller",
+    "Küche"
+  ],
+  "kategorien": [
+    "Milchprodukte",
+    "Fleisch & Fisch",
+    "Gemüse & Früchte",
+    "Tiefkühl",
+    "Getränke",
+    "Konserven & Trockenware",
+    "Backwaren & Brot",
+    "Gewürze & Saucen",
+    "Süsswaren",
+    "Reinigung & Pflege",
+    "Diverses"
+  ],
+  "einheiten": [
+    "Stk",
+    "kg",
+    "g",
+    "l",
+    "dl",
+    "ml",
+    "Pkg",
+    "Bund",
+    "Dose",
+    "Flasche"
+  ],
+  "einkauf": [],
+  "log": [],
+  "aktualisiert": "2026-06-20T12:57:04.988Z"
+}
