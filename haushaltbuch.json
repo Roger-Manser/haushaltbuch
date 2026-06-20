@@ -77,6 +77,32 @@
           "menge": 6
         }
       ]
+    },
+    {
+      "id": 5,
+      "name": "Eistee",
+      "marke": "Migros",
+      "kat": "Getränke",
+      "lager": "Kühlschrank unten",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 1,
+      "barcode": "7616800204086",
+      "preis": 3.5,
+      "packMenge": 4,
+      "packEinheit": "l",
+      "kaufdatum": "2026-06-20",
+      "ablaufdatum": "2027-04-22",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781972021313_178197201336984080276692790356.jpg",
+      "fotoPath": "1781972021313_178197201336984080276692790356.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-20",
+          "preis": 3.5,
+          "menge": 1
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -260,7 +286,31 @@
       "preis": 0,
       "datum": "2026-06-20",
       "zeit": 1781966469795
+    },
+    {
+      "t": "ein",
+      "aid": 5,
+      "name": "Eistee",
+      "lager": "Kühlschrank unten",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 3.5,
+      "datum": "2026-06-20",
+      "zeit": 1781972287760
+    },
+    {
+      "t": "aus",
+      "aid": 5,
+      "name": "Eistee",
+      "lager": "Kühlschrank unten",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "datum": "2026-06-20",
+      "zeit": 1781972293616
     }
   ],
-  "aktualisiert": "2026-06-20T14:41:23.342Z"
+  "aktualisiert": "2026-06-20T16:18:54.220Z"
 }
