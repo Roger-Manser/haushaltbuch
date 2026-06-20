@@ -1,25 +1,5 @@
 {
-  "artikel": [
-    {
-      "id": 1,
-      "name": "Tüte",
-      "marke": "",
-      "kat": "Milchprodukte",
-      "lager": "Küche",
-      "menge": 1,
-      "einheit": "Stk",
-      "mindest": 1,
-      "barcode": "",
-      "preis": 0,
-      "packMenge": 0,
-      "packEinheit": "dl",
-      "kaufdatum": "2026-06-20",
-      "ablaufdatum": "",
-      "notiz": "",
-      "foto": "",
-      "fotoPath": ""
-    }
-  ],
+  "artikel": [],
   "lagerorte": [
     "Kühlschrank",
     "Gefrierschrank",
@@ -67,5 +47,5 @@
       "zeit": 1781960316022
     }
   ],
-  "aktualisiert": "2026-06-20T13:03:03.694Z"
+  "aktualisiert": "2026-06-20T13:09:23.443Z"
 }
