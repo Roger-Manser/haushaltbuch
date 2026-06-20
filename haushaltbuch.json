@@ -103,6 +103,25 @@
           "menge": 1
         }
       ]
+    },
+    {
+      "id": 6,
+      "name": "Schützengarten",
+      "marke": "Dose",
+      "kat": "Genussmittel",
+      "lager": "Kühlschrank unten",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 1,
+      "barcode": "76137099",
+      "preis": 0,
+      "packMenge": 24,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-06-20",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781972385102_off.jpg",
+      "fotoPath": "1781972385102_off.jpg"
     }
   ],
   "lagerorte": [
@@ -310,7 +329,19 @@
       "preis": 0,
       "datum": "2026-06-20",
       "zeit": 1781972293616
+    },
+    {
+      "t": "ein",
+      "aid": 6,
+      "name": "Schützengarten",
+      "lager": "Kühlschrank unten",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "datum": "2026-06-20",
+      "zeit": 1781972429689
     }
   ],
-  "aktualisiert": "2026-06-20T16:18:54.220Z"
+  "aktualisiert": "2026-06-20T19:30:34.387Z"
 }
