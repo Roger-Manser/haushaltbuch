@@ -457,8 +457,8 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='2.7';
-const APP_BUILD='2026-06-20';
+const APP_VERSION='2.8';
+const APP_BUILD='2026-06-20b';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
 const ED=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
@@ -501,6 +501,11 @@ async function ghReq(path,method,body){
   return r.status===204?null:r.json();
 }
 async function ghGet(path){try{return await ghReq('/contents/'+path);}catch(e){return null;}}
+function b64DecodeUtf8(b64){
+  // Mirrors the encode side (encodeURIComponent → unescape → btoa) in reverse,
+  // so umlauts and other non-ASCII characters survive the round-trip through GitHub.
+  return decodeURIComponent(escape(atob(b64)));
+}
 async function ghPut(path,content,msg,sha){
   const b64=btoa(unescape(encodeURIComponent(content)));
   const body={message:msg,content:b64,branch:gh.br};
@@ -553,7 +558,7 @@ async function doSync(){
     const rzf=await ghGet('rezepte.json');
     if(rzf&&rzf.content){
       try{
-        const j=JSON.parse(atob(rzf.content.replace(/\n/g,'')));
+        const j=JSON.parse(b64DecodeUtf8(rzf.content.replace(/\n/g,'')));
         S.rz=Array.isArray(j)?j:(j.rezepte||[]);
         saveL();
       }catch(e){}
@@ -570,14 +575,14 @@ async function loadFromGH(){
   try{
     const f=await ghGet('haushaltbuch.json');
     if(f&&f.content){
-      const d=JSON.parse(atob(f.content.replace(/\n/g,'')));
+      const d=JSON.parse(b64DecodeUtf8(f.content.replace(/\n/g,'')));
       S.a=d.artikel||[];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.log=d.log||[];
       S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;
       saveL();
     }
     const rzf=await ghGet('rezepte.json');
     if(rzf&&rzf.content){
-      try{const j=JSON.parse(atob(rzf.content.replace(/\n/g,'')));S.rz=Array.isArray(j)?j:(j.rezepte||[]);saveL();}catch(e){}
+      try{const j=JSON.parse(b64DecodeUtf8(rzf.content.replace(/\n/g,'')));S.rz=Array.isArray(j)?j:(j.rezepte||[]);saveL();}catch(e){}
     }
     sdot('ok');hideLdr();toast('Daten von GitHub geladen');renderLager();
   }catch(err){hideLdr();toast('Fehler: '+err.message.slice(0,50));}
