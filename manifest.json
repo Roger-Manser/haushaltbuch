@@ -1,15 +1,12 @@
 {
-  "id": "./",
   "name": "Haushaltbuch",
   "short_name": "Haushaltbuch",
   "description": "Lagerverwaltung, Barcode-Erfassung, Rezeptabgleich und Statistik für den Haushalt",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait",
   "background_color": "#F8F9FA",
   "theme_color": "#2563EB",
-  "lang": "de-CH",
   "icons": [
     {
       "src": "./icons/icon-192.png",
