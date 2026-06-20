@@ -25,6 +25,58 @@
           "menge": 4
         }
       ]
+    },
+    {
+      "id": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "marke": "Lidl",
+      "kat": "Genussmittel",
+      "lager": "Küche",
+      "menge": 4,
+      "einheit": "Stange",
+      "mindest": 2,
+      "barcode": "4006396071576",
+      "preis": 57.5,
+      "packMenge": 10,
+      "packEinheit": "Pkg",
+      "kaufdatum": "2026-06-20",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781961409294_17819613986793355689367163798127.jpg",
+      "fotoPath": "1781961409294_17819613986793355689367163798127.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-20",
+          "preis": 57.5,
+          "menge": 3
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Ei",
+      "marke": "Eisenring",
+      "kat": "Milchprodukte",
+      "lager": "Kühlschrank",
+      "menge": 6,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "",
+      "preis": 0.6,
+      "packMenge": 1,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-06-20",
+      "ablaufdatum": "2026-07-18",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-20",
+          "preis": 0.6,
+          "menge": 6
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -60,7 +112,8 @@
     "Bund",
     "Dose",
     "Flasche",
-    "Kiste"
+    "Kiste",
+    "Stange"
   ],
   "einkauf": [],
   "log": [
@@ -99,7 +152,115 @@
       "preis": 0,
       "datum": "2026-06-20",
       "zeit": 1781961305055
+    },
+    {
+      "t": "ein",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 3,
+      "einheit": "Stange",
+      "preis": 57.5,
+      "datum": "2026-06-20",
+      "zeit": 1781961540829
+    },
+    {
+      "t": "ein",
+      "aid": 4,
+      "name": "Ei",
+      "lager": "Kühlschrank",
+      "kat": "Milchprodukte",
+      "menge": 6,
+      "einheit": "Stk",
+      "preis": 0.6,
+      "datum": "2026-06-20",
+      "zeit": 1781965449736
+    },
+    {
+      "t": "aus",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "datum": "2026-06-20",
+      "zeit": 1781966453282
+    },
+    {
+      "t": "aus",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "datum": "2026-06-20",
+      "zeit": 1781966455915
+    },
+    {
+      "t": "aus",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "datum": "2026-06-20",
+      "zeit": 1781966458582
+    },
+    {
+      "t": "ein",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "datum": "2026-06-20",
+      "zeit": 1781966468269
+    },
+    {
+      "t": "ein",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "datum": "2026-06-20",
+      "zeit": 1781966468655
+    },
+    {
+      "t": "ein",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "datum": "2026-06-20",
+      "zeit": 1781966469149
+    },
+    {
+      "t": "ein",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "datum": "2026-06-20",
+      "zeit": 1781966469795
     }
   ],
-  "aktualisiert": "2026-06-20T13:15:43.710Z"
+  "aktualisiert": "2026-06-20T14:41:23.342Z"
 }
