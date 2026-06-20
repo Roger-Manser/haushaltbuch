@@ -6,7 +6,7 @@
       "marke": "Landi",
       "kat": "Genussmittel",
       "lager": "Kühlschrank unten",
-      "menge": 4,
+      "menge": 3,
       "einheit": "Kiste",
       "mindest": 2,
       "barcode": "7611703611962",
@@ -87,7 +87,19 @@
       "preis": 50.2,
       "datum": "2026-06-20",
       "zeit": 1781961235793
+    },
+    {
+      "t": "aus",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Kühlschrank unten",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 0,
+      "datum": "2026-06-20",
+      "zeit": 1781961305055
     }
   ],
-  "aktualisiert": "2026-06-20T13:14:38.679Z"
+  "aktualisiert": "2026-06-20T13:15:43.710Z"
 }
