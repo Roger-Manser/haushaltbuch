@@ -32,7 +32,7 @@
       "marke": "Lidl",
       "kat": "Genussmittel",
       "lager": "Küche",
-      "menge": 4,
+      "menge": 3,
       "einheit": "Stange",
       "mindest": 2,
       "barcode": "4006396071576",
@@ -110,7 +110,7 @@
       "marke": "Dose",
       "kat": "Genussmittel",
       "lager": "Kühlschrank unten",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 1,
       "barcode": "76137099",
@@ -121,7 +121,34 @@
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781972385102_off.jpg",
-      "fotoPath": "1781972385102_off.jpg"
+      "fotoPath": "1781972385102_off.jpg",
+      "preisHistorie": []
+    },
+    {
+      "id": 7,
+      "name": "Senfkörner gelb",
+      "marke": "M Classic",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7613312491256",
+      "preis": 2.3,
+      "packMenge": 72,
+      "packEinheit": "g",
+      "kaufdatum": "2026-06-21",
+      "ablaufdatum": "2028-10-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782027909442_17820278961847459224164070397732.jpg",
+      "fotoPath": "1782027909442_17820278961847459224164070397732.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-21",
+          "preis": 2.3,
+          "menge": 1
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -130,7 +157,8 @@
     "Vorratsschrank",
     "Keller",
     "Küche",
-    "Kühlschrank unten"
+    "Kühlschrank unten",
+    "Schlof"
   ],
   "kategorien": [
     "Milchprodukte",
@@ -341,7 +369,31 @@
       "preis": 0,
       "datum": "2026-06-20",
       "zeit": 1781972429689
+    },
+    {
+      "t": "ein",
+      "aid": 7,
+      "name": "Senfkörner gelb",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.3,
+      "datum": "2026-06-21",
+      "zeit": 1782027889318
+    },
+    {
+      "t": "aus",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "datum": "2026-06-21",
+      "zeit": 1782027991544
     }
   ],
-  "aktualisiert": "2026-06-20T19:30:34.387Z"
+  "aktualisiert": "2026-06-21T07:47:31.660Z"
 }
