@@ -149,6 +149,32 @@
           "menge": 1
         }
       ]
+    },
+    {
+      "id": 8,
+      "name": "Mehrzweckbeutel 2L",
+      "marke": "Migros",
+      "kat": "Reinigung & Pflege",
+      "lager": "Gang unten",
+      "menge": 3,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7628871623796",
+      "preis": 1.11,
+      "packMenge": 1,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-06-22",
+      "ablaufdatum": "",
+      "notiz": "No. 13",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782135607805_off.jpg",
+      "fotoPath": "1782135607805_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-22",
+          "preis": 1.11,
+          "menge": 3
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -158,7 +184,8 @@
     "Keller",
     "Küche",
     "Kühlschrank unten",
-    "Schlof"
+    "Schlof",
+    "Gang unten"
   ],
   "kategorien": [
     "Milchprodukte",
@@ -441,7 +468,20 @@
       "preis": 0,
       "datum": "2026-06-21",
       "zeit": 1782064847483
+    },
+    {
+      "t": "ein",
+      "aid": 8,
+      "name": "Mehrzweckbeutel 2L",
+      "lager": "Gang unten",
+      "kat": "Reinigung & Pflege",
+      "menge": 3,
+      "einheit": "Stk",
+      "preis": 1.11,
+      "aktion": false,
+      "datum": "2026-06-22",
+      "zeit": 1782135814612
     }
   ],
-  "aktualisiert": "2026-06-22T12:06:34.713Z"
+  "aktualisiert": "2026-06-22T13:43:40.878Z"
 }
