@@ -221,8 +221,20 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 @media print{
   body *{visibility:hidden !important}
   #label-sheet,#label-sheet *{visibility:visible !important}
-  #label-sheet{position:fixed;top:0;left:0;box-shadow:none !important;margin:0 !important}
-  @page{margin:0}
+  #label-sheet{
+    position:fixed;top:0;left:0;
+    box-shadow:none !important;
+    margin:0 !important;
+    padding:1mm !important;
+    /* Default: DK-11204 54×17mm */
+    width:54mm !important;
+    height:17mm !important;
+    overflow:hidden;
+  }
+  @page{
+    margin:0;
+    size:54mm 17mm landscape;
+  }
 }
 .lcw{display:flex;flex-wrap:wrap;gap:7px}
 .br{display:flex;gap:10px;margin-top:20px}
@@ -457,8 +469,8 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='3.0';
-const APP_BUILD='2026-06-20d';
+const APP_VERSION='3.3';
+const APP_BUILD='2026-06-20g';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
 const ED=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
@@ -482,9 +494,9 @@ function loadL(){
 }
 function saveL(){try{localStorage.setItem('hb3',JSON.stringify(S));}catch(e){}dirty=true;sdot('dt');}
 function saveGH(){try{localStorage.setItem('hbgh',JSON.stringify(gh));}catch(e){};}
-function addLogEntry(type,artikelId,name,lager,kat,menge,einheit,preis){
+function addLogEntry(type,artikelId,name,lager,kat,menge,einheit,preis,aktion){
   if(!S.log)S.log=[];
-  S.log.push({t:type,aid:artikelId,name,lager,kat,menge,einheit,preis:preis||0,datum:todayISO(),zeit:Date.now()});
+  S.log.push({t:type,aid:artikelId,name,lager,kat,menge,einheit,preis:preis||0,aktion:aktion||false,datum:todayISO(),zeit:Date.now()});
   if(S.log.length>2000)S.log=S.log.slice(-2000); // cap log size
 }
 function sdot(s){const d=document.getElementById('sdot');if(d)d.className='sdot'+(s==='ok'?' ok':s==='dt'?' dt':s==='sy'?' sy':'');}
@@ -845,7 +857,7 @@ function showDet(id){
   const ptotal=packTotal(a);
   const packRow=pinfo?'<div class="ir"><span class="ik">'+I.stack+' Packungsgrösse</span><span class="iv">'+esc(pinfo.split('/')[0])+' pro '+esc(a.einheit||'Stk')+'</span></div>':'';
   const hist=(a.preisHistorie||[]).slice().reverse();
-  const histHtml=hist.length?'<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);font-weight:600">Preisverlauf</div>'+hist.map(h=>'<div class="ir"><span class="ik">'+fmtDateCH(h.datum)+'</span><span class="iv">CHF '+h.preis.toFixed(2)+' · +'+h.menge+' '+esc(a.einheit||'Stk')+'</span></div>').join('')+'</div>':'';
+  const histHtml=hist.length?'<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);font-weight:600">Preisverlauf</div>'+hist.map(h=>'<div class="ir"><span class="ik">'+fmtDateCH(h.datum)+'</span><span class="iv" style="display:flex;align-items:center;gap:6px">CHF '+h.preis.toFixed(2)+' · +'+h.menge+' '+esc(a.einheit||'Stk')+(h.aktion?'<span style="font-size:10px;padding:1px 7px;border-radius:8px;background:var(--wl);color:var(--wn);font-weight:600">Aktion</span>':'')+'</span></div>').join('')+'</div>':'';
   const totalHint=ptotal?'<div style="font-size:11px;color:var(--t2);text-align:right;margin-top:4px">≈ '+esc(ptotal)+'</div>':'';
   const codeDisplay=a.barcode?esc(a.barcode):(a.ownCode?esc(a.ownCode)+' <span style="font-size:11px;color:var(--t2)">(eigener Code)</span>':'—');
   document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span><span class="iv">'+(a.ablaufdatum?fmtDateCH(a.ablaufdatum)+' '+expBadge(a.ablaufdatum):'—')+'</span></div>'+preisRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+histHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>'+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
@@ -1021,35 +1033,68 @@ function lookupBarcode(){
     const th=found.foto?'<div class="at" style="width:52px;height:52px"><img src="'+esc(found.foto)+'"/></div>':'<div class="at" style="width:52px;height:52px">'+I.pkg.replace('20px;height:20px','26px;height:26px')+'</div>';
     const pinfo=packInfo(found);
     const packStr=pinfo?' · à '+esc(pinfo.split('/')[0]):'';
+    const lastPreis=found.preis||0;
     res.innerHTML=
-    '<div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--ol);border:1px solid color-mix(in srgb,var(--ok) 30%,transparent);border-radius:var(--r);margin-bottom:14px">'+th+'<div><div style="font-weight:600;font-size:15px">'+esc(found.name)+'</div><div style="font-size:13px;color:var(--t2)">'+esc(found.lager)+' · aktuell '+found.menge+' '+esc(found.einheit||'Stk')+packStr+'</div></div></div>'+
-    '<div class="fd"><label>Menge hinzufügen</label><div class="ur"><input type="number" id="e-mg" min="1" value="1"/><span style="display:flex;align-items:center;padding:0 10px;color:var(--t2);font-size:14px">'+esc(found.einheit||'Stk')+'</span></div></div>'+
-    '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="number" id="e-pr" min="0" step="0.05" placeholder="z.B. 1.95" value="'+(found.preis||'')+'"/></div>'+
-    '<div class="tc"><div class="fd"><label>Kaufdatum</label><input type="date" id="e-kd" value="'+todayISO()+'"/></div><div class="fd"><label>Neues Ablaufdatum</label><input type="date" id="e-ad" value=""/></div></div>'+
-    '<div class="fd"><label>Lagerort</label><div class="lcw"><div class="chip on">'+lsm(found.lager)+' '+esc(found.lager)+' (übernommen)</div></div></div>'+
-    '<button class="bp" style="width:100%" onclick="confirmEingang('+found.id+')">Eingang bestätigen</button>';
+    // Artikel-Info
+    '<div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--ol);border:1px solid color-mix(in srgb,var(--ok) 30%,transparent);border-radius:var(--r);margin-bottom:16px">'+th+'<div><div style="font-weight:600;font-size:15px">'+esc(found.name)+'</div><div style="font-size:13px;color:var(--t2)">'+esc(found.lager)+' · aktuell '+found.menge+' '+esc(found.einheit||'Stk')+packStr+'</div></div></div>'+
+    // Preis-Dialog — prominent, zentriert, gross
+    '<div style="background:var(--sf);border:2px solid var(--ac);border-radius:var(--r);padding:16px;margin-bottom:14px">'+
+      '<div style="font-size:12px;font-weight:600;color:var(--ac);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Preis bestätigen</div>'+
+      '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'+
+        '<span style="font-size:18px;font-weight:600;color:var(--t2)">CHF</span>'+
+        '<input type="number" id="e-pr" min="0" step="0.05" value="'+(lastPreis>0?lastPreis.toFixed(2):'')+'" placeholder="0.00" style="flex:1;font-size:28px;font-weight:700;padding:10px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);text-align:right"/>'+
+      '</div>'+
+      (lastPreis>0?'<div style="font-size:12px;color:var(--t2);margin-bottom:10px">Letzter erfasster Preis: CHF '+lastPreis.toFixed(2)+'</div>':'')+
+      // Aktion-Flag
+      '<label style="display:flex;align-items:center;gap:10px;cursor:pointer;padding:10px;border-radius:var(--rs);border:1px solid var(--bd);background:var(--bg)">'+
+        '<input type="checkbox" id="e-aktion" style="width:20px;height:20px;accent-color:var(--wn);cursor:pointer"/>'+
+        '<div><div style="font-size:14px;font-weight:500">Aktionspreis</div><div style="font-size:12px;color:var(--t2)">Preis wird als Aktion geloggt, nicht als neuer Standardpreis</div></div>'+
+      '</label>'+
+    '</div>'+
+    // Menge + Kaufdatum
+    '<div class="tc" style="margin-bottom:14px"><div class="fd"><label>Menge</label><div class="ur"><input type="number" id="e-mg" min="1" value="1"/><span style="display:flex;align-items:center;padding:0 10px;color:var(--t2);font-size:14px">'+esc(found.einheit||'Stk')+'</span></div></div><div class="fd"><label>Kaufdatum</label><input type="date" id="e-kd" value="'+todayISO()+'"/></div></div>'+
+    // Ablaufdatum: Pflicht wenn Artikel schon eines hatte, sonst optional
+    (found.ablaufdatum
+      ? '<div class="fd" style="margin-bottom:14px"><label style="display:flex;align-items:center;gap:6px">'+I.calx+' Ablaufdatum (MHD) <span style="color:var(--dg);font-weight:700">*</span> <span style="font-size:11px;color:var(--dg);background:var(--dl);padding:1px 7px;border-radius:8px">Pflicht</span></label><input type="date" id="e-ad" value="" style="border-color:var(--dg)" required/><div style="font-size:12px;color:var(--t2);margin-top:4px">Letztes erfasstes Ablaufdatum: '+fmtDateCH(found.ablaufdatum)+'</div></div>'
+      : '<div class="fd" style="margin-bottom:14px"><label style="display:flex;align-items:center;gap:6px">'+I.calx+' Ablaufdatum (MHD) <span style="font-size:11px;color:var(--t3)">(optional, kein bisheriges Datum)</span></label><input type="date" id="e-ad" value=""/></div>'
+    )+
+    '<button class="bp" style="width:100%;padding:14px;font-size:16px" onclick="confirmEingang('+found.id+','+!!found.ablaufdatum+')">Eingang bestätigen</button>';
+
+    // Preis-Feld sofort fokussieren für schnelle Eingabe
+    setTimeout(()=>{const f=document.getElementById('e-pr');if(f){f.focus();f.select();}},100);
   }else{
     res.innerHTML='<div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--wl);border:1px solid color-mix(in srgb,var(--wn) 30%,transparent);border-radius:var(--r);margin-bottom:14px;font-size:14px;color:var(--wn)">'+I.alert.replace('15px;height:15px','18px;height:18px')+' Kein Artikel mit diesem Barcode gefunden — neu erfassen</div>'+
     '<button class="bp" style="width:100%" onclick="newFromBarcode(\''+esc(bc)+'\')">Neuen Artikel mit diesem Barcode anlegen</button>';
   }
 }
-function confirmEingang(id){
+function confirmEingang(id,ablaufPflicht){
   const a=S.a.find(x=>x.id===id);if(!a)return;
   const addMenge=parseInt(document.getElementById('e-mg').value)||1;
   const preis=parseFloat(document.getElementById('e-pr').value)||0;
+  const isAktion=document.getElementById('e-aktion')&&document.getElementById('e-aktion').checked;
   const kaufdatum=document.getElementById('e-kd').value||todayISO();
   const ablaufdatum=document.getElementById('e-ad').value;
+  // Pflichtprüfung Ablaufdatum
+  if(ablaufPflicht&&!ablaufdatum){
+    const adEl=document.getElementById('e-ad');
+    if(adEl){adEl.style.borderColor='var(--dg)';adEl.focus();}
+    toast('Bitte Ablaufdatum eingeben — dieser Artikel hatte bisher immer eines');
+    return;
+  }
   a.menge+=addMenge;
   a.kaufdatum=kaufdatum;
   if(ablaufdatum)a.ablaufdatum=ablaufdatum;
-  if(preis>0){
+  // Preis immer loggen
+  if(!a.preisHistorie)a.preisHistorie=[];
+  a.preisHistorie.push({datum:kaufdatum,preis,menge:addMenge,aktion:isAktion||false});
+  // Standardpreis nur aktualisieren wenn kein Aktionspreis
+  if(preis>0&&!isAktion){
     a.preis=preis;
-    if(!a.preisHistorie)a.preisHistorie=[];
-    a.preisHistorie.push({datum:kaufdatum,preis,menge:addMenge});
   }
-  addLogEntry('ein',a.id,a.name,a.lager,a.kat,addMenge,a.einheit,preis);
+  addLogEntry('ein',a.id,a.name,a.lager,a.kat,addMenge,a.einheit,preis,isAktion||false);
   saveL();
-  toast('+'+addMenge+' '+(a.einheit||'Stk')+' eingelagert: '+a.name);
+  const aktionHinweis=isAktion?' (Aktionspreis, Standardpreis unverändert)':'';
+  toast('+'+addMenge+' '+esc(a.einheit||'Stk')+' · CHF '+(preis>0?preis.toFixed(2):'—')+aktionHinweis);
   goScreen('s-lager');
 }
 function newFromBarcode(bc){
@@ -1116,13 +1161,12 @@ function processAusgangScan(code){
 /* ── Eigene Barcodes & Etiketten-Druck ────────────────────────────── */
 let etikettArtikelId=null;
 const DK_FORMATS=[
-  {id:'dk2205',name:'DK-2205 / DK-2251',wmm:62,hmm:29,kind:'continuous'},
-  {id:'dk1201',name:'DK-1201 Adress',wmm:29,hmm:90,kind:'die-cut'},
-  {id:'dk1209',name:'DK-1209 klein',wmm:29,hmm:62,kind:'die-cut'},
-  {id:'dk2210',name:'DK-2210 schmal',wmm:29,hmm:0,kind:'continuous'},
-  {id:'dk2243',name:'DK-2243 breit',wmm:102,hmm:0,kind:'continuous'},
+  {id:'dk11204',name:'DK-11204 (Standard)',wmm:54,hmm:17,kind:'die-cut',printW:54,printH:17},
+  {id:'dk2205', name:'DK-2205 / DK-2251', wmm:62,hmm:0, kind:'continuous',printW:62,printH:40},
+  {id:'dk1201', name:'DK-1201 Adress',    wmm:90,hmm:29,kind:'die-cut',printW:90,printH:29},
+  {id:'dk1209', name:'DK-1209 klein',     wmm:62,hmm:29,kind:'die-cut',printW:62,printH:29},
 ];
-let labelFormatId='dk2205';
+let labelFormatId='dk11204';
 
 function genOwnCode(){
   // Eigenes internes Code-Format: HB-000123 (6-stellig, fortlaufend)
@@ -1167,7 +1211,7 @@ function renderEtikettScreen(){
 
 function setLabelFormat(id){ labelFormatId=id; renderLabelPreview(); }
 
-function mmToPx(mm){ return Math.round(mm*3.7795); } // 96dpi screen approx for preview only
+function mmToPx(mm){ return Math.round(mm*3.7795); } // 96dpi for screen preview
 
 function renderLabelPreview(){
   const a=S.a.find(x=>x.id===etikettArtikelId);
@@ -1175,35 +1219,81 @@ function renderLabelPreview(){
   const fmt=DK_FORMATS.find(f=>f.id===labelFormatId)||DK_FORMATS[0];
   const code=a.barcode||a.ownCode;
   const showPrice=document.getElementById('lbl-show-price')&&document.getElementById('lbl-show-price').checked;
-
-  const wmm=fmt.wmm;
-  const hmm=fmt.kind==='die-cut'?fmt.hmm:Math.max(20,fmt.hmm||29);
   const sheet=document.getElementById('label-sheet');
-  sheet.style.width=mmToPx(wmm)+'px';
-  sheet.style.height=mmToPx(hmm)+'px';
 
-  const nameSize=wmm>=50?14:11;
-  const subSize=wmm>=50?10:8;
-  sheet.innerHTML=
-    '<div class="lbl-name" style="font-size:'+nameSize+'px">'+esc(a.name)+'</div>'+
-    '<div class="lbl-sub" style="font-size:'+subSize+'px">'+esc(a.lager)+(showPrice&&a.preis?' · CHF '+a.preis.toFixed(2):'')+'</div>'+
-    '<svg id="lbl-barcode-svg"></svg>';
+  if(fmt.id==='dk11204'){
+    // DK-11204: 54mm breit × 17mm hoch (Querformat)
+    // Layout: Barcode links, Text rechts — alles in schmaler Höhe
+    const wpx=mmToPx(54);
+    const hpx=mmToPx(17);
+    sheet.style.width=wpx+'px';
+    sheet.style.height=hpx+'px';
+    sheet.style.display='flex';
+    sheet.style.flexDirection='row';
+    sheet.style.alignItems='center';
+    sheet.style.gap='4px';
+    sheet.style.padding='2px 4px';
 
-  try{
-    JsBarcode('#lbl-barcode-svg',code,{
-      format:'CODE128',
-      width:wmm>=50?2:1.4,
-      height:wmm>=50?42:30,
-      fontSize:wmm>=50?12:9,
-      margin:4,
-      displayValue:true,
-    });
-  }catch(e){
-    document.getElementById('lbl-barcode-svg').outerHTML='<div style="font-size:11px;color:var(--dg)">Barcode konnte nicht erzeugt werden</div>';
+    sheet.innerHTML=
+      '<svg id="lbl-barcode-svg" style="flex-shrink:0"></svg>'+
+      '<div style="flex:1;min-width:0;overflow:hidden">'+
+        '<div class="lbl-name" style="font-size:7px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(a.name)+'</div>'+
+        (a.marke?'<div class="lbl-sub" style="font-size:6px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(a.marke)+'</div>':'')+
+        '<div class="lbl-sub" style="font-size:6px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(a.lager)+(showPrice&&a.preis?' · CHF '+a.preis.toFixed(2):'')+'</div>'+
+      '</div>';
+
+    try{
+      JsBarcode('#lbl-barcode-svg',code,{
+        format:'CODE128',
+        width:1,
+        height:hpx-10,
+        fontSize:5,
+        margin:0,
+        displayValue:true,
+        textMargin:1,
+      });
+    }catch(e){
+      document.getElementById('lbl-barcode-svg').outerHTML='<div style="font-size:8px;color:var(--dg)">Fehler</div>';
+    }
+  }else{
+    // Andere Formate: klassisches Hochformat-Layout
+    const wmm=fmt.printW;
+    const hmm=fmt.printH||40;
+    sheet.style.width=mmToPx(wmm)+'px';
+    sheet.style.height=mmToPx(hmm)+'px';
+    sheet.style.display='flex';
+    sheet.style.flexDirection='column';
+    sheet.style.alignItems='center';
+    sheet.style.justifyContent='center';
+    sheet.style.padding='4px';
+
+    sheet.innerHTML=
+      '<div class="lbl-name" style="font-size:'+(wmm>=50?12:9)+'px">'+esc(a.name)+'</div>'+
+      '<div class="lbl-sub" style="font-size:'+(wmm>=50?9:7)+'px">'+esc(a.lager)+(showPrice&&a.preis?' · CHF '+a.preis.toFixed(2):'')+'</div>'+
+      '<svg id="lbl-barcode-svg"></svg>';
+
+    try{
+      JsBarcode('#lbl-barcode-svg',code,{
+        format:'CODE128',
+        width:wmm>=50?1.6:1.2,
+        height:wmm>=50?32:24,
+        fontSize:wmm>=50?10:8,
+        margin:3,
+        displayValue:true,
+      });
+    }catch(e){
+      document.getElementById('lbl-barcode-svg').outerHTML='<div style="font-size:9px;color:var(--dg)">Barcode-Fehler</div>';
+    }
   }
 }
 
 function printLabel(){
+  const fmt=DK_FORMATS.find(f=>f.id===labelFormatId)||DK_FORMATS[0];
+  const w=fmt.printW, h=fmt.printH||40;
+  // Inject dynamic @page size so the printout matches the physical label exactly
+  let ps=document.getElementById('print-page-style');
+  if(!ps){ps=document.createElement('style');ps.id='print-page-style';document.head.appendChild(ps);}
+  ps.textContent='@media print{@page{size:'+w+'mm '+h+'mm '+(w>h?'landscape':'portrait')+';}#label-sheet{width:'+w+'mm!important;height:'+h+'mm!important;}}';
   window.print();
 }
 
@@ -1333,7 +1423,7 @@ function renderStatisticsHTML(){
     const icon=e.t==='ein'?'<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><polyline points="19 12 12 19 5 12"/></svg>':'<svg viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>';
     const dt=new Date(e.zeit);
     const timeStr=fmtDateCH(e.datum)+' '+String(dt.getHours()).padStart(2,'0')+':'+String(dt.getMinutes()).padStart(2,'0');
-    const priceStr=e.preis>0?' · CHF '+(e.preis*e.menge).toFixed(2):'';
+    const priceStr=e.preis>0?' · CHF '+(e.preis*e.menge).toFixed(2)+(e.aktion?' 🏷️ Aktion':''):'';
     return '<div class="log-entry"><div class="log-icon '+e.t+'">'+icon+'</div><div class="log-info"><div class="log-name">'+esc(e.name)+'</div><div class="log-meta">'+timeStr+' · '+esc(e.lager||'')+priceStr+'</div></div><div class="log-amt '+e.t+'">'+(e.t==='ein'?'+':'−')+e.menge+' '+esc(e.einheit||'Stk')+'</div></div>';
   }).join('');
   if(filtered.length>25)h+='<div style="text-align:center;padding:8px;color:var(--t3);font-size:12px">… und '+(filtered.length-25)+' weitere</div>';
