@@ -457,8 +457,8 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='2.9';
-const APP_BUILD='2026-06-20c';
+const APP_VERSION='3.0';
+const APP_BUILD='2026-06-20d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
 const ED=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
@@ -1236,7 +1236,34 @@ function rcCard(r){
   const f=r.pct===100;
   const miss=r.zt.filter(z=>!r.have.some(h=>h.toLowerCase()===z.toLowerCase()));
   const tags=[...r.have.map(z=>'<span class="zt ok">'+esc(z)+'</span>'),...miss.map(z=>'<span class="zt ms">'+esc(z)+' fehlt</span>')].join('');
-  return '<div class="rc"><div class="rct"><div class="rci'+(f?'':" p")+'">'+r.emoji+'</div><div><div class="rct-n">'+esc(r.name)+'</div><div class="rct-s">'+r.port+' Port. · '+r.min+' min</div></div></div><div class="mr"><span>Zutaten vorhanden</span><span class="mp '+(f?'f':'p')+'">'+r.have.length+'/'+r.zt.length+'</span></div><div class="mt"><div class="mf '+(f?'f':'')+'" style="width:'+r.pct+'%"></div></div><div class="ztgs">'+tags+'</div></div>';
+  const missJson=miss.length?'data-miss=\''+esc(JSON.stringify(miss))+'\' ':'';
+  const buyBtn=miss.length?'<button '+missJson+'onclick="addMissingToEinkauf(this)" style="margin-top:10px;width:100%;padding:8px;border:1px solid var(--am);background:var(--al);color:var(--ac);border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">'+I.cart+' '+miss.length+' fehlende Zutat'+(miss.length===1?'':'en')+' auf Einkaufsliste</button>':'';
+  return '<div class="rc"><div class="rct"><div class="rci'+(f?'':" p")+'">'+r.emoji+'</div><div><div class="rct-n">'+esc(r.name)+'</div><div class="rct-s">'+r.port+' Port. · '+r.min+' min</div></div></div><div class="mr"><span>Zutaten vorhanden</span><span class="mp '+(f?'f':'p')+'">'+r.have.length+'/'+r.zt.length+'</span></div><div class="mt"><div class="mf '+(f?'f':'')+'" style="width:'+r.pct+'%"></div></div><div class="ztgs">'+tags+'</div>'+buyBtn+'</div>';
+}
+function addMissingToEinkauf(btn){
+  let miss=[];
+  try{miss=JSON.parse(btn.dataset.miss);}catch(e){return;}
+  if(!S.ek)S.ek=[];
+  const existing=new Set(S.ek.map(e=>e.text.toLowerCase()));
+  const added=[];
+  miss.forEach(z=>{
+    if(!existing.has(z.toLowerCase())){
+      S.ek.push({id:Date.now()+Math.random(),text:z,checked:false});
+      existing.add(z.toLowerCase());
+      added.push(z);
+    }
+  });
+  if(added.length){
+    saveL();
+    toast(added.length+' Zutat'+(added.length===1?'':'en')+' auf Einkaufsliste');
+    btn.style.background='var(--ol)';
+    btn.style.borderColor='color-mix(in srgb,var(--ok) 40%,transparent)';
+    btn.style.color='var(--ok)';
+    btn.textContent='✓ Zur Einkaufsliste hinzugefügt';
+    btn.disabled=true;
+  }else{
+    toast('Alle fehlenden Zutaten schon auf der Einkaufsliste');
+  }
 }
 
 /* ── Übersicht ────────────────────────────────────────────────────── */
