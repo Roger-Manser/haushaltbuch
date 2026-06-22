@@ -457,8 +457,8 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='2.8';
-const APP_BUILD='2026-06-20b';
+const APP_VERSION='2.9';
+const APP_BUILD='2026-06-20c';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
 const ED=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
@@ -1407,7 +1407,7 @@ function renderSt(){
   '<button class="db-btn" onclick="loadFromGH()">'+I.dl+' Daten von GitHub laden</button>'+
   '<button class="db-btn" onclick="doSync()"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:18px;height:18px;stroke:var(--ac)"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.21-4.45"/></svg> Jetzt synchronisieren</button>'+
   '<p style="font-size:12px;color:var(--t3);margin-top:6px;line-height:1.6">Token braucht <strong>repo</strong> Scope. Fotos &rarr; <code>bilder/</code>. Daten &rarr; <code>haushaltbuch.json</code>. Rezepte &larr; <code>rezepte.json</code> im selben Repo.</p></div>'+
-  '<div class="ss"><div class="ssl">Lagerorte</div><div>'+S.lo.map((l,i)=>'<div class="lmi">'+licon(l).replace('20px;height:20px','18px;height:18px')+' '+esc(l)+(i>=LD.length?'<button onclick="delLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addLo()">+ Neuer Lagerort</button></div>'+
+  '<div class="ss"><div class="ssl">Lagerorte</div><div>'+S.lo.map((l,i)=>'<div class="lmi">'+licon(l).replace('20px;height:20px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(l)+'</span><button onclick="editLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=LD.length?'<button onclick="delLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addLo()">+ Neuer Lagerort</button></div>'+
   '<div class="ss"><div class="ssl">Kategorien</div><div>'+S.ka.map((k,i)=>'<div class="lmi">'+KICON.replace('13px;height:13px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(k)+'</span><button onclick="editKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=KD.length?'<button onclick="delKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addKat()">+ Neue Kategorie</button></div>'+
   '<div class="ss"><div class="ssl">Einheiten</div><div>'+S.ei.map((u,i)=>'<div class="lmi"><span style="flex:1">'+esc(u)+'</span>'+(i>=ED.length?'<button onclick="delEinheit(\''+esc(u)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addEinheitSettings()">+ Neue Einheit</button></div>'+
   '<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong>v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button></div>'+
@@ -1416,6 +1416,15 @@ function renderSt(){
 function saveGHcfg(){gh={tok:document.getElementById('gh-t').value.trim(),own:document.getElementById('gh-o').value.trim(),repo:document.getElementById('gh-r').value.trim(),br:document.getElementById('gh-b').value.trim()||'main'};saveGH();toast('GitHub gespeichert');renderSt();}
 function addLo(){const n=prompt('Neuer Lagerort:');if(!n||!n.trim())return;const nm=n.trim();if(!S.lo.includes(nm)){S.lo.push(nm);saveL();}renderSt();}
 function delLo(n){if(S.a.some(a=>a.lager===n)){alert('Lagerort «'+n+'» wird noch verwendet.');return;}S.lo=S.lo.filter(l=>l!==n);saveL();renderSt();}
+function editLo(l){
+  const n=prompt('Lagerort umbenennen:',l);if(!n||!n.trim()||n.trim()===l)return;
+  const nm=n.trim();
+  if(S.lo.includes(nm)){alert('Lagerort «'+nm+'» existiert bereits.');return;}
+  S.lo=S.lo.map(x=>x===l?nm:x);
+  S.a.forEach(a=>{if(a.lager===l)a.lager=nm;});
+  (S.log||[]).forEach(e=>{if(e.lager===l)e.lager=nm;});
+  saveL();renderSt();toast('Lagerort umbenannt');
+}
 function addKat(){const n=prompt('Neue Kategorie:');if(!n||!n.trim())return;const nm=n.trim();if(!S.ka.includes(nm)){S.ka.push(nm);saveL();}renderSt();}
 function delKat(k){if(S.a.some(a=>a.kat===k)){alert('Kategorie «'+k+'» wird noch verwendet.');return;}S.ka=S.ka.filter(x=>x!==k);saveL();renderSt();}
 function addEinheitSettings(){const n=prompt('Neue Einheit (z.B. Sack, Karton):');if(!n||!n.trim())return;const nm=n.trim();if(!S.ei.includes(nm)){S.ei.push(nm);saveL();}renderSt();}
