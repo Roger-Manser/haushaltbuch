@@ -382,6 +382,25 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782212180104_off.jpg",
       "fotoPath": "1782212180104_off.jpg"
+    },
+    {
+      "id": 19,
+      "name": "Amlodipine Valsartan",
+      "marke": "Sanzoz",
+      "kat": "Medikament",
+      "lager": "Küche",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7680660150135",
+      "preis": 0,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-06-23",
+      "ablaufdatum": "",
+      "notiz": "Blutdrucksenker",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782215805775_17822157940686375979542534197242.jpg",
+      "fotoPath": "1782215805775_17822157940686375979542534197242.jpg"
     }
   ],
   "lagerorte": [
@@ -406,7 +425,8 @@
     "Süsswaren",
     "Reinigung & Pflege",
     "Diverses",
-    "Genussmittel"
+    "Genussmittel",
+    "Medikament"
   ],
   "einheiten": [
     "Stk",
@@ -857,7 +877,20 @@
       "aktion": false,
       "datum": "2026-06-23",
       "zeit": 1782212243147
+    },
+    {
+      "t": "ein",
+      "aid": 19,
+      "name": "Amlodipine Valsartan",
+      "lager": "Küche",
+      "kat": "Medikament",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-23",
+      "zeit": 1782215905294
     }
   ],
-  "aktualisiert": "2026-06-23T11:30:56.966Z"
+  "aktualisiert": "2026-06-23T11:58:34.540Z"
 }
