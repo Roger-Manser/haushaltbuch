@@ -891,6 +891,25 @@
       "datum": "2026-06-23",
       "zeit": 1782215905294
     }
+  {
+  "id": 9999,
+  "name": "Wild Rice Mix",
+  "marke": "Mister Rice",
+  "kat": "Konserven & Trockenware",
+  "lager": "Vorratsschrank",
+  "menge": 1,
+  "einheit": "Pkg",
+  "mindest": 1,
+  "barcode": "7613331225043",
+  "preis": 3.75,
+  "packMenge": 0,
+  "packEinheit": "dl",
+  "kaufdatum": "2026-06-23",
+  "ablaufdatum": "",
+  "notiz": "Parboiled Reis 85%, Wildreis 15%. Glutenfrei, vegan.",
+  "foto": "",
+  "fotoPath": ""
+}
   ],
   "aktualisiert": "2026-06-23T11:58:34.540Z"
 }
