@@ -238,8 +238,9 @@
       "kaufdatum": "2026-06-23",
       "ablaufdatum": "",
       "notiz": "",
-      "foto": "",
-      "fotoPath": ""
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782213847348_17822138408287701948716595398018.jpg",
+      "fotoPath": "1782213847348_17822138408287701948716595398018.jpg",
+      "preisHistorie": []
     },
     {
       "id": 12,
@@ -304,7 +305,7 @@
       "marke": "Barilla",
       "kat": "Getränke",
       "lager": "Schlof",
-      "menge": 3,
+      "menge": 4,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "8076809585194",
@@ -346,7 +347,7 @@
     {
       "id": 17,
       "name": "Aceto Balsamico di Modena I.G.P Invecchiato",
-      "marke": "Mazzetti",
+      "marke": "Mazzetti - Coop",
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
       "menge": 1,
@@ -362,6 +363,25 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782211035851_17822110144946005056457592513754.jpg",
       "fotoPath": "1782211035851_17822110144946005056457592513754.jpg",
       "preisHistorie": []
+    },
+    {
+      "id": 18,
+      "name": "Bouillon Huhn / Gemüse",
+      "marke": "Maggi",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7613034957528",
+      "preis": 0,
+      "packMenge": 280,
+      "packEinheit": "g",
+      "kaufdatum": "2026-06-23",
+      "ablaufdatum": "2027-01-01",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782212180104_off.jpg",
+      "fotoPath": "1782212180104_off.jpg"
     }
   ],
   "lagerorte": [
@@ -798,7 +818,46 @@
       "aktion": false,
       "datum": "2026-06-23",
       "zeit": 1782211041349
+    },
+    {
+      "t": "ein",
+      "aid": 15,
+      "name": "Barilla Al Bronzo Spaghetti Al Bronzo 500g",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-23",
+      "zeit": 1782211499892
+    },
+    {
+      "t": "ein",
+      "aid": 18,
+      "name": "Bouillon Huhn / Gemüse",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-23",
+      "zeit": 1782212230371
+    },
+    {
+      "t": "ein",
+      "aid": 18,
+      "name": "Bouillon Huhn / Gemüse",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-23",
+      "zeit": 1782212243147
     }
   ],
-  "aktualisiert": "2026-06-23T10:44:10.171Z"
+  "aktualisiert": "2026-06-23T11:24:22.616Z"
 }
