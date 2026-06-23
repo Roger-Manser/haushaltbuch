@@ -31,7 +31,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .sbar{padding:10px 16px;background:var(--sf);border-bottom:1px solid var(--bd);flex-shrink:0}
 .sw{position:relative}
 .sw svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;stroke:var(--t3);fill:none;stroke-width:2;pointer-events:none}
-.sw input{width:100%;padding:9px 10px 9px 33px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;color:var(--tx)}
+.sw input{width:100%;padding:9px 32px 9px 33px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;color:var(--tx)}
 .sw input:focus{outline:none;border-color:var(--ac)}
 .chips{padding:8px 16px 6px;display:flex;gap:6px;overflow-x:auto;flex-shrink:0;scrollbar-width:none;background:var(--sf);border-bottom:1px solid var(--bd)}
 .chips::-webkit-scrollbar{display:none}
@@ -305,7 +305,10 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   </div>
   <div class="sbar"><div class="sw">
     <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-    <input type="text" id="lager-search" placeholder="Artikel suchen..." oninput="renderLager()"/>
+    <input type="text" id="lager-search" placeholder="Artikel suchen..." oninput="renderLager();document.getElementById('lager-search-clear').style.visibility=this.value?'visible':'hidden'"/>
+    <button id="lager-search-clear" onclick="document.getElementById('lager-search').value='';renderLager();this.style.visibility='hidden'" style="visibility:hidden;position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:var(--t3);padding:2px;display:flex;align-items:center">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+    </button>
   </div></div>
   <div class="chips" id="lager-chips"></div>
   <div class="sort-bar" id="sort-bar"></div>
@@ -458,8 +461,8 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='4.3';
-const APP_BUILD='2026-06-21d';
+const APP_VERSION='4.7';
+const APP_BUILD='2026-06-21h';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
 const ED=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
@@ -848,13 +851,52 @@ function showDet(id){
   const ptotal=packTotal(a);
   const packRow=pinfo?'<div class="ir"><span class="ik">'+I.stack+' Packungsgrösse</span><span class="iv">'+esc(pinfo.split('/')[0])+' pro '+esc(a.einheit||'Stk')+'</span></div>':'';
   const hist=(a.preisHistorie||[]).slice().reverse();
-  const histHtml=hist.length?'<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);font-weight:600">Preisverlauf</div>'+hist.map(h=>'<div class="ir"><span class="ik">'+fmtDateCH(h.datum)+'</span><span class="iv" style="display:flex;align-items:center;gap:6px">CHF '+h.preis.toFixed(2)+' · +'+h.menge+' '+esc(a.einheit||'Stk')+(h.aktion?'<span style="font-size:10px;padding:1px 7px;border-radius:8px;background:var(--wl);color:var(--wn);font-weight:600">Aktion</span>':'')+'</span></div>').join('')+'</div>':'';
+  const histHtml=hist.length?'<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">Preisverlauf</span></div>'+
+    hist.map((h,ri)=>{
+      const i=(a.preisHistorie.length-1-ri); // original index (not reversed)
+      return '<div class="ir" style="align-items:center"><div style="flex:1"><div style="font-size:13px">CHF '+h.preis.toFixed(2)+' · +'+h.menge+' '+esc(a.einheit||'Stk')+(h.aktion?'<span style="font-size:10px;padding:1px 7px;border-radius:8px;background:var(--wl);color:var(--wn);font-weight:600;margin-left:6px">Aktion</span>':'')+'</div><div style="font-size:11px;color:var(--t2)">'+fmtDateCH(h.datum)+'</div></div><div style="display:flex;gap:6px;flex-shrink:0"><button onclick="editPreisHistorie('+id+','+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:4px 8px;cursor:pointer;font-size:12px;color:var(--ac)">✏️</button><button onclick="delPreisHistorie('+id+','+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:4px 8px;cursor:pointer;font-size:12px;color:var(--dg)">✕</button></div></div>';
+    }).join('')+'</div>':'';
   const totalHint=ptotal?'<div style="font-size:11px;color:var(--t2);text-align:right;margin-top:4px">≈ '+esc(ptotal)+'</div>':'';
   const codeDisplay=a.barcode?esc(a.barcode):(a.ownCode?esc(a.ownCode)+' <span style="font-size:11px;color:var(--t2)">(eigener Code)</span>':'—');
   document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span><span class="iv">'+(a.ablaufdatum?fmtDateCH(a.ablaufdatum)+' '+expBadge(a.ablaufdatum):'—')+'</span></div>'+preisRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+histHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>'+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
   const heroEl=document.getElementById('dh-hero-img');
   if(heroEl)heroEl.addEventListener('click',()=>openLightbox(a.foto));
   goScreen('s-detail');
+}
+function editPreisHistorie(artikelId,idx){
+  const a=S.a.find(x=>x.id===artikelId);
+  if(!a||!a.preisHistorie||!a.preisHistorie[idx])return;
+  const h=a.preisHistorie[idx];
+  // Preis bearbeiten
+  const neuerPreis=prompt('Preis (CHF):',h.preis.toFixed(2));
+  if(neuerPreis===null)return;
+  const p=parseFloat(neuerPreis.replace(',','.'));
+  if(isNaN(p)||p<0){alert('Ungültiger Preis');return;}
+  // Datum bearbeiten
+  const neuesDatum=prompt('Datum (JJJJ-MM-TT):',h.datum||todayISO());
+  if(neuesDatum===null)return;
+  if(neuesDatum&&!/^\d{4}-\d{2}-\d{2}$/.test(neuesDatum)){alert('Datum im Format JJJJ-MM-TT eingeben');return;}
+  // Menge
+  const neueMenge=prompt('Menge:',h.menge||1);
+  if(neueMenge===null)return;
+  const m=parseInt(neueMenge)||1;
+  // Aktion-Flag
+  const aktion=confirm('Aktionspreis?\n(OK = Ja, Abbrechen = Nein)');
+  a.preisHistorie[idx]={...h,preis:p,datum:neuesDatum||h.datum,menge:m,aktion};
+  // Wenn dieser Eintrag der aktuellste ist und kein Aktionspreis: Standardpreis aktualisieren
+  if(idx===a.preisHistorie.length-1&&!aktion)a.preis=p;
+  saveL();showDet(artikelId);toast('Preisverlauf aktualisiert');
+}
+function delPreisHistorie(artikelId,idx){
+  const a=S.a.find(x=>x.id===artikelId);
+  if(!a||!a.preisHistorie||!a.preisHistorie[idx])return;
+  const h=a.preisHistorie[idx];
+  if(!confirm('Eintrag «CHF '+h.preis.toFixed(2)+' vom '+fmtDateCH(h.datum)+'» löschen?'))return;
+  a.preisHistorie.splice(idx,1);
+  // Standardpreis auf letzten Nicht-Aktionspreis setzen
+  const letzte=a.preisHistorie.filter(e=>!e.aktion);
+  if(letzte.length)a.preis=letzte[letzte.length-1].preis;
+  saveL();showDet(artikelId);toast('Eintrag gelöscht');
 }
 function chgB(id,d){
   const a=S.a.find(x=>x.id===id);if(!a)return;
@@ -898,7 +940,7 @@ function openForm(id){
   '<div class="fd"><label>Kategorie</label><div class="lcw" id="f-ka">'+kc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Anfangsbestand</label><div class="ur"><input type="number" id="f-mg" min="0" value="'+(a?a.menge:1)+'"/><select id="f-ei" onchange="if(this.value===\'__add__\')addEinheit(this)">'+eo+'<option value="__add__">+ Neue Einheit...</option></select></div></div><div class="fd"><label>Mindestbestand</label><input type="number" id="f-mn" min="0" value="'+(a?a.mindest:1)+'"/></div></div>'+
   '<div class="fd"><label>Packungsgrösse <span style="color:var(--t3);font-weight:400">(optional, z.B. 2.5 dl pro Stück)</span></label><div class="ur"><input type="number" id="f-pg" min="0" step="0.1" placeholder="z.B. 2.5" value="'+(a&&a.packMenge?esc(a.packMenge):'')+'"/><select id="f-pe">'+epo+'</select></div></div>'+
-  '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="number" id="f-pr" min="0" step="0.05" placeholder="z.B. 1.95" value="'+(a?esc(a.preis||''):'')+'"/></div>'+
+  '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="number" id="f-pr" min="0" step="0.05" placeholder="z.B. 1.95" value="'+(a?esc(a.preis||''):'')+'"/><label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg)"><input type="checkbox" id="f-aktion" style="width:18px;height:18px;accent-color:var(--wn);cursor:pointer"/><div><div style="font-size:14px;font-weight:500;color:var(--tx)">Aktionspreis</div><div style="font-size:12px;color:var(--t2)">Wird als Aktion geloggt, kein neuer Standardpreis</div></div></label></div>'+
   '<div class="fd"><label>Lagerort</label><div class="lcw" id="f-lo">'+lc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Kaufdatum</label>'+dateField('f-kd',a?a.kaufdatum||todayISO():todayISO())+'</div><div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('f-ad',a?a.ablaufdatum||'':'')+'</div></div>'+
   '<div class="fd"><label>Notiz</label><textarea id="f-nt" placeholder="z.B. Bio, Lieblingsmarke...">'+(a?esc(a.notiz||''):'')+'</textarea></div>'+
@@ -985,17 +1027,20 @@ async function saveForm(){
   }else if(fb64){furl=fb64;fpth=ffn;}
   else if(editId){const ex=S.a.find(x=>x.id===editId);if(ex){furl=ex.foto||'';fpth=ex.fotoPath||'';}}
   const preis=parseFloat(document.getElementById('f-pr').value)||0;
+  const isAktion=document.getElementById('f-aktion')&&document.getElementById('f-aktion').checked;
   const kaufdatum=document.getElementById('f-kd').value||todayISO();
   const packMenge=parseFloat(document.getElementById('f-pg').value)||0;
   const packEinheit=document.getElementById('f-pe').value;
-  const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,menge:parseInt(document.getElementById('f-mg').value)||0,einheit:document.getElementById('f-ei').value,mindest:parseInt(document.getElementById('f-mn').value)||1,barcode:document.getElementById('f-bc').value.trim(),preis,packMenge,packEinheit,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
-  if(!editId&&preis>0){d.preisHistorie=[{datum:kaufdatum,preis,menge:d.menge}];}
+  // Standardpreis nur speichern wenn kein Aktionspreis
+  const standardPreis=isAktion?0:preis;
+  const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,menge:parseInt(document.getElementById('f-mg').value)||0,einheit:document.getElementById('f-ei').value,mindest:parseInt(document.getElementById('f-mn').value)||1,barcode:document.getElementById('f-bc').value.trim(),preis:standardPreis,packMenge,packEinheit,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
+  if(!editId&&preis>0){d.preisHistorie=[{datum:kaufdatum,preis,menge:d.menge,aktion:isAktion||false}];}
   else if(editId){const ex=S.a.find(x=>x.id===editId);d.preisHistorie=ex&&ex.preisHistorie?ex.preisHistorie:[];}
   if(editId){const i=S.a.findIndex(x=>x.id===editId);if(i>=0)S.a[i]={...S.a[i],...d};}
   else{
     const newId=S.nid++;
     S.a.push({id:newId,...d});
-    if(d.menge>0)addLogEntry('ein',newId,d.name,d.lager,d.kat,d.menge,d.einheit,preis);
+    if(d.menge>0)addLogEntry('ein',newId,d.name,d.lager,d.kat,d.menge,d.einheit,preis,isAktion||false);
   }
   fb64='';ffn='';saveL();hideLdr();closeForm();toast(editId?'Artikel aktualisiert':'Artikel hinzugefügt');
 }
@@ -1235,22 +1280,26 @@ function drawLabelCanvas(canvasId,a,fmt,code,showPrice,showKaufdatum,showAblauf,
 
   if(fmt.id==='dk11204'){
     // DK-11204: 54mm × 17mm
-    // Aufteilung: ~65% Barcode (volle Breite), ~35% Text darunter
-    const textH=Math.round(hpx*0.35);
+    // Aufteilung: 70% Barcode, 30% Text
+    const textH=Math.round(hpx*0.30);
     const bcAreaH=hpx-textH;
     const pad=Math.round(scale*2);
 
-    // Barcode: volle Breite, keine Ziffern anzeigen (Platz für Text darunter)
+    // Barcode direkt in Zielgrösse rendern — kein Skalieren, scharfe Balken
+    // barWidth so berechnen dass Barcode genau wpx breit wird
+    // Code128 für typische EAN/HB-Codes: ~70 Module → barWidth = wpx/70
+    const approxModules=Math.max(40,code.length*11+35);
+    const barWidth=Math.max(2,Math.floor(wpx/approxModules));
     const bcCanvas=document.createElement('canvas');
     let bcOk=false;
     try{
       JsBarcode(bcCanvas,code,{
         format:'CODE128',
-        width:Math.max(1,Math.round(scale*1.5)),
+        width:barWidth,
         height:bcAreaH-pad,
-        fontSize:0,           // Keine Ziffern im Barcode selbst
+        fontSize:0,
         margin:0,
-        displayValue:false,   // Platz sparen — Code steht unten im Text
+        displayValue:false,
         background:'#ffffff',
         lineColor:'#000000',
       });
@@ -1258,19 +1307,15 @@ function drawLabelCanvas(canvasId,a,fmt,code,showPrice,showKaufdatum,showAblauf,
     }catch(e){bcOk=false;}
 
     if(bcOk){
-      // Barcode horizontal zentriert, volle verfügbare Breite
-      const bcDrawW=Math.min(bcCanvas.width,wpx);
-      const bcX=Math.round((wpx-bcDrawW)/2);
-      ctx.drawImage(bcCanvas,0,0,bcCanvas.width,bcCanvas.height, bcX,0,bcDrawW,bcAreaH);
+      // 1:1 zentriert einzeichnen — keine Skalierung
+      const bcX=Math.round((wpx-bcCanvas.width)/2);
+      ctx.drawImage(bcCanvas,bcX,0);
     }
 
-    // Trennlinie (optional, subtil)
+    // Trennlinie
     ctx.strokeStyle='#cccccc';
     ctx.lineWidth=Math.max(1,Math.round(scale*0.5));
-    ctx.beginPath();
-    ctx.moveTo(0,bcAreaH);
-    ctx.lineTo(wpx,bcAreaH);
-    ctx.stroke();
+    ctx.beginPath();ctx.moveTo(0,bcAreaH);ctx.lineTo(wpx,bcAreaH);ctx.stroke();
 
     // Text-Zeile: Name · Kauf: TT.MM.JJJJ · MHD: TT.MM.JJJJ
     const parts=[];
@@ -1284,13 +1329,13 @@ function drawLabelCanvas(canvasId,a,fmt,code,showPrice,showKaufdatum,showAblauf,
     const maxTextW=wpx-pad*2;
     const textY=bcAreaH+Math.round(textH*0.1);
 
-    // Auto-shrink: start small, reduce until text fits width
-    let fs=Math.min(Math.round(textH*0.55),18);
+    // Auto-shrink: 2.5× grössere Startgrösse, schrumpft bis Text passt
+    let fs=Math.min(Math.round(textH*1.4),45);
     ctx.textBaseline='top';
     ctx.fillStyle='#000000';
     do{
       fs=Math.max(fs-1,4);
-      ctx.font=fs+'px sans-serif';
+      ctx.font='bold '+fs+'px sans-serif';
     }while(fs>4&&ctx.measureText(line).width>maxTextW);
 
     ctx.fillText(line,pad,textY);
