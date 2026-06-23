@@ -76,8 +76,7 @@
           "preis": 0.6,
           "menge": 6
         }
-      ],
-      "ownCode": "HB-000007"
+      ]
     },
     {
       "id": 5,
@@ -131,15 +130,15 @@
       "marke": "M Classic",
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7613312491256",
       "preis": 2.3,
       "packMenge": 72,
       "packEinheit": "g",
-      "kaufdatum": "2026-06-22",
-      "ablaufdatum": "2026-06-23",
+      "kaufdatum": "2026-06-21",
+      "ablaufdatum": "2028-10-31",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782027909442_17820278961847459224164070397732.jpg",
       "fotoPath": "1782027909442_17820278961847459224164070397732.jpg",
@@ -148,12 +147,58 @@
           "datum": "2026-06-21",
           "preis": 2.3,
           "menge": 1
-        },
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Mehrzweckbeutel 2L",
+      "marke": "Migros",
+      "kat": "Reinigung & Pflege",
+      "lager": "Gang unten",
+      "menge": 3,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7628871623796",
+      "preis": 1.11,
+      "packMenge": 1,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-06-22",
+      "ablaufdatum": "",
+      "notiz": "No. 13",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782135607805_off.jpg",
+      "fotoPath": "1782135607805_off.jpg",
+      "preisHistorie": [
         {
           "datum": "2026-06-22",
-          "preis": 2.3,
-          "menge": 1,
-          "aktion": false
+          "preis": 1.11,
+          "menge": 3
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Grüne Erbsen",
+      "marke": "Lidl",
+      "kat": "Gemüse & Früchte",
+      "lager": "Vorratsschrank",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "4056489176602",
+      "preis": 2.13,
+      "packMenge": 3,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-06-23",
+      "ablaufdatum": "2029-06-01",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782189536794_1782189523707916622770917781994.jpg",
+      "fotoPath": "1782189536794_1782189523707916622770917781994.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-23",
+          "preis": 2.13,
+          "menge": 1
         }
       ]
     }
@@ -165,7 +210,8 @@
     "Keller",
     "Küche",
     "Kühlschrank unten",
-    "Schlof"
+    "Schlof",
+    "Gang unten"
   ],
   "kategorien": [
     "Milchprodukte",
@@ -451,17 +497,30 @@
     },
     {
       "t": "ein",
-      "aid": 7,
-      "name": "Senfkörner gelb",
-      "lager": "Küche",
-      "kat": "Gewürze & Saucen",
-      "menge": 1,
+      "aid": 8,
+      "name": "Mehrzweckbeutel 2L",
+      "lager": "Gang unten",
+      "kat": "Reinigung & Pflege",
+      "menge": 3,
       "einheit": "Stk",
-      "preis": 2.3,
+      "preis": 1.11,
       "aktion": false,
       "datum": "2026-06-22",
-      "zeit": 1782130526762
+      "zeit": 1782135814612
+    },
+    {
+      "t": "ein",
+      "aid": 9,
+      "name": "Grüne Erbsen",
+      "lager": "Vorratsschrank",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.13,
+      "aktion": false,
+      "datum": "2026-06-23",
+      "zeit": 1782189673264
     }
   ],
-  "aktualisiert": "2026-06-23T04:41:51.562Z"
+  "aktualisiert": "2026-06-23T04:42:00.245Z"
 }
