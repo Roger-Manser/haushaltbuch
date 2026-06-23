@@ -342,6 +342,26 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782210777021_off.jpg",
       "fotoPath": "1782210777021_off.jpg"
+    },
+    {
+      "id": 17,
+      "name": "Aceto Balsamico di Modena I.G.P Invecchiato",
+      "marke": "Mazzetti",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "8002461910906",
+      "preis": 0,
+      "packMenge": 250,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-06-23",
+      "ablaufdatum": "2030-02-01",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782211035851_17822110144946005056457592513754.jpg",
+      "fotoPath": "1782211035851_17822110144946005056457592513754.jpg",
+      "preisHistorie": []
     }
   ],
   "lagerorte": [
@@ -765,7 +785,20 @@
       "aktion": false,
       "datum": "2026-06-23",
       "zeit": 1782210828376
+    },
+    {
+      "t": "ein",
+      "aid": 17,
+      "name": "Aceto Balsamico di Modena I.G.P Invecchiato",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-23",
+      "zeit": 1782211041349
     }
   ],
-  "aktualisiert": "2026-06-23T10:34:02.933Z"
+  "aktualisiert": "2026-06-23T10:37:48.170Z"
 }
