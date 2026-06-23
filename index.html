@@ -458,8 +458,8 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='3.8';
-const APP_BUILD='2026-06-20l';
+const APP_VERSION='3.9';
+const APP_BUILD='2026-06-20m';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
 const ED=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
@@ -1192,17 +1192,21 @@ function renderEtikettScreen(){
   document.getElementById('etikett-body').innerHTML=
     (isOwn?'<div class="own-code-box">'+I.tag+' Dieser Artikel hat keinen Barcode. Eigener interner Code wurde vergeben: <strong>'+esc(code)+'</strong></div>':'')+
     '<div class="fd"><label>Etikettenformat (Brother DK)</label><div class="label-format-grid">'+fmtChips+'</div></div>'+
-    '<div class="label-preview-wrap"><div id="label-sheet"></div></div>'+
-    '<div class="field" style="margin-bottom:14px"><label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><input type="checkbox" id="lbl-show-price" '+(a.preis?'checked':'')+' style="width:16px;height:16px" onchange="renderLabelPreview()"/> Preis anzeigen</label></div>'+
-    '<button class="bp" style="width:100%;margin-bottom:8px" onclick="printLabel()">'+I.scan.replace('18px;height:18px','20px;height:20px')+' Etikett drucken</button>'+
-    '<p style="font-size:12px;color:var(--t3);text-align:center;line-height:1.6">Öffnet den Druckdialog deines Handys.<br>iPhone: über AirPrint direkt zum Brother-Drucker. Android: «Drucken» wählen, dann Brother iPrint&amp;Label oder den Mopria-Druckdienst auswählen.</p>';
+    '<div class="label-preview-wrap"><div id="label-preview-outer"><canvas id="label-canvas" style="max-width:100%;height:auto;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.12)"></canvas></div></div>'+
+    '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">'+
+      '<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><input type="checkbox" id="lbl-show-price" '+(a.preis?'checked':'')+' style="width:16px;height:16px" onchange="renderLabelPreview()"/> Preis anzeigen</label>'+
+      '<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><input type="checkbox" id="lbl-show-kaufdatum" '+(a.kaufdatum?'checked':'')+' style="width:16px;height:16px" onchange="renderLabelPreview()"/> Kaufdatum anzeigen</label>'+
+      '<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><input type="checkbox" id="lbl-show-ablauf" '+(a.ablaufdatum?'checked':'')+' style="width:16px;height:16px" onchange="renderLabelPreview()"/> Ablaufdatum (MHD) anzeigen</label>'+
+    '</div>'+
+    '<button class="bp" style="width:100%;margin-bottom:8px;font-size:16px" onclick="copyLabelToClipboard()">📋 Bild in Zwischenablage kopieren</button>'+
+    '<p style="font-size:12px;color:var(--t3);text-align:center;line-height:1.6">Danach Brother iPrint&amp;Label öffnen → Neues Etikett → Bild einfügen</p>';
 
   renderLabelPreview();
 }
 
 function setLabelFormat(id){ labelFormatId=id; renderLabelPreview(); }
 
-function mmToPx(mm){ return Math.round(mm*3.7795); } // 96dpi for screen preview
+function mmToPx(mm,dpi){ return Math.round(mm/25.4*(dpi||96)); }
 
 function renderLabelPreview(){
   const a=S.a.find(x=>x.id===etikettArtikelId);
@@ -1210,150 +1214,149 @@ function renderLabelPreview(){
   const fmt=DK_FORMATS.find(f=>f.id===labelFormatId)||DK_FORMATS[0];
   const code=a.barcode||a.ownCode;
   const showPrice=document.getElementById('lbl-show-price')&&document.getElementById('lbl-show-price').checked;
-  const sheet=document.getElementById('label-sheet');
-
-  if(fmt.id==='dk11204'){
-    // DK-11204: 54mm breit × 17mm hoch (Querformat)
-    // Layout: Barcode links, Text rechts — alles in schmaler Höhe
-    const wpx=mmToPx(54);
-    const hpx=mmToPx(17);
-    sheet.style.width=wpx+'px';
-    sheet.style.height=hpx+'px';
-    sheet.style.display='flex';
-    sheet.style.flexDirection='row';
-    sheet.style.alignItems='center';
-    sheet.style.gap='4px';
-    sheet.style.padding='2px 4px';
-
-    sheet.innerHTML=
-      '<svg id="lbl-barcode-svg" style="flex-shrink:0"></svg>'+
-      '<div style="flex:1;min-width:0;overflow:hidden">'+
-        '<div class="lbl-name" style="font-size:7px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(a.name)+'</div>'+
-        (a.marke?'<div class="lbl-sub" style="font-size:6px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(a.marke)+'</div>':'')+
-        '<div class="lbl-sub" style="font-size:6px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+esc(a.lager)+(showPrice&&a.preis?' · CHF '+a.preis.toFixed(2):'')+'</div>'+
-      '</div>';
-
-    try{
-      JsBarcode('#lbl-barcode-svg',code,{
-        format:'CODE128',
-        width:1,
-        height:hpx-10,
-        fontSize:5,
-        margin:0,
-        displayValue:true,
-        textMargin:1,
-      });
-    }catch(e){
-      document.getElementById('lbl-barcode-svg').outerHTML='<div style="font-size:8px;color:var(--dg)">Fehler</div>';
-    }
-  }else{
-    // Andere Formate: klassisches Hochformat-Layout
-    const wmm=fmt.printW;
-    const hmm=fmt.printH||40;
-    sheet.style.width=mmToPx(wmm)+'px';
-    sheet.style.height=mmToPx(hmm)+'px';
-    sheet.style.display='flex';
-    sheet.style.flexDirection='column';
-    sheet.style.alignItems='center';
-    sheet.style.justifyContent='center';
-    sheet.style.padding='4px';
-
-    sheet.innerHTML=
-      '<div class="lbl-name" style="font-size:'+(wmm>=50?12:9)+'px">'+esc(a.name)+'</div>'+
-      '<div class="lbl-sub" style="font-size:'+(wmm>=50?9:7)+'px">'+esc(a.lager)+(showPrice&&a.preis?' · CHF '+a.preis.toFixed(2):'')+'</div>'+
-      '<svg id="lbl-barcode-svg"></svg>';
-
-    try{
-      JsBarcode('#lbl-barcode-svg',code,{
-        format:'CODE128',
-        width:wmm>=50?1.6:1.2,
-        height:wmm>=50?32:24,
-        fontSize:wmm>=50?10:8,
-        margin:3,
-        displayValue:true,
-      });
-    }catch(e){
-      document.getElementById('lbl-barcode-svg').outerHTML='<div style="font-size:9px;color:var(--dg)">Barcode-Fehler</div>';
-    }
-  }
+  const showKaufdatum=document.getElementById('lbl-show-kaufdatum')&&document.getElementById('lbl-show-kaufdatum').checked;
+  const showAblauf=document.getElementById('lbl-show-ablauf')&&document.getElementById('lbl-show-ablauf').checked;
+  drawLabelCanvas('label-canvas',a,fmt,code,showPrice,showKaufdatum,showAblauf,4);
 }
 
-function printLabel(){
-  const a=S.a.find(x=>x.id===etikettArtikelId);
-  if(!a)return;
-  const fmt=DK_FORMATS.find(f=>f.id===labelFormatId)||DK_FORMATS[0];
-  const w=fmt.printW, h=fmt.printH||40;
-  const code=a.barcode||a.ownCode;
-  const showPrice=document.getElementById('lbl-show-price')&&document.getElementById('lbl-show-price').checked;
+function drawLabelCanvas(canvasId,a,fmt,code,showPrice,showKaufdatum,showAblauf,scale){
+  const canvas=document.getElementById(canvasId);
+  if(!canvas)return;
+  // Use high DPI for crisp output (300dpi for print, scaled for screen)
+  const dpi=scale*96;
+  const wpx=mmToPx(fmt.printW,dpi);
+  const hpx=mmToPx(fmt.printH||40,dpi);
+  canvas.width=wpx;
+  canvas.height=hpx;
+  canvas.style.width=mmToPx(fmt.printW,96*2)+'px';
+  canvas.style.height=mmToPx(fmt.printH||40,96*2)+'px';
+  const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#ffffff';
+  ctx.fillRect(0,0,wpx,hpx);
 
-  // Convert SVG barcode to PNG data URL via canvas — avoids Chrome Mobile SVG print hang
-  const svgEl=document.getElementById('lbl-barcode-svg');
-  if(!svgEl){toast('Etikett noch nicht bereit');return;}
+  // Build barcode SVG via JsBarcode into hidden SVG, then draw as image
+  const tmpSvg=document.createElement('svg');
+  document.body.appendChild(tmpSvg);
+  try{
+    JsBarcode(tmpSvg,code,{
+      format:'CODE128',
+      width:Math.max(1,scale*1.2),
+      height:fmt.id==='dk11204'?hpx-Math.round(hpx*0.25):Math.round(hpx*0.55),
+      fontSize:Math.round(scale*7),
+      margin:Math.round(scale*2),
+      displayValue:true,
+      background:'#ffffff',
+      lineColor:'#000000',
+    });
+  }catch(e){tmpSvg.remove();drawTextOnly(ctx,a,fmt,wpx,hpx,scale,showPrice,showKaufdatum,showAblauf);return;}
 
-  const svgData=new XMLSerializer().serializeToString(svgEl);
+  const svgData=new XMLSerializer().serializeToString(tmpSvg);
+  tmpSvg.remove();
   const svgBlob=new Blob([svgData],{type:'image/svg+xml;charset=utf-8'});
   const svgUrl=URL.createObjectURL(svgBlob);
   const img=new Image();
-  img.onload=function(){
-    const canvas=document.createElement('canvas');
-    canvas.width=img.width||400;
-    canvas.height=img.height||100;
-    const ctx=canvas.getContext('2d');
+  img.onload=()=>{
+    URL.revokeObjectURL(svgUrl);
     ctx.fillStyle='#ffffff';
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.drawImage(img,0,0);
-    const pngUrl=canvas.toDataURL('image/png');
-    URL.revokeObjectURL(svgUrl);
-    openPrintFrame(a,fmt,w,h,pngUrl,showPrice);
+    ctx.fillRect(0,0,wpx,hpx);
+    const pad=Math.round(scale*3);
+    if(fmt.id==='dk11204'){
+      // DK-11204: Landscape 54×17mm — Barcode links, Text rechts
+      const bcW=Math.min(img.width,Math.round(wpx*0.55));
+      const bcH=img.height;
+      const bcY=Math.round((hpx-bcH)/2);
+      ctx.drawImage(img,0,bcY,bcW,bcH);
+      drawInfoText(ctx,a,wpx,hpx,bcW+pad,pad,wpx-bcW-pad*2,scale,showPrice,showKaufdatum,showAblauf);
+    }else{
+      // Andere Formate: Barcode oben, Text unten
+      const bcH=Math.round(hpx*0.6);
+      const bcW=Math.min(img.width,wpx-pad*2);
+      ctx.drawImage(img,Math.round((wpx-bcW)/2),0,bcW,bcH);
+      drawInfoText(ctx,a,wpx,hpx,pad,bcH+pad,wpx-pad*2,scale,showPrice,showKaufdatum,showAblauf);
+    }
   };
-  img.onerror=function(){
-    // Fallback: direct SVG embed if canvas fails
-    URL.revokeObjectURL(svgUrl);
-    openPrintFrame(a,fmt,w,h,null,showPrice);
-  };
+  img.onerror=()=>{URL.revokeObjectURL(svgUrl);drawTextOnly(ctx,a,fmt,wpx,hpx,scale,showPrice,showKaufdatum,showAblauf);};
   img.src=svgUrl;
 }
 
-function openPrintFrame(a,fmt,w,h,barcodePng,showPrice){
-  // Build self-contained print HTML with only the label — no external deps
-  const isLandscape=w>h;
-  const barcodeHtml=barcodePng
-    ?'<img src="'+barcodePng+'" style="display:block;max-width:100%;height:auto"/>'
-    :'<svg id="print-bc"></svg>';
+function drawInfoText(ctx,a,wpx,hpx,x,y,maxW,scale,showPrice,showKaufdatum,showAblauf){
+  const fs=Math.max(6,Math.round(scale*6.5));
+  const fsSmall=Math.max(5,Math.round(scale*5.5));
+  const lh=Math.round(fs*1.4);
+  ctx.fillStyle='#000000';
+  ctx.textBaseline='top';
+  // Name (bold)
+  ctx.font='bold '+fs+'pt sans-serif';
+  const name=truncText(ctx,a.name,maxW);
+  ctx.fillText(name,x,y);
+  let cy=y+lh;
+  // Sublines
+  ctx.font=fsSmall+'pt sans-serif';
+  ctx.fillStyle='#333333';
+  const subs=[];
+  if(a.marke)subs.push(a.marke);
+  if(a.lager)subs.push(a.lager);
+  if(showPrice&&a.preis)subs.push('CHF '+a.preis.toFixed(2));
+  if(showKaufdatum&&a.kaufdatum)subs.push('Kauf: '+fmtDateCH(a.kaufdatum));
+  if(showAblauf&&a.ablaufdatum)subs.push('MHD: '+fmtDateCH(a.ablaufdatum));
+  subs.forEach(s=>{
+    if(cy+lh>hpx)return;
+    ctx.fillText(truncText(ctx,s,maxW),x,cy);
+    cy+=Math.round(lh*0.9);
+  });
+}
 
-  const labelHtml=fmt.id==='dk11204'
-    ?'<div style="display:flex;flex-direction:row;align-items:center;gap:3px;width:'+w+'mm;height:'+h+'mm;overflow:hidden;padding:1mm">'+
-      '<div style="flex-shrink:0">'+barcodeHtml+'</div>'+
-      '<div style="flex:1;min-width:0;overflow:hidden">'+
-        '<div style="font-family:sans-serif;font-size:6pt;font-weight:700;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+a.name+'</div>'+
-        (a.marke?'<div style="font-family:sans-serif;font-size:5pt;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#555">'+a.marke+'</div>':'')+
-        '<div style="font-family:sans-serif;font-size:5pt;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#555">'+a.lager+(showPrice&&a.preis?' · CHF '+a.preis.toFixed(2):'')+'</div>'+
-      '</div>'+
-    '</div>'
-    :'<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:'+w+'mm;height:'+h+'mm;overflow:hidden;padding:2mm">'+
-      '<div style="font-family:sans-serif;font-size:9pt;font-weight:700;text-align:center;line-height:1.2">'+a.name+'</div>'+
-      '<div style="font-family:sans-serif;font-size:7pt;text-align:center;color:#555;margin-bottom:2mm">'+a.lager+(showPrice&&a.preis?' · CHF '+a.preis.toFixed(2):'')+'</div>'+
-      barcodeHtml+
-    '</div>';
+function drawTextOnly(ctx,a,fmt,wpx,hpx,scale,showPrice,showKaufdatum,showAblauf){
+  const pad=Math.round(scale*4);
+  drawInfoText(ctx,a,wpx,hpx,pad,pad,wpx-pad*2,scale,showPrice,showKaufdatum,showAblauf);
+}
 
-  const printHtml='<!DOCTYPE html><html><head><meta charset="UTF-8"/>'+
-    '<style>*{margin:0;padding:0;box-sizing:border-box}'+
-    'html,body{width:'+w+'mm;height:'+h+'mm;overflow:hidden}'+
-    '@page{size:'+w+'mm '+h+'mm '+(isLandscape?'landscape':'portrait')+';margin:0}'+
-    '@media print{html,body{width:'+w+'mm;height:'+h+'mm}}'+
-    '</style></head><body>'+labelHtml+'</body></html>';
+function truncText(ctx,text,maxW){
+  if(ctx.measureText(text).width<=maxW)return text;
+  let t=text;
+  while(t.length>1&&ctx.measureText(t+'…').width>maxW)t=t.slice(0,-1);
+  return t+'…';
+}
 
-  // Open in new window and trigger print
-  const win=window.open('','_blank','width=400,height=300');
-  if(!win){toast('Popup blockiert — bitte Popups für diese Seite erlauben');return;}
-  win.document.write(printHtml);
-  win.document.close();
-  // Give browser time to render (esp. image load) before printing
-  setTimeout(()=>{
-    win.focus();
-    win.print();
-    setTimeout(()=>win.close(),1500);
-  },600);
+async function copyLabelToClipboard(){
+  const a=S.a.find(x=>x.id===etikettArtikelId);
+  if(!a){toast('Kein Artikel ausgewählt');return;}
+  const fmt=DK_FORMATS.find(f=>f.id===labelFormatId)||DK_FORMATS[0];
+  const code=a.barcode||a.ownCode;
+  const showPrice=document.getElementById('lbl-show-price')&&document.getElementById('lbl-show-price').checked;
+  const showKaufdatum=document.getElementById('lbl-show-kaufdatum')&&document.getElementById('lbl-show-kaufdatum').checked;
+  const showAblauf=document.getElementById('lbl-show-ablauf')&&document.getElementById('lbl-show-ablauf').checked;
+
+  // Render high-res canvas for clipboard (300dpi equivalent)
+  const hiCanvas=document.createElement('canvas');
+  hiCanvas.id='label-canvas-hi';
+  hiCanvas.style.display='none';
+  document.body.appendChild(hiCanvas);
+  drawLabelCanvas('label-canvas-hi',a,fmt,code,showPrice,showKaufdatum,showAblauf,12);
+
+  // Wait for async image load in drawLabelCanvas
+  await new Promise(r=>setTimeout(r,800));
+
+  try{
+    hiCanvas.toBlob(async blob=>{
+      hiCanvas.remove();
+      if(!blob){toast('Bild konnte nicht erstellt werden');return;}
+      try{
+        await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
+        toast('✓ Etikett in Zwischenablage — jetzt Brother App öffnen und einfügen');
+      }catch(e){
+        // Fallback: open as data URL in new tab so user can long-press save
+        hiCanvas.remove();
+        const url=URL.createObjectURL(blob);
+        const w=window.open(url,'_blank');
+        if(w)toast('Bild in neuem Tab — lange drücken zum Speichern/Einfügen');
+        else toast('Bitte Popups erlauben oder Screenshot machen');
+      }
+    },'image/png');
+  }catch(e){
+    hiCanvas.remove();
+    toast('Fehler: '+e.message);
+  }
 }
 
 /* ── Rezepte ──────────────────────────────────────────────────────── */
