@@ -458,8 +458,8 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='3.9';
-const APP_BUILD='2026-06-20m';
+const APP_VERSION='4.0';
+const APP_BUILD='2026-06-21';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
 const ED=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
@@ -1222,7 +1222,6 @@ function renderLabelPreview(){
 function drawLabelCanvas(canvasId,a,fmt,code,showPrice,showKaufdatum,showAblauf,scale){
   const canvas=document.getElementById(canvasId);
   if(!canvas)return;
-  // Use high DPI for crisp output (300dpi for print, scaled for screen)
   const dpi=scale*96;
   const wpx=mmToPx(fmt.printW,dpi);
   const hpx=mmToPx(fmt.printH||40,dpi);
@@ -1234,49 +1233,45 @@ function drawLabelCanvas(canvasId,a,fmt,code,showPrice,showKaufdatum,showAblauf,
   ctx.fillStyle='#ffffff';
   ctx.fillRect(0,0,wpx,hpx);
 
-  // Build barcode SVG via JsBarcode into hidden SVG, then draw as image
-  const tmpSvg=document.createElement('svg');
-  document.body.appendChild(tmpSvg);
+  const pad=Math.round(scale*3);
+
+  // Render barcode directly onto a temporary canvas via JsBarcode
+  const bcCanvas=document.createElement('canvas');
+  let bcOk=false;
   try{
-    JsBarcode(tmpSvg,code,{
+    const bcH=fmt.id==='dk11204'
+      ?Math.round(hpx*0.78)
+      :Math.round(hpx*0.55);
+    JsBarcode(bcCanvas,code,{
       format:'CODE128',
-      width:Math.max(1,scale*1.2),
-      height:fmt.id==='dk11204'?hpx-Math.round(hpx*0.25):Math.round(hpx*0.55),
+      width:Math.max(1,Math.round(scale*1.3)),
+      height:bcH,
       fontSize:Math.round(scale*7),
       margin:Math.round(scale*2),
       displayValue:true,
       background:'#ffffff',
       lineColor:'#000000',
     });
-  }catch(e){tmpSvg.remove();drawTextOnly(ctx,a,fmt,wpx,hpx,scale,showPrice,showKaufdatum,showAblauf);return;}
+    bcOk=true;
+  }catch(e){bcOk=false;}
 
-  const svgData=new XMLSerializer().serializeToString(tmpSvg);
-  tmpSvg.remove();
-  const svgBlob=new Blob([svgData],{type:'image/svg+xml;charset=utf-8'});
-  const svgUrl=URL.createObjectURL(svgBlob);
-  const img=new Image();
-  img.onload=()=>{
-    URL.revokeObjectURL(svgUrl);
-    ctx.fillStyle='#ffffff';
-    ctx.fillRect(0,0,wpx,hpx);
-    const pad=Math.round(scale*3);
+  if(bcOk){
     if(fmt.id==='dk11204'){
-      // DK-11204: Landscape 54×17mm — Barcode links, Text rechts
-      const bcW=Math.min(img.width,Math.round(wpx*0.55));
-      const bcH=img.height;
-      const bcY=Math.round((hpx-bcH)/2);
-      ctx.drawImage(img,0,bcY,bcW,bcH);
+      // Landscape: Barcode links, Text rechts
+      const bcW=Math.min(bcCanvas.width,Math.round(wpx*0.58));
+      const bcY=Math.round((hpx-bcCanvas.height)/2);
+      ctx.drawImage(bcCanvas,0,0,bcCanvas.width,bcCanvas.height, 0,Math.max(0,bcY),bcW,bcCanvas.height);
       drawInfoText(ctx,a,wpx,hpx,bcW+pad,pad,wpx-bcW-pad*2,scale,showPrice,showKaufdatum,showAblauf);
     }else{
-      // Andere Formate: Barcode oben, Text unten
-      const bcH=Math.round(hpx*0.6);
-      const bcW=Math.min(img.width,wpx-pad*2);
-      ctx.drawImage(img,Math.round((wpx-bcW)/2),0,bcW,bcH);
-      drawInfoText(ctx,a,wpx,hpx,pad,bcH+pad,wpx-pad*2,scale,showPrice,showKaufdatum,showAblauf);
+      // Portrait: Barcode oben, Text darunter
+      const bcDisplayH=Math.round(hpx*0.6);
+      ctx.drawImage(bcCanvas,0,0,bcCanvas.width,bcCanvas.height, pad,0,wpx-pad*2,bcDisplayH);
+      drawInfoText(ctx,a,wpx,hpx,pad,bcDisplayH+pad,wpx-pad*2,scale,showPrice,showKaufdatum,showAblauf);
     }
-  };
-  img.onerror=()=>{URL.revokeObjectURL(svgUrl);drawTextOnly(ctx,a,fmt,wpx,hpx,scale,showPrice,showKaufdatum,showAblauf);};
-  img.src=svgUrl;
+  }else{
+    // Kein Barcode: nur Text
+    drawInfoText(ctx,a,wpx,hpx,pad,pad,wpx-pad*2,scale,showPrice,showKaufdatum,showAblauf);
+  }
 }
 
 function drawInfoText(ctx,a,wpx,hpx,x,y,maxW,scale,showPrice,showKaufdatum,showAblauf){
@@ -1327,15 +1322,11 @@ async function copyLabelToClipboard(){
   const showKaufdatum=document.getElementById('lbl-show-kaufdatum')&&document.getElementById('lbl-show-kaufdatum').checked;
   const showAblauf=document.getElementById('lbl-show-ablauf')&&document.getElementById('lbl-show-ablauf').checked;
 
-  // Render high-res canvas for clipboard (300dpi equivalent)
+  // Render hochauflösend (scale=12 ≈ 300dpi) — synchron, kein Warten nötig
   const hiCanvas=document.createElement('canvas');
-  hiCanvas.id='label-canvas-hi';
   hiCanvas.style.display='none';
   document.body.appendChild(hiCanvas);
-  drawLabelCanvas('label-canvas-hi',a,fmt,code,showPrice,showKaufdatum,showAblauf,12);
-
-  // Wait for async image load in drawLabelCanvas
-  await new Promise(r=>setTimeout(r,800));
+  drawLabelCanvas(hiCanvas.id='hb-print-canvas',a,fmt,code,showPrice,showKaufdatum,showAblauf,12);
 
   try{
     hiCanvas.toBlob(async blob=>{
@@ -1343,14 +1334,12 @@ async function copyLabelToClipboard(){
       if(!blob){toast('Bild konnte nicht erstellt werden');return;}
       try{
         await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);
-        toast('✓ Etikett in Zwischenablage — jetzt Brother App öffnen und einfügen');
+        toast('✓ Etikett kopiert — jetzt Brother App öffnen und einfügen');
       }catch(e){
-        // Fallback: open as data URL in new tab so user can long-press save
-        hiCanvas.remove();
         const url=URL.createObjectURL(blob);
         const w=window.open(url,'_blank');
-        if(w)toast('Bild in neuem Tab — lange drücken zum Speichern/Einfügen');
-        else toast('Bitte Popups erlauben oder Screenshot machen');
+        if(w)toast('Bild in neuem Tab — lange drücken zum Speichern');
+        else toast('Popup blockiert — bitte Popups erlauben');
       }
     },'image/png');
   }catch(e){
