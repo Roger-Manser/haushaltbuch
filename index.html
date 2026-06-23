@@ -437,6 +437,20 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   <span>Neue Version verfügbar</span>
   <button onclick="applyUpdate()">Aktualisieren</button>
 </div>
+<div id="cal-overlay" onclick="if(event.target===this)closeCal()" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:10200;align-items:flex-end;justify-content:center">
+  <div id="cal-box" style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:420px;padding:0 0 env(safe-area-inset-bottom)">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px 8px">
+      <button onclick="calNav(-1)" style="background:none;border:none;color:var(--ac);font-size:22px;cursor:pointer;padding:4px 10px">‹</button>
+      <div id="cal-title" style="font-weight:600;font-size:15px;color:var(--tx)"></div>
+      <button onclick="calNav(1)" style="background:none;border:none;color:var(--ac);font-size:22px;cursor:pointer;padding:4px 10px">›</button>
+    </div>
+    <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:0 10px 10px"></div>
+    <div style="display:flex;gap:8px;padding:0 16px 14px">
+      <button onclick="closeCal()" style="flex:1;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>
+      <button onclick="calClearDate()" style="flex:1;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--dg)">Löschen</button>
+    </div>
+  </div>
+</div>
 <div id="lightbox" onclick="closeLightbox()">
   <button id="lightbox-close" onclick="closeLightbox()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()"/>
@@ -469,8 +483,8 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='3.3';
-const APP_BUILD='2026-06-20g';
+const APP_VERSION='3.4';
+const APP_BUILD='2026-06-20h';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
 const ED=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
@@ -909,7 +923,7 @@ function openForm(id){
   '<div class="fd"><label>Packungsgrösse <span style="color:var(--t3);font-weight:400">(optional, z.B. 2.5 dl pro Stück)</span></label><div class="ur"><input type="number" id="f-pg" min="0" step="0.1" placeholder="z.B. 2.5" value="'+(a&&a.packMenge?esc(a.packMenge):'')+'"/><select id="f-pe">'+epo+'</select></div></div>'+
   '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="number" id="f-pr" min="0" step="0.05" placeholder="z.B. 1.95" value="'+(a?esc(a.preis||''):'')+'"/></div>'+
   '<div class="fd"><label>Lagerort</label><div class="lcw" id="f-lo">'+lc+'</div></div>'+
-  '<div class="tc"><div class="fd"><label>Kaufdatum</label><input type="date" id="f-kd" value="'+(a?esc(a.kaufdatum||todayISO()):todayISO())+'"/></div><div class="fd"><label>Ablaufdatum (MHD)</label><input type="date" id="f-ad" value="'+(a?esc(a.ablaufdatum||''):'')+'"/></div></div>'+
+  '<div class="tc"><div class="fd"><label>Kaufdatum</label>'+dateField('f-kd',a?a.kaufdatum||todayISO():todayISO())+'</div><div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('f-ad',a?a.ablaufdatum||'':'')+'</div></div>'+
   '<div class="fd"><label>Notiz</label><textarea id="f-nt" placeholder="z.B. Bio, Lieblingsmarke...">'+(a?esc(a.notiz||''):'')+'</textarea></div>'+
   '<div class="br"><button class="bg2" onclick="closeForm()">Abbrechen</button><button class="bp" onclick="saveForm()">'+(a?'Speichern':'Hinzufügen')+'</button></div>';
   goScreen('s-form');
@@ -1052,11 +1066,11 @@ function lookupBarcode(){
       '</label>'+
     '</div>'+
     // Menge + Kaufdatum
-    '<div class="tc" style="margin-bottom:14px"><div class="fd"><label>Menge</label><div class="ur"><input type="number" id="e-mg" min="1" value="1"/><span style="display:flex;align-items:center;padding:0 10px;color:var(--t2);font-size:14px">'+esc(found.einheit||'Stk')+'</span></div></div><div class="fd"><label>Kaufdatum</label><input type="date" id="e-kd" value="'+todayISO()+'"/></div></div>'+
+    '<div class="tc" style="margin-bottom:14px"><div class="fd"><label>Menge</label><div class="ur"><input type="number" id="e-mg" min="1" value="1"/><span style="display:flex;align-items:center;padding:0 10px;color:var(--t2);font-size:14px">'+esc(found.einheit||'Stk')+'</span></div></div><div class="fd"><label>Kaufdatum</label>'+dateField('e-kd',todayISO())+'</div></div>'+
     // Ablaufdatum: Pflicht wenn Artikel schon eines hatte, sonst optional
     (found.ablaufdatum
-      ? '<div class="fd" style="margin-bottom:14px"><label style="display:flex;align-items:center;gap:6px">'+I.calx+' Ablaufdatum (MHD) <span style="color:var(--dg);font-weight:700">*</span> <span style="font-size:11px;color:var(--dg);background:var(--dl);padding:1px 7px;border-radius:8px">Pflicht</span></label><input type="date" id="e-ad" value="" style="border-color:var(--dg)" required/><div style="font-size:12px;color:var(--t2);margin-top:4px">Letztes erfasstes Ablaufdatum: '+fmtDateCH(found.ablaufdatum)+'</div></div>'
-      : '<div class="fd" style="margin-bottom:14px"><label style="display:flex;align-items:center;gap:6px">'+I.calx+' Ablaufdatum (MHD) <span style="font-size:11px;color:var(--t3)">(optional, kein bisheriges Datum)</span></label><input type="date" id="e-ad" value=""/></div>'
+      ? '<div class="fd" style="margin-bottom:14px"><label style="display:flex;align-items:center;gap:6px">'+I.calx+' Ablaufdatum (MHD) <span style="color:var(--dg);font-weight:700">*</span> <span style="font-size:11px;color:var(--dg);background:var(--dl);padding:1px 7px;border-radius:8px">Pflicht</span></label>'+dateField('e-ad','','border-color:var(--dg)')+'<div style="font-size:12px;color:var(--t2);margin-top:4px">Letztes erfasstes Ablaufdatum: '+fmtDateCH(found.ablaufdatum)+'</div></div>'
+      : '<div class="fd" style="margin-bottom:14px"><label style="display:flex;align-items:center;gap:6px">'+I.calx+' Ablaufdatum (MHD) <span style="font-size:11px;color:var(--t3)">(optional, kein bisheriges Datum)</span></label>'+dateField('e-ad','')+'</div>'
     )+
     '<button class="bp" style="width:100%;padding:14px;font-size:16px" onclick="confirmEingang('+found.id+','+!!found.ablaufdatum+')">Eingang bestätigen</button>';
 
@@ -1076,8 +1090,8 @@ function confirmEingang(id,ablaufPflicht){
   const ablaufdatum=document.getElementById('e-ad').value;
   // Pflichtprüfung Ablaufdatum
   if(ablaufPflicht&&!ablaufdatum){
-    const adEl=document.getElementById('e-ad');
-    if(adEl){adEl.style.borderColor='var(--dg)';adEl.focus();}
+    const adBtn=document.getElementById('e-ad-btn');
+    if(adBtn){adBtn.style.borderColor='var(--dg)';adBtn.style.boxShadow='0 0 0 3px color-mix(in srgb,var(--dg) 20%,transparent)';}
     toast('Bitte Ablaufdatum eingeben — dieser Artikel hatte bisher immer eines');
     return;
   }
@@ -1561,6 +1575,83 @@ function resetAll(){if(!confirm('Alle Daten wirklich löschen?'))return;S={a:[],
 /* ── Toast & Loader ───────────────────────────────────────────────── */
 let tT;
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('on'),2300);}
+/* ── Kalender-Picker ─────────────────────────────────────────────── */
+let calTargetId=null;
+let calYear=2026;
+let calMonth=0; // 0-based
+const CAL_DAYS=['Mo','Di','Mi','Do','Fr','Sa','So'];
+const CAL_MONTHS=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+
+function openCal(inputId){
+  calTargetId=inputId;
+  const inp=document.getElementById(inputId);
+  const val=inp?inp.value:'';
+  const d=val?new Date(val):new Date();
+  calYear=d.getFullYear();
+  calMonth=d.getMonth();
+  renderCal();
+  const ov=document.getElementById('cal-overlay');
+  ov.style.display='flex';
+  document.body.style.overflow='hidden';
+}
+function closeCal(){
+  document.getElementById('cal-overlay').style.display='none';
+  document.body.style.overflow='';
+  calTargetId=null;
+}
+function calClearDate(){
+  if(calTargetId){
+    const inp=document.getElementById(calTargetId);
+    if(inp){inp.value='';calUpdateLabel(calTargetId);inp.dispatchEvent(new Event('change'));}
+  }
+  closeCal();
+}
+function calNav(dir){
+  calMonth+=dir;
+  if(calMonth>11){calMonth=0;calYear++;}
+  if(calMonth<0){calMonth=11;calYear--;}
+  renderCal();
+}
+function calPick(y,m,d){
+  if(calTargetId){
+    const inp=document.getElementById(calTargetId);
+    if(inp){
+      const ds=y+'-'+String(m+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+      inp.value=ds;
+      calUpdateLabel(calTargetId);
+      inp.dispatchEvent(new Event('change'));
+    }
+  }
+  closeCal();
+}
+function renderCal(){
+  document.getElementById('cal-title').textContent=CAL_MONTHS[calMonth]+' '+calYear;
+  const grid=document.getElementById('cal-grid');
+  // Day headers
+  let h=CAL_DAYS.map(d=>'<div style="text-align:center;font-size:11px;font-weight:600;color:var(--t3);padding:4px 0">'+d+'</div>').join('');
+  // First weekday of month (Mon=0)
+  const first=new Date(calYear,calMonth,1);
+  let startDay=(first.getDay()+6)%7; // convert Sun=0 to Mon=0
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  // Current selected value
+  const inp=calTargetId?document.getElementById(calTargetId):null;
+  const selVal=inp?inp.value:'';
+  const today=todayISO();
+  // Empty cells before first day
+  for(let i=0;i<startDay;i++)h+='<div></div>';
+  // Day cells
+  for(let d=1;d<=daysInMonth;d++){
+    const ds=calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+    const isSel=ds===selVal;
+    const isToday=ds===today;
+    h+='<div onclick="calPick('+calYear+','+calMonth+','+d+')" style="'+
+      'text-align:center;padding:7px 2px;border-radius:6px;cursor:pointer;font-size:14px;'+
+      (isSel?'background:var(--ac);color:#fff;font-weight:700;':isToday?'background:var(--al);color:var(--ac);font-weight:600;':'color:var(--tx);')+
+      '">'+d+'</div>';
+  }
+  grid.innerHTML=h;
+}
+
 function openLightbox(src){
   if(!src)return;
   document.getElementById('lightbox-img').src=src;
@@ -1599,6 +1690,32 @@ function packTotal(a){
   return tot+' '+(a.packEinheit||'dl')+' gesamt';
 }
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function dateField(id,value,extraStyle){
+  const v=value||'';
+  const disp=v?fmtDateCH(v):'Datum wählen';
+  const borderColor=extraStyle&&extraStyle.includes('dg')?'var(--dg)':'var(--bd)';
+  return '<div style="position:relative">'+
+    '<input type="date" id="'+id+'" value="'+esc(v)+'" '+
+    'style="position:absolute;opacity:0;width:1px;height:1px;pointer-events:none" '+
+    'onchange="calUpdateLabel(\''+id+'\')"/>'+
+    '<button type="button" id="'+id+'-btn" onclick="openCal(\''+id+'\')" '+
+    'style="width:100%;padding:11px 14px;border:1px solid '+borderColor+
+    ';border-radius:var(--rs);background:var(--bg);color:'+(v?'var(--tx)':'var(--t3)')+
+    ';font-size:15px;text-align:left;cursor:pointer;display:flex;align-items:center;gap:8px">'+
+    I.cal.replace('20px;height:20px','16px;height:16px')+
+    '<span id="'+id+'-lbl">'+esc(disp)+'</span>'+
+    '</button>'+
+  '</div>';
+}
+function calUpdateLabel(id){
+  const inp=document.getElementById(id);
+  const lbl=document.getElementById(id+'-lbl');
+  const btn=document.getElementById(id+'-btn');
+  if(!inp||!lbl)return;
+  const val=inp.value;
+  lbl.textContent=val?fmtDateCH(val):'Datum wählen';
+  if(btn)btn.style.color=val?'var(--tx)':'var(--t3)';
+}
 function daysUntil(iso){
   if(!iso)return null;
   const today=new Date();today.setHours(0,0,0,0);
