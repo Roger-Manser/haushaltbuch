@@ -411,7 +411,7 @@
       "lager": "Schlof",
       "menge": 0,
       "einheit": "Stk",
-      "mindest": 1,
+      "mindest": 0,
       "barcode": "4002103249535",
       "preis": 0,
       "packMenge": 3.3,
@@ -1411,5 +1411,5 @@
       "zeit": 1782311585444
     }
   ],
-  "aktualisiert": "2026-06-25T13:19:47.342Z"
+  "aktualisiert": "2026-06-25T13:22:04.684Z"
 }
