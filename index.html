@@ -146,6 +146,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .sok svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0}
 .cam-wrap{position:relative;background:#000;border-radius:var(--rs);overflow:hidden;margin-top:8px;display:none}
 .cam-wrap video{width:100%;display:block;max-height:280px;object-fit:cover}
+.cam-wrap canvas.drawingBuffer{position:absolute;top:0;left:0;width:100%!important;height:100%!important;opacity:0.4}
 .cam-frame{position:absolute;inset:20% 12%;border:2px solid var(--ac);border-radius:8px;box-shadow:0 0 0 999px rgba(0,0,0,.35);pointer-events:none}
 .cam-frame::before,.cam-frame::after{content:'';position:absolute;width:100%;height:2px;background:var(--ac);left:0;animation:camscan 1.8s ease-in-out infinite}
 .cam-frame::before{top:0}
@@ -282,8 +283,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 @keyframes spin{to{transform:rotate(360deg)}}
 .ldm{font-size:14px;color:var(--t2)}
 </style>
-<script src="https://unpkg.com/@zxing/library@0.20.0"></script>
-<script src="https://unpkg.com/@zxing/browser@0.1.5"></script>
+<script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2@1.8.4/dist/quagga.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.12.1/JsBarcode.all.min.js"></script>
 </head>
 <body>
@@ -461,8 +461,8 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='4.8';
-const APP_BUILD='2026-06-21i';
+const APP_VERSION='4.9';
+const APP_BUILD='2026-06-23';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
 const ED=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
@@ -592,106 +592,27 @@ async function loadFromGH(){
   }catch(err){hideLdr();toast('Fehler: '+err.message.slice(0,50));}
 }
 
-/* ── Live-Kamera-Scanner (ZXing) ──────────────────────────────────── */
-let zxReader=null;
-let zxStream=null;
-let zxTargetInputId=null; // which input field receives the scanned code
-let zxOnResult=null; // optional callback(code) after scan
+/* ── Live-Kamera-Scanner (Quagga2) ────────────────────────────────── */
+let qTargetInputId=null;
+let qOnResult=null;
+let qContinuous=false;
+let qRunning=false;
+let qLastCode='';
+let qLastTime=0;
 
-function getZXing(){
-  // @zxing/browser exposes window.ZXingBrowser (has BrowserMultiFormatReader).
-  // @zxing/library alone exposes window.ZXing (core only, no browser reader in older builds).
-  if(window.ZXingBrowser&&window.ZXingBrowser.BrowserMultiFormatReader)return window.ZXingBrowser;
-  if(window.ZXing&&window.ZXing.BrowserMultiFormatReader)return window.ZXing;
-  return null;
-}
 function cameraApiAvailable(){
   return !!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia);
 }
 function httpsOk(){
   return location.protocol==='https:'||location.hostname==='localhost'||location.hostname==='127.0.0.1';
 }
-async function waitForZXing(timeoutMs){
-  const start=Date.now();
-  while(Date.now()-start<timeoutMs){
-    if(getZXing())return getZXing();
-    await new Promise(r=>setTimeout(r,150));
-  }
-  return null;
-}
-function scannerSupported(){
-  return cameraApiAvailable()&&httpsOk()&&!!getZXing();
-}
-
-let zxContinuous=false;
-let zxLastCode='';
-let zxLastTime=0;
-
-async function openScanner(targetInputId,onResult,continuous){
-  zxTargetInputId=targetInputId;
-  zxOnResult=onResult||null;
-  zxContinuous=!!continuous;
-  zxLastCode='';zxLastTime=0;
-  const wrap=document.getElementById('cam-'+targetInputId);
-  if(!wrap)return;
-
-  if(!httpsOk()){
-    showCamErr(targetInputId,'Kamera benötigt eine sichere Verbindung (https://). Diese Seite läuft nicht über HTTPS.');
-    return;
-  }
-  if(!cameraApiAvailable()){
-    showCamErr(targetInputId,'Dieser Browser unterstützt keinen Kamerazugriff (getUserMedia fehlt). Bitte Barcode manuell eingeben.');
-    return;
-  }
-  let ZX=getZXing();
-  if(!ZX){
-    showCamErr(targetInputId,'Scanner-Modul lädt noch…');
-    ZX=await waitForZXing(4000);
-  }
-  if(!ZX){
-    showCamErr(targetInputId,'Scanner-Bibliothek konnte nicht geladen werden (evtl. Internetverbindung oder Werbeblocker prüfen). Bitte Barcode manuell eingeben.');
-    return;
-  }
-
-  wrap.style.display='block';
-  hideCamErr(targetInputId);
-  try{
-    const video=document.getElementById('camv-'+targetInputId);
-    const BrowserMultiFormatReader=ZX.BrowserMultiFormatReader;
-    zxReader=new BrowserMultiFormatReader();
-    let deviceId=undefined;
-    try{
-      const devices=await BrowserMultiFormatReader.listVideoInputDevices();
-      const back=devices.find(d=>/back|rear|environment/i.test(d.label));
-      if(back)deviceId=back.deviceId;
-    }catch(de){/* device listing can fail before permission is granted; continue with default */}
-    await zxReader.decodeFromVideoDevice(deviceId,video,(result,error)=>{
-      if(result){
-        const code=result.getText();
-        const now=Date.now();
-        if(code===zxLastCode&&(now-zxLastTime)<2500)return; // debounce duplicate scans
-        zxLastCode=code;zxLastTime=now;
-        if(navigator.vibrate)navigator.vibrate(80);
-        if(!zxContinuous){
-          closeScanner();
-          const input=document.getElementById(targetInputId);
-          if(input)input.value=code;
-        }
-        if(zxOnResult)zxOnResult(code);
-        else flashScanOk(targetInputId,code);
-      }
-    });
-  }catch(e){
-    let msg='Kein Kamerazugriff: '+(e.message||'unbekannter Fehler')+'.';
-    if(e.name==='NotAllowedError')msg='Kamera-Berechtigung wurde verweigert. Bitte in den Browser-/Website-Einstellungen erlauben.';
-    else if(e.name==='NotFoundError')msg='Keine Kamera gefunden.';
-    else if(e.name==='NotReadableError')msg='Kamera wird bereits von einer anderen App verwendet.';
-    showCamErr(targetInputId,msg+' Bitte Barcode manuell eingeben.');
-  }
-}
-function closeScanner(){
-  try{if(zxReader){zxReader.reset();zxReader=null;}}catch(e){}
-  document.querySelectorAll('.cam-wrap').forEach(w=>w.style.display='none');
+function camScannerHTML(id){
+  return '<div class="cam-wrap" id="cam-'+id+'">'+
+    '<button class="cam-close" onclick="closeScanner()">'+I.xc+'</button>'+
+    '<div id="camv-'+id+'" style="width:100%;position:relative"></div>'+
+    '<div class="cam-frame"></div>'+
+    '<div class="cam-hint">Barcode schräg oder gerade halten</div>'+
+  '</div><div class="cam-err" id="camerr-'+id+'"></div>';
 }
 function showCamErr(id,msg){
   const e=document.getElementById('camerr-'+id);
@@ -700,11 +621,98 @@ function showCamErr(id,msg){
   if(w)w.style.display='none';
 }
 function hideCamErr(id){const e=document.getElementById('camerr-'+id);if(e)e.style.display='none';}
-function flashScanOk(id,code){
-  toast('Barcode erkannt: '+code);
+function flashScanOk(id,code){toast('Barcode erkannt: '+code);}
+
+async function openScanner(targetInputId,onResult,continuous){
+  qTargetInputId=targetInputId;
+  qOnResult=onResult||null;
+  qContinuous=!!continuous;
+  qLastCode='';qLastTime=0;
+
+  const wrap=document.getElementById('cam-'+targetInputId);
+  if(!wrap)return;
+  if(!httpsOk()){showCamErr(targetInputId,'Kamera benötigt HTTPS.');return;}
+  if(!cameraApiAvailable()){showCamErr(targetInputId,'Kein Kamerazugriff (getUserMedia fehlt).');return;}
+  if(!window.Quagga){showCamErr(targetInputId,'Scanner-Bibliothek lädt noch — bitte kurz warten und nochmal versuchen.');return;}
+
+  wrap.style.display='block';
+  hideCamErr(targetInputId);
+
+  const viewportEl=document.getElementById('camv-'+targetInputId);
+  if(!viewportEl)return;
+
+  if(qRunning){Quagga.stop();qRunning=false;}
+
+  Quagga.init({
+    inputStream:{
+      type:'LiveStream',
+      target:viewportEl,
+      constraints:{
+        facingMode:'environment',   // Rückkamera
+        width:{ideal:1280},
+        height:{ideal:720},
+      },
+      area:{                         // Scanbereich auf mittleres Drittel begrenzen
+        top:'20%',left:'5%',right:'5%',bottom:'20%'
+      },
+    },
+    decoder:{
+      readers:[
+        'ean_reader',               // EAN-13 (Europäischer Standard)
+        'ean_8_reader',             // EAN-8
+        'upc_reader',               // UPC-A (USA)
+        'code_128_reader',          // Code128 (eigene Codes HB-...)
+        'code_39_reader',           // Code39 Fallback
+      ],
+      multiple:false,
+    },
+    locate:true,                    // Barcode im Bild aktiv suchen (tolerant bei Schräglage)
+    numOfWorkers:2,
+    frequency:10,                   // Erkennungsversuche pro Sekunde
+  },err=>{
+    if(err){
+      let msg='Kamera-Fehler: '+(err.message||err);
+      if(/permission|denied/i.test(msg))msg='Kamera-Berechtigung verweigert — bitte in den Browser-Einstellungen erlauben.';
+      showCamErr(targetInputId,msg);
+      wrap.style.display='none';
+      return;
+    }
+    qRunning=true;
+    Quagga.start();
+  });
+
+  Quagga.offDetected();  // alte Handler entfernen
+  Quagga.onDetected(result=>{
+    const code=result&&result.codeResult&&result.codeResult.code;
+    if(!code)return;
+    // Nur Codes mit hoher Konfidenz akzeptieren
+    const err=result.codeResult.decodedCodes
+      .filter(c=>c.error!==undefined)
+      .reduce((s,c)=>s+c.error,0)/Math.max(1,result.codeResult.decodedCodes.filter(c=>c.error!==undefined).length);
+    if(err>0.25)return;  // zu unsicher, ignorieren
+
+    const now=Date.now();
+    if(code===qLastCode&&(now-qLastTime)<2500)return; // Debounce
+    qLastCode=code;qLastTime=now;
+    if(navigator.vibrate)navigator.vibrate(80);
+
+    if(!qContinuous){
+      closeScanner();
+      const input=document.getElementById(targetInputId);
+      if(input)input.value=code;
+    }
+    if(qOnResult)qOnResult(code);
+    else flashScanOk(targetInputId,code);
+  });
 }
-function camScannerHTML(id){
-  return '<div class="cam-wrap" id="cam-'+id+'"><button class="cam-close" onclick="closeScanner()">'+I.xc+'</button><video id="camv-'+id+'" autoplay playsinline muted></video><div class="cam-frame"></div><div class="cam-hint">Barcode ins Feld halten</div></div><div class="cam-err" id="camerr-'+id+'"></div>';
+
+function closeScanner(){
+  if(qRunning){
+    try{Quagga.stop();}catch(e){}
+    qRunning=false;
+  }
+  Quagga.offDetected();
+  document.querySelectorAll('.cam-wrap').forEach(w=>w.style.display='none');
 }
 
 /* ── Open Food Facts Lookup ───────────────────────────────────────── */
@@ -752,7 +760,7 @@ function mapOFFCategory(tags){
 /* ── Routing ──────────────────────────────────────────────────────── */
 let cur='s-lager';
 function goScreen(id){
-  if(cur!==id&&(cur==='s-eingang'||cur==='s-ausgang')&&zxReader){closeScanner();}
+  if(cur!==id&&(cur==='s-eingang'||cur==='s-ausgang')&&qRunning){closeScanner();}
   document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
   document.getElementById(id).classList.add('on');
   cur=id;nav();
