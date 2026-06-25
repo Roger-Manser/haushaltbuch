@@ -292,7 +292,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 <div class="sc on" id="s-lager">
   <div class="tb">
-    <span class="tb-t">Haushaltbuch <span id="app-version-badge" style="font-size:10px;font-weight:500;color:var(--t3);vertical-align:middle;"></span></span>
+    <span class="tb-t">Haushaltbuch <span id="app-version-badge" style="font-size:10px;font-weight:500;color:var(--t3);vertical-align:middle;"></span> <span id="artikel-count-badge" style="font-size:10px;font-weight:500;color:var(--t3);vertical-align:middle;background:var(--al);color:var(--ac);border-radius:8px;padding:1px 6px;margin-left:2px"></span></span>
     <div class="tb-r">
       <button class="ib" id="sync-btn" title="GitHub Sync" onclick="doSync()">
         <span class="sdot" id="sdot"></span>
@@ -461,8 +461,8 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='5.1';
-const APP_BUILD='2026-06-23c';
+const APP_VERSION='5.3';
+const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
 const ED=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
@@ -496,9 +496,17 @@ function sdot(s){const d=document.getElementById('sdot');if(d)d.className='sdot'
 /* ── GitHub API ───────────────────────────────────────────────────── */
 async function ghReq(path,method,body){
   if(!gh.tok||!gh.own||!gh.repo)throw new Error('GitHub nicht konfiguriert');
-  const r=await fetch('https://api.github.com/repos/'+gh.own+'/'+gh.repo+path,{
+  const url='https://api.github.com/repos/'+gh.own+'/'+gh.repo+path+
+    (method==='GET'||!method?'?t='+Date.now():''); // Cache-Buster für GET-Anfragen
+  const r=await fetch(url,{
     method:method||'GET',
-    headers:{'Authorization':'token '+gh.tok,'Content-Type':'application/json','Accept':'application/vnd.github.v3+json'},
+    headers:{
+      'Authorization':'token '+gh.tok,
+      'Content-Type':'application/json',
+      'Accept':'application/vnd.github.v3+json',
+      'Cache-Control':'no-cache',
+    },
+    cache:'no-store',
     body:body?JSON.stringify(body):undefined
   });
   if(!r.ok){const t=await r.text();throw new Error('GitHub '+r.status+': '+t.slice(0,100));}
@@ -813,6 +821,9 @@ function renderSortBar(){
 function setSortMode(m){sortMode=m;renderLager();}
 
 function renderLager(){
+  // Artikel-Anzahl Badge aktualisieren
+  const cb=document.getElementById('artikel-count-badge');
+  if(cb)cb.textContent=S.a.length+' Artikel';
   renderSortBar();
   const bar=document.getElementById('lager-chips');
   const used=[...new Set(S.a.map(x=>x.lager))];
