@@ -605,7 +605,7 @@
       "lager": "Schlof",
       "menge": 1,
       "einheit": "Stk",
-      "mindest": 1,
+      "mindest": 0,
       "barcode": "4061463702265",
       "preis": 0,
       "packMenge": 190,
@@ -614,7 +614,8 @@
       "ablaufdatum": "2027-05-31",
       "notiz": "",
       "foto": "",
-      "fotoPath": ""
+      "fotoPath": "",
+      "preisHistorie": []
     },
     {
       "id": 31,
@@ -624,7 +625,7 @@
       "lager": "Schlof",
       "menge": 1,
       "einheit": "Stk",
-      "mindest": 1,
+      "mindest": 0,
       "barcode": "4061463702388",
       "preis": 0,
       "packMenge": 190,
@@ -633,7 +634,8 @@
       "ablaufdatum": "2027-05-31",
       "notiz": "",
       "foto": "",
-      "fotoPath": ""
+      "fotoPath": "",
+      "preisHistorie": []
     }
   ],
   "lagerorte": [
@@ -1411,5 +1413,5 @@
       "zeit": 1782311585444
     }
   ],
-  "aktualisiert": "2026-06-25T13:22:04.684Z"
+  "aktualisiert": "2026-06-25T13:22:52.384Z"
 }
