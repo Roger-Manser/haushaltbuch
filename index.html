@@ -19,9 +19,9 @@
 html,body{height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;background:var(--bg);color:var(--tx);-webkit-tap-highlight-color:transparent}
 button,input,select,textarea{font-family:inherit;font-size:inherit}
 #app{height:100%;display:flex;flex-direction:column}
-#screens{flex:1;overflow:hidden;position:relative}
+#screens{flex:1;overflow:hidden;position:relative;padding-bottom:var(--nh)}
 .sc{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .12s}
-.sc.on{opacity:1;pointer-events:all}.tb{background:var(--sf);border-bottom:1px solid var(--bd);padding:0 16px;height:var(--th);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:10px}
+#global-nav{background:var(--sf);border-top:1px solid var(--bd);display:flex;height:var(--nh);padding-bottom:env(safe-area-inset-bottom)}.tb{background:var(--sf);border-bottom:1px solid var(--bd);padding:0 16px;height:var(--th);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:10px}
 .tb-t{font-size:18px;font-weight:700;letter-spacing:-.3px}
 .tb-r{display:flex;gap:6px}
 .ib{width:36px;height:36px;border-radius:var(--rs);border:1px solid var(--bd);background:transparent;display:flex;align-items:center;justify-content:center;color:var(--t2);cursor:pointer}
@@ -76,7 +76,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .sort-btn{padding:5px 12px;border-radius:8px;border:1px solid var(--bd);font-size:12px;background:var(--sf);color:var(--t2);white-space:nowrap;cursor:pointer;display:flex;align-items:center;gap:4px}
 .sort-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
 .sort-btn.on{background:var(--al);border-color:var(--am);color:var(--ac);font-weight:500}
-#bnav,[id^="bnav"]{background:var(--sf);border-top:1px solid var(--bd);display:flex;height:var(--nh);padding-bottom:env(safe-area-inset-bottom);flex-shrink:0;position:sticky;bottom:0;z-index:100}
+.sc.on{opacity:1;pointer-events:all}
 .nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;border:none;color:var(--t3);font-size:9px;font-weight:500;cursor:pointer;padding:4px 2px;min-width:0;overflow:hidden}
 .nb svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75;flex-shrink:0}
 .nb span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
@@ -330,7 +330,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
       Neuer Artikel
     </button>
   </div>
-  <div id="bnav"></div>
+
 </div>
 
 <div class="sc" id="s-eingang" style="overflow-y:auto">
@@ -367,20 +367,20 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
     </button></div>
   </div>
   <div class="scroll" id="rezept-list"></div>
-  <div id="bnav2"></div>
+
 </div>
 
 <div class="sc" id="s-uebersicht">
   <div class="tb"><span class="tb-t">Übersicht</span></div>
   <div class="scroll" id="ub-body"></div>
-  <div id="bnav3"></div>
+
 </div>
 
 <div class="sc" id="s-statistik">
   <div class="tb"><span class="tb-t">Statistik</span></div>
   <div class="chips" id="stat-period-chips"></div>
   <div class="scroll" id="stat-body"></div>
-  <div id="bnav4s"></div>
+
 </div>
 
 <div class="sc" id="s-einkauf">
@@ -391,7 +391,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   </div>
   <div class="chips" id="ek-shop-chips"></div>
   <div class="scroll" id="ek-body"></div>
-  <div id="bnav4"></div>
+
 </div>
 
 <div class="sc" id="s-form" style="overflow-y:auto">
@@ -424,6 +424,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 </div>
 
 </div></div>
+<div id="global-nav" style="position:fixed;bottom:0;left:0;right:0;z-index:200;max-width:600px;margin:0 auto"></div>
 <div id="toast"></div>
 <div id="ldr"><div class="ldb"><div class="spn"></div><div class="ldm" id="ldr-msg">Lädt...</div></div></div>
 <div id="update-banner">
@@ -463,7 +464,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='7.2';
+const APP_VERSION='7.4';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -486,8 +487,13 @@ let dirty=false;
 function loadL(){
   try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ge=d.ge||[...GD];S.ek=d.ek||[];S.rz=d.rz||[];S.log=d.log||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);}}catch(e){}
   try{const r=localStorage.getItem('hbgh');if(r)gh=JSON.parse(r);}catch(e){}
+  try{const c=localStorage.getItem('hb_ai_cache');if(c)aiMatchCache=JSON.parse(c);}catch(e){}
 }
-function saveL(){try{localStorage.setItem('hb3',JSON.stringify(S));}catch(e){}dirty=true;sdot('dt');}
+function saveL(){
+  try{localStorage.setItem('hb3',JSON.stringify(S));}catch(e){}
+  try{if(Object.keys(aiMatchCache).length)localStorage.setItem('hb_ai_cache',JSON.stringify(aiMatchCache));}catch(e){}
+  dirty=true;sdot('dt');
+}
 function saveGH(){try{localStorage.setItem('hbgh',JSON.stringify(gh));}catch(e){};}
 function addLogEntry(type,artikelId,name,lager,kat,menge,einheit,preis,aktion){
   if(!S.log)S.log=[];
@@ -843,7 +849,7 @@ function nav(){
     const bdg=t.b?'<span class="nbb">'+t.b+'</span>':'';
     return '<button class="nb'+(on?' on':'')+'" onclick="goScreen(\''+t.id+'\')" ><div class="nbw">'+t.s+bdg+'</div><span>'+t.l+'</span></button>';
   }).join('');
-  ['','2','3','4','4s'].forEach(s=>{const el=document.getElementById('bnav'+s);if(el)el.innerHTML=h;});
+  const el=document.getElementById('global-nav');if(el)el.innerHTML=h;
 }
 
 /* ── Lager ────────────────────────────────────────────────────────── */
@@ -1613,25 +1619,99 @@ async function syncRezepte(){
       S.rz=parseRezepte(j);
     }
     saveL();renderRezepte();
+    // KI-Cache invalidieren — neue Rezepte brauchen neuen Abgleich
+    aiMatchCache={};
     toast(S.rz.length+' Rezepte geladen');
   }catch(e){
     toast('Fehler: '+e.message.slice(0,60));
   }
 }
+// KI-Synonym-Cache: {zutat_lager: true/false}
+let aiMatchCache={};
+let aiMatchLoading=false;
+
+async function buildAiMatchCache(){
+  if(aiMatchLoading||!S.rz.length||!S.a.length)return;
+  aiMatchLoading=true;
+
+  // Alle einzigartigen Zutaten aus allen Rezepten
+  const allZutaten=[...new Set(S.rz.flatMap(r=>
+    (r.zutaten||[]).map(z=>typeof z==='string'?z:(z.n||z.zutat||z.name||''))
+    .filter(z=>z.length>1)
+  ))];
+
+  // Alle Artikelnamen im Lager
+  const lagerArtikel=S.a.map(a=>a.name);
+
+  if(!allZutaten.length||!lagerArtikel.length){aiMatchLoading=false;return;}
+
+  try{
+    const prompt=
+      'Du bist ein Lebensmittel-Experte. Ich gebe dir eine Liste von Rezept-Zutaten und eine Liste von Lagerartikeln.\n'+
+      'Gib zurück welche Zutaten durch welche Lagerartikel erfüllt werden können — auch bei unterschiedlichen Bezeichnungen, Synonymen, regionalen Namen oder Teilmengen.\n'+
+      'Beispiele: "Pouletbrust" ↔ "Pouletschnitzel", "Pfifferling" ↔ "Eierschwamm", "Rahm" ↔ "Sauerrahm" (wenn keine Alternative), "Mehl" ↔ "Weissmehl".\n'+
+      'Sei grosszügig bei Synonymen aber nicht bei komplett anderen Zutaten.\n\n'+
+      'Rezept-Zutaten:\n'+allZutaten.map((z,i)=>(i+1)+'. '+z).join('\n')+'\n\n'+
+      'Lagerartikel:\n'+lagerArtikel.map((a,i)=>(i+1)+'. '+a).join('\n')+'\n\n'+
+      'Antworte NUR mit einem JSON-Objekt in diesem Format (keine andere Ausgabe):\n'+
+      '{"matches":[{"zutat":"Pouletbrust","lager":"Pouletschnitzel"},{"zutat":"Pfifferling","lager":"Eierschwamm"},...]}'+
+      '\nNur Paare ausgeben bei denen die Zutat NICHT schon exakt im Lager vorhanden ist, aber durch einen Lagerartikel erfüllt werden kann.';
+
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:1000,
+        messages:[{role:'user',content:prompt}]
+      })
+    });
+    const data=await res.json();
+    const text=data.content&&data.content[0]&&data.content[0].text||'';
+    const clean=text.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+    if(parsed.matches&&Array.isArray(parsed.matches)){
+      aiMatchCache={};
+      parsed.matches.forEach(m=>{
+        if(m.zutat&&m.lager){
+          const key=m.zutat.toLowerCase()+'::'+m.lager.toLowerCase();
+          aiMatchCache[key]=true;
+        }
+      });
+      saveL(); // Cache in localStorage mitpeichern
+      toast('🤖 KI-Synonymerkennung bereit ('+parsed.matches.length+' Synonyme gefunden)');
+      renderRezepte();
+    }
+  }catch(e){
+    // Kein KI-Zugang oder Fehler — still ignorieren, Fallback auf normales Matching
+  }finally{aiMatchLoading=false;}
+}
+
+function aiMatch(zutat,lagerNamen){
+  // Prüft ob eine Zutat durch einen Lagerartikel erfüllt wird (KI + exakt)
+  const z=zutat.toLowerCase();
+  // 1. Exakter/teilweiser Treffer
+  if(lagerNamen.some(n=>n.includes(z)||z.includes(n)&&n.length>3))return true;
+  // 2. KI-Cache
+  return lagerNamen.some(n=>{
+    const key=z+'::'+n.toLowerCase();
+    const keyRev=n.toLowerCase()+'::'+z;
+    return aiMatchCache[key]||aiMatchCache[keyRev];
+  });
+}
+
 function renderRezepte(){
   const names=S.a.map(a=>a.name.toLowerCase());
   const src=S.rz.length?S.rz.map(r=>{
     const zt=(r.zutaten||[]).map(z=>typeof z==='string'?z:(z.n||z.zutat||z.name||''));
-    return{id:r.id||r.titel,name:r.titel||r.name,emoji:r.emoji||'\uD83C\uDF7D',min:r.dauer||r.zeit||20,port:r.portionen||4,zt};
+    return{id:r.id||r.titel,name:r.titel||r.name,emoji:r.emoji||'\uD83C\uDF7D',min:r.dauer||r.zeit||20,port:r.portionen||4,zt,img:r.img||''};
   }):[
-    {id:1,name:'Pasta Carbonara',emoji:'\uD83C\uDF5D',min:20,port:4,zt:['Pasta','Eier','Speck','Parmesan','Rahm']},
-    {id:2,name:'Gemüsesuppe',emoji:'\uD83C\uDF72',min:40,port:6,zt:['Karotten','Lauch','Sellerie','Kartoffeln','Bouillon']},
-    {id:3,name:'Pfannkuchen',emoji:'\uD83E\uDD5E',min:20,port:4,zt:['Mehl','Eier','Milch','Butter','Salz']},
-    {id:4,name:'Grüner Salat',emoji:'\uD83E\uDD57',min:10,port:2,zt:['Salat','Olivenöl','Essig','Salz']},
-    {id:5,name:'Omelette',emoji:'\uD83C\uDF73',min:10,port:1,zt:['Eier','Butter','Salz','Käse']},
+    {id:1,name:'Pasta Carbonara',emoji:'\uD83C\uDF5D',min:20,port:4,zt:['Pasta','Eier','Speck','Parmesan','Rahm'],img:''},
+    {id:2,name:'Gemüsesuppe',emoji:'\uD83C\uDF72',min:40,port:6,zt:['Karotten','Lauch','Sellerie','Kartoffeln','Bouillon'],img:''},
+    {id:3,name:'Pfannkuchen',emoji:'\uD83E\uDD5E',min:20,port:4,zt:['Mehl','Eier','Milch','Butter','Salz'],img:''},
   ];
   const sc=src.map(r=>{
-    const have=r.zt.filter(z=>names.some(n=>n.includes(z.toLowerCase())));
+    const have=r.zt.filter(z=>aiMatch(z,names));
     return{...r,have,pct:Math.round(have.length/Math.max(r.zt.length,1)*100)};
   }).sort((a,b)=>b.pct-a.pct);
   const full=sc.filter(r=>r.pct===100),part=sc.filter(r=>r.pct>=50&&r.pct<100),miss=sc.filter(r=>r.pct<50);
@@ -1640,6 +1720,11 @@ function renderRezepte(){
   if(full.length)h+='<div class="sh">Vollständig kochbar ('+full.length+')</div>'+full.map(rcCard).join('');
   if(part.length)h+='<div class="sh">Fast kochbar</div>'+part.map(rcCard).join('');
   if(miss.length)h+='<div class="sh">Zutaten fehlen</div>'+miss.map(rcCard).join('');
+  // KI-Abgleich im Hintergrund starten wenn Cache leer
+  if(!Object.keys(aiMatchCache).length&&S.rz.length&&S.a.length){
+    setTimeout(()=>buildAiMatchCache(),500);
+    h='<div style="font-size:12px;color:var(--t3);text-align:center;padding:4px">🤖 KI analysiert Synonyme...</div>'+h;
+  }
   document.getElementById('rezept-list').innerHTML=h;
 }
 function rzImgUrl(img){
