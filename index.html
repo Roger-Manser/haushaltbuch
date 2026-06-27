@@ -476,7 +476,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='7.9';
+const APP_VERSION='8.2';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -517,6 +517,7 @@ function sdot(s){const d=document.getElementById('sdot');if(d)d.className='sdot'
 /* ── GitHub API ───────────────────────────────────────────────────── */
 async function ghReq(path,method,body){
   if(!gh.tok||!gh.own||!gh.repo)throw new Error('GitHub nicht konfiguriert');
+  const isGet=!method||method==='GET';
   const r=await fetch('https://api.github.com/repos/'+gh.own+'/'+gh.repo+path,{
     method:method||'GET',
     headers:{
@@ -524,6 +525,8 @@ async function ghReq(path,method,body){
       'Content-Type':'application/json',
       'Accept':'application/vnd.github.v3+json',
     },
+    // cache:'no-store' nur für GET — verhindert Browser-Cache ohne CORS-Problem
+    ...(isGet?{cache:'no-store'}:{}),
     body:body?JSON.stringify(body):undefined
   });
   if(!r.ok){const t=await r.text();throw new Error('GitHub '+r.status+': '+t.slice(0,100));}
@@ -625,7 +628,7 @@ async function loadFromGH(){
         }
         ldr('Lade von GitHub...');
       }
-      S.a=ghArtikel;S.ge=d.geschaefte||[...GD];S.ge=d.geschaefte||[...GD];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.log=d.log||[];
+      S.a=ghArtikel;S.ge=d.geschaefte||[...GD];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.log=d.log||[];
       S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;
       saveL();
     }
@@ -1560,29 +1563,38 @@ async function drawLabelCanvas(canvasId,a,fmt,code,showPrice,showKaufdatum,showA
       }catch(e){}
     }
 
-    // Text rechts vom QR-Code: Name oben, Kauf+MHD Mitte, Preis unten
-    const parts=[];
-    parts.push(a.name);
+    // Text rechts vom QR-Code:
+    // Zeile 1: Name (bold, gross)
+    // Zeile 2: MHD (gross, auffällig)
+    // Zeile 3: Kauf + Preis (klein, eine Zeile)
+    const line1=a.name;
+    const line2=showAblauf&&a.ablaufdatum?'MHD: '+fmtDateCH(a.ablaufdatum):'';
+    const line3Parts=[];
+    if(showKaufdatum&&a.kaufdatum)line3Parts.push('Kauf: '+fmtDateCH(a.kaufdatum));
+    if(showPrice&&a.preis)line3Parts.push('CHF '+a.preis.toFixed(2));
+    const line3=line3Parts.join('  ');
 
-    const dateParts=[];
-    if(showKaufdatum&&a.kaufdatum)dateParts.push('Kauf: '+fmtDateCH(a.kaufdatum));
-    if(showAblauf&&a.ablaufdatum)dateParts.push('MHD: '+fmtDateCH(a.ablaufdatum));
-    const pricePart=showPrice&&a.preis?'CHF '+a.preis.toFixed(2):'';
+    const lines=[line1,line2,line3].filter(Boolean);
+    // Gewichtung: Name 35%, MHD 40%, Kauf+Preis 25%
+    const weights=lines.length===3?[0.35,0.40,0.25]:lines.length===2?[0.5,0.5]:[1];
+    const totalH=hpx-pad*2;
 
-    ctx.fillStyle='#000000';
     ctx.textBaseline='top';
-
-    // Verfügbare Höhe gleichmässig aufteilen
-    const lines=[parts[0],dateParts.join('  '),pricePart].filter(Boolean);
-    const lineH=Math.floor((hpx-pad*2)/lines.length);
-
+    let curY=pad;
     lines.forEach((line,i)=>{
-      let fs=Math.round(lineH*0.72);
-      const bold=i===0?'bold ':'';
+      const lineH=Math.round(totalH*weights[i]);
+      const bold=i===0?'bold ':'bold '; // Name und MHD beide bold
+      const maxFs=Math.round(lineH*0.78);
+      let fs=maxFs;
       do{fs=Math.max(fs-1,5);ctx.font=bold+fs+'px sans-serif';}
       while(fs>5&&ctx.measureText(line).width>textW);
-      ctx.fillStyle=i===0?'#000000':'#333333';
-      ctx.fillText(line,textX,pad+i*lineH+Math.round((lineH-fs)*0.3));
+      // Kauf+Preis-Zeile nicht bold
+      if(i===lines.length-1&&lines.length===3){
+        ctx.font=fs+'px sans-serif';
+      }
+      ctx.fillStyle=i===1?'#000000':i===0?'#000000':'#444444';
+      ctx.fillText(line,textX,curY+Math.round((lineH-fs)*0.2));
+      curY+=lineH;
     });
 
   }else{
@@ -2234,13 +2246,18 @@ let quittungGeschaeft=''; // erkanntes Geschäft
 function openQuittung(){
   quittungItems=[];quittungIdx=0;quittungGeschaeft='';
   document.getElementById('quittung-body').innerHTML=
-    '<input type="file" id="quittung-file" accept="image/*" capture="environment" style="display:none" onchange="handleQuittungFile(this)"/>'+
-    '<div style="text-align:center;padding:8px 0 16px">'+
-      '<button onclick="document.getElementById(\'quittung-file\').click()" style="width:100%;padding:14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
+    '<input type="file" id="quittung-file" accept="image/*" style="display:none" onchange="handleQuittungFile(this)"/>'+
+    '<input type="file" id="quittung-file-cam" accept="image/*" capture="environment" style="display:none" onchange="handleQuittungFile(this)"/>'+
+    '<div style="text-align:center;padding:8px 0 16px;display:flex;flex-direction:column;gap:10px">'+
+      '<button onclick="document.getElementById(\'quittung-file-cam\').click()" style="width:100%;padding:14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>'+
-        'Quittung fotografieren / auswählen'+
+        'Quittung fotografieren'+
       '</button>'+
-      '<div style="font-size:12px;color:var(--t3);margin-top:8px">Claude analysiert die Quittung und erkennt alle Artikel automatisch</div>'+
+      '<button onclick="document.getElementById(\'quittung-file\').click()" style="width:100%;padding:14px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'+
+        'Aus Galerie auswählen'+
+      '</button>'+
+      '<div style="font-size:12px;color:var(--t3)">Claude analysiert die Quittung automatisch</div>'+
     '</div>';
   document.getElementById('quittung-overlay').style.display='flex';
 }
