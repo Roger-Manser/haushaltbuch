@@ -462,7 +462,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='6.3';
+const APP_VERSION='6.4';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1503,23 +1503,38 @@ async function copyLabelToClipboard(){
 
 /* ── Rezepte ──────────────────────────────────────────────────────── */
 async function syncRezepte(){
-  if(!gh.tok||!gh.own||!gh.repo){
+  if(!gh.tok||!gh.own){
     toast('GitHub noch nicht konfiguriert — bitte zuerst in Einstellungen verbinden');
     goScreen('s-settings');
     return;
   }
+  // Rezepte kommen aus dem Rezeptbuch-Repo (kann ein anderes Repo sein als haushaltbuch)
+  const rzRepo=gh.rzrepo||gh.repo; // Fallback auf haushaltbuch-Repo wenn nicht konfiguriert
   toast('Lade Rezepte von GitHub…');
   try{
-    const rzf=await ghGet('rezepte.json');
-    if(rzf&&rzf.content){
-      const j=JSON.parse(b64DecodeUtf8(rzf.content.replace(/\n/g,'')));
-      S.rz=Array.isArray(j)?j:(j.rezepte||[]);
-      saveL();
-      renderRezepte();
-      toast(S.rz.length+' Rezepte geladen');
+    // Direkt per fetch, da ghGet immer gh.repo verwendet
+    const url='https://api.github.com/repos/'+gh.own+'/'+rzRepo+'/contents/Rezepte.json';
+    const r=await fetch(url,{headers:{
+      'Authorization':'token '+gh.tok,
+      'Accept':'application/vnd.github.v3+json',
+    }});
+    if(!r.ok){
+      // Fallback: kleingeschriebene Variante versuchen
+      const r2=await fetch('https://api.github.com/repos/'+gh.own+'/'+rzRepo+'/contents/rezepte.json',{headers:{
+        'Authorization':'token '+gh.tok,
+        'Accept':'application/vnd.github.v3+json',
+      }});
+      if(!r2.ok)throw new Error('Datei nicht gefunden in '+rzRepo+' ('+r.status+')');
+      const f2=await r2.json();
+      const j2=JSON.parse(b64DecodeUtf8(f2.content.replace(/\n/g,'')));
+      S.rz=Array.isArray(j2)?j2:(j2.rezepte||[]);
     }else{
-      toast('Keine rezepte.json im Repo gefunden');
+      const f=await r.json();
+      const j=JSON.parse(b64DecodeUtf8(f.content.replace(/\n/g,'')));
+      S.rz=Array.isArray(j)?j:(j.rezepte||[]);
     }
+    saveL();renderRezepte();
+    toast(S.rz.length+' Rezepte geladen');
   }catch(e){
     toast('Fehler: '+e.message.slice(0,60));
   }
@@ -1862,6 +1877,7 @@ function renderSt(){
   '<div class="ghf"><label>Personal Access Token (repo Scope)</label><input type="password" id="gh-t" placeholder="ghp_..." value="'+esc(gh.tok||'')+'"/></div>'+
   '<div class="ghf"><label>GitHub Username</label><input type="text" id="gh-o" placeholder="Roger-Manser" value="'+esc(gh.own||'')+'"/></div>'+
   '<div class="ghf"><label>Repository Name</label><input type="text" id="gh-r" placeholder="haushaltbuch" value="'+esc(gh.repo||'')+'"/></div>'+
+  '<div class="ghf"><label>Rezeptbuch Repository</label><input type="text" id="gh-rz" placeholder="rezeptbuch" value="'+esc(gh.rzrepo||'')+'"/></div>'+
   '<div class="ghf"><label>Branch</label><input type="text" id="gh-b" placeholder="main" value="'+esc(gh.br||'main')+'"/></div>'+
   '<button class="db-btn" onclick="saveGHcfg()">'+I.gh+' Verbindung speichern</button>'+
   '<button class="db-btn" onclick="loadFromGH()">'+I.dl+' Daten von GitHub laden</button>'+
@@ -1873,7 +1889,7 @@ function renderSt(){
   '<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong>v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button></div>'+
   '<div class="ss"><div class="ssl">Daten</div><button class="db-btn" onclick="expJ()">'+I.dl+' Lokaler Export (JSON)</button><button class="db-btn" onclick="document.getElementById(\'imp\').click()">'+I.ul+' Lokaler Import (JSON)<input type="file" id="imp" accept=".json" style="display:none" onchange="impJ(event)"/></button><button class="db-btn d" onclick="resetAll()">'+I.trash+' Alle Daten löschen</button></div>';
 }
-function saveGHcfg(){gh={tok:document.getElementById('gh-t').value.trim(),own:document.getElementById('gh-o').value.trim(),repo:document.getElementById('gh-r').value.trim(),br:document.getElementById('gh-b').value.trim()||'main'};saveGH();toast('GitHub gespeichert');renderSt();}
+function saveGHcfg(){gh={tok:document.getElementById('gh-t').value.trim(),own:document.getElementById('gh-o').value.trim(),repo:document.getElementById('gh-r').value.trim(),br:document.getElementById('gh-b').value.trim()||'main',rzrepo:document.getElementById('gh-rz').value.trim()||''};saveGH();toast('GitHub gespeichert');renderSt();}
 function addLo(){const n=prompt('Neuer Lagerort:');if(!n||!n.trim())return;const nm=n.trim();if(!S.lo.includes(nm)){S.lo.push(nm);saveL();}renderSt();}
 function delLo(n){if(S.a.some(a=>a.lager===n)){alert('Lagerort «'+n+'» wird noch verwendet.');return;}S.lo=S.lo.filter(l=>l!==n);saveL();renderSt();}
 function editLo(l){
