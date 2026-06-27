@@ -388,6 +388,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
       <svg viewBox="0 0 24 24"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
     </button></div>
   </div>
+  <div class="chips" id="ek-shop-chips"></div>
   <div class="scroll" id="ek-body"></div>
   <div id="bnav4"></div>
 </div>
@@ -461,10 +462,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='5.5';
+const APP_VERSION='5.6';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
+const GD=['Migros','Coop','Lidl','Aldi','Denner','Volg','Online'];
 const ED=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
 const KICON='<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:13px;height:13px;stroke:currentColor"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>';
 
@@ -475,13 +477,13 @@ function licon(n){
 function lsm(n){return licon(n).replace('width:20px;height:20px','width:13px;height:13px');}
 
 /* ── State ────────────────────────────────────────────────────────── */
-let S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ek:[],nid:1,rz:[],log:[]};
+let S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ge:[...GD],ek:[],nid:1,rz:[],log:[]};
 let deferredInstallPrompt=null;
 let gh={tok:'',own:'',repo:'',br:'main'};
 let dirty=false;
 
 function loadL(){
-  try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ek=d.ek||[];S.rz=d.rz||[];S.log=d.log||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);}}catch(e){}
+  try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ge=d.ge||[...GD];S.ek=d.ek||[];S.rz=d.rz||[];S.log=d.log||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);}}catch(e){}
   try{const r=localStorage.getItem('hbgh');if(r)gh=JSON.parse(r);}catch(e){}
 }
 function saveL(){try{localStorage.setItem('hb3',JSON.stringify(S));}catch(e){}dirty=true;sdot('dt');}
@@ -562,7 +564,7 @@ async function doSync(){
     }
 
     const ex=await ghGet('haushaltbuch.json');
-    const exp={artikel:S.a.map(a=>({...a})),lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,einkauf:S.ek,log:S.log||[],aktualisiert:new Date().toISOString()};
+    const exp={artikel:S.a.map(a=>({...a})),lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,geschaefte:S.ge||[],einkauf:S.ek,log:S.log||[],aktualisiert:new Date().toISOString()};
     await ghPut('haushaltbuch.json',JSON.stringify(exp,null,2),'Haushaltbuch Update',ex?ex.sha:undefined);
     // Load rezepte.json
     const rzf=await ghGet('rezepte.json');
@@ -596,7 +598,7 @@ async function loadFromGH(){
         }
         ldr('Lade von GitHub...');
       }
-      S.a=ghArtikel;S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.log=d.log||[];
+      S.a=ghArtikel;S.ge=d.geschaefte||[...GD];S.ge=d.geschaefte||[...GD];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.log=d.log||[];
       S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;
       saveL();
     }
@@ -931,6 +933,7 @@ function chgB(id,d){
   a.menge=Math.max(0,a.menge+d);
   const actualDelta=a.menge-before;
   if(actualDelta!==0)addLogEntry(actualDelta>0?'ein':'aus',a.id,a.name,a.lager,a.kat,Math.abs(actualDelta),a.einheit,0);
+  if(a.menge===0&&a.ablaufdatum){a.ablaufdatum='';}  // Ablaufdatum löschen wenn leer
   const el=document.getElementById('sv-'+id);
   if(el){el.textContent=a.menge;el.className='spv '+(a.menge===0?'lo':a.menge<a.mindest?'wn':'ok');}
   saveL();toast(d>0?'+1 eingelagert':'−1 entnommen');
@@ -970,6 +973,7 @@ function openForm(id){
   '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="number" id="f-pr" min="0" step="0.05" placeholder="z.B. 1.95" value="'+(a?esc(a.preis||''):'')+'"/><label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg)"><input type="checkbox" id="f-aktion" style="width:18px;height:18px;accent-color:var(--wn);cursor:pointer"/><div><div style="font-size:14px;font-weight:500;color:var(--tx)">Aktionspreis</div><div style="font-size:12px;color:var(--t2)">Wird als Aktion geloggt, kein neuer Standardpreis</div></div></label></div>'+
   '<div class="fd"><label>Lagerort</label><div class="lcw" id="f-lo">'+lc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Kaufdatum</label>'+dateField('f-kd',a?a.kaufdatum||todayISO():todayISO())+'</div><div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('f-ad',a?a.ablaufdatum||'':'')+'</div></div>'+
+  '<div class="fd"><label>Wo gekauft</label><div class="lcw" id="f-ge">'+S.ge.map(g=>'<button class="chip'+(a&&a.kaufort===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#f-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+'<button class="chip" onclick="addGeschaeft(this)">+ Neu...</button></div></div>'+
   '<div class="fd"><label>Notiz</label><textarea id="f-nt" placeholder="z.B. Bio, Lieblingsmarke...">'+(a?esc(a.notiz||''):'')+'</textarea></div>'+
   '<div class="br"><button class="bg2" onclick="closeForm()">Abbrechen</button><button class="bp" onclick="saveForm()">'+(a?'Speichern':'Hinzufügen')+'</button></div>';
   goScreen('s-form');
@@ -1060,7 +1064,9 @@ async function saveForm(){
   const packEinheit=document.getElementById('f-pe').value;
   // Standardpreis nur speichern wenn kein Aktionspreis
   const standardPreis=isAktion?0:preis;
-  const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,menge:parseInt(document.getElementById('f-mg').value)||0,einheit:document.getElementById('f-ei').value,mindest:Math.max(0,parseInt(document.getElementById('f-mn').value)||0),barcode:document.getElementById('f-bc').value.trim(),preis:standardPreis,packMenge,packEinheit,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
+  const geChip=document.querySelector('#f-ge .chip.on[data-ge]');
+  const kaufort=geChip?geChip.dataset.ge:'';
+  const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,kaufort,menge:parseInt(document.getElementById('f-mg').value)||0,einheit:document.getElementById('f-ei').value,mindest:Math.max(0,parseInt(document.getElementById('f-mn').value)||0),barcode:document.getElementById('f-bc').value.trim(),preis:standardPreis,packMenge,packEinheit,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
   if(!editId&&preis>0){d.preisHistorie=[{datum:kaufdatum,preis,menge:d.menge,aktion:isAktion||false}];}
   else if(editId){const ex=S.a.find(x=>x.id===editId);d.preisHistorie=ex&&ex.preisHistorie?ex.preisHistorie:[];}
   if(editId){const i=S.a.findIndex(x=>x.id===editId);if(i>=0)S.a[i]={...S.a[i],...d};}
@@ -1105,7 +1111,7 @@ function lookupBarcode(){
       '<div style="font-size:12px;font-weight:600;color:var(--ac);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Preis bestätigen</div>'+
       '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'+
         '<span style="font-size:18px;font-weight:600;color:var(--t2)">CHF</span>'+
-        '<input type="number" id="e-pr" min="0" step="0.05" value="'+(lastPreis>0?lastPreis.toFixed(2):'')+'" placeholder="0.00" style="flex:1;font-size:28px;font-weight:700;padding:10px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);text-align:right"/>'+
+        '<input type="number" id="e-pr" min="0" step="0.05" value="'+(lastPreis>0?lastPreis.toFixed(2):'')+'" placeholder="0.00" style="flex:1;font-size:17px;font-weight:600;padding:8px 10px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);text-align:right"/>'+
       '</div>'+
       (lastPreis>0?'<div style="font-size:12px;color:var(--t2);margin-bottom:10px">Letzter erfasster Preis: CHF '+lastPreis.toFixed(2)+'</div>':'')+
       // Aktion-Flag
@@ -1209,6 +1215,7 @@ function processAusgangScan(code){
     return;
   }
   found.menge=Math.max(0,found.menge-1);
+  if(found.menge===0&&found.ablaufdatum){found.ablaufdatum='';}  // MHD löschen wenn leer
   addLogEntry('aus',found.id,found.name,found.lager,found.kat,1,found.einheit,0);
   saveL();
   ausgangLog.unshift({id:found.id,name:found.name,foto:found.foto,lager:found.lager,einheit:found.einheit,zeit:Date.now()});
@@ -1772,16 +1779,40 @@ function renderCategorySpendChart(entries){
 }
 
 /* ── Einkauf ──────────────────────────────────────────────────────── */
+let ekShopFilter='alle';
+function setEkShopFilter(g){ekShopFilter=g;renderEk();}
 function renderEk(){
-  const auto=S.a.filter(a=>a.menge<a.mindest);
-  let h='<div class="sh">Automatisch — unter Mindestbestand</div>';
-  h+=auto.length?auto.map(a=>'<div class="ei" id="eia-'+a.id+'"><input type="checkbox" onchange="ckA('+a.id+',this.checked)"/><div><div class="eit">'+esc(a.name)+'</div><div class="eis">'+esc(a.lager)+' · mind. '+(a.mindest-a.menge)+' '+esc(a.einheit||'Stk')+' kaufen</div></div></div>').join(''):'<div style="color:var(--t3);font-size:13px;padding:4px 0 12px">Alle Artikel im Soll</div>';
+  // Shop-Filter Chips
+  const shopChipsEl=document.getElementById('ek-shop-chips');
+  if(shopChipsEl){
+    const usedShops=[...new Set(S.a.filter(a=>a.menge<a.mindest&&a.kaufort).map(a=>a.kaufort))];
+    if(usedShops.length>0){
+      shopChipsEl.innerHTML=['alle',...usedShops].map(g=>'<button class="chip'+(ekShopFilter===g?' on':'')+'" onclick="setEkShopFilter(\''+esc(g)+'\')">'+esc(g==='alle'?'Alle Geschäfte':g)+'</button>').join('');
+      shopChipsEl.style.display='flex';
+    }else{
+      shopChipsEl.innerHTML='';shopChipsEl.style.display='none';
+    }
+  }
+  const auto=S.a.filter(a=>a.menge<a.mindest&&(ekShopFilter==='alle'||a.kaufort===ekShopFilter));
+  let h='<div class="sh">Automatisch — unter Mindestbestand'+(ekShopFilter!=='alle'?' · '+esc(ekShopFilter):'')+'</div>';
+  h+=auto.length?auto.map(a=>'<div class="ei" id="eia-'+a.id+'"><input type="checkbox" onchange="ckA('+a.id+',this.checked)"/><div><div class="eit">'+esc(a.name)+'</div><div class="eis">'+esc(a.lager)+(a.kaufort?' · '+esc(a.kaufort):'')+' · mind. '+(a.mindest-a.menge)+' '+esc(a.einheit||'Stk')+' kaufen</div></div></div>').join(''):'<div style="color:var(--t3);font-size:13px;padding:4px 0 12px">Alle Artikel im Soll</div>';
   h+='<div class="sh">Manuell</div><div class="mir"><input type="text" id="mi-i" placeholder="Artikel hinzufügen..." onkeydown="if(event.key===\'Enter\')addM()"/><button onclick="addM()">+</button></div><div id="mi-l">';
   S.ek.forEach(e=>h+='<div class="ei'+(e.checked?' ck':'')+'" id="eim-'+e.id+'"><input type="checkbox" '+(e.checked?'checked':'')+' onchange="ckM('+e.id+',this.checked)"/><div class="eit">'+esc(e.text)+'</div><button class="eid" onclick="delM('+e.id+')">&#x2715;</button></div>');
   h+='</div>';
   document.getElementById('ek-body').innerHTML=h;
 }
 function ckA(id,v){const el=document.getElementById('eia-'+id);if(el)el.classList.toggle('ck',v);}
+function addGeschaeft(btn){
+  const n=prompt('Neues Geschäft:');if(!n||!n.trim())return;
+  const nm=n.trim();if(!S.ge.includes(nm)){S.ge.push(nm);saveL();}
+  const wrap=document.getElementById('f-ge');if(!wrap)return;
+  const chip=document.createElement('button');
+  chip.className='chip on';chip.dataset.ge=nm;chip.textContent=nm;
+  chip.onclick=()=>{document.querySelectorAll('#f-ge .chip[data-ge]').forEach(c=>c.classList.remove('on'));chip.classList.add('on');};
+  wrap.insertBefore(chip,btn);
+  document.querySelectorAll('#f-ge .chip[data-ge]').forEach(c=>c.classList.remove('on'));
+  chip.classList.add('on');
+}
 function addM(){const i=document.getElementById('mi-i');const t=i.value.trim();if(!t)return;S.ek.push({id:Date.now(),text:t,checked:false});i.value='';saveL();renderEk();}
 function ckM(id,v){const e=S.ek.find(x=>x.id===id);if(e){e.checked=v;saveL();}const el=document.getElementById('eim-'+id);if(el)el.classList.toggle('ck',v);}
 function delM(id){S.ek=S.ek.filter(x=>x.id!==id);saveL();renderEk();}
@@ -1842,9 +1873,9 @@ function editKat(k){
   S.a.forEach(a=>{if(a.kat===k)a.kat=nm;});
   saveL();renderSt();toast('Kategorie umbenannt');
 }
-function expJ(){const b=new Blob([JSON.stringify({artikel:S.a,lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,einkauf:S.ek,log:S.log||[],exportiert:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='haushaltbuch_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Export abgeschlossen');}
-function impJ(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=r=>{try{const d=JSON.parse(r.target.result);if(!d.artikel)throw new Error('Kein gültiges Format');if(confirm(d.artikel.length+' Artikel importieren? Bestehende Daten überschreiben.')){S.a=d.artikel;S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.log=d.log||[];S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;saveL();goScreen('s-lager');toast(d.artikel.length+' Artikel importiert');}}catch(e){alert('Import-Fehler: '+e.message);}};rd.readAsText(f);ev.target.value='';}
-function resetAll(){if(!confirm('Alle Daten wirklich löschen?'))return;S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ek:[],nid:1,rz:[],log:[]};saveL();goScreen('s-lager');toast('Daten gelöscht');}
+function expJ(){const b=new Blob([JSON.stringify({artikel:S.a,lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,geschaefte:S.ge||[],einkauf:S.ek,log:S.log||[],exportiert:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='haushaltbuch_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Export abgeschlossen');}
+function impJ(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=r=>{try{const d=JSON.parse(r.target.result);if(!d.artikel)throw new Error('Kein gültiges Format');if(confirm(d.artikel.length+' Artikel importieren? Bestehende Daten überschreiben.')){S.a=d.artikel;S.ge=d.geschaefte||[...GD];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.log=d.log||[];S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;saveL();goScreen('s-lager');toast(d.artikel.length+' Artikel importiert');}}catch(e){alert('Import-Fehler: '+e.message);}};rd.readAsText(f);ev.target.value='';}
+function resetAll(){if(!confirm('Alle Daten wirklich löschen?'))return;S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ge:[...GD],ek:[],nid:1,rz:[],log:[]};saveL();goScreen('s-lager');toast('Daten gelöscht');}
 
 /* ── Toast & Loader ───────────────────────────────────────────────── */
 let tT;
