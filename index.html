@@ -462,7 +462,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='6.9';
+const APP_VERSION='7.0';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -895,7 +895,21 @@ function showDet(id){
     }).join('')+'</div>':'';
   const totalHint=ptotal?'<div style="font-size:11px;color:var(--t2);text-align:right;margin-top:4px">≈ '+esc(ptotal)+'</div>':'';
   const codeDisplay=a.barcode?esc(a.barcode):(a.ownCode?esc(a.ownCode)+' <span style="font-size:11px;color:var(--t2)">(eigener Code)</span>':'—');
-  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span><span class="iv">'+(a.ablaufdatum?fmtDateCH(a.ablaufdatum)+' '+expBadge(a.ablaufdatum):'—')+'</span></div>'+preisRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+histHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>'+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
+  // Rezepte die diesen Artikel verwenden
+  const artName=a.name.toLowerCase();
+  const rzMit=(S.rz||[]).filter(r=>(r.zutaten||[]).some(z=>{
+    const zn=(typeof z==='string'?z:(z.n||z.zutat||z.name||'')).toLowerCase();
+    return zn.includes(artName)||artName.includes(zn)&&zn.length>3;
+  }));
+  const rzHtml=rzMit.length?
+    '<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);font-weight:600;font-size:13px">🍽️ Verwendet in '+rzMit.length+' Rezept'+(rzMit.length===1?'':'en')+'</div>'+
+    rzMit.map(r=>{
+      const imgUrl=rzImgUrl(r.img||'');
+      const thumb=imgUrl?'<img src="'+esc(imgUrl)+'" style="width:36px;height:36px;border-radius:6px;object-fit:cover;flex-shrink:0" onerror="this.style.display=\'none\'"/>':'<span style="font-size:20px">'+r.emoji+'</span>';
+      return '<div class="ir" style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="goScreen(\'s-rezepte\')">'+thumb+'<div><div style="font-size:13px;font-weight:500">'+esc(r.name)+'</div><div style="font-size:11px;color:var(--t2)">'+r.port+' Port. · '+r.min+' min</div></div></div>';
+    }).join('')+'</div>':
+    '';
+  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span><span class="iv">'+(a.ablaufdatum?fmtDateCH(a.ablaufdatum)+' '+expBadge(a.ablaufdatum):'—')+'</span></div>'+preisRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+histHtml+rzHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>'+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
   const heroEl=document.getElementById('dh-hero-img');
   if(heroEl)heroEl.addEventListener('click',()=>openLightbox(a.foto));
   goScreen('s-detail');
