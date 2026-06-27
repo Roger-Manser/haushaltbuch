@@ -285,6 +285,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2@1.8.4/dist/quagga.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.12.1/JsBarcode.all.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 </head>
 <body>
 <div id="app">
@@ -462,7 +463,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='7.1';
+const APP_VERSION='7.2';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1357,10 +1358,10 @@ function renderLabelPreview(){
   const showPrice=document.getElementById('lbl-show-price')&&document.getElementById('lbl-show-price').checked;
   const showKaufdatum=document.getElementById('lbl-show-kaufdatum')&&document.getElementById('lbl-show-kaufdatum').checked;
   const showAblauf=document.getElementById('lbl-show-ablauf')&&document.getElementById('lbl-show-ablauf').checked;
-  drawLabelCanvas('label-canvas',a,fmt,code,showPrice,showKaufdatum,showAblauf,4);
+  drawLabelCanvas('label-canvas',a,fmt,code,showPrice,showKaufdatum,showAblauf,4); // async, kein await nötig für Vorschau
 }
 
-function drawLabelCanvas(canvasId,a,fmt,code,showPrice,showKaufdatum,showAblauf,scale){
+async function drawLabelCanvas(canvasId,a,fmt,code,showPrice,showKaufdatum,showAblauf,scale){
   const canvas=document.getElementById(canvasId);
   if(!canvas)return;
   const dpi=scale*96;
@@ -1376,65 +1377,78 @@ function drawLabelCanvas(canvasId,a,fmt,code,showPrice,showKaufdatum,showAblauf,
 
   if(fmt.id==='dk11204'){
     // DK-11204: 54mm × 17mm
-    // Aufteilung: 70% Barcode, 30% Text
-    const textH=Math.round(hpx*0.30);
-    const bcAreaH=hpx-textH;
-    const pad=Math.round(scale*2);
+    // Layout: QR-Code links (quadratisch, volle Höhe), Text rechts
+    const pad=Math.round(scale*3);
+    const qrSize=hpx; // QR-Code nimmt volle Höhe = quadratisch
+    const textX=qrSize+pad;
+    const textW=wpx-qrSize-pad*2;
 
-    // Barcode direkt in Zielgrösse rendern — kein Skalieren, scharfe Balken
-    // barWidth so berechnen dass Barcode genau wpx breit wird
-    // Code128 für typische EAN/HB-Codes: ~70 Module → barWidth = wpx/70
-    const approxModules=Math.max(40,code.length*11+35);
-    const barWidth=Math.max(2,Math.floor(wpx/approxModules));
-    const bcCanvas=document.createElement('canvas');
-    let bcOk=false;
+    // QR-Code via QRCode.js auf temporäres Canvas rendern
+    const qrContainer=document.createElement('div');
+    qrContainer.style.display='none';
+    document.body.appendChild(qrContainer);
+    let qrOk=false;
     try{
-      JsBarcode(bcCanvas,code,{
-        format:'CODE128',
-        width:barWidth,
-        height:bcAreaH-pad,
-        fontSize:0,
-        margin:0,
-        displayValue:false,
-        background:'#ffffff',
-        lineColor:'#000000',
+      new QRCode(qrContainer,{
+        text:code,
+        width:qrSize,
+        height:qrSize,
+        colorDark:'#000000',
+        colorLight:'#ffffff',
+        correctLevel:QRCode.CorrectLevel.M,
       });
-      bcOk=true;
-    }catch(e){bcOk=false;}
+      // QRCode.js erzeugt ein <canvas> oder <img> — beides abfangen
+      const qrCanvas=qrContainer.querySelector('canvas');
+      const qrImg=qrContainer.querySelector('img');
+      if(qrCanvas){
+        ctx.drawImage(qrCanvas,0,0,qrSize,qrSize);
+        qrOk=true;
+      }else if(qrImg){
+        // img könnte noch laden — kurze Wartezeit via Promise
+        await new Promise(res=>{
+          if(qrImg.complete){ctx.drawImage(qrImg,0,0,qrSize,qrSize);qrOk=true;res();}
+          else{qrImg.onload=()=>{ctx.drawImage(qrImg,0,0,qrSize,qrSize);qrOk=true;res();};qrImg.onerror=()=>res();}
+        });
+      }
+    }catch(e){qrOk=false;}
+    qrContainer.remove();
 
-    if(bcOk){
-      // 1:1 zentriert einzeichnen — keine Skalierung
-      const bcX=Math.round((wpx-bcCanvas.width)/2);
-      ctx.drawImage(bcCanvas,bcX,0);
+    if(!qrOk){
+      // Fallback: Code128 Barcode wenn QR fehlschlägt
+      const bcCanvas=document.createElement('canvas');
+      try{
+        JsBarcode(bcCanvas,code,{format:'CODE128',width:Math.max(2,Math.floor(wpx/80)),height:hpx-pad,fontSize:0,margin:0,displayValue:false,background:'#ffffff',lineColor:'#000000'});
+        ctx.drawImage(bcCanvas,0,0,Math.min(bcCanvas.width,wpx*0.6),hpx);
+      }catch(e){}
     }
 
-    // Trennlinie
-    ctx.strokeStyle='#cccccc';
-    ctx.lineWidth=Math.max(1,Math.round(scale*0.5));
-    ctx.beginPath();ctx.moveTo(0,bcAreaH);ctx.lineTo(wpx,bcAreaH);ctx.stroke();
-
-    // Text-Zeile: Name · Kauf: TT.MM.JJJJ · MHD: TT.MM.JJJJ
+    // Text rechts vom QR-Code: Name, dann Zusatzinfos
     const parts=[];
     parts.push(a.name);
     if(showKaufdatum&&a.kaufdatum)parts.push('Kauf: '+fmtDateCH(a.kaufdatum));
     if(showAblauf&&a.ablaufdatum)parts.push('MHD: '+fmtDateCH(a.ablaufdatum));
     if(showPrice&&a.preis)parts.push('CHF '+a.preis.toFixed(2));
 
-    const sep=' · ';
-    const line=parts.join(sep);
-    const maxTextW=wpx-pad*2;
-    const textY=bcAreaH+Math.round(textH*0.1);
-
-    // Auto-shrink: 2.5× grössere Startgrösse, schrumpft bis Text passt
-    let fs=Math.min(Math.round(textH*1.4),45);
-    ctx.textBaseline='top';
     ctx.fillStyle='#000000';
-    do{
-      fs=Math.max(fs-1,4);
-      ctx.font='bold '+fs+'px sans-serif';
-    }while(fs>4&&ctx.measureText(line).width>maxTextW);
+    ctx.textBaseline='top';
 
-    ctx.fillText(line,pad,textY);
+    // Name: so gross wie möglich
+    let fsName=Math.round(hpx*0.28);
+    do{fsName=Math.max(fsName-1,5);ctx.font='bold '+fsName+'px sans-serif';}
+    while(fsName>5&&ctx.measureText(parts[0]).width>textW);
+    ctx.fillText(parts[0],textX,pad);
+
+    // Restliche Infos kleiner darunter
+    let y=pad+Math.round(fsName*1.3);
+    const subParts=parts.slice(1);
+    const subLine=subParts.join(' · ');
+    if(subLine){
+      let fsSub=Math.round(fsName*0.7);
+      do{fsSub=Math.max(fsSub-1,4);ctx.font=fsSub+'px sans-serif';}
+      while(fsSub>4&&ctx.measureText(subLine).width>textW);
+      ctx.fillStyle='#444444';
+      ctx.fillText(subLine,textX,y);
+    }
 
   }else{
     // Andere Formate: Barcode oben, Text darunter
@@ -1517,7 +1531,10 @@ async function copyLabelToClipboard(){
   const hiCanvas=document.createElement('canvas');
   hiCanvas.style.display='none';
   document.body.appendChild(hiCanvas);
-  drawLabelCanvas(hiCanvas.id='hb-print-canvas',a,fmt,code,showPrice,showKaufdatum,showAblauf,12);
+  await drawLabelCanvas(hiCanvas.id='hb-print-canvas',a,fmt,code,showPrice,showKaufdatum,showAblauf,12);
+
+  // Kurz warten damit async QR-Rendering fertig ist
+  await new Promise(r=>setTimeout(r,200));
 
   try{
     hiCanvas.toBlob(async blob=>{
