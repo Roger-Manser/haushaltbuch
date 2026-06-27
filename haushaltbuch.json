@@ -32,7 +32,7 @@
       "marke": "Lidl",
       "kat": "Genussmittel",
       "lager": "Küche",
-      "menge": 3,
+      "menge": 2,
       "einheit": "Stange",
       "mindest": 2,
       "barcode": "4006396071576",
@@ -77,8 +77,7 @@
           "menge": 6
         }
       ],
-      "ownCode": "HB-000009",
-      "kaufort": "Rita Eisenring"
+      "ownCode": "HB-000009"
     },
     {
       "id": 5,
@@ -104,8 +103,7 @@
           "preis": 3.5,
           "menge": 1
         }
-      ],
-      "kaufort": "Migros"
+      ]
     },
     {
       "id": 6,
@@ -384,9 +382,7 @@
       "ablaufdatum": "2027-01-01",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782212180104_off.jpg",
-      "fotoPath": "1782212180104_off.jpg",
-      "kaufort": "Coop",
-      "preisHistorie": []
+      "fotoPath": "1782212180104_off.jpg"
     },
     {
       "id": 19,
@@ -415,7 +411,7 @@
       "lager": "Schlof",
       "menge": 0,
       "einheit": "Stk",
-      "mindest": 0,
+      "mindest": 1,
       "barcode": "4002103249535",
       "preis": 0,
       "packMenge": 3.3,
@@ -445,8 +441,7 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782224617427_17822246017915494784069699740850.jpg",
       "fotoPath": "1782224617427_17822246017915494784069699740850.jpg",
-      "preisHistorie": [],
-      "kaufort": "Coop"
+      "preisHistorie": []
     },
     {
       "id": 22,
@@ -600,8 +595,7 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782311158358_17823111509323023841191726663671.jpg",
       "fotoPath": "1782311158358_17823111509323023841191726663671.jpg",
-      "preisHistorie": [],
-      "kaufort": "Lidl"
+      "preisHistorie": []
     },
     {
       "id": 30,
@@ -611,7 +605,7 @@
       "lager": "Schlof",
       "menge": 1,
       "einheit": "Stk",
-      "mindest": 0,
+      "mindest": 1,
       "barcode": "4061463702265",
       "preis": 0,
       "packMenge": 190,
@@ -619,8 +613,8 @@
       "kaufdatum": "2026-06-24",
       "ablaufdatum": "2027-05-31",
       "notiz": "",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782401805958_17824017984397838707749823817032.jpg",
+      "fotoPath": "1782401805958_17824017984397838707749823817032.jpg",
       "preisHistorie": []
     },
     {
@@ -631,7 +625,7 @@
       "lager": "Schlof",
       "menge": 1,
       "einheit": "Stk",
-      "mindest": 0,
+      "mindest": 1,
       "barcode": "4061463702388",
       "preis": 0,
       "packMenge": 190,
@@ -639,9 +633,184 @@
       "kaufdatum": "2026-06-24",
       "ablaufdatum": "2027-05-31",
       "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782401828112_17824018206225952135174084414759.jpg",
+      "fotoPath": "1782401828112_17824018206225952135174084414759.jpg",
+      "preisHistorie": []
+    },
+    {
+      "id": 32,
+      "name": "Forellenfilets",
+      "marke": "Lidl",
+      "kat": "Fleisch & Fisch",
+      "lager": "Kühlschrank oben",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "9262124087058",
+      "preis": 2.95,
+      "packMenge": 125,
+      "packEinheit": "g",
+      "kaufdatum": "2026-06-27",
+      "ablaufdatum": "2026-06-28",
+      "notiz": "",
       "foto": "",
       "fotoPath": "",
+      "preisHistorie": [],
+      "kaufort": "Lidl"
+    },
+    {
+      "id": 33,
+      "name": "Dattelcherrytomaten",
+      "marke": "Lidl",
+      "kat": "Gemüse & Früchte",
+      "lager": "Kühlschrank oben",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "20316488",
+      "preis": 4.95,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-06-27",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782541986317_off.jpg",
+      "fotoPath": "1782541986317_off.jpg",
       "preisHistorie": []
+    },
+    {
+      "id": 34,
+      "name": "Morzarella",
+      "marke": "Lovilio",
+      "kat": "Milchprodukte",
+      "lager": "Kühlschrank oben",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "20631321",
+      "preis": 0,
+      "packMenge": 300,
+      "packEinheit": "g",
+      "kaufdatum": "2026-06-27",
+      "ablaufdatum": "2026-07-18",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542043787_off.jpg",
+      "fotoPath": "1782542043787_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-27",
+          "preis": 0,
+          "menge": 1,
+          "aktion": false
+        }
+      ]
+    },
+    {
+      "id": 35,
+      "name": "Salami",
+      "marke": "Italiamo",
+      "kat": "Fleisch & Fisch",
+      "lager": "Kühlschrank oben",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "20016012",
+      "preis": 5.39,
+      "packMenge": 180,
+      "packEinheit": "g",
+      "kaufdatum": "2026-06-27",
+      "ablaufdatum": "2026-08-08",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542121912_off.jpg",
+      "fotoPath": "1782542121912_off.jpg",
+      "preisHistorie": []
+    },
+    {
+      "id": 36,
+      "name": "Pouletschnitzel a la minute",
+      "marke": "Bonvalle",
+      "kat": "Fleisch & Fisch",
+      "lager": "Kühlschrank oben",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "20813055",
+      "preis": 6.89,
+      "packMenge": 330,
+      "packEinheit": "g",
+      "kaufdatum": "2026-06-27",
+      "ablaufdatum": "2026-07-03",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542205864_off.jpg",
+      "fotoPath": "1782542205864_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-27",
+          "preis": 0,
+          "menge": 1,
+          "aktion": false
+        }
+      ]
+    },
+    {
+      "id": 37,
+      "name": "Halbrahm",
+      "marke": "Milbona",
+      "kat": "Milchprodukte",
+      "lager": "Kühlschrank oben",
+      "menge": 3,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "4056489975250",
+      "preis": 2.65,
+      "packMenge": 500,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-06-27",
+      "ablaufdatum": "2026-07-07",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542289759_off.jpg",
+      "fotoPath": "1782542289759_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-27",
+          "preis": 0,
+          "menge": 1,
+          "aktion": false
+        },
+        {
+          "datum": "2026-06-27",
+          "preis": 0,
+          "menge": 1,
+          "aktion": false
+        }
+      ]
+    },
+    {
+      "id": 38,
+      "name": "Vollrahm",
+      "marke": "Milbona",
+      "kat": "Milchprodukte",
+      "lager": "Kühlschrank oben",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "4056489975267",
+      "preis": 3.29,
+      "packMenge": 500,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-06-27",
+      "ablaufdatum": "2026-10-06",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542344505_off.jpg",
+      "fotoPath": "1782542344505_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-27",
+          "preis": 0,
+          "menge": 1,
+          "aktion": false
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -652,7 +821,8 @@
     "Küche",
     "Kühlschrank unten",
     "Schlof",
-    "Gang unten"
+    "Gang unten",
+    "Garten"
   ],
   "kategorien": [
     "Milchprodukte",
@@ -690,8 +860,7 @@
     "Aldi",
     "Denner",
     "Volg",
-    "Online",
-    "Rita Eisenring"
+    "Online"
   ],
   "einkauf": [],
   "log": [
@@ -1427,7 +1596,202 @@
       "aktion": false,
       "datum": "2026-06-24",
       "zeit": 1782311585444
+    },
+    {
+      "t": "aus",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-26",
+      "zeit": 1782444931706
+    },
+    {
+      "t": "ein",
+      "aid": 32,
+      "name": "Forellenfilets",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782541931165
+    },
+    {
+      "t": "ein",
+      "aid": 33,
+      "name": "Dattelcherrytomaten",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782542031876
+    },
+    {
+      "t": "ein",
+      "aid": 34,
+      "name": "Morzarella",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782542090859
+    },
+    {
+      "t": "ein",
+      "aid": 34,
+      "name": "Morzarella",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782542109174
+    },
+    {
+      "t": "ein",
+      "aid": 35,
+      "name": "Salami",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782542197629
+    },
+    {
+      "t": "ein",
+      "aid": 36,
+      "name": "Escalope de poitrine de poulet a la minute",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782542238348
+    },
+    {
+      "t": "ein",
+      "aid": 36,
+      "name": "Escalope de poitrine de poulet a la minute",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782542262243
+    },
+    {
+      "t": "ein",
+      "aid": 37,
+      "name": "Halbrahm",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782542334166
+    },
+    {
+      "t": "ein",
+      "aid": 38,
+      "name": "Vollrahm",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782542366189
+    },
+    {
+      "t": "ein",
+      "aid": 38,
+      "name": "Vollrahm",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782542422883
+    },
+    {
+      "t": "ein",
+      "aid": 37,
+      "name": "Halbrahm",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782542468765
+    },
+    {
+      "t": "ein",
+      "aid": 37,
+      "name": "Halbrahm",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782542497875
+    },
+    {
+      "t": "aus",
+      "aid": 36,
+      "name": "Pouletschnitzel a la minute",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782543351205
+    },
+    {
+      "t": "ein",
+      "aid": 36,
+      "name": "Pouletschnitzel a la minute",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782543352193
     }
   ],
-  "aktualisiert": "2026-06-27T09:02:38.781Z"
+  "aktualisiert": "2026-06-27T09:06:05.246Z"
 }
