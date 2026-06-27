@@ -476,7 +476,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='7.7';
+const APP_VERSION='7.9';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -944,6 +944,27 @@ function showDet(id){
       return '<div class="ir" style="align-items:center"><div style="flex:1"><div style="font-size:13px">CHF '+((h.preis||0).toFixed(2))+' · +'+h.menge+' '+esc(a.einheit||'Stk')+(h.aktion?'<span style="font-size:10px;padding:1px 7px;border-radius:8px;background:var(--wl);color:var(--wn);font-weight:600;margin-left:6px">Aktion</span>':'')+'</div><div style="font-size:11px;color:var(--t2)">'+fmtDateCH(h.datum)+'</div></div><div style="display:flex;gap:6px;flex-shrink:0"><button onclick="editPreisHistorie('+id+','+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:4px 8px;cursor:pointer;font-size:12px;color:var(--ac)">✏️</button><button onclick="delPreisHistorie('+id+','+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:4px 8px;cursor:pointer;font-size:12px;color:var(--dg)">✕</button></div></div>';
     }).join('')+'</div>':'';
   const totalHint=ptotal?'<div style="font-size:11px;color:var(--t2);text-align:right;margin-top:4px">≈ '+esc(ptotal)+'</div>':'';
+
+  // Packungen anzeigen wenn mehr als eine
+  ensurePackungen(a);
+  const sortedPack=a.packungen.filter(p=>p.menge>0).sort((x,y)=>{
+    if(!x.ablaufdatum&&!y.ablaufdatum)return x.kaufdatum.localeCompare(y.kaufdatum);
+    if(!x.ablaufdatum)return 1;if(!y.ablaufdatum)return -1;
+    return x.ablaufdatum.localeCompare(y.ablaufdatum);
+  });
+  const packHtml=sortedPack.length>1?
+    '<div class="il" style="margin-top:14px">'+
+    '<div class="ir" style="border-bottom:1px solid var(--bd);font-weight:600;font-size:13px">📦 Packungen ('+sortedPack.length+')</div>'+
+    sortedPack.map((p,i)=>{
+      const d=p.ablaufdatum?daysUntil(p.ablaufdatum):null;
+      const badge=p.ablaufdatum?'<span class="exp-badge '+expClass(d)+'" style="margin:0">'+expLabel(d)+'</span>':'';
+      const fi=i===0&&p.ablaufdatum?'🔔 ':'';
+      return '<div class="ir"><div style="flex:1"><div style="font-size:13px;font-weight:500">'+fi+p.menge+' '+esc(a.einheit||'Stk')+
+        (p.ablaufdatum?' · MHD: '+fmtDateCH(p.ablaufdatum):' · kein MHD')+'</div>'+
+        '<div style="font-size:11px;color:var(--t2)">Kauf: '+fmtDateCH(p.kaufdatum)+'</div></div>'+badge+
+      '</div>';
+    }).join('')+
+    '</div>':'';
   const codeDisplay=a.barcode?esc(a.barcode):(a.ownCode?esc(a.ownCode)+' <span style="font-size:11px;color:var(--t2)">(eigener Code)</span>':'—');
   // Rezepte die diesen Artikel verwenden
   const artName=a.name.toLowerCase();
@@ -959,7 +980,7 @@ function showDet(id){
       return '<div class="ir" style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="goScreen(\'s-rezepte\')">'+thumb+'<div><div style="font-size:13px;font-weight:500">'+esc(r.name)+'</div><div style="font-size:11px;color:var(--t2)">'+r.port+' Port. · '+r.min+' min</div></div></div>';
     }).join('')+'</div>':
     '';
-  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span><span class="iv">'+(a.ablaufdatum?fmtDateCH(a.ablaufdatum)+' '+expBadge(a.ablaufdatum):'—')+'</span></div>'+preisRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+histHtml+rzHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>'+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
+  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span><span class="iv">'+(a.ablaufdatum?fmtDateCH(a.ablaufdatum)+' '+expBadge(a.ablaufdatum):'—')+'</span></div>'+preisRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+packHtml+histHtml+rzHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>'+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
   const heroEl=document.getElementById('dh-hero-img');
   if(heroEl)heroEl.addEventListener('click',()=>openLightbox(a.foto));
   goScreen('s-detail');
@@ -999,6 +1020,29 @@ function delPreisHistorie(artikelId,idx){
   if(letzte.length)a.preis=letzte[letzte.length-1].preis;
   saveL();showDet(artikelId);toast('Eintrag gelöscht');
 }
+/* ── Packungen (Multi-MHD pro Artikel) ───────────────────────────── */
+let nextPackId=1;
+function newPackId(){return nextPackId++;}
+
+// Migration: Artikel ohne packungen-Array bekommen einen Eintrag aus bestehendem MHD
+function ensurePackungen(a){
+  if(!a.packungen||!Array.isArray(a.packungen)||a.packungen.length===0){
+    a.packungen=[{id:newPackId(),menge:a.menge,kaufdatum:a.kaufdatum||todayISO(),ablaufdatum:a.ablaufdatum||''}];
+  }
+}
+
+// Gesamtbestand aus Packungen berechnen und a.menge synchronisieren
+function syncMenge(a){
+  if(a.packungen&&a.packungen.length){
+    a.menge=a.packungen.reduce((s,p)=>s+(p.menge||0),0);
+    // Packungen mit Menge 0 entfernen
+    a.packungen=a.packungen.filter(p=>p.menge>0);
+    // a.ablaufdatum = frühestes MHD (für Anzeige/Badges)
+    const withDate=a.packungen.filter(p=>p.ablaufdatum).sort((a,b)=>a.ablaufdatum.localeCompare(b.ablaufdatum));
+    a.ablaufdatum=withDate.length?withDate[0].ablaufdatum:'';
+  }
+}
+
 function chgB(id,d){
   const a=S.a.find(x=>x.id===id);if(!a)return;
   const before=a.menge;
@@ -1244,14 +1288,15 @@ function confirmEingang(id,ablaufPflicht){
     toast('Bitte Ablaufdatum eingeben — dieser Artikel hatte bisher immer eines');
     return;
   }
-  a.menge+=addMenge;
+  // Neue Packung hinzufügen
+  if(!a.packungen)a.packungen=[];
+  a.packungen.push({id:newPackId(),menge:addMenge,kaufdatum,ablaufdatum});
+  syncMenge(a); // a.menge + a.ablaufdatum aus Packungen neu berechnen
   a.kaufdatum=kaufdatum;
   if(kaufort)a.kaufort=kaufort;
-  if(ablaufdatum)a.ablaufdatum=ablaufdatum;
-  // Preis immer loggen
+  // Preis loggen
   if(!a.preisHistorie)a.preisHistorie=[];
   a.preisHistorie.push({datum:kaufdatum,preis,menge:addMenge,aktion:isAktion||false});
-  // Standardpreis nur aktualisieren wenn kein Aktionspreis
   if(preis>0&&!isAktion){a.preis=preis;}
   addLogEntry('ein',a.id,a.name,a.lager,a.kat,addMenge,a.einheit,preis,isAktion||false);
   saveL();
@@ -1307,18 +1352,81 @@ function processAusgangScan(code){
     toast('Barcode nicht gefunden: '+code);
     return;
   }
-  found.menge=Math.max(0,found.menge-1);
-  if(found.menge===0&&found.ablaufdatum){found.ablaufdatum='';}  // MHD löschen wenn leer
-  addLogEntry('aus',found.id,found.name,found.lager,found.kat,1,found.einheit,0);
+  ensurePackungen(found);
+  const aktivePack=found.packungen.filter(p=>p.menge>0);
+  if(aktivePack.length>1){
+    // Mehrere Packungen — Dialog zeigen
+    showAusgangPackDialog(found,list);
+  }else{
+    // Nur eine Packung — direkt abbuchen
+    ausgangPackAbbuchen(found,aktivePack[0]?aktivePack[0].id:null,1,list);
+  }
+}
+
+function showAusgangPackDialog(a,list){
+  // Bestehenden Dialog schliessen falls vorhanden
+  const existing=document.getElementById('pack-dialog');
+  if(existing)existing.remove();
+
+  const sorted=a.packungen.filter(p=>p.menge>0).sort((x,y)=>{
+    if(!x.ablaufdatum&&!y.ablaufdatum)return x.kaufdatum.localeCompare(y.kaufdatum);
+    if(!x.ablaufdatum)return 1;
+    if(!y.ablaufdatum)return -1;
+    return x.ablaufdatum.localeCompare(y.ablaufdatum);
+  });
+
+  const dlg=document.createElement('div');
+  dlg.id='pack-dialog';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="font-weight:600;font-size:15px;margin-bottom:4px">'+esc(a.name)+' — Welche Packung?</div>'+
+    '<div style="font-size:12px;color:var(--t2);margin-bottom:14px">Sortiert nach frühestem MHD</div>'+
+    sorted.map((p,i)=>{
+      const d=p.ablaufdatum?daysUntil(p.ablaufdatum):null;
+      const badge=p.ablaufdatum?'<span class="exp-badge '+expClass(d)+'">'+expLabel(d)+'</span>':'';
+      const earliest=i===0&&p.ablaufdatum?'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:4px">Frühestes MHD</span>':'';
+      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd)">'+
+        '<div>'+
+          '<div style="font-size:14px;font-weight:500">'+
+            (p.ablaufdatum?'MHD: '+fmtDateCH(p.ablaufdatum):'Kein MHD')+earliest+
+          '</div>'+
+          '<div style="font-size:12px;color:var(--t2)">Kauf: '+fmtDateCH(p.kaufdatum)+' · '+p.menge+' '+esc(a.einheit||'Stk')+' · '+badge+'</div>'+
+        '</div>'+
+        '<button onclick="ausgangPackAbbuchen(S.a.find(x=>x.id==='+a.id+'),'+p.id+',1,document.getElementById(\'ausgang-list\'));document.getElementById(\'pack-dialog\').remove()" '+
+          'style="background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:8px 14px;font-size:13px;cursor:pointer;flex-shrink:0;margin-left:8px">'+
+          '−1 entnehmen'+
+        '</button>'+
+      '</div>';
+    }).join('')+
+    '<button onclick="document.getElementById(\'pack-dialog\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+    '</div>';
+  document.body.appendChild(dlg);
+}
+
+function ausgangPackAbbuchen(a,packId,menge,list){
+  if(!a)return;
+  ensurePackungen(a);
+  const pack=a.packungen.find(p=>p.id===packId);
+  if(pack){
+    pack.menge=Math.max(0,pack.menge-menge);
+  }else if(a.packungen.length){
+    // Fallback: erste Packung
+    a.packungen[0].menge=Math.max(0,a.packungen[0].menge-menge);
+  }
+  syncMenge(a);
+  addLogEntry('aus',a.id,a.name,a.lager,a.kat,menge,a.einheit,0);
   saveL();
-  ausgangLog.unshift({id:found.id,name:found.name,foto:found.foto,lager:found.lager,einheit:found.einheit,zeit:Date.now()});
-  if(list.children.length===1&&list.children[0].textContent.includes('Noch keine'))list.innerHTML='';
-  const th=found.foto?'<div class="at"><img src="'+esc(found.foto)+'"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','18px;height:18px')+'</div>';
-  const div=document.createElement('div');
-  div.className='ausgang-log';
-  div.innerHTML=th+'<div class="ai"><div class="an">'+esc(found.name)+'</div><div class="am">'+esc(found.lager)+' · noch '+found.menge+' '+esc(found.einheit||'Stk')+'</div></div><div class="ausgang-badge">−1</div>';
-  list.insertBefore(div,list.firstChild);
-  toast('−1 entnommen: '+found.name+' (noch '+found.menge+')');
+  ausgangLog.unshift({id:a.id,name:a.name,foto:a.foto,lager:a.lager,einheit:a.einheit,zeit:Date.now()});
+  if(list){
+    if(list.children.length===1&&list.children[0].textContent.includes('Noch keine'))list.innerHTML='';
+    const th=a.foto?'<div class="at"><img src="'+esc(a.foto)+'"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','18px;height:18px')+'</div>';
+    const div=document.createElement('div');
+    div.className='ausgang-log';
+    div.innerHTML=th+'<div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+esc(a.lager)+' · noch '+a.menge+' '+esc(a.einheit||'Stk')+'</div></div><div class="ausgang-badge">−1</div>';
+    list.insertBefore(div,list.firstChild);
+  }
+  toast('−1 entnommen: '+a.name+' (noch '+a.menge+')');
 }
 
 /* ── Eigene Barcodes & Etiketten-Druck ────────────────────────────── */
@@ -1452,33 +1560,30 @@ async function drawLabelCanvas(canvasId,a,fmt,code,showPrice,showKaufdatum,showA
       }catch(e){}
     }
 
-    // Text rechts vom QR-Code: Name, dann Zusatzinfos
+    // Text rechts vom QR-Code: Name oben, Kauf+MHD Mitte, Preis unten
     const parts=[];
     parts.push(a.name);
-    if(showKaufdatum&&a.kaufdatum)parts.push('Kauf: '+fmtDateCH(a.kaufdatum));
-    if(showAblauf&&a.ablaufdatum)parts.push('MHD: '+fmtDateCH(a.ablaufdatum));
-    if(showPrice&&a.preis)parts.push('CHF '+a.preis.toFixed(2));
+
+    const dateParts=[];
+    if(showKaufdatum&&a.kaufdatum)dateParts.push('Kauf: '+fmtDateCH(a.kaufdatum));
+    if(showAblauf&&a.ablaufdatum)dateParts.push('MHD: '+fmtDateCH(a.ablaufdatum));
+    const pricePart=showPrice&&a.preis?'CHF '+a.preis.toFixed(2):'';
 
     ctx.fillStyle='#000000';
     ctx.textBaseline='top';
 
-    // Name: so gross wie möglich
-    let fsName=Math.round(hpx*0.45);
-    do{fsName=Math.max(fsName-1,5);ctx.font='bold '+fsName+'px sans-serif';}
-    while(fsName>5&&ctx.measureText(parts[0]).width>textW);
-    ctx.fillText(parts[0],textX,pad);
+    // Verfügbare Höhe gleichmässig aufteilen
+    const lines=[parts[0],dateParts.join('  '),pricePart].filter(Boolean);
+    const lineH=Math.floor((hpx-pad*2)/lines.length);
 
-    // Restliche Infos kleiner darunter
-    let y=pad+Math.round(fsName*1.35);
-    const subParts=parts.slice(1);
-    const subLine=subParts.join(' · ');
-    if(subLine){
-      let fsSub=Math.round(fsName*0.85);
-      do{fsSub=Math.max(fsSub-1,4);ctx.font=fsSub+'px sans-serif';}
-      while(fsSub>4&&ctx.measureText(subLine).width>textW);
-      ctx.fillStyle='#444444';
-      ctx.fillText(subLine,textX,y);
-    }
+    lines.forEach((line,i)=>{
+      let fs=Math.round(lineH*0.72);
+      const bold=i===0?'bold ':'';
+      do{fs=Math.max(fs-1,5);ctx.font=bold+fs+'px sans-serif';}
+      while(fs>5&&ctx.measureText(line).width>textW);
+      ctx.fillStyle=i===0?'#000000':'#333333';
+      ctx.fillText(line,textX,pad+i*lineH+Math.round((lineH-fs)*0.3));
+    });
 
   }else{
     // Andere Formate: Barcode oben, Text darunter
