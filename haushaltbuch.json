@@ -82,7 +82,7 @@
     {
       "id": 5,
       "name": "Eistee",
-      "marke": "Migros",
+      "marke": "",
       "kat": "Getränke",
       "lager": "Kühlschrank unten",
       "menge": 0,
@@ -93,7 +93,7 @@
       "packMenge": 4,
       "packEinheit": "l",
       "kaufdatum": "2026-06-20",
-      "ablaufdatum": "2027-04-22",
+      "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781972021313_178197201336984080276692790356.jpg",
       "fotoPath": "1781972021313_178197201336984080276692790356.jpg",
@@ -103,7 +103,8 @@
           "preis": 3.5,
           "menge": 1
         }
-      ]
+      ],
+      "kaufort": "Migros"
     },
     {
       "id": 6,
@@ -417,7 +418,7 @@
       "packMenge": 3.3,
       "packEinheit": "dl",
       "kaufdatum": "2026-06-23",
-      "ablaufdatum": "2026-07-15",
+      "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782224369335_off.jpg",
       "fotoPath": "1782224369335_off.jpg",
@@ -502,7 +503,7 @@
     },
     {
       "id": 25,
-      "name": "ALDI GOURMET FINEST CUISINE PILZE Morilles",
+      "name": "Morcheln getrocknet",
       "marke": "ALDI GOURMET FINEST CUISINE",
       "kat": "Konserven & Trockenware",
       "lager": "Schlof",
@@ -517,7 +518,9 @@
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782310563289_off.jpg",
-      "fotoPath": "1782310563289_off.jpg"
+      "fotoPath": "1782310563289_off.jpg",
+      "kaufort": "",
+      "preisHistorie": []
     },
     {
       "id": 26,
@@ -646,15 +649,15 @@
       "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
-      "barcode": "9262124087058",
+      "barcode": "4056489147268",
       "preis": 2.95,
       "packMenge": 125,
       "packEinheit": "g",
       "kaufdatum": "2026-06-27",
       "ablaufdatum": "2026-06-28",
       "notiz": "",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782551885501_off.jpg",
+      "fotoPath": "1782551885501_off.jpg",
       "preisHistorie": [],
       "kaufort": "Lidl"
     },
@@ -1793,5 +1796,5 @@
       "zeit": 1782543352193
     }
   ],
-  "aktualisiert": "2026-06-27T09:19:31.591Z"
+  "aktualisiert": "2026-06-27T09:21:06.162Z"
 }
