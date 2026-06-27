@@ -78,7 +78,7 @@
       "packMenge": 6,
       "packEinheit": "Stk",
       "kaufdatum": "2026-06-20",
-      "ablaufdatum": "2026-07-17",
+      "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782190086786_17821900533123253954791247278943.jpg",
       "fotoPath": "1782190086786_17821900533123253954791247278943.jpg",
@@ -103,8 +103,7 @@
           "kaufdatum": "2026-06-20",
           "ablaufdatum": ""
         }
-      ],
-      "kaufort": ""
+      ]
     },
     {
       "id": 5,
@@ -673,7 +672,7 @@
       "marke": "Lidl",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "4056489147268",
@@ -681,20 +680,12 @@
       "packMenge": 125,
       "packEinheit": "g",
       "kaufdatum": "2026-06-27",
-      "ablaufdatum": "",
+      "ablaufdatum": "2026-06-28",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782551885501_off.jpg",
       "fotoPath": "1782551885501_off.jpg",
       "preisHistorie": [],
-      "kaufort": "Lidl",
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-06-27",
-          "ablaufdatum": "2026-06-28"
-        }
-      ]
+      "kaufort": "Lidl"
     },
     {
       "id": 33,
@@ -1940,20 +1931,7 @@
       "aktion": false,
       "datum": "2026-06-27",
       "zeit": 1782563853778
-    },
-    {
-      "t": "aus",
-      "aid": 32,
-      "name": "Forellenfilets",
-      "lager": "Kühlschrank oben",
-      "kat": "Fleisch & Fisch",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-27",
-      "zeit": 1782566765137
     }
   ],
-  "aktualisiert": "2026-06-27T13:26:51.991Z"
+  "aktualisiert": "2026-06-27T13:26:59.622Z"
 }
