@@ -78,7 +78,7 @@
       "packMenge": 6,
       "packEinheit": "Stk",
       "kaufdatum": "2026-06-20",
-      "ablaufdatum": "2026-07-18",
+      "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782190086786_17821900533123253954791247278943.jpg",
       "fotoPath": "1782190086786_17821900533123253954791247278943.jpg",
@@ -87,6 +87,12 @@
           "datum": "2026-06-20",
           "preis": 0.6,
           "menge": 6
+        },
+        {
+          "datum": "2026-06-20",
+          "preis": 0.6,
+          "menge": 1,
+          "aktion": false
         }
       ],
       "ownCode": "HB-000009"
@@ -826,6 +832,26 @@
           "aktion": false
         }
       ]
+    },
+    {
+      "id": 39,
+      "name": "Big Feuerzeug",
+      "marke": "Big",
+      "kat": "Diverses",
+      "lager": "Küche",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "3086126790503",
+      "preis": 0,
+      "packMenge": 10,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-06-27",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782557891926_1782557848003181302118987887147.jpg",
+      "fotoPath": "1782557891926_1782557848003181302118987887147.jpg"
     }
   ],
   "lagerorte": [
@@ -1858,7 +1884,46 @@
       "aktion": false,
       "datum": "2026-06-27",
       "zeit": 1782552861709
+    },
+    {
+      "t": "ein",
+      "aid": 39,
+      "name": "Big Feuerzeug",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782557943299
+    },
+    {
+      "t": "aus",
+      "aid": 4,
+      "name": "Ei",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782563821727
+    },
+    {
+      "t": "ein",
+      "aid": 4,
+      "name": "Ei",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0.6,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782563853778
     }
   ],
-  "aktualisiert": "2026-06-27T09:38:17.263Z"
+  "aktualisiert": "2026-06-27T12:38:49.554Z"
 }
