@@ -337,7 +337,9 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   <div class="ftp">
     <button class="bkb" onclick="closeEingang()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
     <span class="ftl">Wareneingang</span>
-    <div style="width:36px"></div>
+    <button class="ib" onclick="openQuittung()" title="Quittung scannen" style="color:var(--ac)">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/><line x1="13" y1="13" x2="17" y2="13"/><line x1="13" y1="17" x2="17" y2="17"/></svg>
+    </button>
   </div>
   <div class="fb" id="eingang-body"></div>
 </div>
@@ -432,6 +434,15 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   <button onclick="applyUpdate()">Aktualisieren</button>
 </div>
 
+<div id="quittung-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:5000;align-items:flex-end;justify-content:center">
+  <div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:0 0 env(safe-area-inset-bottom)">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd)">
+      <span style="font-weight:600;font-size:16px">📄 Quittung scannen</span>
+      <button onclick="closeQuittung()" style="background:none;border:none;cursor:pointer;color:var(--t2);font-size:22px;line-height:1">×</button>
+    </div>
+    <div id="quittung-body" style="padding:16px"></div>
+  </div>
+</div>
 <div id="lightbox" onclick="closeLightbox()">
   <button id="lightbox-close" onclick="closeLightbox()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
   <img id="lightbox-img" src="" alt="" onclick="event.stopPropagation()"/>
@@ -464,7 +475,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='7.4';
+const APP_VERSION='7.6';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -929,7 +940,7 @@ function showDet(id){
   const histHtml=hist.length?'<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">Preisverlauf</span></div>'+
     hist.map((h,ri)=>{
       const i=(a.preisHistorie.length-1-ri); // original index (not reversed)
-      return '<div class="ir" style="align-items:center"><div style="flex:1"><div style="font-size:13px">CHF '+h.preis.toFixed(2)+' · +'+h.menge+' '+esc(a.einheit||'Stk')+(h.aktion?'<span style="font-size:10px;padding:1px 7px;border-radius:8px;background:var(--wl);color:var(--wn);font-weight:600;margin-left:6px">Aktion</span>':'')+'</div><div style="font-size:11px;color:var(--t2)">'+fmtDateCH(h.datum)+'</div></div><div style="display:flex;gap:6px;flex-shrink:0"><button onclick="editPreisHistorie('+id+','+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:4px 8px;cursor:pointer;font-size:12px;color:var(--ac)">✏️</button><button onclick="delPreisHistorie('+id+','+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:4px 8px;cursor:pointer;font-size:12px;color:var(--dg)">✕</button></div></div>';
+      return '<div class="ir" style="align-items:center"><div style="flex:1"><div style="font-size:13px">CHF '+((h.preis||0).toFixed(2))+' · +'+h.menge+' '+esc(a.einheit||'Stk')+(h.aktion?'<span style="font-size:10px;padding:1px 7px;border-radius:8px;background:var(--wl);color:var(--wn);font-weight:600;margin-left:6px">Aktion</span>':'')+'</div><div style="font-size:11px;color:var(--t2)">'+fmtDateCH(h.datum)+'</div></div><div style="display:flex;gap:6px;flex-shrink:0"><button onclick="editPreisHistorie('+id+','+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:4px 8px;cursor:pointer;font-size:12px;color:var(--ac)">✏️</button><button onclick="delPreisHistorie('+id+','+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:4px 8px;cursor:pointer;font-size:12px;color:var(--dg)">✕</button></div></div>';
     }).join('')+'</div>':'';
   const totalHint=ptotal?'<div style="font-size:11px;color:var(--t2);text-align:right;margin-top:4px">≈ '+esc(ptotal)+'</div>':'';
   const codeDisplay=a.barcode?esc(a.barcode):(a.ownCode?esc(a.ownCode)+' <span style="font-size:11px;color:var(--t2)">(eigener Code)</span>':'—');
@@ -1127,8 +1138,20 @@ async function saveForm(){
   const geChip=document.querySelector('#f-ge .chip.on[data-ge]');
   const kaufort=geChip?geChip.dataset.ge:'';
   const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,kaufort,menge:parseInt(document.getElementById('f-mg').value)||0,einheit:document.getElementById('f-ei').value,mindest:Math.max(0,parseInt(document.getElementById('f-mn').value)||0),barcode:document.getElementById('f-bc').value.trim(),preis:standardPreis,packMenge,packEinheit,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
-  if(!editId&&preis>0){d.preisHistorie=[{datum:kaufdatum,preis,menge:d.menge,aktion:isAktion||false}];}
-  else if(editId){const ex=S.a.find(x=>x.id===editId);d.preisHistorie=ex&&ex.preisHistorie?ex.preisHistorie:[];}
+  if(!editId){
+    // Neuer Artikel: Preis-Historie nur anlegen wenn Preis angegeben
+    d.preisHistorie=preis>0?[{datum:kaufdatum,preis,menge:d.menge,aktion:isAktion||false}]:[];
+  }else{
+    // Artikel bearbeiten: bestehende Historie behalten, bei Preisänderung neuen Eintrag hinzufügen
+    const ex=S.a.find(x=>x.id===editId);
+    d.preisHistorie=ex&&ex.preisHistorie?[...ex.preisHistorie]:[];
+    if(preis>0){
+      const lastPreis=d.preisHistorie.length?d.preisHistorie[d.preisHistorie.length-1].preis:0;
+      if(preis!==lastPreis){
+        d.preisHistorie.push({datum:kaufdatum,preis,menge:d.menge,aktion:isAktion||false});
+      }
+    }
+  }
   if(editId){const i=S.a.findIndex(x=>x.id===editId);if(i>=0)S.a[i]={...S.a[i],...d};}
   else{
     const newId=S.nid++;
@@ -2097,6 +2120,231 @@ function resetAll(){if(!confirm('Alle Daten wirklich löschen?'))return;S={a:[],
 /* ── Toast & Loader ───────────────────────────────────────────────── */
 let tT;
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('on'),2300);}
+/* ── Quittung scannen (Claude Vision) ────────────────────────────── */
+let quittungItems=[]; // erkannte Artikel von der Quittung
+let quittungIdx=0;    // aktueller Artikel im Einzelbestätigungs-Flow
+let quittungGeschaeft=''; // erkanntes Geschäft
+
+function openQuittung(){
+  quittungItems=[];quittungIdx=0;quittungGeschaeft='';
+  document.getElementById('quittung-body').innerHTML=
+    '<input type="file" id="quittung-file" accept="image/*" capture="environment" style="display:none" onchange="handleQuittungFile(this)"/>'+
+    '<div style="text-align:center;padding:8px 0 16px">'+
+      '<button onclick="document.getElementById(\'quittung-file\').click()" style="width:100%;padding:14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>'+
+        'Quittung fotografieren / auswählen'+
+      '</button>'+
+      '<div style="font-size:12px;color:var(--t3);margin-top:8px">Claude analysiert die Quittung und erkennt alle Artikel automatisch</div>'+
+    '</div>';
+  document.getElementById('quittung-overlay').style.display='flex';
+}
+
+function closeQuittung(){
+  document.getElementById('quittung-overlay').style.display='none';
+}
+
+async function handleQuittungFile(input){
+  const file=input.files[0];if(!file)return;
+  const body=document.getElementById('quittung-body');
+  body.innerHTML='<div style="text-align:center;padding:24px;color:var(--t2)"><div class="spn" style="margin:0 auto 12px"></div>Claude analysiert die Quittung…</div>';
+
+  // Bild als Base64 lesen
+  const b64=await new Promise((res,rej)=>{
+    const r=new FileReader();
+    r.onload=()=>res(r.result.split(',')[1]);
+    r.onerror=()=>rej(new Error('Datei konnte nicht gelesen werden'));
+    r.readAsDataURL(file);
+  });
+
+  const mediaType=file.type||'image/jpeg';
+
+  // Claude Vision API
+  try{
+    const prompt=
+      'Analysiere diese Quittung/Kassenbon und extrahiere alle gekauften Artikel.\n'+
+      'Antworte NUR mit einem JSON-Objekt, keine andere Ausgabe:\n'+
+      '{\n'+
+      '  "geschaeft": "Migros",\n'+
+      '  "datum": "2026-06-23",\n'+
+      '  "artikel": [\n'+
+      '    {"name":"Vollmilch","menge":2,"preis":1.85,"einheit":"Stk","kat":"Milchprodukte"},\n'+
+      '    ...\n'+
+      '  ]\n'+
+      '}\n\n'+
+      'Regeln:\n'+
+      '- name: Produktname von der Quittung\n'+
+      '- menge: Anzahl (Standard 1)\n'+
+      '- preis: Preis PRO EINHEIT in CHF (Zahl, kein Währungssymbol)\n'+
+      '- einheit: Stk/kg/g/l/dl/Pkg/Flasche/Dose etc.\n'+
+      '- kat: eine von: Milchprodukte, Fleisch & Fisch, Gemüse & Früchte, Tiefkühl, Getränke, Konserven & Trockenware, Backwaren & Brot, Gewürze & Saucen, Süsswaren, Reinigung & Pflege, Diverses\n'+
+      '- geschaeft: Geschäftsname (Migros/Coop/Lidl/Aldi/Denner/Volg/Online oder erkannter Name)\n'+
+      '- datum: Datum im Format JJJJ-MM-TT (oder heutiges Datum falls nicht lesbar)\n'+
+      '- Nur echte Produkte, keine Rabatte/Steuern/Totals als eigene Artikel';
+
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:1500,
+        messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:mediaType,data:b64}},
+          {type:'text',text:prompt}
+        ]}]
+      })
+    });
+    const data=await res.json();
+    const text=data.content&&data.content[0]&&data.content[0].text||'';
+    const clean=text.replace(/```json|```/g,'').trim();
+    const parsed=JSON.parse(clean);
+
+    quittungItems=parsed.artikel||[];
+    quittungGeschaeft=parsed.geschaeft||'';
+    quittungIdx=0;
+
+    if(!quittungItems.length){
+      body.innerHTML='<div style="text-align:center;padding:24px;color:var(--dg)">Keine Artikel auf der Quittung erkannt. Bitte ein klareres Foto versuchen.</div>';
+      return;
+    }
+
+    // Übersicht zeigen
+    renderQuittungUebersicht(parsed.datum||todayISO());
+
+  }catch(e){
+    body.innerHTML='<div style="text-align:center;padding:24px;color:var(--dg)">Fehler bei der Analyse: '+esc(e.message)+'</div>';
+  }
+}
+
+function renderQuittungUebersicht(datum){
+  const body=document.getElementById('quittung-body');
+  const ge=quittungGeschaeft;
+  let h='<div style="background:var(--ol);border-radius:var(--rs);padding:10px 14px;margin-bottom:14px;font-size:13px">'+
+    '✓ <strong>'+quittungItems.length+' Artikel</strong> erkannt'+
+    (ge?' · '+esc(ge):'')+
+    (datum?' · '+fmtDateCH(datum):'')+
+  '</div>';
+  h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">Jeden Artikel einzeln bestätigen:</div>';
+  h+=quittungItems.map((it,i)=>{
+    const existing=S.a.find(a=>a.name.toLowerCase().includes(it.name.toLowerCase().slice(0,5))||it.name.toLowerCase().includes(a.name.toLowerCase().slice(0,5)));
+    const badge=existing?'<span style="font-size:10px;background:var(--al);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px">im Lager</span>':'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:6px">neu</span>';
+    if(it._done){
+      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd);opacity:.5">'+
+        '<div><div style="font-size:14px;font-weight:500;text-decoration:line-through">'+esc(it.name)+'</div>'+
+        '<div style="font-size:12px;color:var(--t2)">'+it.menge+'× CHF '+it.preis.toFixed(2)+'</div></div>'+
+        '<span style="color:var(--ok);font-size:20px">✓</span>'+
+      '</div>';
+    }
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd)">'+
+      '<div><div style="font-size:14px;font-weight:500">'+esc(it.name)+badge+'</div>'+
+      '<div style="font-size:12px;color:var(--t2)">'+it.menge+'× CHF '+it.preis.toFixed(2)+'</div></div>'+
+      '<button onclick="startQuittungArtikel('+i+')" style="background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:7px 14px;font-size:13px;cursor:pointer">Buchen</button>'+
+    '</div>';
+  }).join('');
+  h+='<button onclick="closeQuittung()" style="width:100%;margin-top:14px;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Fertig</button>';
+  body.innerHTML=h;
+  // Kaufdatum speichern für spätere Verwendung
+  body.dataset.datum=datum;
+}
+
+function startQuittungArtikel(idx){
+  const it=quittungItems[idx];
+  const body=document.getElementById('quittung-body');
+  const datum=body.dataset.datum||todayISO();
+
+  // Lager-Match suchen
+  const existing=S.a.find(a=>
+    a.name.toLowerCase().includes(it.name.toLowerCase().slice(0,5))||
+    it.name.toLowerCase().includes(a.name.toLowerCase().slice(0,5))
+  );
+  const ablaufPflicht=existing&&!!existing.ablaufdatum;
+
+  let h='<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">'+
+    '<button onclick="renderQuittungUebersicht(\''+esc(datum)+'\')" style="background:none;border:none;cursor:pointer;color:var(--ac);font-size:20px;line-height:1">‹</button>'+
+    '<span style="font-weight:600;font-size:15px">'+esc(it.name)+'</span>'+
+  '</div>';
+
+  // Artikel-Match Info
+  if(existing){
+    h+='<div style="background:var(--al);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--ac);margin-bottom:12px">'+
+      '→ Wird zum Lagerartikel <strong>'+esc(existing.name)+'</strong> gebucht'+
+    '</div>';
+  }else{
+    h+='<div style="background:var(--wl);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--wn);margin-bottom:12px">'+
+      '⚠ Kein passender Artikel im Lager — wird als neuer Artikel angelegt'+
+    '</div>';
+  }
+
+  // Felder
+  h+='<div class="fd"><label>Bezeichnung</label><input type="text" id="qq-name" value="'+esc(it.name)+'"/></div>'+
+    '<div class="tc"><div class="fd"><label>Menge</label><input type="number" id="qq-mg" min="1" value="'+it.menge+'"/></div>'+
+    '<div class="fd"><label>Einheit</label><input type="text" id="qq-ei" value="'+esc(it.einheit||'Stk')+'"/></div></div>'+
+    '<div class="fd"><label>Preis pro Einheit (CHF)</label><input type="text" inputmode="decimal" id="qq-pr" value="'+it.preis.toFixed(2)+'"/></div>'+
+    '<div class="fd"><label>Kategorie</label><input type="text" id="qq-kat" value="'+esc(it.kat||'Diverses')+'"/></div>'+
+    '<div class="fd"><label>Wo gekauft</label><div class="lcw">'+
+      S.ge.map(g=>'<button class="chip'+(quittungGeschaeft===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#qq-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+
+    '</div></div>';
+  // Ablaufdatum nur wenn Artikel bisher eines hatte
+  if(ablaufPflicht){
+    h+='<div class="fd"><label style="display:flex;align-items:center;gap:6px">'+
+      'Ablaufdatum (MHD) <span style="color:var(--dg);font-weight:700">*</span>'+
+      '<span style="font-size:11px;color:var(--dg);background:var(--dl);padding:1px 7px;border-radius:8px">Pflicht</span></label>'+
+      dateField('qq-ad','')+'</div>';
+  }
+  h+='<div style="display:flex;gap:8px;margin-top:14px">'+
+    '<button onclick="renderQuittungUebersicht(\''+esc(datum)+'\')" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Überspringen</button>'+
+    '<button onclick="confirmQuittungArtikel('+idx+','+!!existing+(existing?','+existing.id:',null')+')" style="flex:2;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">Eingang buchen</button>'+
+  '</div>';
+
+  // Kaufort-Div ID setzen
+  h=h.replace('class="lcw">','class="lcw" id="qq-ge">');
+  body.innerHTML=h;
+}
+
+function confirmQuittungArtikel(idx,hasExisting,existingId){
+  const body=document.getElementById('quittung-body');
+  const datum=body.dataset.datum||todayISO();
+  const name=document.getElementById('qq-name').value.trim();
+  const menge=parseInt(document.getElementById('qq-mg').value)||1;
+  const einheit=document.getElementById('qq-ei').value.trim()||'Stk';
+  const preis=parseDecimal(document.getElementById('qq-pr').value)||0;
+  const kat=document.getElementById('qq-kat').value.trim()||'Diverses';
+  const geChip=document.querySelector('#qq-ge .chip.on[data-ge]');
+  const kaufort=geChip?geChip.dataset.ge:quittungGeschaeft;
+  const ablaufdatum=document.getElementById('qq-ad')?document.getElementById('qq-ad').value:'';
+
+  // Pflicht-Check MHD
+  if(hasExisting&&document.getElementById('qq-ad')&&!ablaufdatum){
+    toast('Bitte Ablaufdatum eingeben');return;
+  }
+
+  if(hasExisting&&existingId){
+    // Bestehenden Artikel im Lager aktualisieren
+    const a=S.a.find(x=>x.id===existingId);
+    if(a){
+      a.menge+=menge;
+      a.kaufdatum=datum;
+      a.kaufort=kaufort||a.kaufort;
+      if(ablaufdatum)a.ablaufdatum=ablaufdatum;
+      if(!a.preisHistorie)a.preisHistorie=[];
+      a.preisHistorie.push({datum,preis,menge,aktion:false});
+      if(preis>0)a.preis=preis;
+      addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,einheit,preis,false);
+    }
+  }else{
+    // Neuen Artikel anlegen
+    const newId=S.nid++;
+    const lager=S.lo[0]||'Vorratsschrank';
+    S.a.push({id:newId,name,marke:'',kat,lager,kaufort,menge,einheit,mindest:1,barcode:'',preis,packMenge:0,packEinheit:'',kaufdatum:datum,ablaufdatum,notiz:'',foto:'',fotoPath:'',preisHistorie:[{datum,preis,menge,aktion:false}]});
+    addLogEntry('ein',newId,name,lager,kat,menge,einheit,preis,false);
+  }
+  saveL();
+  toast('✓ '+esc(name)+' gebucht');
+
+  // Artikel aus Liste markieren als erledigt
+  quittungItems[idx]._done=true;
+  renderQuittungUebersicht(datum);
+}
+
 /* ── Datumseingabe: nativer Systemkalender ───────────────────────── */
 function dateField(id,value,extraStyle){
   // Nutzt den nativen Systemkalender des Geräts (Android/iOS).
