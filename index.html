@@ -462,7 +462,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='6.6';
+const APP_VERSION='6.9';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -977,8 +977,8 @@ function openForm(id){
   '<div class="fd"><label>Marke</label><input type="text" id="f-mk" placeholder="z.B. Emmi" value="'+(a?esc(a.marke||''):'')+'"/></div>'+
   '<div class="fd"><label>Kategorie</label><div class="lcw" id="f-ka">'+kc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Anfangsbestand</label><div class="ur"><input type="number" id="f-mg" min="0" value="'+(a?a.menge:1)+'"/><select id="f-ei" onchange="if(this.value===\'__add__\')addEinheit(this)">'+eo+'<option value="__add__">+ Neue Einheit...</option></select></div></div><div class="fd"><label>Mindestbestand</label><input type="number" id="f-mn" min="0" value="'+(a?a.mindest:1)+'"/></div></div>'+
-  '<div class="fd"><label>Packungsgrösse <span style="color:var(--t3);font-weight:400">(optional, z.B. 2.5 dl pro Stück)</span></label><div class="ur"><input type="number" id="f-pg" min="0" step="0.1" placeholder="z.B. 2.5" value="'+(a&&a.packMenge?esc(a.packMenge):'')+'"/><select id="f-pe">'+epo+'</select></div></div>'+
-  '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="number" id="f-pr" min="0" step="0.05" placeholder="z.B. 1.95" value="'+(a?esc(a.preis||''):'')+'"/><label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg)"><input type="checkbox" id="f-aktion" style="width:18px;height:18px;accent-color:var(--wn);cursor:pointer"/><div><div style="font-size:14px;font-weight:500;color:var(--tx)">Aktionspreis</div><div style="font-size:12px;color:var(--t2)">Wird als Aktion geloggt, kein neuer Standardpreis</div></div></label></div>'+
+  '<div class="fd"><label>Packungsgrösse <span style="color:var(--t3);font-weight:400">(optional, z.B. 2.5 dl pro Stück)</span></label><div class="ur"><input type="text" inputmode="decimal" id="f-pg" placeholder="z.B. 2.5" value="'+(a&&a.packMenge?esc(a.packMenge):'')+'"/><select id="f-pe">'+epo+'</select></div></div>'+
+  '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="text" inputmode="decimal" id="f-pr" placeholder="z.B. 1.95" value="'+(a?esc(a.preis||''):'')+'"/><label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg)"><input type="checkbox" id="f-aktion" style="width:18px;height:18px;accent-color:var(--wn);cursor:pointer"/><div><div style="font-size:14px;font-weight:500;color:var(--tx)">Aktionspreis</div><div style="font-size:12px;color:var(--t2)">Wird als Aktion geloggt, kein neuer Standardpreis</div></div></label></div>'+
   '<div class="fd"><label>Lagerort</label><div class="lcw" id="f-lo">'+lc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Kaufdatum</label>'+dateField('f-kd',a?a.kaufdatum||todayISO():todayISO())+'</div><div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('f-ad',a?a.ablaufdatum||'':'')+'</div></div>'+
   '<div class="fd"><label>Wo gekauft</label><div class="lcw" id="f-ge">'+S.ge.map(g=>'<button class="chip'+(a&&a.kaufort===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#f-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+'<button class="chip" onclick="addGeschaeft(this)">+ Neu...</button></div></div>'+
@@ -1065,10 +1065,10 @@ async function saveForm(){
     catch(e){hideLdr();toast('Foto-Upload fehlgeschlagen: '+e.message.slice(0,40));furl=fb64;fpth=ffn;}
   }else if(fb64){furl=fb64;fpth=ffn;}
   else if(editId){const ex=S.a.find(x=>x.id===editId);if(ex){furl=ex.foto||'';fpth=ex.fotoPath||'';}}
-  const preis=parseFloat(document.getElementById('f-pr').value)||0;
+  const preis=parseDecimal(document.getElementById('f-pr').value)||0;
   const isAktion=document.getElementById('f-aktion')&&document.getElementById('f-aktion').checked;
   const kaufdatum=document.getElementById('f-kd').value||todayISO();
-  const packMenge=parseFloat(document.getElementById('f-pg').value)||0;
+  const packMenge=parseDecimal(document.getElementById('f-pg').value)||0;
   const packEinheit=document.getElementById('f-pe').value;
   // Standardpreis nur speichern wenn kein Aktionspreis
   const standardPreis=isAktion?0:preis;
@@ -1124,7 +1124,7 @@ function lookupBarcode(){
       '<div style="font-size:12px;font-weight:600;color:var(--ac);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Preis bestätigen</div>'+
       '<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">'+
         '<span style="font-size:18px;font-weight:600;color:var(--t2)">CHF</span>'+
-        '<input type="number" id="e-pr" min="0" step="0.05" value="'+(lastPreis>0?lastPreis.toFixed(2):'')+'" placeholder="0.00" style="flex:1;font-size:17px;font-weight:600;padding:8px 10px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);text-align:right"/>'+
+        '<input type="text" inputmode="decimal" id="e-pr" value="'+(lastPreis>0?lastPreis.toFixed(2):'')+'" placeholder="0.00" style="flex:1;font-size:17px;font-weight:600;padding:8px 10px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);text-align:right"/>'+
       '</div>'+
       (lastPreis>0?'<div style="font-size:12px;color:var(--t2);margin-bottom:10px">Letzter erfasster Preis: CHF '+lastPreis.toFixed(2)+'</div>':'')+
       // Aktion-Flag
@@ -1140,6 +1140,9 @@ function lookupBarcode(){
       ? '<div class="fd" style="margin-bottom:14px"><label style="display:flex;align-items:center;gap:6px">'+I.calx+' Ablaufdatum (MHD) <span style="color:var(--dg);font-weight:700">*</span> <span style="font-size:11px;color:var(--dg);background:var(--dl);padding:1px 7px;border-radius:8px">Pflicht</span></label>'+dateField('e-ad','','border-color:var(--dg)')+'<div style="font-size:12px;color:var(--t2);margin-top:4px">Letztes erfasstes Ablaufdatum: '+fmtDateCH(found.ablaufdatum)+'</div></div>'
       : '<div class="fd" style="margin-bottom:14px"><label style="display:flex;align-items:center;gap:6px">'+I.calx+' Ablaufdatum (MHD) <span style="font-size:11px;color:var(--t3)">(optional, kein bisheriges Datum)</span></label>'+dateField('e-ad','')+'</div>'
     )+
+    '<div class="fd" style="margin-bottom:14px"><label>Wo gekauft</label><div class="lcw" id="e-ge">'+
+      S.ge.map(g=>'<button class="chip'+(found.kaufort===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#e-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+
+    '</div></div>'+
     '<button class="bp" style="width:100%;padding:14px;font-size:16px" onclick="confirmEingang('+found.id+','+!!found.ablaufdatum+')">Eingang bestätigen</button>';
 
     // Preis-Feld sofort fokussieren für schnelle Eingabe
@@ -1152,10 +1155,12 @@ function lookupBarcode(){
 function confirmEingang(id,ablaufPflicht){
   const a=S.a.find(x=>x.id===id);if(!a)return;
   const addMenge=parseInt(document.getElementById('e-mg').value)||1;
-  const preis=parseFloat(document.getElementById('e-pr').value)||0;
+  const preis=parseDecimal(document.getElementById('e-pr').value)||0;
   const isAktion=document.getElementById('e-aktion')&&document.getElementById('e-aktion').checked;
   const kaufdatum=document.getElementById('e-kd').value||todayISO();
   const ablaufdatum=document.getElementById('e-ad').value;
+  const geChip=document.querySelector('#e-ge .chip.on[data-ge]');
+  const kaufort=geChip?geChip.dataset.ge:(a.kaufort||'');
   // Pflichtprüfung Ablaufdatum
   if(ablaufPflicht&&!ablaufdatum){
     const adDisplay=document.getElementById('e-ad-display');
@@ -1165,14 +1170,13 @@ function confirmEingang(id,ablaufPflicht){
   }
   a.menge+=addMenge;
   a.kaufdatum=kaufdatum;
+  if(kaufort)a.kaufort=kaufort;
   if(ablaufdatum)a.ablaufdatum=ablaufdatum;
   // Preis immer loggen
   if(!a.preisHistorie)a.preisHistorie=[];
   a.preisHistorie.push({datum:kaufdatum,preis,menge:addMenge,aktion:isAktion||false});
   // Standardpreis nur aktualisieren wenn kein Aktionspreis
-  if(preis>0&&!isAktion){
-    a.preis=preis;
-  }
+  if(preis>0&&!isAktion){a.preis=preis;}
   addLogEntry('ein',a.id,a.name,a.lager,a.kat,addMenge,a.einheit,preis,isAktion||false);
   saveL();
   const aktionHinweis=isAktion?' (Aktionspreis, Standardpreis unverändert)':'';
@@ -1576,13 +1580,26 @@ function renderRezepte(){
   if(miss.length)h+='<div class="sh">Zutaten fehlen</div>'+miss.map(rcCard).join('');
   document.getElementById('rezept-list').innerHTML=h;
 }
+function rzImgUrl(img){
+  // Bild-URL aus relativem Pfad (z.B. "bilder/penne-alla-vodka.jpg") bauen
+  // Bilder liegen auf GitHub Pages des Rezeptbuch-Repos
+  if(!img)return '';
+  if(img.startsWith('http'))return img;
+  const rzRepo=gh.rzrepo||'rezeptbuch';
+  return 'https://'+gh.own+'.github.io/'+rzRepo+'/'+img;
+}
 function rcCard(r){
   const f=r.pct===100;
   const miss=r.zt.filter(z=>!r.have.some(h=>h.toLowerCase()===z.toLowerCase()));
   const tags=[...r.have.map(z=>'<span class="zt ok">'+esc(z)+'</span>'),...miss.map(z=>'<span class="zt ms">'+esc(z)+' fehlt</span>')].join('');
   const missJson=miss.length?'data-miss=\''+esc(JSON.stringify(miss))+'\' ':'';
   const buyBtn=miss.length?'<button '+missJson+'onclick="addMissingToEinkauf(this)" style="margin-top:10px;width:100%;padding:8px;border:1px solid var(--am);background:var(--al);color:var(--ac);border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">'+I.cart+' '+miss.length+' fehlende Zutat'+(miss.length===1?'':'en')+' auf Einkaufsliste</button>':'';
-  return '<div class="rc"><div class="rct"><div class="rci'+(f?'':" p")+'">'+r.emoji+'</div><div><div class="rct-n">'+esc(r.name)+'</div><div class="rct-s">'+r.port+' Port. · '+r.min+' min</div></div></div><div class="mr"><span>Zutaten vorhanden</span><span class="mp '+(f?'f':'p')+'">'+r.have.length+'/'+r.zt.length+'</span></div><div class="mt"><div class="mf '+(f?'f':'')+'" style="width:'+r.pct+'%"></div></div><div class="ztgs">'+tags+'</div>'+buyBtn+'</div>';
+  // Bild oder Emoji anzeigen
+  const imgUrl=rzImgUrl(r.img||'');
+  const thumb=imgUrl
+    ?'<img src="'+esc(imgUrl)+'" style="width:48px;height:48px;border-radius:var(--rs);object-fit:cover;flex-shrink:0" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'" /><div class="rci'+(f?'':" p")+'" style="display:none">'+r.emoji+'</div>'
+    :'<div class="rci'+(f?'':" p")+'">'+r.emoji+'</div>';
+  return '<div class="rc"><div class="rct">'+thumb+'<div><div class="rct-n">'+esc(r.name)+'</div><div class="rct-s">'+r.port+' Port. · '+r.min+' min</div></div></div><div class="mr"><span>Zutaten vorhanden</span><span class="mp '+(f?'f':'p')+'">'+r.have.length+'/'+r.zt.length+'</span></div><div class="mt"><div class="mf '+(f?'f':'')+'" style="width:'+r.pct+'%"></div></div><div class="ztgs">'+tags+'</div>'+buyBtn+'</div>';
 }
 function addMissingToEinkauf(btn){
   let miss=[];
@@ -2001,6 +2018,7 @@ function packTotal(a){
   const tot=total%1===0?total:total.toFixed(1);
   return tot+' '+(a.packEinheit||'dl')+' gesamt';
 }
+function parseDecimal(v){return parseFloat(String(v).replace(',','.'))||0;}
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function daysUntil(iso){
   if(!iso)return null;
