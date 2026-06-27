@@ -462,7 +462,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='6.5';
+const APP_VERSION='6.6';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1491,6 +1491,30 @@ async function copyLabelToClipboard(){
 }
 
 /* ── Rezepte ──────────────────────────────────────────────────────── */
+function parseRezepte(j){
+  // Unterstützt mehrere JSON-Strukturen:
+  // 1. {recipes:[{name, ings:[{n,q,u}], portions, cat, ...}]} — Rezeptbuch-Format
+  // 2. {rezepte:[{name, zutaten:[...], port, kat, ...}]} — internes Format
+  // 3. [{name, zutaten:[...]}] — Array-Format
+  const raw=Array.isArray(j)?j:(j.recipes||j.rezepte||[]);
+  return raw.map(r=>{
+    // Zutaten normalisieren: {n,q,u} → Zutatname-String
+    let zutaten=r.zutaten||[];
+    if(!zutaten.length&&r.ings){
+      zutaten=r.ings.map(i=>i.n||(i.name||''));
+    }
+    return {
+      name:r.name||'',
+      kat:r.kat||r.cat||'',
+      port:r.port||r.portions||4,
+      min:r.min||r.time||30,
+      emoji:r.emoji||'🍽️',
+      zutaten,
+      ings:r.ings||[], // original behalten für Detailansicht
+      img:r.img||r.foto||'',
+    };
+  });
+}
 async function syncRezepte(){
   if(!gh.tok||!gh.own){
     toast('GitHub noch nicht konfiguriert — bitte zuerst in Einstellungen verbinden');
@@ -1516,11 +1540,11 @@ async function syncRezepte(){
       if(!r2.ok)throw new Error('Datei nicht gefunden in '+rzRepo+' ('+r.status+')');
       const f2=await r2.json();
       const j2=JSON.parse(b64DecodeUtf8(f2.content.replace(/\n/g,'')));
-      S.rz=Array.isArray(j2)?j2:(j2.rezepte||[]);
+      S.rz=parseRezepte(j2);
     }else{
       const f=await r.json();
       const j=JSON.parse(b64DecodeUtf8(f.content.replace(/\n/g,'')));
-      S.rz=Array.isArray(j)?j:(j.rezepte||[]);
+      S.rz=parseRezepte(j);
     }
     saveL();renderRezepte();
     toast(S.rz.length+' Rezepte geladen');
@@ -1531,7 +1555,7 @@ async function syncRezepte(){
 function renderRezepte(){
   const names=S.a.map(a=>a.name.toLowerCase());
   const src=S.rz.length?S.rz.map(r=>{
-    const zt=(r.zutaten||[]).map(z=>typeof z==='string'?z:(z.zutat||z.name||''));
+    const zt=(r.zutaten||[]).map(z=>typeof z==='string'?z:(z.n||z.zutat||z.name||''));
     return{id:r.id||r.titel,name:r.titel||r.name,emoji:r.emoji||'\uD83C\uDF7D',min:r.dauer||r.zeit||20,port:r.portionen||4,zt};
   }):[
     {id:1,name:'Pasta Carbonara',emoji:'\uD83C\uDF5D',min:20,port:4,zt:['Pasta','Eier','Speck','Parmesan','Rahm']},
@@ -1600,7 +1624,7 @@ function renderUeb(){
   const w=S.a.filter(a=>a.menge<a.mindest);
   const expSoon=S.a.filter(a=>a.ablaufdatum&&daysUntil(a.ablaufdatum)<=7).sort((a,b)=>a.ablaufdatum.localeCompare(b.ablaufdatum));
   const nm=S.a.map(a=>a.name.toLowerCase());
-  const k=(S.rz||[]).filter(r=>(r.zutaten||[]).every(z=>nm.some(n=>n.includes((typeof z==='string'?z:(z.zutat||'')).toLowerCase())))).length;
+  const k=(S.rz||[]).filter(r=>(r.zutaten||[]).every(z=>nm.some(n=>n.includes((typeof z==='string'?z:(z.n||z.zutat||'')).toLowerCase())))).length;
   let h='<div class="stg">'+
     '<div class="stc"><div class="stl">Artikel total</div><div class="stn a">'+t+'</div></div>'+
     '<div class="stc"><div class="stl">Kochbar</div><div class="stn ok">'+k+'</div></div>'+
