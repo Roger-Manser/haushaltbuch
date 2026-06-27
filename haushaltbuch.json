@@ -82,7 +82,7 @@
     {
       "id": 5,
       "name": "Eistee",
-      "marke": "",
+      "marke": "Migros",
       "kat": "Getränke",
       "lager": "Kühlschrank unten",
       "menge": 0,
@@ -93,7 +93,7 @@
       "packMenge": 4,
       "packEinheit": "l",
       "kaufdatum": "2026-06-20",
-      "ablaufdatum": "",
+      "ablaufdatum": "2027-04-22",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781972021313_178197201336984080276692790356.jpg",
       "fotoPath": "1781972021313_178197201336984080276692790356.jpg",
@@ -103,8 +103,7 @@
           "preis": 3.5,
           "menge": 1
         }
-      ],
-      "kaufort": "Migros"
+      ]
     },
     {
       "id": 6,
@@ -418,7 +417,7 @@
       "packMenge": 3.3,
       "packEinheit": "dl",
       "kaufdatum": "2026-06-23",
-      "ablaufdatum": "",
+      "ablaufdatum": "2026-07-15",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782224369335_off.jpg",
       "fotoPath": "1782224369335_off.jpg",
@@ -503,7 +502,7 @@
     },
     {
       "id": 25,
-      "name": "Morcheln getrocknet",
+      "name": "ALDI GOURMET FINEST CUISINE PILZE Morilles",
       "marke": "ALDI GOURMET FINEST CUISINE",
       "kat": "Konserven & Trockenware",
       "lager": "Schlof",
@@ -518,9 +517,7 @@
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782310563289_off.jpg",
-      "fotoPath": "1782310563289_off.jpg",
-      "kaufort": "",
-      "preisHistorie": []
+      "fotoPath": "1782310563289_off.jpg"
     },
     {
       "id": 26,
@@ -1796,5 +1793,5 @@
       "zeit": 1782543352193
     }
   ],
-  "aktualisiert": "2026-06-27T09:15:46.511Z"
+  "aktualisiert": "2026-06-27T09:15:59.393Z"
 }
