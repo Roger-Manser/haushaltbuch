@@ -78,7 +78,7 @@
       "packMenge": 6,
       "packEinheit": "Stk",
       "kaufdatum": "2026-06-20",
-      "ablaufdatum": "",
+      "ablaufdatum": "2026-07-17",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782190086786_17821900533123253954791247278943.jpg",
       "fotoPath": "1782190086786_17821900533123253954791247278943.jpg",
@@ -95,7 +95,16 @@
           "aktion": false
         }
       ],
-      "ownCode": "HB-000009"
+      "ownCode": "HB-000009",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-20",
+          "ablaufdatum": ""
+        }
+      ],
+      "kaufort": ""
     },
     {
       "id": 5,
@@ -1925,5 +1934,5 @@
       "zeit": 1782563853778
     }
   ],
-  "aktualisiert": "2026-06-27T13:15:47.750Z"
+  "aktualisiert": "2026-06-27T13:17:56.074Z"
 }
