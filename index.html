@@ -492,7 +492,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='9.7';
+const APP_VERSION='9.8';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -2627,12 +2627,33 @@ function editKat(k){
 function expJ(){const b=new Blob([JSON.stringify({artikel:S.a,lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,geschaefte:S.ge||[],einkauf:S.ek,log:S.log||[],exportiert:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='haushaltbuch_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Export abgeschlossen');}
 function impJ(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=r=>{try{const d=JSON.parse(r.target.result);if(!d.artikel)throw new Error('Kein gültiges Format');if(confirm(d.artikel.length+' Artikel importieren? Bestehende Daten überschreiben.')){S.a=d.artikel;S.ge=d.geschaefte||[...GD];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.log=d.log||[];S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;saveL();goScreen('s-lager');toast(d.artikel.length+' Artikel importiert');}}catch(e){alert('Import-Fehler: '+e.message);}};rd.readAsText(f);ev.target.value='';}
 function clearLog(){
-  if(!confirm('Gesamtes Bewegungsprotokoll löschen?\n\nAlle Eingang/Ausgang-Einträge und Preisverläufe werden unwiderruflich gelöscht. Lagerbestand und Artikel bleiben erhalten.'))return;
-  S.log=[];
-  // Auch preisHistorie in allen Artikeln leeren
-  S.a.forEach(a=>{a.preisHistorie=[];});
-  saveL();
-  toast('Bewegungsprotokoll gelöscht — Statistik startet neu');
+  if(!confirm('Gesamtes Bewegungsprotokoll löschen?\n\nEine Sicherungsdatei wird automatisch heruntergeladen bevor die Daten gelöscht werden.\n\nAlle Eingang/Ausgang-Einträge und Preisverläufe werden unwiderruflich gelöscht. Lagerbestand und Artikel bleiben erhalten.'))return;
+  // Automatische Sicherung vor dem Löschen
+  const backup={
+    sicherung_datum: new Date().toISOString(),
+    sicherung_version: APP_VERSION,
+    artikel: S.a,
+    log: S.log||[],
+    lagerorte: S.lo,
+    kategorien: S.ka,
+    einheiten: S.ei,
+    geschaefte: S.ge||[],
+    einkauf: S.ek,
+  };
+  const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='haushaltbuch-sicherung-'+todayISO()+'.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  // Kurz warten damit Download startet, dann löschen
+  setTimeout(()=>{
+    S.log=[];
+    S.a.forEach(a=>{a.preisHistorie=[];});
+    saveL();
+    toast('✓ Sicherung heruntergeladen — Protokoll gelöscht');
+  },500);
 }
 function resetAll(){if(!confirm('Alle Daten wirklich löschen?'))return;S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ge:[...GD],ek:[],nid:1,rz:[],log:[]};saveL();goScreen('s-lager');toast('Daten gelöscht');}
 
