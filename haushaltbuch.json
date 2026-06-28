@@ -1040,6 +1040,45 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648313250_17826483072308710239019996929871.jpg",
       "fotoPath": "1782648313250_17826483072308710239019996929871.jpg",
       "preisHistorie": []
+    },
+    {
+      "id": 45,
+      "name": "Emmi Caffè Latte",
+      "marke": "Emmi",
+      "kat": "Milchprodukte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Coop",
+      "menge": 0,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7610900292745",
+      "preis": 2,
+      "packMenge": 230,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-06-28",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782653535171_17826535272125989518119422401432.jpg",
+      "fotoPath": "1782653535171_17826535272125989518119422401432.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-28",
+          "preis": 2,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false
+        },
+        {
+          "datum": "2026-06-28",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        }
+      ],
+      "packungen": []
     }
   ],
   "lagerorte": [
@@ -2255,7 +2294,33 @@
       "aktion": false,
       "datum": "2026-06-28",
       "zeit": 1782648338012
+    },
+    {
+      "t": "ein",
+      "aid": 45,
+      "name": "Emmi Caffè Latte",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782653586713
+    },
+    {
+      "t": "aus",
+      "aid": 45,
+      "name": "Emmi Caffè Latte",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782653604426
     }
   ],
-  "aktualisiert": "2026-06-28T13:27:50.409Z"
+  "aktualisiert": "2026-06-28T13:33:57.646Z"
 }
