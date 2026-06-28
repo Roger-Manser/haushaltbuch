@@ -485,7 +485,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='8.6';
+const APP_VERSION='8.7';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -604,6 +604,20 @@ async function doSync(){
         ex=await ghGet('haushaltbuch.json');
         putRes=await ghPut('haushaltbuch.json',expJson,'Haushaltbuch Update',ex?ex.sha:undefined);
       }else throw e;
+    }
+    // Kurz warten dann zurücklesen zur Verifikation
+    await new Promise(r=>setTimeout(r,1000));
+    const verify=await ghGet('haushaltbuch.json');
+    if(verify&&verify.content){
+      try{
+        const vd=JSON.parse(b64DecodeUtf8(verify.content.replace(/\n/g,'')));
+        const ghCount=(vd.artikel||[]).length;
+        if(ghCount!==S.a.length){
+          sdot('dt');
+          toast('⚠️ Sync-Konflikt: Lokal '+S.a.length+' aber GitHub hat '+ghCount+' — nochmals synchronisieren');
+          hideLdr();renderLager();return;
+        }
+      }catch(e){}
     }
     // Load rezepte.json (aus haushaltbuch-Repo, falls vorhanden)
     const rzf=await ghGet('rezepte.json');
