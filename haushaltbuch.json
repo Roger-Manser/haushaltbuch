@@ -907,6 +907,14 @@
           "menge": 1,
           "aktion": false
         }
+      ],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 2,
+          "kaufdatum": "2026-06-27",
+          "ablaufdatum": "2026-10-06"
+        }
       ]
     },
     {
@@ -1018,7 +1026,15 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648210056_off.jpg",
       "fotoPath": "1782648210056_off.jpg",
-      "preisHistorie": []
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-28",
+          "ablaufdatum": "2026-07-13"
+        }
+      ]
     },
     {
       "id": 44,
@@ -2257,5 +2273,5 @@
       "zeit": 1782648338012
     }
   ],
-  "aktualisiert": "2026-06-28T13:27:41.243Z"
+  "aktualisiert": "2026-06-28T13:27:45.566Z"
 }
