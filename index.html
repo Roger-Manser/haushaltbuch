@@ -325,7 +325,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
       Ausgang
     </button>
   </div>
-  <div style="margin:0 16px 4px">
+  <div style="margin:0 16px calc(var(--nh) + 12px)">
     <button class="add-btn" style="margin:0;width:100%;background:var(--sf);color:var(--ac);border:1px solid var(--am)" onclick="openForm()">
       <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
       Neuer Artikel
@@ -476,7 +476,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='8.3';
+const APP_VERSION='8.4';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -2484,22 +2484,27 @@ function confirmQuittungArtikel(idx,hasExisting,existingId){
 }
 
 /* ── Datumseingabe: nativer Systemkalender ───────────────────────── */
+function isMobile(){return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);}
+
 function dateField(id,value,extraStyle){
-  // Nutzt den nativen Systemkalender des Geräts (Android/iOS).
-  // Ein sichtbarer Label-Button überlagert das echte Input und zeigt
-  // das Datum im CH-Format an — das Input selbst bleibt per CSS
-  // unsichtbar aber vollständig klickbar (pointer-events:auto, opacity:0).
   const v=value||'';
-  const disp=v?fmtDateCH(v):'Datum wählen';
-  const hasVal=!!v;
   const isRequired=extraStyle&&extraStyle.includes('dg');
   const borderCol=isRequired?'var(--dg)':'var(--bd)';
+
+  if(!isMobile()){
+    // Desktop/PC: natives date-Input direkt sichtbar anzeigen
+    return '<input type="date" id="'+id+'" value="'+esc(v)+'" '+
+      'style="width:100%;padding:11px 14px;border:1px solid '+borderCol+';border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:15px;cursor:pointer" '+
+      'onchange="nativeDateChanged(\''+id+'\')" />';
+  }
+
+  // Mobile: transparentes Input über sichtbarem Display-Div (öffnet nativen Kalender)
+  const disp=v?fmtDateCH(v):'Datum wählen';
+  const hasVal=!!v;
   return '<div style="position:relative;height:46px">'+
-    // Sichtbarer Pseudo-Button (Klick wird ans darüber liegende Input weitergegeben)
     '<div id="'+id+'-display" style="position:absolute;inset:0;display:flex;align-items:center;gap:8px;padding:0 14px;border:1px solid '+borderCol+';border-radius:var(--rs);background:var(--bg);color:'+(hasVal?'var(--tx)':'var(--t3)')+';font-size:15px;pointer-events:none;z-index:0">'+
       I.cal.replace('20px;height:20px','16px;height:16px')+'<span id="'+id+'-lbl">'+esc(disp)+'</span>'+
     '</div>'+
-    // Echtes Input — transparent obendrauf, öffnet nativen Kalender
     '<input type="date" id="'+id+'" value="'+esc(v)+'" '+
     'style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:1;font-size:16px" '+
     'onchange="nativeDateChanged(\''+id+'\')" />'+
