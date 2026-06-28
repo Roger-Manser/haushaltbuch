@@ -492,7 +492,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='9.1';
+const APP_VERSION='9.2';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1244,29 +1244,26 @@ async function saveForm(){
     if(i>=0){
       const altMenge=S.a[i].menge;
       const neuMenge=d.menge;
-      S.a[i]={...S.a[i],...d};
       const diff=neuMenge-altMenge;
+      // Erst alle anderen Felder (Name, Kategorie, etc.) speichern
+      S.a[i]={...S.a[i],...d,menge:altMenge}; // Menge noch nicht ändern
+      fb64='';ffn='';saveL();hideLdr();closeForm();
       if(diff>0){
-        // Menge erhöht → neue Packung + Eingang loggen
-        ensurePackungen(S.a[i]);
-        S.a[i].packungen.push({id:newPackId(),menge:diff,kaufdatum,ablaufdatum:d.ablaufdatum||''});
-        syncMenge(S.a[i]);
-        addLogEntry('ein',editId,d.name,d.lager,d.kat,diff,d.einheit,preis,isAktion||false);
+        // Eingang-Dialog öffnen mit vorausgefüllten Daten
+        toast('Mengenerhöhung erkannt — Eingang erfassen');
+        setTimeout(()=>{
+          openEingangFuerArtikel(editId,diff,preis,isAktion||false,kaufdatum,d.ablaufdatum||'');
+        },200);
       }else if(diff<0){
-        // Menge verringert → Ausgang von ältester Packung loggen
-        ensurePackungen(S.a[i]);
-        let rest=Math.abs(diff);
-        const sorted=S.a[i].packungen.slice().sort((a,b)=>a.kaufdatum.localeCompare(b.kaufdatum));
-        for(const p of sorted){
-          if(rest<=0)break;
-          const abbuchen=Math.min(p.menge,rest);
-          p.menge-=abbuchen;rest-=abbuchen;
-        }
-        syncMenge(S.a[i]);
-        addLogEntry('aus',editId,d.name,d.lager,d.kat,Math.abs(diff),d.einheit,0,false);
+        // Ausgang-Dialog öffnen
+        toast('Mengenverringerung erkannt — Ausgang erfassen');
+        setTimeout(()=>{
+          openAusgangFuerArtikel(editId,Math.abs(diff));
+        },200);
+      }else{
+        toast('Artikel aktualisiert');
       }
-      // Ablaufdatum löschen wenn Bestand 0
-      if(S.a[i].menge===0)S.a[i].ablaufdatum='';
+      return;
     }
   }
   else{
@@ -1281,6 +1278,60 @@ async function saveForm(){
   toast(editId?'Artikel aktualisiert':'Artikel hinzugefügt');
 }
 function closeForm(){editId=null;fb64='';ffn='';goScreen('s-lager');}
+
+function openEingangFuerArtikel(artikelId,menge,preis,isAktion,kaufdatum,ablaufdatum){
+  const a=S.a.find(x=>x.id===artikelId);if(!a)return;
+  // Eingang-Screen mit vorausgefülltem Artikel öffnen
+  openEingang();
+  // Barcode eintragen und Suche ausführen
+  setTimeout(()=>{
+    const bc=document.getElementById('e-bc');
+    if(bc){
+      bc.value=a.barcode||a.ownCode||'';
+      lookupBarcode();
+      // Felder vorausfüllen nach kurzer Verzögerung (lookupBarcode rendert async)
+      setTimeout(()=>{
+        const mgEl=document.getElementById('e-mg');
+        const prEl=document.getElementById('e-pr');
+        const kdEl=document.getElementById('e-kd');
+        const adEl=document.getElementById('e-ad');
+        const akEl=document.getElementById('e-aktion');
+        if(mgEl)mgEl.value=menge;
+        if(prEl)prEl.value=preis>0?preis.toFixed(2):'';
+        if(kdEl)kdEl.value=kaufdatum||todayISO();
+        if(adEl)adEl.value=ablaufdatum||'';
+        if(akEl)akEl.checked=isAktion;
+        // Kaufort vorauswählen
+        if(a.kaufort){
+          document.querySelectorAll('#e-ge .chip[data-ge]').forEach(c=>{
+            c.classList.toggle('on',c.dataset.ge===a.kaufort);
+          });
+        }
+        // Datum-Anzeige aktualisieren
+        nativeDateChanged('e-kd');
+        if(ablaufdatum)nativeDateChanged('e-ad');
+      },300);
+    }
+  },100);
+}
+
+function openAusgangFuerArtikel(artikelId,menge){
+  const a=S.a.find(x=>x.id===artikelId);if(!a)return;
+  ensurePackungen(a);
+  const aktivePack=a.packungen.filter(p=>p.menge>0);
+  const list=document.getElementById('ausgang-list');
+  if(aktivePack.length>1){
+    // Packungsdialog zeigen
+    openAusgang();
+    setTimeout(()=>showAusgangPackDialog(a,list),200);
+  }else{
+    // Direkt abbuchen und im Ausgang-Screen anzeigen
+    openAusgang();
+    setTimeout(()=>{
+      ausgangPackAbbuchen(a,aktivePack[0]?aktivePack[0].id:null,menge,list);
+    },200);
+  }
+}
 
 /* ── Eingang (Wareneingang per Barcode) ──────────────────────────── */
 function openEingang(){
