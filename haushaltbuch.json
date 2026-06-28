@@ -1078,6 +1078,44 @@
           "aktion": false
         }
       ],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 0,
+          "kaufdatum": "2026-06-28",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 46,
+      "name": "Sekt",
+      "marke": "Rotkäppchen",
+      "kat": "Genussmittel",
+      "lager": "Kühlschrank unten",
+      "kaufort": "Lidl",
+      "menge": 0,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4400066903417",
+      "preis": 0,
+      "packMenge": 750,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-06-28",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782657306731_off.jpg",
+      "fotoPath": "1782657306731_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-28",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        }
+      ],
       "packungen": []
     }
   ],
@@ -2320,7 +2358,33 @@
       "aktion": false,
       "datum": "2026-06-28",
       "zeit": 1782653604426
+    },
+    {
+      "t": "ein",
+      "aid": 46,
+      "name": "Sekt",
+      "lager": "Kühlschrank unten",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782657516086
+    },
+    {
+      "t": "aus",
+      "aid": 46,
+      "name": "Sekt",
+      "lager": "Kühlschrank unten",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782657522974
     }
   ],
-  "aktualisiert": "2026-06-28T13:33:57.646Z"
+  "aktualisiert": "2026-06-28T14:38:51.077Z"
 }
