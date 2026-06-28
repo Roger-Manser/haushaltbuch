@@ -101,6 +101,12 @@
           "preis": 0.6,
           "menge": 1,
           "aktion": false
+        },
+        {
+          "datum": "2026-06-20",
+          "preis": 0.6,
+          "menge": 1,
+          "aktion": false
         }
       ],
       "ownCode": "HB-000009",
@@ -109,7 +115,7 @@
           "id": 1,
           "menge": 1,
           "kaufdatum": "2026-06-20",
-          "ablaufdatum": ""
+          "ablaufdatum": "2026-07-17"
         }
       ],
       "kaufort": ""
@@ -865,14 +871,6 @@
           "menge": 1,
           "aktion": false
         }
-      ],
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 3,
-          "kaufdatum": "2026-06-27",
-          "ablaufdatum": "2026-07-07"
-        }
       ]
     },
     {
@@ -941,6 +939,97 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782577901348_off.jpg",
       "fotoPath": "1782577901348_off.jpg",
+      "preisHistorie": []
+    },
+    {
+      "id": 41,
+      "name": "Tafelsalz",
+      "marke": "JuraSel",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7610039000280",
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-06-28",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648018150_off.jpg",
+      "fotoPath": "1782648018150_off.jpg",
+      "preisHistorie": []
+    },
+    {
+      "id": 42,
+      "name": "Pfeffer schwarz",
+      "marke": "",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "",
+      "preis": 12.5,
+      "packMenge": 250,
+      "packEinheit": "g",
+      "kaufdatum": "2026-06-28",
+      "ablaufdatum": "2028-12-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648109323_17826480967854463027588329021256.jpg",
+      "fotoPath": "1782648109323_17826480967854463027588329021256.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-28",
+          "preis": 12.5,
+          "menge": 1,
+          "aktion": false
+        }
+      ]
+    },
+    {
+      "id": 43,
+      "name": "Butter",
+      "marke": "BO Butter",
+      "kat": "Milchprodukte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7610128737165",
+      "preis": 0,
+      "packMenge": 250,
+      "packEinheit": "g",
+      "kaufdatum": "2026-06-28",
+      "ablaufdatum": "2026-07-13",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648210056_off.jpg",
+      "fotoPath": "1782648210056_off.jpg",
+      "preisHistorie": []
+    },
+    {
+      "id": 44,
+      "name": "speckwürfel",
+      "marke": "Maestade",
+      "kat": "Fleisch & Fisch",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "20596149",
+      "preis": 0,
+      "packMenge": 200,
+      "packEinheit": "g",
+      "kaufdatum": "2026-06-28",
+      "ablaufdatum": "2026-06-27",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648313250_17826483072308710239019996929871.jpg",
+      "fotoPath": "1782648313250_17826483072308710239019996929871.jpg",
       "preisHistorie": []
     }
   ],
@@ -2066,7 +2155,98 @@
       "aktion": false,
       "datum": "2026-06-28",
       "zeit": 1782630430706
+    },
+    {
+      "t": "aus",
+      "aid": 4,
+      "name": "Ei",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782647203599
+    },
+    {
+      "t": "aus",
+      "aid": 4,
+      "name": "Ei",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782647218667
+    },
+    {
+      "t": "ein",
+      "aid": 4,
+      "name": "Ei",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0.6,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782647292733
+    },
+    {
+      "t": "ein",
+      "aid": 41,
+      "name": "Tafelsalz",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782648050843
+    },
+    {
+      "t": "ein",
+      "aid": 42,
+      "name": "Pfeffer schwarz",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 12.5,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782648176897
+    },
+    {
+      "t": "ein",
+      "aid": 43,
+      "name": "Butter",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782648246525
+    },
+    {
+      "t": "ein",
+      "aid": 44,
+      "name": "speckwürfel",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782648338012
     }
   ],
-  "aktualisiert": "2026-06-28T12:18:12.069Z"
+  "aktualisiert": "2026-06-28T12:18:39.356Z"
 }
