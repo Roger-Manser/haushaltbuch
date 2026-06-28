@@ -1039,7 +1039,15 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648313250_17826483072308710239019996929871.jpg",
       "fotoPath": "1782648313250_17826483072308710239019996929871.jpg",
-      "preisHistorie": []
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-28",
+          "ablaufdatum": "2026-06-27"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -2255,7 +2263,176 @@
       "aktion": false,
       "datum": "2026-06-28",
       "zeit": 1782648338012
+    },
+    {
+      "t": "ein",
+      "aid": 45,
+      "name": "TEST Artikel",
+      "lager": "Küche",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 1.05,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782651192572
+    },
+    {
+      "t": "ein",
+      "aid": 45,
+      "name": "TEST Artikel",
+      "lager": "Küche",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 1.1,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782651256252
+    },
+    {
+      "t": "ein",
+      "aid": 45,
+      "name": "TEST Artikel",
+      "lager": "Küche",
+      "kat": "Milchprodukte",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 1.1,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782651273459
+    },
+    {
+      "t": "aus",
+      "aid": 45,
+      "name": "TEST Artikel",
+      "lager": "Küche",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782651308155
+    },
+    {
+      "t": "aus",
+      "aid": 45,
+      "name": "TEST Artikel",
+      "lager": "Küche",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782651324842
+    },
+    {
+      "t": "ein",
+      "aid": 45,
+      "name": "TEST Artikel",
+      "lager": "Küche",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782651328243
+    },
+    {
+      "t": "aus",
+      "aid": 45,
+      "name": "TEST Artikel",
+      "lager": "Küche",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782651549475
+    },
+    {
+      "t": "ein",
+      "aid": 45,
+      "name": "TEST Artikel",
+      "lager": "Küche",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782651558123
+    },
+    {
+      "t": "aus",
+      "aid": 45,
+      "name": "TEST Artikel",
+      "lager": "Küche",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782651562227
+    },
+    {
+      "t": "ein",
+      "aid": 45,
+      "name": "TEST Artikel",
+      "lager": "Küche",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782651570571
+    },
+    {
+      "t": "ein",
+      "aid": 45,
+      "name": "TEST Artikel",
+      "lager": "Küche",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782651575067
+    },
+    {
+      "t": "aus",
+      "aid": 45,
+      "name": "TEST Artikel",
+      "lager": "Küche",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782652135283
+    },
+    {
+      "t": "ein",
+      "aid": 45,
+      "name": "TEST Artikel",
+      "lager": "Küche",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 1.05,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782652189052
     }
   ],
-  "aktualisiert": "2026-06-28T12:45:09.277Z"
+  "aktualisiert": "2026-06-28T13:13:01.672Z"
 }
