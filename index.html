@@ -492,7 +492,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='9.6';
+const APP_VERSION='9.7';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -2598,7 +2598,7 @@ function renderSt(){
   '<div class="ss"><div class="ssl">Kategorien</div><div>'+S.ka.map((k,i)=>'<div class="lmi">'+KICON.replace('13px;height:13px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(k)+'</span><button onclick="editKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=KD.length?'<button onclick="delKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addKat()">+ Neue Kategorie</button></div>'+
   '<div class="ss"><div class="ssl">Einheiten</div><div>'+S.ei.map((u,i)=>'<div class="lmi"><span style="flex:1">'+esc(u)+'</span>'+(i>=ED.length?'<button onclick="delEinheit(\''+esc(u)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addEinheitSettings()">+ Neue Einheit</button></div>'+
   '<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong>v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button></div>'+
-  '<div class="ss"><div class="ssl">Daten</div><button class="db-btn" onclick="expJ()">'+I.dl+' Lokaler Export (JSON)</button><button class="db-btn" onclick="document.getElementById(\'imp\').click()">'+I.ul+' Lokaler Import (JSON)<input type="file" id="imp" accept=".json" style="display:none" onchange="impJ(event)"/></button><button class="db-btn d" onclick="resetAll()">'+I.trash+' Alle Daten löschen</button></div>';
+  '<div class="ss"><div class="ssl">Daten</div><button class="db-btn" onclick="expJ()">'+I.dl+' Lokaler Export (JSON)</button><button class="db-btn" onclick="document.getElementById(\'imp\').click()">'+I.ul+' Lokaler Import (JSON)<input type="file" id="imp" accept=".json" style="display:none" onchange="impJ(event)"/></button><button class="db-btn d" onclick="clearLog()">'+I.trash+' Bewegungsprotokoll löschen</button><button class="db-btn d" onclick="resetAll()">'+I.trash+' Alle Daten löschen</button></div>';
 }
 function saveGHcfg(){gh={tok:document.getElementById('gh-t').value.trim(),own:document.getElementById('gh-o').value.trim(),repo:document.getElementById('gh-r').value.trim(),br:document.getElementById('gh-b').value.trim()||'main',rzrepo:document.getElementById('gh-rz').value.trim()||''};saveGH();toast('GitHub gespeichert');renderSt();}
 function addLo(){const n=prompt('Neuer Lagerort:');if(!n||!n.trim())return;const nm=n.trim();if(!S.lo.includes(nm)){S.lo.push(nm);saveL();}renderSt();}
@@ -2626,6 +2626,14 @@ function editKat(k){
 }
 function expJ(){const b=new Blob([JSON.stringify({artikel:S.a,lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,geschaefte:S.ge||[],einkauf:S.ek,log:S.log||[],exportiert:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='haushaltbuch_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Export abgeschlossen');}
 function impJ(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=r=>{try{const d=JSON.parse(r.target.result);if(!d.artikel)throw new Error('Kein gültiges Format');if(confirm(d.artikel.length+' Artikel importieren? Bestehende Daten überschreiben.')){S.a=d.artikel;S.ge=d.geschaefte||[...GD];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.log=d.log||[];S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;saveL();goScreen('s-lager');toast(d.artikel.length+' Artikel importiert');}}catch(e){alert('Import-Fehler: '+e.message);}};rd.readAsText(f);ev.target.value='';}
+function clearLog(){
+  if(!confirm('Gesamtes Bewegungsprotokoll löschen?\n\nAlle Eingang/Ausgang-Einträge und Preisverläufe werden unwiderruflich gelöscht. Lagerbestand und Artikel bleiben erhalten.'))return;
+  S.log=[];
+  // Auch preisHistorie in allen Artikeln leeren
+  S.a.forEach(a=>{a.preisHistorie=[];});
+  saveL();
+  toast('Bewegungsprotokoll gelöscht — Statistik startet neu');
+}
 function resetAll(){if(!confirm('Alle Daten wirklich löschen?'))return;S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ge:[...GD],ek:[],nid:1,rz:[],log:[]};saveL();goScreen('s-lager');toast('Daten gelöscht');}
 
 /* ── Toast & Loader ───────────────────────────────────────────────── */
