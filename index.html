@@ -476,7 +476,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='8.4';
+const APP_VERSION='8.5';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1782,77 +1782,158 @@ async function syncRezepte(){
     toast('Fehler: '+e.message.slice(0,60));
   }
 }
-// KI-Synonym-Cache: {zutat_lager: true/false}
+// Eingebaute Synonymliste — Schweizer/deutsche Lebensmittel
+const SYNONYME=[
+  // Fleisch & Geflügel
+  ['Poulet','Hühnchen','Hähnchen','Chicken','Huhn'],
+  ['Pouletbrust','Pouletschnitzel','Hühnerbrust','Hähnchenbrust','Pouletfilet','Chicken Breast'],
+  ['Pouletschenkel','Hühnerscbenkel','Pouletbein'],
+  ['Hackfleisch','Gehacktes','Faschiertes','Rindshack','Rinderhack'],
+  ['Rindfleisch','Rind','Beef'],
+  ['Kalbfleisch','Kalb','Veal'],
+  ['Lammfleisch','Lamm'],
+  ['Schweinefleisch','Schwein','Pork'],
+  ['Speck','Bacon','Lardons','Pancetta'],
+  ['Schinken','Ham','Jambon'],
+  ['Bündnerfleisch','Bündner Fleisch'],
+  ['Cervelat','Cervelas'],
+  ['Bratwurst','Brat','Würstchen','Wurst'],
+  // Fisch & Meeresfrüchte
+  ['Lachs','Salmon','Salm'],
+  ['Thunfisch','Thon','Tuna'],
+  ['Kabeljau','Dorsch','Bacalhau'],
+  ['Crevetten','Garnelen','Shrimps','Prawns'],
+  // Milchprodukte
+  ['Rahm','Sahne','Crème','Vollrahm','Sauerrahm','Crème fraîche','Halbrahm'],
+  ['Sauerrahm','Crème fraîche','Saure Sahne'],
+  ['Butter','Beurre'],
+  ['Milch','Vollmilch','Halbmilch','Lait'],
+  ['Käse','Fromage','Cheese'],
+  ['Gruyère','Greyerzer'],
+  ['Parmesan','Parmigiano','Grana Padano'],
+  ['Mozzarella','Mozarella'],
+  ['Quark','Topfen','Fromage blanc','Weisskäse'],
+  ['Ricotta','Ricota'],
+  ['Joghurt','Yogurt','Jogurt'],
+  ['Eier','Ei','Hühnereier','Oeufs'],
+  // Gemüse
+  ['Karotten','Rüebli','Möhren','Mohrrüben','Karotte'],
+  ['Zwiebeln','Zwiebel','Oignons','Cipolla'],
+  ['Knoblauch','Ail','Aglio'],
+  ['Kartoffeln','Kartoffel','Pommes de terre','Erdäpfel'],
+  ['Tomaten','Tomate','Pomodori'],
+  ['Zucchini','Zucchetti','Courgettes'],
+  ['Auberginen','Aubergine','Melanzane'],
+  ['Peperoni','Paprika','Poivrons','Capsicum'],
+  ['Brokkoli','Broccoli'],
+  ['Blumenkohl','Chou-fleur','Cavolfiore'],
+  ['Lauch','Porree','Poireau'],
+  ['Sellerie','Stangensellerie','Céleri'],
+  ['Spinat','Épinards'],
+  ['Salat','Lattich','Kopfsalat','Eisbergsalat','Laitue'],
+  ['Randen','Rote Beete','Rote Rüben','Betterave'],
+  ['Fenchel','Fenouil'],
+  ['Spargel','Asperges','Asparagi'],
+  ['Erbsen','Petits pois','Piselli'],
+  ['Bohnen','Grüne Bohnen','Haricots'],
+  ['Mais','Corn','Maïs'],
+  ['Pilze','Champignons','Funghi'],
+  ['Pfifferling','Eierschwamm','Eierschwammerl','Chanterelles','Girolles'],
+  ['Steinpilze','Cèpes','Porcini'],
+  ['Kürbis','Potiron','Zucca'],
+  // Früchte
+  ['Äpfel','Apfel','Pommes','Mele'],
+  ['Birnen','Birne','Poires'],
+  ['Bananen','Banane'],
+  ['Orangen','Orange','Oranges'],
+  ['Zitronen','Zitrone','Citrons','Limonen'],
+  ['Erdbeeren','Erdbeere','Fraises'],
+  ['Himbeeren','Himbeere','Framboises'],
+  ['Heidelbeeren','Blaubeeren','Myrtilles'],
+  ['Trauben','Weintrauben','Raisins'],
+  // Getreide & Mehl
+  ['Mehl','Weissmehl','Weizenmehl','Farine'],
+  ['Vollkornmehl','Ruchmehl','Halbweissmehl'],
+  ['Pasta','Teigwaren','Nudeln','Pâtes'],
+  ['Spaghetti','Spagetti'],
+  ['Reis','Langkornreis','Parboiled Reis','Riz','Riso'],
+  ['Quinoa','Quinua'],
+  ['Haferflocken','Oats','Flocons d\'avoine'],
+  ['Paniermehl','Semmelbrösel','Breadcrumbs'],
+  // Gewürze & Saucen
+  ['Salz','Sel','Sale'],
+  ['Pfeffer','Poivre','Pepe'],
+  ['Olivenöl','Huile d\'olive','Olio d\'oliva'],
+  ['Rapsöl','Sonnenblumenöl','Pflanzenöl','Huile végétale'],
+  ['Essig','Weinessig','Aceto','Vinaigre'],
+  ['Sojasauce','Sojasosse','Sauce soja'],
+  ['Tomatensauce','Sugo','Passata','Tomatenpassata'],
+  ['Bouillon','Brühe','Fond','Consommé'],
+  ['Currypulver','Curry'],
+  ['Paprikapulver','Paprika'],
+  ['Oregano','Origan'],
+  ['Basilikum','Basilic','Basilico'],
+  ['Petersilie','Persil','Prezzemolo'],
+  ['Rosmarin','Romarin'],
+  ['Thymian','Thym','Timo'],
+  ['Lorbeer','Lorbeerblatt','Laurier'],
+  ['Ingwer','Gingembre','Zenzero'],
+  ['Zimt','Cannelle','Cannella'],
+  ['Vanille','Vanillin','Vanillezucker'],
+  // Backwaren
+  ['Zucker','Kristallzucker','Sucre'],
+  ['Backpulver','Levure chimique'],
+  ['Hefe','Levure','Lievito'],
+  ['Honig','Miel','Miele'],
+  ['Schokolade','Chocolat','Cioccolato'],
+  ['Kakao','Cacao'],
+  ['Mandeln','Amandes'],
+  ['Walnüsse','Walnuss','Noix'],
+  ['Haselnüsse','Haselnuss','Noisettes'],
+  // Konserven
+  ['Kokosmilch','Lait de coco'],
+  ['Kichererbsen','Pois chiches'],
+  ['Linsen','Lentilles','Lenticchie'],
+  ['Kidneybohnen','Haricots rouges'],
+];
+
+// Synonym-Lookup-Map aufbauen
+const SYNONYM_MAP=new Map();
+SYNONYME.forEach(gruppe=>{
+  gruppe.forEach(wort=>{
+    SYNONYM_MAP.set(wort.toLowerCase(), gruppe.map(w=>w.toLowerCase()));
+  });
+});
+
+function getSynonymGruppe(wort){
+  const w=wort.toLowerCase().trim();
+  // Direkter Treffer
+  if(SYNONYM_MAP.has(w))return SYNONYM_MAP.get(w);
+  // Teilstring-Treffer (z.B. "Pouletbrustfilet" → findet "pouletbrust")
+  for(const [key,gruppe] of SYNONYM_MAP){
+    if(w.includes(key)||key.includes(w)&&key.length>3)return gruppe;
+  }
+  return [w];
+}
+
+// KI-Cache leer lassen (nicht mehr benötigt)
 let aiMatchCache={};
 let aiMatchLoading=false;
 
 async function buildAiMatchCache(){
-  if(aiMatchLoading||!S.rz.length||!S.a.length)return;
-  aiMatchLoading=true;
-
-  // Alle einzigartigen Zutaten aus allen Rezepten
-  const allZutaten=[...new Set(S.rz.flatMap(r=>
-    (r.zutaten||[]).map(z=>typeof z==='string'?z:(z.n||z.zutat||z.name||''))
-    .filter(z=>z.length>1)
-  ))];
-
-  // Alle Artikelnamen im Lager
-  const lagerArtikel=S.a.map(a=>a.name);
-
-  if(!allZutaten.length||!lagerArtikel.length){aiMatchLoading=false;return;}
-
-  try{
-    const prompt=
-      'Du bist ein Lebensmittel-Experte. Ich gebe dir eine Liste von Rezept-Zutaten und eine Liste von Lagerartikeln.\n'+
-      'Gib zurück welche Zutaten durch welche Lagerartikel erfüllt werden können — auch bei unterschiedlichen Bezeichnungen, Synonymen, regionalen Namen oder Teilmengen.\n'+
-      'Beispiele: "Pouletbrust" ↔ "Pouletschnitzel", "Pfifferling" ↔ "Eierschwamm", "Rahm" ↔ "Sauerrahm" (wenn keine Alternative), "Mehl" ↔ "Weissmehl".\n'+
-      'Sei grosszügig bei Synonymen aber nicht bei komplett anderen Zutaten.\n\n'+
-      'Rezept-Zutaten:\n'+allZutaten.map((z,i)=>(i+1)+'. '+z).join('\n')+'\n\n'+
-      'Lagerartikel:\n'+lagerArtikel.map((a,i)=>(i+1)+'. '+a).join('\n')+'\n\n'+
-      'Antworte NUR mit einem JSON-Objekt in diesem Format (keine andere Ausgabe):\n'+
-      '{"matches":[{"zutat":"Pouletbrust","lager":"Pouletschnitzel"},{"zutat":"Pfifferling","lager":"Eierschwamm"},...]}'+
-      '\nNur Paare ausgeben bei denen die Zutat NICHT schon exakt im Lager vorhanden ist, aber durch einen Lagerartikel erfüllt werden kann.';
-
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-6',
-        max_tokens:1000,
-        messages:[{role:'user',content:prompt}]
-      })
-    });
-    const data=await res.json();
-    const text=data.content&&data.content[0]&&data.content[0].text||'';
-    const clean=text.replace(/```json|```/g,'').trim();
-    const parsed=JSON.parse(clean);
-    if(parsed.matches&&Array.isArray(parsed.matches)){
-      aiMatchCache={};
-      parsed.matches.forEach(m=>{
-        if(m.zutat&&m.lager){
-          const key=m.zutat.toLowerCase()+'::'+m.lager.toLowerCase();
-          aiMatchCache[key]=true;
-        }
-      });
-      saveL(); // Cache in localStorage mitpeichern
-      toast('🤖 KI-Synonymerkennung bereit ('+parsed.matches.length+' Synonyme gefunden)');
-      renderRezepte();
-    }
-  }catch(e){
-    // Kein KI-Zugang oder Fehler — still ignorieren, Fallback auf normales Matching
-  }finally{aiMatchLoading=false;}
+  // Nicht mehr verwendet — Synonyme sind eingebaut
 }
 
 function aiMatch(zutat,lagerNamen){
-  // Prüft ob eine Zutat durch einen Lagerartikel erfüllt wird (KI + exakt)
-  const z=zutat.toLowerCase();
-  // 1. Exakter/teilweiser Treffer
-  if(lagerNamen.some(n=>n.includes(z)||z.includes(n)&&n.length>3))return true;
-  // 2. KI-Cache
+  const z=zutat.toLowerCase().trim();
+  const zGruppe=getSynonymGruppe(z);
   return lagerNamen.some(n=>{
-    const key=z+'::'+n.toLowerCase();
-    const keyRev=n.toLowerCase()+'::'+z;
-    return aiMatchCache[key]||aiMatchCache[keyRev];
+    const nl=n.toLowerCase();
+    // Exakter/teilweiser Treffer
+    if(nl.includes(z)||z.includes(nl)&&nl.length>3)return true;
+    // Synonym-Treffer
+    const nGruppe=getSynonymGruppe(nl);
+    return zGruppe.some(zs=>nGruppe.some(ns=>ns===zs||ns.includes(zs)&&zs.length>3||zs.includes(ns)&&ns.length>3));
   });
 }
 
@@ -1876,11 +1957,6 @@ function renderRezepte(){
   if(full.length)h+='<div class="sh">Vollständig kochbar ('+full.length+')</div>'+full.map(rcCard).join('');
   if(part.length)h+='<div class="sh">Fast kochbar</div>'+part.map(rcCard).join('');
   if(miss.length)h+='<div class="sh">Zutaten fehlen</div>'+miss.map(rcCard).join('');
-  // KI-Abgleich im Hintergrund starten wenn Cache leer
-  if(!Object.keys(aiMatchCache).length&&S.rz.length&&S.a.length){
-    setTimeout(()=>buildAiMatchCache(),500);
-    h='<div style="font-size:12px;color:var(--t3);text-align:center;padding:4px">🤖 KI analysiert Synonyme...</div>'+h;
-  }
   document.getElementById('rezept-list').innerHTML=h;
 }
 function rzImgUrl(img){
