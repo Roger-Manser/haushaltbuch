@@ -369,6 +369,13 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
       <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.21-4.45"/></svg>
     </button></div>
   </div>
+  <div class="sbar"><div class="sw">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input type="text" id="rezept-search" placeholder="Rezept suchen..." oninput="renderRezepte();document.getElementById('rezept-search-clear').style.visibility=this.value?'visible':'hidden'"/>
+    <button id="rezept-search-clear" onclick="document.getElementById('rezept-search').value='';renderRezepte();this.style.visibility='hidden'" style="visibility:hidden;position:absolute;right:6px;top:50%;transform:translateY(-50%);background:var(--b2);border:none;cursor:pointer;color:var(--t2);padding:4px;display:flex;align-items:center;border-radius:50%;width:26px;height:26px;justify-content:center">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:22px;height:22px"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div></div>
   <div class="scroll" id="rezept-list"></div>
 
 </div>
@@ -485,7 +492,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='8.8';
+const APP_VERSION='8.9';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1957,6 +1964,7 @@ function aiMatch(zutat,lagerNamen){
 
 function renderRezepte(){
   const names=S.a.map(a=>a.name.toLowerCase());
+  const q=(document.getElementById('rezept-search')?.value||'').toLowerCase().trim();
   const src=S.rz.length?S.rz.map(r=>{
     const zt=(r.zutaten||[]).map(z=>typeof z==='string'?z:(z.n||z.zutat||z.name||''));
     return{id:r.id||r.titel,name:r.titel||r.name,emoji:r.emoji||'\uD83C\uDF7D',min:r.dauer||r.zeit||20,port:r.portionen||4,zt,img:r.img||''};
@@ -1965,16 +1973,26 @@ function renderRezepte(){
     {id:2,name:'Gemüsesuppe',emoji:'\uD83C\uDF72',min:40,port:6,zt:['Karotten','Lauch','Sellerie','Kartoffeln','Bouillon'],img:''},
     {id:3,name:'Pfannkuchen',emoji:'\uD83E\uDD5E',min:20,port:4,zt:['Mehl','Eier','Milch','Butter','Salz'],img:''},
   ];
-  const sc=src.map(r=>{
+  // Suchfilter anwenden
+  const filtered=q?src.filter(r=>
+    r.name.toLowerCase().includes(q)||
+    (r.zt||[]).some(z=>z.toLowerCase().includes(q))||
+    (r.kat||'').toLowerCase().includes(q)
+  ):src;
+  const sc=filtered.map(r=>{
     const have=r.zt.filter(z=>aiMatch(z,names));
     return{...r,have,pct:Math.round(have.length/Math.max(r.zt.length,1)*100)};
   }).sort((a,b)=>b.pct-a.pct);
   const full=sc.filter(r=>r.pct===100),part=sc.filter(r=>r.pct>=50&&r.pct<100),miss=sc.filter(r=>r.pct<50);
   let h='';
-  if(!src.length)h='<div class="empty">'+I.pkg+'<p>Keine Rezepte</p><small>GitHub synchronisieren um rezepte.json zu laden</small></div>';
-  if(full.length)h+='<div class="sh">Vollständig kochbar ('+full.length+')</div>'+full.map(rcCard).join('');
-  if(part.length)h+='<div class="sh">Fast kochbar</div>'+part.map(rcCard).join('');
-  if(miss.length)h+='<div class="sh">Zutaten fehlen</div>'+miss.map(rcCard).join('');
+  if(q&&!sc.length){
+    h='<div style="text-align:center;padding:32px 16px;color:var(--t3);font-size:14px">Kein Rezept gefunden für «'+esc(q)+'»</div>';
+  }else{
+    if(!src.length)h='<div class="empty">'+I.pkg+'<p>Keine Rezepte</p><small>GitHub synchronisieren um rezepte.json zu laden</small></div>';
+    if(full.length)h+='<div class="sh">Vollständig kochbar ('+full.length+')</div>'+full.map(rcCard).join('');
+    if(part.length)h+='<div class="sh">Fast kochbar</div>'+part.map(rcCard).join('');
+    if(miss.length)h+='<div class="sh">Zutaten fehlen</div>'+miss.map(rcCard).join('');
+  }
   document.getElementById('rezept-list').innerHTML=h;
 }
 function rzImgUrl(img){
