@@ -373,6 +373,15 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 
 </div>
 
+<div class="sc" id="s-rezept-detail" style="overflow-y:auto">
+  <div class="ftp">
+    <button class="bkb" onclick="goScreen('s-rezepte')"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
+    <span class="ftl" id="rezept-detail-title">Rezept</span>
+    <div style="width:36px"></div>
+  </div>
+  <div id="rezept-detail-body" style="padding:0 16px 16px"></div>
+</div>
+
 <div class="sc" id="s-uebersicht">
   <div class="tb"><span class="tb-t">Übersicht</span></div>
   <div class="scroll" id="ub-body"></div>
@@ -476,7 +485,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='8.5';
+const APP_VERSION='8.6';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -860,7 +869,7 @@ function nav(){
     {id:'s-einkauf',l:'Einkauf',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>',b:wc},
   ];
   const h=tabs.map(t=>{
-    const on=cur===t.id||((cur==='s-detail'||cur==='s-form'||cur==='s-eingang'||cur==='s-ausgang'||cur==='s-etikett')&&t.id==='s-lager');
+    const on=cur===t.id||((cur==='s-detail'||cur==='s-form'||cur==='s-eingang'||cur==='s-ausgang'||cur==='s-etikett')&&t.id==='s-lager')||(cur==='s-rezept-detail'&&t.id==='s-rezepte');
     const bdg=t.b?'<span class="nbb">'+t.b+'</span>':'';
     return '<button class="nb'+(on?' on':'')+'" onclick="goScreen(\''+t.id+'\')" ><div class="nbw">'+t.s+bdg+'</div><span>'+t.l+'</span></button>';
   }).join('');
@@ -1972,13 +1981,74 @@ function rcCard(r){
   const miss=r.zt.filter(z=>!r.have.some(h=>h.toLowerCase()===z.toLowerCase()));
   const tags=[...r.have.map(z=>'<span class="zt ok">'+esc(z)+'</span>'),...miss.map(z=>'<span class="zt ms">'+esc(z)+' fehlt</span>')].join('');
   const missJson=miss.length?'data-miss=\''+esc(JSON.stringify(miss))+'\' ':'';
-  const buyBtn=miss.length?'<button '+missJson+'onclick="addMissingToEinkauf(this)" style="margin-top:10px;width:100%;padding:8px;border:1px solid var(--am);background:var(--al);color:var(--ac);border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">'+I.cart+' '+miss.length+' fehlende Zutat'+(miss.length===1?'':'en')+' auf Einkaufsliste</button>':'';
-  // Bild oder Emoji anzeigen
+  const buyBtn=miss.length?'<button '+missJson+'onclick="addMissingToEinkauf(this);event.stopPropagation()" style="margin-top:10px;width:100%;padding:8px;border:1px solid var(--am);background:var(--al);color:var(--ac);border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">'+I.cart+' '+miss.length+' fehlende Zutat'+(miss.length===1?'':'en')+' auf Einkaufsliste</button>':'';
   const imgUrl=rzImgUrl(r.img||'');
   const thumb=imgUrl
     ?'<img src="'+esc(imgUrl)+'" style="width:48px;height:48px;border-radius:var(--rs);object-fit:cover;flex-shrink:0" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'" /><div class="rci'+(f?'':" p")+'" style="display:none">'+r.emoji+'</div>'
     :'<div class="rci'+(f?'':" p")+'">'+r.emoji+'</div>';
-  return '<div class="rc"><div class="rct">'+thumb+'<div><div class="rct-n">'+esc(r.name)+'</div><div class="rct-s">'+r.port+' Port. · '+r.min+' min</div></div></div><div class="mr"><span>Zutaten vorhanden</span><span class="mp '+(f?'f':'p')+'">'+r.have.length+'/'+r.zt.length+'</span></div><div class="mt"><div class="mf '+(f?'f':'')+'" style="width:'+r.pct+'%"></div></div><div class="ztgs">'+tags+'</div>'+buyBtn+'</div>';
+  const rJson=esc(JSON.stringify(r));
+  return '<div class="rc" onclick="showRezeptDetail(this)" data-r=\''+rJson+'\' style="cursor:pointer"><div class="rct">'+thumb+'<div><div class="rct-n">'+esc(r.name)+'</div><div class="rct-s">'+r.port+' Port. · '+r.min+' min</div></div></div><div class="mr"><span>Zutaten vorhanden</span><span class="mp '+(f?'f':'p')+'">'+r.have.length+'/'+r.zt.length+'</span></div><div class="mt"><div class="mf '+(f?'f':'')+'" style="width:'+r.pct+'%"></div></div><div class="ztgs">'+tags+'</div>'+buyBtn+'</div>';
+}
+
+function showRezeptDetail(el){
+  let r;
+  try{r=JSON.parse(el.dataset.r);}catch(e){return;}
+  document.getElementById('rezept-detail-title').textContent=r.name;
+
+  const imgUrl=rzImgUrl(r.img||'');
+  const imgHtml=imgUrl?'<img src="'+esc(imgUrl)+'" style="width:100%;max-height:220px;object-fit:cover;border-radius:var(--r);margin-bottom:14px" onerror="this.style.display=\'none\'"/>':'';
+
+  // Zutaten mit Lager-Status
+  const names=S.a.map(a=>a.name.toLowerCase());
+  const ztHtml=(r.zt||[]).map(z=>{
+    const ok=aiMatch(z,names);
+    return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd)">'+
+      '<span style="font-size:16px">'+(ok?'✓':'✗')+'</span>'+
+      '<span style="flex:1;font-size:14px;color:'+(ok?'var(--tx)':'var(--t2)')+'">'+esc(z)+'</span>'+
+      (ok?'<span style="font-size:11px;color:var(--ok)">vorhanden</span>':'<span style="font-size:11px;color:var(--dg)">fehlt</span>')+
+    '</div>';
+  }).join('');
+
+  // Original ings mit Mengenangaben falls vorhanden
+  const ingsHtml=(r.ings||[]).length?
+    (r.ings||[]).map(i=>'<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bd)">'+
+      '<span style="font-size:14px">'+esc(i.n||'')+'</span>'+
+      '<span style="font-size:14px;color:var(--t2);white-space:nowrap;margin-left:8px">'+esc((i.q||'')+' '+(i.u||'')).trim()+'</span>'+
+    '</div>').join(''):ztHtml;
+
+  const missCount=(r.zt||[]).filter(z=>!aiMatch(z,names)).length;
+  const buyBtn=missCount?'<button onclick="addMissingFromDetail()" data-miss=\''+esc(JSON.stringify((r.zt||[]).filter(z=>!aiMatch(z,names))))+'\' style="width:100%;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;margin-top:12px">'+I.cart+' '+missCount+' fehlende Zutaten auf Einkaufsliste</button>':'<div style="background:var(--ol);color:var(--ok);border-radius:var(--rs);padding:12px;text-align:center;font-weight:600;margin-top:12px">✓ Alle Zutaten vorhanden</div>';
+
+  document.getElementById('rezept-detail-body').innerHTML=
+    imgHtml+
+    '<div style="display:flex;gap:12px;margin-bottom:16px">'+
+      '<div style="flex:1;background:var(--bg);border-radius:var(--rs);padding:10px;text-align:center"><div style="font-size:20px">👥</div><div style="font-size:12px;color:var(--t2);margin-top:2px">'+r.port+' Port.</div></div>'+
+      '<div style="flex:1;background:var(--bg);border-radius:var(--rs);padding:10px;text-align:center"><div style="font-size:20px">⏱️</div><div style="font-size:12px;color:var(--t2);margin-top:2px">'+r.min+' min</div></div>'+
+      (r.kat?'<div style="flex:1;background:var(--bg);border-radius:var(--rs);padding:10px;text-align:center"><div style="font-size:20px">🏷️</div><div style="font-size:12px;color:var(--t2);margin-top:2px">'+esc(r.kat)+'</div></div>':'')+
+    '</div>'+
+    '<div style="font-weight:600;font-size:15px;margin-bottom:8px">Zutaten</div>'+
+    ingsHtml+
+    buyBtn;
+
+  goScreen('s-rezept-detail');
+}
+
+function addMissingFromDetail(){
+  const btn=event.currentTarget;
+  let miss=[];
+  try{miss=JSON.parse(btn.dataset.miss);}catch(e){return;}
+  if(!S.ek)S.ek=[];
+  const existing=new Set(S.ek.map(e=>e.text.toLowerCase()));
+  const added=[];
+  miss.forEach(z=>{
+    if(!existing.has(z.toLowerCase())){
+      S.ek.push({id:Date.now()+Math.random(),text:z,checked:false});
+      existing.add(z.toLowerCase());
+      added.push(z);
+    }
+  });
+  if(added.length){saveL();toast(added.length+' Zutat'+(added.length===1?'':'en')+' auf Einkaufsliste');}
+  else toast('Alle schon auf der Einkaufsliste');
 }
 function addMissingToEinkauf(btn){
   let miss=[];
