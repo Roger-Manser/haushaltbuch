@@ -101,6 +101,12 @@
           "preis": 0.6,
           "menge": 1,
           "aktion": false
+        },
+        {
+          "datum": "2026-06-20",
+          "preis": 0.6,
+          "menge": 1,
+          "aktion": false
         }
       ],
       "ownCode": "HB-000009",
@@ -109,7 +115,7 @@
           "id": 1,
           "menge": 1,
           "kaufdatum": "2026-06-20",
-          "ablaufdatum": ""
+          "ablaufdatum": "2026-07-17"
         }
       ],
       "kaufort": ""
@@ -2058,7 +2064,46 @@
       "aktion": false,
       "datum": "2026-06-28",
       "zeit": 1782630430706
+    },
+    {
+      "t": "aus",
+      "aid": 4,
+      "name": "Ei",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782647203599
+    },
+    {
+      "t": "aus",
+      "aid": 4,
+      "name": "Ei",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782647218667
+    },
+    {
+      "t": "ein",
+      "aid": 4,
+      "name": "Ei",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0.6,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782647292733
     }
   ],
-  "aktualisiert": "2026-06-28T11:44:43.183Z"
+  "aktualisiert": "2026-06-28T11:48:19.182Z"
 }
