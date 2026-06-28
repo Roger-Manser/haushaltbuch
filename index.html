@@ -492,7 +492,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='9.0';
+const APP_VERSION='9.1';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1239,18 +1239,46 @@ async function saveForm(){
       }
     }
   }
-  if(editId){const i=S.a.findIndex(x=>x.id===editId);if(i>=0)S.a[i]={...S.a[i],...d};}
+  if(editId){
+    const i=S.a.findIndex(x=>x.id===editId);
+    if(i>=0){
+      const altMenge=S.a[i].menge;
+      const neuMenge=d.menge;
+      S.a[i]={...S.a[i],...d};
+      const diff=neuMenge-altMenge;
+      if(diff>0){
+        // Menge erhöht → neue Packung + Eingang loggen
+        ensurePackungen(S.a[i]);
+        S.a[i].packungen.push({id:newPackId(),menge:diff,kaufdatum,ablaufdatum:d.ablaufdatum||''});
+        syncMenge(S.a[i]);
+        addLogEntry('ein',editId,d.name,d.lager,d.kat,diff,d.einheit,preis,isAktion||false);
+      }else if(diff<0){
+        // Menge verringert → Ausgang von ältester Packung loggen
+        ensurePackungen(S.a[i]);
+        let rest=Math.abs(diff);
+        const sorted=S.a[i].packungen.slice().sort((a,b)=>a.kaufdatum.localeCompare(b.kaufdatum));
+        for(const p of sorted){
+          if(rest<=0)break;
+          const abbuchen=Math.min(p.menge,rest);
+          p.menge-=abbuchen;rest-=abbuchen;
+        }
+        syncMenge(S.a[i]);
+        addLogEntry('aus',editId,d.name,d.lager,d.kat,Math.abs(diff),d.einheit,0,false);
+      }
+      // Ablaufdatum löschen wenn Bestand 0
+      if(S.a[i].menge===0)S.a[i].ablaufdatum='';
+    }
+  }
   else{
     const newId=S.nid++;
     S.a.push({id:newId,...d});
     if(d.menge>0)addLogEntry('ein',newId,d.name,d.lager,d.kat,d.menge,d.einheit,preis,isAktion||false);
+    // Packung für neuen Artikel anlegen
+    const newA=S.a.find(x=>x.id===newId);
+    if(newA){newA.packungen=[{id:newPackId(),menge:d.menge,kaufdatum,ablaufdatum:d.ablaufdatum||''}];}
   }
-  // Ablaufdatum löschen wenn Bestand 0
-  if(d.menge===0){
-    const saved=S.a.find(x=>x.id===(editId||S.nid-1));
-    if(saved)saved.ablaufdatum='';
-  }
-  fb64='';ffn='';saveL();hideLdr();closeForm();toast(editId?'Artikel aktualisiert':'Artikel hinzugefügt');
+  fb64='';ffn='';saveL();hideLdr();closeForm();
+  toast(editId?'Artikel aktualisiert':'Artikel hinzugefügt');
 }
 function closeForm(){editId=null;fb64='';ffn='';goScreen('s-lager');}
 
