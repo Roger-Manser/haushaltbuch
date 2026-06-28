@@ -492,7 +492,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='9.2';
+const APP_VERSION='9.3';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1336,11 +1336,57 @@ function openAusgangFuerArtikel(artikelId,menge){
 /* ── Eingang (Wareneingang per Barcode) ──────────────────────────── */
 function openEingang(){
   document.getElementById('eingang-body').innerHTML=
-  '<div class="fd"><label>Barcode scannen oder eingeben</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="e-bc" placeholder="7610200071017" inputmode="numeric" onkeydown="if(event.key===\'Enter\')lookupBarcode()"/></div><button class="scb" onclick="openScanner(\'e-bc\',onScanEingang)">'+I.scan+' Scannen</button></div>'+camScannerHTML('e-bc')+'</div>'+
-  '<button class="bp" style="width:100%;margin-bottom:6px" onclick="lookupBarcode()">Suchen</button>'+
-  '<p style="font-size:12px;color:var(--t3);text-align:center;margin-bottom:10px">Barcode eingeben/scannen und Enter drücken, oder Suchen tippen</p>'+
+  '<div style="display:flex;gap:8px;margin-bottom:12px">'+
+    '<button id="eingang-mode-bc" onclick="setEingangMode(\'bc\')" class="bp" style="flex:1;padding:9px;font-size:13px">'+I.scan+' Barcode</button>'+
+    '<button id="eingang-mode-txt" onclick="setEingangMode(\'txt\')" class="bp" style="flex:1;padding:9px;font-size:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd)">🔤 Textsuche</button>'+
+  '</div>'+
+  '<div id="eingang-input-bc">'+
+    '<div class="fd"><label>Barcode scannen oder eingeben</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="e-bc" placeholder="7610200071017" inputmode="numeric" onkeydown="if(event.key===\'Enter\')lookupBarcode()"/></div><button class="scb" onclick="openScanner(\'e-bc\',onScanEingang)">'+I.scan+' Scannen</button></div>'+camScannerHTML('e-bc')+'</div>'+
+    '<button class="bp" style="width:100%;margin-bottom:6px" onclick="lookupBarcode()">Suchen</button>'+
+  '</div>'+
+  '<div id="eingang-input-txt" style="display:none">'+
+    '<div class="fd"><label>Artikelname suchen</label><div class="sw"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="e-txt" placeholder="z.B. Milch, Eier..." oninput="lookupText()"/></div></div>'+
+    '<div id="eingang-txt-results"></div>'+
+  '</div>'+
   '<div id="eingang-result"></div>';
   goScreen('s-eingang');
+}
+function setEingangMode(mode){
+  document.getElementById('eingang-input-bc').style.display=mode==='bc'?'block':'none';
+  document.getElementById('eingang-input-txt').style.display=mode==='txt'?'block':'none';
+  document.getElementById('eingang-mode-bc').style.cssText=mode==='bc'?'flex:1;padding:9px;font-size:13px':'flex:1;padding:9px;font-size:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd)';
+  document.getElementById('eingang-mode-txt').style.cssText=mode==='txt'?'flex:1;padding:9px;font-size:13px':'flex:1;padding:9px;font-size:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd)';
+  document.getElementById('eingang-result').innerHTML='';
+  if(mode==='txt'){setTimeout(()=>document.getElementById('e-txt')?.focus(),100);}
+}
+function lookupText(){
+  const q=(document.getElementById('e-txt')?.value||'').toLowerCase().trim();
+  const res=document.getElementById('eingang-txt-results');
+  if(!q){res.innerHTML='';return;}
+  const matches=S.a.filter(a=>a.name.toLowerCase().includes(q)||(a.marke||'').toLowerCase().includes(q)).slice(0,8);
+  if(!matches.length){res.innerHTML='<div style="color:var(--t3);font-size:13px;padding:8px 0">Kein Artikel gefunden</div>';return;}
+  res.innerHTML=matches.map(a=>{
+    const bc=a.menge<a.mindest?'<span style="font-size:10px;color:var(--dg);margin-left:4px">⚠ unter Mindest</span>':'';
+    return '<div onclick="selectEingangArtikel('+a.id+')" style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:6px;cursor:pointer;background:var(--sf)">'+
+      (a.foto?'<img src="'+esc(a.foto)+'" style="width:36px;height:36px;border-radius:6px;object-fit:cover;flex-shrink:0"/>':'<div style="width:36px;height:36px;border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center">'+I.pkg.replace('20px;height:20px','18px;height:18px')+'</div>')+
+      '<div><div style="font-size:14px;font-weight:500">'+esc(a.name)+(a.marke?' · <span style="color:var(--t2)">'+esc(a.marke)+'</span>':'')+bc+'</div>'+
+      '<div style="font-size:12px;color:var(--t2)">'+esc(a.lager)+' · '+a.menge+' '+esc(a.einheit||'Stk')+'</div></div>'+
+    '</div>';
+  }).join('');
+}
+function selectEingangArtikel(id){
+  // Gefundenen Artikel direkt im Eingang-Result anzeigen (gleicher Flow wie Barcode)
+  const a=S.a.find(x=>x.id===id);
+  if(!a)return;
+  document.getElementById('eingang-txt-results').innerHTML='';
+  document.getElementById('e-txt').value=a.name;
+  // Eingang-Result mit diesem Artikel befüllen (gleicher Code wie lookupBarcode bei found)
+  const fakeCode=a.barcode||a.ownCode||'';
+  if(fakeCode){
+    document.getElementById('e-bc').value=fakeCode;
+  }
+  // Direkt den Artikel-Dialog rendern
+  renderEingangArtikel(a);
 }
 function closeEingang(){closeScanner();goScreen('s-lager');}
 function onScanEingang(code){
@@ -1353,7 +1399,15 @@ function lookupBarcode(){
   const found=S.a.find(a=>(a.barcode&&a.barcode===bc)||(a.ownCode&&a.ownCode===bc));
   const res=document.getElementById('eingang-result');
   if(found){
-    const th=found.foto?'<div class="at" style="width:52px;height:52px"><img src="'+esc(found.foto)+'"/></div>':'<div class="at" style="width:52px;height:52px">'+I.pkg.replace('20px;height:20px','26px;height:26px')+'</div>';
+    renderEingangArtikel(found);
+  }else{
+    res.innerHTML='<div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--wl);border:1px solid color-mix(in srgb,var(--wn) 30%,transparent);border-radius:var(--r);margin-bottom:14px;font-size:14px;color:var(--wn)">'+I.alert.replace('15px;height:15px','18px;height:18px')+' Kein Artikel mit diesem Barcode gefunden — neu erfassen</div>'+
+    '<button class="bp" style="width:100%" onclick="newFromBarcode(\''+esc(bc)+'\')">Neuen Artikel mit diesem Barcode anlegen</button>';
+  }
+}
+function renderEingangArtikel(found){
+  const res=document.getElementById('eingang-result');if(!res)return;
+  const th=found.foto?'<div class="at" style="width:52px;height:52px"><img src="'+esc(found.foto)+'"/></div>':'<div class="at" style="width:52px;height:52px">'+I.pkg.replace('20px;height:20px','26px;height:26px')+'</div>';
     const pinfo=packInfo(found);
     const packStr=pinfo?' · à '+esc(pinfo.split('/')[0]):'';
     const lastPreis=found.preis||0;
@@ -1388,10 +1442,6 @@ function lookupBarcode(){
 
     // Preis-Feld sofort fokussieren für schnelle Eingabe
     setTimeout(()=>{const f=document.getElementById('e-pr');if(f){f.focus();f.select();}},100);
-  }else{
-    res.innerHTML='<div style="display:flex;align-items:center;gap:10px;padding:12px;background:var(--wl);border:1px solid color-mix(in srgb,var(--wn) 30%,transparent);border-radius:var(--r);margin-bottom:14px;font-size:14px;color:var(--wn)">'+I.alert.replace('15px;height:15px','18px;height:18px')+' Kein Artikel mit diesem Barcode gefunden — neu erfassen</div>'+
-    '<button class="bp" style="width:100%" onclick="newFromBarcode(\''+esc(bc)+'\')">Neuen Artikel mit diesem Barcode anlegen</button>';
-  }
 }
 function confirmEingang(id,ablaufPflicht){
   const a=S.a.find(x=>x.id===id);if(!a)return;
@@ -1438,13 +1488,63 @@ let ausgangLog=[];
 function openAusgang(){
   ausgangLog=[];
   document.getElementById('ausgang-body').innerHTML=
-  '<button class="scan-toggle" id="ausgang-toggle" onclick="toggleAusgangScan()">'+I.scan+' Scanner starten</button>'+
-  camScannerHTML('ausgang-dummy')+
-  '<div class="fd" style="margin-top:4px"><label>Oder Barcode manuell eingeben</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="ausgang-manual" placeholder="7610200071017" inputmode="numeric" onkeydown="if(event.key===\'Enter\'){processAusgangScan(this.value.trim());this.value=\'\'}"/></div><button class="bp" style="width:auto;padding:0 16px" onclick="processAusgangScan(document.getElementById(\'ausgang-manual\').value.trim());document.getElementById(\'ausgang-manual\').value=\'\'">OK</button></div></div>'+
-  '<p style="font-size:12px;color:var(--t3);text-align:center;margin:10px 0">Jeder erkannte Barcode zieht automatisch 1 Stück vom Lager ab</p>'+
+  '<div style="display:flex;gap:8px;margin-bottom:12px">'+
+    '<button id="ausgang-mode-bc" onclick="setAusgangMode(\'bc\')" class="bp" style="flex:1;padding:9px;font-size:13px">'+I.scan+' Barcode</button>'+
+    '<button id="ausgang-mode-txt" onclick="setAusgangMode(\'txt\')" class="bp" style="flex:1;padding:9px;font-size:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd)">🔤 Textsuche</button>'+
+  '</div>'+
+  '<div id="ausgang-input-bc">'+
+    '<button class="scan-toggle" id="ausgang-toggle" onclick="toggleAusgangScan()">'+I.scan+' Scanner starten</button>'+
+    camScannerHTML('ausgang-dummy')+
+    '<div class="fd" style="margin-top:4px"><label>Oder Barcode manuell eingeben</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="ausgang-manual" placeholder="7610200071017" inputmode="numeric" onkeydown="if(event.key===\'Enter\'){processAusgangScan(this.value.trim());this.value=\'\'}"/></div><button class="bp" style="width:auto;padding:0 16px" onclick="processAusgangScan(document.getElementById(\'ausgang-manual\').value.trim());document.getElementById(\'ausgang-manual\').value=\'\'">OK</button></div></div>'+
+  '</div>'+
+  '<div id="ausgang-input-txt" style="display:none">'+
+    '<div class="fd"><label>Artikelname suchen</label><div class="sw"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input type="text" id="ausgang-txt" placeholder="z.B. Milch, Eier..." oninput="lookupAusgangText()"/></div></div>'+
+    '<div id="ausgang-txt-results"></div>'+
+  '</div>'+
+  '<p style="font-size:12px;color:var(--t3);text-align:center;margin:8px 0">Jeder erkannte Barcode zieht automatisch 1 Stück vom Lager ab</p>'+
   '<div class="sh">Erfasste Ausgänge</div>'+
   '<div id="ausgang-list"><div style="text-align:center;padding:20px;color:var(--t3);font-size:13px">Noch keine Ausgänge erfasst</div></div>';
   goScreen('s-ausgang');
+}
+function setAusgangMode(mode){
+  document.getElementById('ausgang-input-bc').style.display=mode==='bc'?'block':'none';
+  document.getElementById('ausgang-input-txt').style.display=mode==='txt'?'block':'none';
+  document.getElementById('ausgang-mode-bc').style.cssText=mode==='bc'?'flex:1;padding:9px;font-size:13px':'flex:1;padding:9px;font-size:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd)';
+  document.getElementById('ausgang-mode-txt').style.cssText=mode==='txt'?'flex:1;padding:9px;font-size:13px':'flex:1;padding:9px;font-size:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd)';
+  if(mode==='bc')closeScanner();
+  if(mode==='txt')setTimeout(()=>document.getElementById('ausgang-txt')?.focus(),100);
+}
+function lookupAusgangText(){
+  const q=(document.getElementById('ausgang-txt')?.value||'').toLowerCase().trim();
+  const res=document.getElementById('ausgang-txt-results');
+  if(!q){res.innerHTML='';return;}
+  const matches=S.a.filter(a=>(a.name.toLowerCase().includes(q)||(a.marke||'').toLowerCase().includes(q))&&a.menge>0).slice(0,8);
+  if(!matches.length){res.innerHTML='<div style="color:var(--t3);font-size:13px;padding:8px 0">Kein Artikel mit Bestand > 0 gefunden</div>';return;}
+  const list=document.getElementById('ausgang-list');
+  res.innerHTML=matches.map(a=>
+    '<div onclick="processAusgangText('+a.id+')" style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:6px;cursor:pointer;background:var(--sf)">'+
+    (a.foto?'<img src="'+esc(a.foto)+'" style="width:36px;height:36px;border-radius:6px;object-fit:cover;flex-shrink:0"/>':'<div style="width:36px;height:36px;border-radius:6px;background:var(--bg);display:flex;align-items:center;justify-content:center">'+I.pkg.replace('20px;height:20px','18px;height:18px')+'</div>')+
+    '<div style="flex:1"><div style="font-size:14px;font-weight:500">'+esc(a.name)+'</div>'+
+    '<div style="font-size:12px;color:var(--t2)">'+esc(a.lager)+' · noch '+a.menge+' '+esc(a.einheit||'Stk')+'</div></div>'+
+    '<span style="font-size:20px;color:var(--dg);font-weight:700">−1</span>'+
+    '</div>'
+  ).join('');
+}
+function processAusgangText(id){
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  const list=document.getElementById('ausgang-list');
+  ensurePackungen(a);
+  const aktivePack=a.packungen.filter(p=>p.menge>0);
+  if(aktivePack.length>1){
+    showAusgangPackDialog(a,list);
+  }else{
+    ausgangPackAbbuchen(a,aktivePack[0]?aktivePack[0].id:null,1,list);
+  }
+  // Suche leeren
+  const txt=document.getElementById('ausgang-txt');
+  const res=document.getElementById('ausgang-txt-results');
+  if(txt)txt.value='';
+  if(res)res.innerHTML='';
 }
 function closeAusgang(){closeScanner();goScreen('s-lager');}
 function toggleAusgangScan(){
