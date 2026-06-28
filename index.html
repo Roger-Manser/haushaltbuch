@@ -492,7 +492,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='9.3';
+const APP_VERSION='9.4';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -976,10 +976,21 @@ function showDet(id){
   const ptotal=packTotal(a);
   const packRow=pinfo?'<div class="ir"><span class="ik">'+I.stack+' Packungsgrösse</span><span class="iv">'+esc(pinfo.split('/')[0])+' pro '+esc(a.einheit||'Stk')+'</span></div>':'';
   const hist=(a.preisHistorie||[]).slice().reverse();
-  const histHtml=hist.length?'<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">Preisverlauf</span></div>'+
+  const histHtml=hist.length?'<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">Verlauf</span></div>'+
     hist.map((h,ri)=>{
-      const i=(a.preisHistorie.length-1-ri); // original index (not reversed)
-      return '<div class="ir" style="align-items:center"><div style="flex:1"><div style="font-size:13px">CHF '+((h.preis||0).toFixed(2))+' · +'+h.menge+' '+esc(a.einheit||'Stk')+(h.aktion?'<span style="font-size:10px;padding:1px 7px;border-radius:8px;background:var(--wl);color:var(--wn);font-weight:600;margin-left:6px">Aktion</span>':'')+'</div><div style="font-size:11px;color:var(--t2)">'+fmtDateCH(h.datum)+'</div></div><div style="display:flex;gap:6px;flex-shrink:0"><button onclick="editPreisHistorie('+id+','+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:4px 8px;cursor:pointer;font-size:12px;color:var(--ac)">✏️</button><button onclick="delPreisHistorie('+id+','+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:4px 8px;cursor:pointer;font-size:12px;color:var(--dg)">✕</button></div></div>';
+      const i=(a.preisHistorie.length-1-ri);
+      const typBadge=h.typ==='aus'
+        ?'<span style="font-size:10px;padding:1px 7px;border-radius:8px;background:var(--dl);color:var(--dg);font-weight:600">−Ausgang</span>'
+        :'<span style="font-size:10px;padding:1px 7px;border-radius:8px;background:var(--ol);color:var(--ok);font-weight:600">+Eingang</span>';
+      const aktionBadge=h.aktion?'<span style="font-size:10px;padding:1px 7px;border-radius:8px;background:var(--wl);color:var(--wn);font-weight:600;margin-left:4px">Aktion</span>':'';
+      const preisStr=h.preis>0?' · CHF '+((h.preis||0).toFixed(2)):'';
+      return '<div class="ir" style="align-items:center"><div style="flex:1">'+
+        '<div style="font-size:13px;display:flex;align-items:center;gap:6px">'+typBadge+aktionBadge+'<span>'+(h.menge||1)+' '+esc(h.einheit||a.einheit||'Stk')+preisStr+'</span></div>'+
+        '<div style="font-size:11px;color:var(--t2)">'+fmtDateCH(h.datum)+'</div></div>'+
+        '<div style="display:flex;gap:6px;flex-shrink:0">'+
+          '<button onclick="editPreisHistorie('+id+','+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:4px 8px;cursor:pointer;font-size:12px;color:var(--ac)">✏️</button>'+
+          '<button onclick="delPreisHistorie('+id+','+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:4px 8px;cursor:pointer;font-size:12px;color:var(--dg)">✕</button>'+
+        '</div></div>';
     }).join('')+'</div>':'';
   const totalHint=ptotal?'<div style="font-size:11px;color:var(--t2);text-align:right;margin-top:4px">≈ '+esc(ptotal)+'</div>':'';
 
@@ -1090,7 +1101,11 @@ function chgB(id,d){
   const before=a.menge;
   a.menge=Math.max(0,a.menge+d);
   const actualDelta=a.menge-before;
-  if(actualDelta!==0)addLogEntry(actualDelta>0?'ein':'aus',a.id,a.name,a.lager,a.kat,Math.abs(actualDelta),a.einheit,0);
+  if(actualDelta!==0){
+    addLogEntry(actualDelta>0?'ein':'aus',a.id,a.name,a.lager,a.kat,Math.abs(actualDelta),a.einheit,0);
+    if(!a.preisHistorie)a.preisHistorie=[];
+    a.preisHistorie.push({datum:todayISO(),preis:0,menge:Math.abs(actualDelta),einheit:a.einheit||'Stk',typ:actualDelta>0?'ein':'aus',aktion:false});
+  }
   if(a.menge===0&&a.ablaufdatum){a.ablaufdatum='';}  // Ablaufdatum löschen wenn leer
   const el=document.getElementById('sv-'+id);
   if(el){el.textContent=a.menge;el.className='spv '+(a.menge===0?'lo':a.menge<a.mindest?'wn':'ok');}
@@ -1226,17 +1241,14 @@ async function saveForm(){
   const kaufort=geChip?geChip.dataset.ge:'';
   const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,kaufort,menge:parseInt(document.getElementById('f-mg').value)||0,einheit:document.getElementById('f-ei').value,mindest:Math.max(0,parseInt(document.getElementById('f-mn').value)||0),barcode:document.getElementById('f-bc').value.trim(),preis:standardPreis,packMenge,packEinheit,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
   if(!editId){
-    // Neuer Artikel: Preis-Historie nur anlegen wenn Preis angegeben
-    d.preisHistorie=preis>0?[{datum:kaufdatum,preis,menge:d.menge,aktion:isAktion||false}]:[];
+    // Neuer Artikel: Preis-Historie anlegen wenn Preis angegeben
+    d.preisHistorie=preis>0?[{datum:kaufdatum,preis,menge:d.menge,einheit:d.einheit,typ:'ein',aktion:isAktion||false}]:[];
   }else{
-    // Artikel bearbeiten: bestehende Historie behalten, bei Preisänderung neuen Eintrag hinzufügen
+    // Artikel bearbeiten: bestehende Historie behalten, immer neuen Eintrag hinzufügen
     const ex=S.a.find(x=>x.id===editId);
     d.preisHistorie=ex&&ex.preisHistorie?[...ex.preisHistorie]:[];
     if(preis>0){
-      const lastPreis=d.preisHistorie.length?d.preisHistorie[d.preisHistorie.length-1].preis:0;
-      if(preis!==lastPreis){
-        d.preisHistorie.push({datum:kaufdatum,preis,menge:d.menge,aktion:isAktion||false});
-      }
+      d.preisHistorie.push({datum:kaufdatum,preis,menge:d.menge,einheit:d.einheit,typ:'ein',aktion:isAktion||false});
     }
   }
   if(editId){
@@ -1467,7 +1479,7 @@ function confirmEingang(id,ablaufPflicht){
   if(kaufort)a.kaufort=kaufort;
   // Preis loggen
   if(!a.preisHistorie)a.preisHistorie=[];
-  a.preisHistorie.push({datum:kaufdatum,preis,menge:addMenge,aktion:isAktion||false});
+  a.preisHistorie.push({datum:kaufdatum,preis,menge:addMenge,einheit:a.einheit||'Stk',typ:'ein',aktion:isAktion||false});
   if(preis>0&&!isAktion){a.preis=preis;}
   addLogEntry('ein',a.id,a.name,a.lager,a.kat,addMenge,a.einheit,preis,isAktion||false);
   saveL();
@@ -1636,6 +1648,9 @@ function ausgangPackAbbuchen(a,packId,menge,list){
     a.packungen[0].menge=Math.max(0,a.packungen[0].menge-menge);
   }
   syncMenge(a);
+  // Ausgang in Preis-Historie loggen
+  if(!a.preisHistorie)a.preisHistorie=[];
+  a.preisHistorie.push({datum:todayISO(),preis:0,menge,einheit:a.einheit||'Stk',typ:'aus',aktion:false});
   addLogEntry('aus',a.id,a.name,a.lager,a.kat,menge,a.einheit,0);
   saveL();
   ausgangLog.unshift({id:a.id,name:a.name,foto:a.foto,lager:a.lager,einheit:a.einheit,zeit:Date.now()});
