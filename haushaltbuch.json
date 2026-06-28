@@ -149,8 +149,8 @@
     },
     {
       "id": 6,
-      "name": "Schützengarten",
-      "marke": "Dose",
+      "name": "Schützengarten Lager Bier",
+      "marke": "Schützengarten",
       "kat": "Genussmittel",
       "lager": "Kühlschrank unten",
       "menge": 1,
@@ -165,7 +165,16 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781972385102_off.jpg",
       "fotoPath": "1781972385102_off.jpg",
-      "preisHistorie": []
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-20",
+          "ablaufdatum": ""
+        }
+      ],
+      "kaufort": "Coop"
     },
     {
       "id": 7,
@@ -2248,5 +2257,5 @@
       "zeit": 1782648338012
     }
   ],
-  "aktualisiert": "2026-06-28T12:26:51.390Z"
+  "aktualisiert": "2026-06-28T12:39:26.466Z"
 }
