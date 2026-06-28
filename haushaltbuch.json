@@ -38,7 +38,7 @@
       "marke": "Lidl",
       "kat": "Genussmittel",
       "lager": "Küche",
-      "menge": 4,
+      "menge": 3,
       "einheit": "Stange",
       "mindest": 2,
       "barcode": "4006396071576",
@@ -62,6 +62,14 @@
           "menge": 2,
           "aktion": false
         }
+      ],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 3,
+          "kaufdatum": "2026-06-27",
+          "ablaufdatum": ""
+        }
       ]
     },
     {
@@ -78,7 +86,7 @@
       "packMenge": 6,
       "packEinheit": "Stk",
       "kaufdatum": "2026-06-20",
-      "ablaufdatum": "",
+      "ablaufdatum": "2026-07-17",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782190086786_17821900533123253954791247278943.jpg",
       "fotoPath": "1782190086786_17821900533123253954791247278943.jpg",
@@ -103,7 +111,8 @@
           "kaufdatum": "2026-06-20",
           "ablaufdatum": ""
         }
-      ]
+      ],
+      "kaufort": ""
     },
     {
       "id": 5,
@@ -438,7 +447,7 @@
       "lager": "Schlof",
       "menge": 0,
       "einheit": "Stk",
-      "mindest": 1,
+      "mindest": 0,
       "barcode": "4002103249535",
       "preis": 0,
       "packMenge": 3.3,
@@ -448,7 +457,16 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782224369335_off.jpg",
       "fotoPath": "1782224369335_off.jpg",
-      "preisHistorie": []
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 0,
+          "kaufdatum": "2026-06-23",
+          "ablaufdatum": ""
+        }
+      ],
+      "kaufort": ""
     },
     {
       "id": 21,
@@ -556,7 +574,7 @@
       "lager": "Schlof",
       "menge": 0,
       "einheit": "Stk",
-      "mindest": 1,
+      "mindest": 0,
       "barcode": "4099200432632",
       "preis": 0,
       "packMenge": 50,
@@ -565,7 +583,17 @@
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782310695709_off.jpg",
-      "fotoPath": "1782310695709_off.jpg"
+      "fotoPath": "1782310695709_off.jpg",
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 0,
+          "kaufdatum": "2026-06-24",
+          "ablaufdatum": ""
+        }
+      ],
+      "kaufort": "",
+      "preisHistorie": []
     },
     {
       "id": 27,
@@ -594,7 +622,7 @@
       "lager": "Schlof",
       "menge": 0,
       "einheit": "Stk",
-      "mindest": 1,
+      "mindest": 0,
       "barcode": "7624841029513",
       "preis": 0,
       "packMenge": 108,
@@ -604,7 +632,16 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782310929723_off.jpg",
       "fotoPath": "1782310929723_off.jpg",
-      "preisHistorie": []
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 0,
+          "kaufdatum": "2026-06-24",
+          "ablaufdatum": ""
+        }
+      ],
+      "kaufort": ""
     },
     {
       "id": 29,
@@ -672,7 +709,7 @@
       "marke": "Lidl",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "4056489147268",
@@ -680,12 +717,20 @@
       "packMenge": 125,
       "packEinheit": "g",
       "kaufdatum": "2026-06-27",
-      "ablaufdatum": "2026-06-28",
+      "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782551885501_off.jpg",
       "fotoPath": "1782551885501_off.jpg",
       "preisHistorie": [],
-      "kaufort": "Lidl"
+      "kaufort": "Lidl",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-27",
+          "ablaufdatum": "2026-06-28"
+        }
+      ]
     },
     {
       "id": 33,
@@ -779,6 +824,14 @@
           "menge": 1,
           "aktion": false
         }
+      ],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 2,
+          "kaufdatum": "2026-06-27",
+          "ablaufdatum": "2026-07-03"
+        }
       ]
     },
     {
@@ -860,6 +913,27 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782557891926_1782557848003181302118987887147.jpg",
       "fotoPath": "1782557891926_1782557848003181302118987887147.jpg"
+    },
+    {
+      "id": 40,
+      "name": "Quöllfrisch alkoholfrei",
+      "marke": "Appenzeller Bier",
+      "kat": "Getränke",
+      "lager": "Kühlschrank unten",
+      "kaufort": "Landi",
+      "menge": 0,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7611889123334",
+      "preis": 0,
+      "packMenge": 5,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-06-27",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782577901348_off.jpg",
+      "fotoPath": "1782577901348_off.jpg",
+      "preisHistorie": []
     }
   ],
   "lagerorte": [
@@ -909,7 +983,8 @@
     "Aldi",
     "Denner",
     "Volg",
-    "Online"
+    "Online",
+    "Landi"
   ],
   "einkauf": [],
   "log": [
@@ -1931,7 +2006,59 @@
       "aktion": false,
       "datum": "2026-06-27",
       "zeit": 1782563853778
+    },
+    {
+      "t": "aus",
+      "aid": 32,
+      "name": "Forellenfilets",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-27",
+      "zeit": 1782566765137
+    },
+    {
+      "t": "aus",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782629054050
+    },
+    {
+      "t": "ein",
+      "aid": 36,
+      "name": "Pouletschnitzel a la minute",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782630427157
+    },
+    {
+      "t": "aus",
+      "aid": 36,
+      "name": "Pouletschnitzel a la minute",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-28",
+      "zeit": 1782630430706
     }
   ],
-  "aktualisiert": "2026-06-27T13:27:23.518Z"
+  "aktualisiert": "2026-06-28T11:02:58.490Z"
 }
