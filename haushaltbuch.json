@@ -1128,6 +1128,44 @@
         }
       ],
       "packungen": []
+    },
+    {
+      "id": 47,
+      "name": "Fanta Berry",
+      "marke": "Fanta",
+      "kat": "Getränke",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 0,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "049000067729",
+      "preis": 0,
+      "packMenge": 355,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-06-29",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782722313335_off.jpg",
+      "fotoPath": "1782722313335_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-29",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        }
+      ],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-29",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -2414,7 +2452,33 @@
       "aktion": false,
       "datum": "2026-06-29",
       "zeit": 1782708794606
+    },
+    {
+      "t": "ein",
+      "aid": 47,
+      "name": "Fanta Berry",
+      "lager": "Kühlschrank oben",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-29",
+      "zeit": 1782722402496
+    },
+    {
+      "t": "aus",
+      "aid": 47,
+      "name": "Fanta Berry",
+      "lager": "Kühlschrank oben",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-29",
+      "zeit": 1782724272994
     }
   ],
-  "aktualisiert": "2026-06-29T04:54:16.373Z"
+  "aktualisiert": "2026-06-29T09:13:41.259Z"
 }
