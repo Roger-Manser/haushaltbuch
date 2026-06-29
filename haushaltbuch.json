@@ -508,7 +508,7 @@
       "name": "Mutti Solo Pomodoro Parma Passierte italienische Tomaten",
       "marke": "Mutti",
       "kat": "Gemüse & Früchte",
-      "lager": "Gefrierschrank unten",
+      "lager": "Schlof",
       "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
@@ -520,7 +520,17 @@
       "ablaufdatum": "2029-01-31",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782306015140_off.jpg",
-      "fotoPath": "1782306015140_off.jpg"
+      "fotoPath": "1782306015140_off.jpg",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-24",
+          "ablaufdatum": "2029-01-31"
+        }
+      ],
+      "kaufort": "",
+      "preisHistorie": []
     },
     {
       "id": 23,
@@ -2480,5 +2490,5 @@
       "zeit": 1782724272994
     }
   ],
-  "aktualisiert": "2026-06-29T09:13:41.259Z"
+  "aktualisiert": "2026-06-29T13:55:46.210Z"
 }
