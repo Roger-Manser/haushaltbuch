@@ -916,7 +916,7 @@
       "kat": "Diverses",
       "lager": "Küche",
       "kaufort": "Migros",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "3086126790503",
@@ -927,7 +927,18 @@
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782557891926_1782557848003181302118987887147.jpg",
-      "fotoPath": "1782557891926_1782557848003181302118987887147.jpg"
+      "fotoPath": "1782557891926_1782557848003181302118987887147.jpg",
+      "packungen": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-06-29",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        }
+      ]
     },
     {
       "id": 40,
@@ -1169,7 +1180,13 @@
     "Online",
     "Landi"
   ],
-  "einkauf": [],
+  "einkauf": [
+    {
+      "id": 1782657617875,
+      "text": "Taschentuch Box",
+      "checked": false
+    }
+  ],
   "log": [
     {
       "t": "ein",
@@ -2384,7 +2401,20 @@
       "aktion": false,
       "datum": "2026-06-28",
       "zeit": 1782657522974
+    },
+    {
+      "t": "aus",
+      "aid": 39,
+      "name": "Big Feuerzeug",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-29",
+      "zeit": 1782708794606
     }
   ],
-  "aktualisiert": "2026-06-28T14:38:51.077Z"
+  "aktualisiert": "2026-06-29T04:54:16.373Z"
 }
