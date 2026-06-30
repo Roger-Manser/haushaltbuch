@@ -338,7 +338,7 @@
       "marke": "Mutti",
       "kat": "Gemüse & Früchte",
       "lager": "Schlof",
-      "menge": 3,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "8005110630408",
@@ -349,7 +349,33 @@
       "ablaufdatum": "2028-10-01",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782210233689_off.jpg",
-      "fotoPath": "1782210233689_off.jpg"
+      "fotoPath": "1782210233689_off.jpg",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-23",
+          "ablaufdatum": "2028-10-01"
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-06-29",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-06-29",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        }
+      ]
     },
     {
       "id": 15,
@@ -742,7 +768,7 @@
       "packMenge": 125,
       "packEinheit": "g",
       "kaufdatum": "2026-06-27",
-      "ablaufdatum": "",
+      "ablaufdatum": "2026-06-28",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782551885501_off.jpg",
       "fotoPath": "1782551885501_off.jpg",
@@ -1176,6 +1202,105 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 48,
+      "name": "Regeneriersalz",
+      "marke": "reosal",
+      "kat": "Reinigung & Pflege",
+      "lager": "Bad unten",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7610039000051",
+      "preis": 0,
+      "packMenge": 1,
+      "packEinheit": "kg",
+      "kaufdatum": "2026-06-29",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782741745602_off.jpg",
+      "fotoPath": "1782741745602_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-29",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-06-29",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-06-29",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        }
+      ],
+      "packungen": []
+    },
+    {
+      "id": 49,
+      "name": "Geschirrspühler Reiniger",
+      "marke": "finish",
+      "kat": "Reinigung & Pflege",
+      "lager": "Bad unten",
+      "kaufort": "Coop",
+      "menge": 4,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "5410036102855",
+      "preis": 0,
+      "packMenge": 1,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-06-29",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782747624966_17827476144613915863684325133073.jpg",
+      "fotoPath": "1782747624966_17827476144613915863684325133073.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-29",
+          "preis": 2,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": true
+        },
+        {
+          "datum": "2026-06-29",
+          "preis": 0,
+          "menge": 3,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false
+        }
+      ],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-29",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 2,
+          "menge": 3,
+          "kaufdatum": "2026-06-29",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -1187,7 +1312,8 @@
     "Kühlschrank unten",
     "Schlof",
     "Gang unten",
-    "Garten"
+    "Garten",
+    "Bad unten"
   ],
   "kategorien": [
     "Milchprodukte",
@@ -2488,7 +2614,111 @@
       "aktion": false,
       "datum": "2026-06-29",
       "zeit": 1782724272994
+    },
+    {
+      "t": "ein",
+      "aid": 48,
+      "name": "Regeneriersalz",
+      "lager": "Bad unten",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-29",
+      "zeit": 1782741810865
+    },
+    {
+      "t": "aus",
+      "aid": 48,
+      "name": "Regeneriersalz",
+      "lager": "Bad unten",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-29",
+      "zeit": 1782741832743
+    },
+    {
+      "t": "aus",
+      "aid": 48,
+      "name": "Regeneriersalz",
+      "lager": "Bad unten",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-29",
+      "zeit": 1782741835256
+    },
+    {
+      "t": "aus",
+      "aid": 48,
+      "name": "Regeneriersalz",
+      "lager": "Bad unten",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-29",
+      "zeit": 1782741837830
+    },
+    {
+      "t": "aus",
+      "aid": 14,
+      "name": "Passata 400g Mutti",
+      "lager": "Schlof",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-29",
+      "zeit": 1782747505460
+    },
+    {
+      "t": "aus",
+      "aid": 14,
+      "name": "Passata 400g Mutti",
+      "lager": "Schlof",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-29",
+      "zeit": 1782747525490
+    },
+    {
+      "t": "ein",
+      "aid": 49,
+      "name": "Geschirrspühler Reiniger",
+      "lager": "Bad unten",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2,
+      "aktion": true,
+      "datum": "2026-06-29",
+      "zeit": 1782747683631
+    },
+    {
+      "t": "ein",
+      "aid": 49,
+      "name": "Geschirrspühler Reiniger",
+      "lager": "Bad unten",
+      "kat": "Reinigung & Pflege",
+      "menge": 3,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-29",
+      "zeit": 1782747708552
     }
   ],
-  "aktualisiert": "2026-06-29T13:55:46.210Z"
+  "aktualisiert": "2026-06-30T06:27:15.747Z"
 }
