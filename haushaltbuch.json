@@ -338,7 +338,7 @@
       "marke": "Mutti",
       "kat": "Gemüse & Früchte",
       "lager": "Schlof",
-      "menge": 1,
+      "menge": 3,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "8005110630408",
@@ -349,33 +349,7 @@
       "ablaufdatum": "2028-10-01",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782210233689_off.jpg",
-      "fotoPath": "1782210233689_off.jpg",
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-06-23",
-          "ablaufdatum": "2028-10-01"
-        }
-      ],
-      "preisHistorie": [
-        {
-          "datum": "2026-06-29",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-06-29",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        }
-      ]
+      "fotoPath": "1782210233689_off.jpg"
     },
     {
       "id": 15,
@@ -534,7 +508,7 @@
       "name": "Mutti Solo Pomodoro Parma Passierte italienische Tomaten",
       "marke": "Mutti",
       "kat": "Gemüse & Früchte",
-      "lager": "Schlof",
+      "lager": "Gefrierschrank unten",
       "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
@@ -546,17 +520,7 @@
       "ablaufdatum": "2029-01-31",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782306015140_off.jpg",
-      "fotoPath": "1782306015140_off.jpg",
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-06-24",
-          "ablaufdatum": "2029-01-31"
-        }
-      ],
-      "kaufort": "",
-      "preisHistorie": []
+      "fotoPath": "1782306015140_off.jpg"
     },
     {
       "id": 23,
@@ -712,7 +676,15 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782311158358_17823111509323023841191726663671.jpg",
       "fotoPath": "1782311158358_17823111509323023841191726663671.jpg",
-      "preisHistorie": []
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-24",
+          "ablaufdatum": "2027-05-31"
+        }
+      ]
     },
     {
       "id": 30,
@@ -768,7 +740,7 @@
       "packMenge": 125,
       "packEinheit": "g",
       "kaufdatum": "2026-06-27",
-      "ablaufdatum": "2026-06-28",
+      "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782551885501_off.jpg",
       "fotoPath": "1782551885501_off.jpg",
@@ -827,6 +799,14 @@
           "preis": 0,
           "menge": 1,
           "aktion": false
+        }
+      ],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 2,
+          "kaufdatum": "2026-06-27",
+          "ablaufdatum": "2026-07-18"
         }
       ]
     },
@@ -916,6 +896,14 @@
           "menge": 1,
           "aktion": false
         }
+      ],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 3,
+          "kaufdatum": "2026-06-27",
+          "ablaufdatum": "2026-07-07"
+        }
       ]
     },
     {
@@ -943,6 +931,14 @@
           "menge": 1,
           "aktion": false
         }
+      ],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 2,
+          "kaufdatum": "2026-06-27",
+          "ablaufdatum": "2026-10-06"
+        }
       ]
     },
     {
@@ -952,7 +948,7 @@
       "kat": "Diverses",
       "lager": "Küche",
       "kaufort": "Migros",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "3086126790503",
@@ -963,18 +959,7 @@
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782557891926_1782557848003181302118987887147.jpg",
-      "fotoPath": "1782557891926_1782557848003181302118987887147.jpg",
-      "packungen": [],
-      "preisHistorie": [
-        {
-          "datum": "2026-06-29",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        }
-      ]
+      "fotoPath": "1782557891926_1782557848003181302118987887147.jpg"
     },
     {
       "id": 40,
@@ -1065,7 +1050,15 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648210056_off.jpg",
       "fotoPath": "1782648210056_off.jpg",
-      "preisHistorie": []
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-28",
+          "ablaufdatum": "2026-07-13"
+        }
+      ]
     },
     {
       "id": 44,
@@ -1087,423 +1080,6 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648313250_17826483072308710239019996929871.jpg",
       "fotoPath": "1782648313250_17826483072308710239019996929871.jpg",
       "preisHistorie": []
-    },
-    {
-      "id": 45,
-      "name": "Emmi Caffè Latte",
-      "marke": "Emmi",
-      "kat": "Milchprodukte",
-      "lager": "Kühlschrank oben",
-      "kaufort": "Coop",
-      "menge": 0,
-      "einheit": "Stk",
-      "mindest": 0,
-      "barcode": "7610900292745",
-      "preis": 2,
-      "packMenge": 230,
-      "packEinheit": "ml",
-      "kaufdatum": "2026-06-28",
-      "ablaufdatum": "",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782653535171_17826535272125989518119422401432.jpg",
-      "fotoPath": "1782653535171_17826535272125989518119422401432.jpg",
-      "preisHistorie": [
-        {
-          "datum": "2026-06-28",
-          "preis": 2,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false
-        },
-        {
-          "datum": "2026-06-28",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        }
-      ],
-      "packungen": [
-        {
-          "id": 2,
-          "menge": 0,
-          "kaufdatum": "2026-06-28",
-          "ablaufdatum": ""
-        }
-      ]
-    },
-    {
-      "id": 46,
-      "name": "Sekt",
-      "marke": "Rotkäppchen",
-      "kat": "Genussmittel",
-      "lager": "Kühlschrank unten",
-      "kaufort": "Lidl",
-      "menge": 0,
-      "einheit": "Stk",
-      "mindest": 0,
-      "barcode": "4400066903417",
-      "preis": 0,
-      "packMenge": 750,
-      "packEinheit": "ml",
-      "kaufdatum": "2026-06-28",
-      "ablaufdatum": "",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782657306731_off.jpg",
-      "fotoPath": "1782657306731_off.jpg",
-      "preisHistorie": [
-        {
-          "datum": "2026-06-28",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        }
-      ],
-      "packungen": []
-    },
-    {
-      "id": 47,
-      "name": "Fanta Berry",
-      "marke": "Fanta",
-      "kat": "Getränke",
-      "lager": "Kühlschrank oben",
-      "kaufort": "Lidl",
-      "menge": 0,
-      "einheit": "Stk",
-      "mindest": 0,
-      "barcode": "049000067729",
-      "preis": 0,
-      "packMenge": 355,
-      "packEinheit": "ml",
-      "kaufdatum": "2026-06-29",
-      "ablaufdatum": "",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782722313335_off.jpg",
-      "fotoPath": "1782722313335_off.jpg",
-      "preisHistorie": [
-        {
-          "datum": "2026-06-29",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        }
-      ],
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-06-29",
-          "ablaufdatum": ""
-        }
-      ]
-    },
-    {
-      "id": 48,
-      "name": "Regeneriersalz",
-      "marke": "reosal",
-      "kat": "Reinigung & Pflege",
-      "lager": "Bad unten",
-      "kaufort": "",
-      "menge": 0,
-      "einheit": "Stk",
-      "mindest": 1,
-      "barcode": "7610039000051",
-      "preis": 0,
-      "packMenge": 1,
-      "packEinheit": "kg",
-      "kaufdatum": "2026-06-29",
-      "ablaufdatum": "",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782741745602_off.jpg",
-      "fotoPath": "1782741745602_off.jpg",
-      "preisHistorie": [
-        {
-          "datum": "2026-06-29",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-06-29",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-06-29",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        }
-      ],
-      "packungen": []
-    },
-    {
-      "id": 49,
-      "name": "Geschirrspühler Reiniger",
-      "marke": "finish",
-      "kat": "Reinigung & Pflege",
-      "lager": "Bad unten",
-      "kaufort": "Coop",
-      "menge": 4,
-      "einheit": "Stk",
-      "mindest": 1,
-      "barcode": "5410036102855",
-      "preis": 0,
-      "packMenge": 1,
-      "packEinheit": "Stk",
-      "kaufdatum": "2026-06-29",
-      "ablaufdatum": "",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782747624966_17827476144613915863684325133073.jpg",
-      "fotoPath": "1782747624966_17827476144613915863684325133073.jpg",
-      "preisHistorie": [
-        {
-          "datum": "2026-06-29",
-          "preis": 2,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": true
-        },
-        {
-          "datum": "2026-06-29",
-          "preis": 0,
-          "menge": 3,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false
-        }
-      ],
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-06-29",
-          "ablaufdatum": ""
-        },
-        {
-          "id": 2,
-          "menge": 3,
-          "kaufdatum": "2026-06-29",
-          "ablaufdatum": ""
-        }
-      ]
-    },
-    {
-      "id": 50,
-      "name": "French Dressing mit Kräutern",
-      "marke": "Saladinettes",
-      "kat": "Gewürze & Saucen",
-      "lager": "Kühlschrank oben",
-      "kaufort": "Lidl",
-      "menge": 1,
-      "einheit": "Stk",
-      "mindest": 1,
-      "barcode": "20417918",
-      "preis": 0,
-      "packMenge": 1,
-      "packEinheit": "l",
-      "kaufdatum": "2026-06-30",
-      "ablaufdatum": "2027-02-23",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782806438806_off.jpg",
-      "fotoPath": "1782806438806_off.jpg",
-      "preisHistorie": [],
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-06-30",
-          "ablaufdatum": "2027-02-23"
-        }
-      ]
-    },
-    {
-      "id": 51,
-      "name": "Senf Mild",
-      "marke": "Nestlé",
-      "kat": "Gewürze & Saucen",
-      "lager": "Kühlschrank oben",
-      "kaufort": "Migros",
-      "menge": 1,
-      "einheit": "Stk",
-      "mindest": 0,
-      "barcode": "7610100031403",
-      "preis": 0,
-      "packMenge": 200,
-      "packEinheit": "g",
-      "kaufdatum": "2026-06-30",
-      "ablaufdatum": "2026-06-11",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782806504170_off.jpg",
-      "fotoPath": "1782806504170_off.jpg",
-      "preisHistorie": [],
-      "packungen": [
-        {
-          "id": 2,
-          "menge": 1,
-          "kaufdatum": "2026-06-30",
-          "ablaufdatum": "2026-06-11"
-        }
-      ]
-    },
-    {
-      "id": 52,
-      "name": "Senf grobkörnig",
-      "marke": "Migros",
-      "kat": "Gewürze & Saucen",
-      "lager": "Kühlschrank oben",
-      "kaufort": "Migros",
-      "menge": 1,
-      "einheit": "Stk",
-      "mindest": 1,
-      "barcode": "7616700168211",
-      "preis": 0,
-      "packMenge": 200,
-      "packEinheit": "g",
-      "kaufdatum": "2026-06-30",
-      "ablaufdatum": "2026-02-28",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782806556804_off.jpg",
-      "fotoPath": "1782806556804_off.jpg",
-      "preisHistorie": [],
-      "packungen": [
-        {
-          "id": 3,
-          "menge": 1,
-          "kaufdatum": "2026-06-30",
-          "ablaufdatum": "2026-02-28"
-        }
-      ]
-    },
-    {
-      "id": 53,
-      "name": "Mayonaise",
-      "marke": "Thomy",
-      "kat": "Gewürze & Saucen",
-      "lager": "Kühlschrank oben",
-      "kaufort": "Migros",
-      "menge": 2,
-      "einheit": "Stk",
-      "mindest": 1,
-      "barcode": "7610100034084",
-      "preis": 0,
-      "packMenge": 265,
-      "packEinheit": "g",
-      "kaufdatum": "2026-06-30",
-      "ablaufdatum": "2026-12-07",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782806602601_off.jpg",
-      "fotoPath": "1782806602601_off.jpg",
-      "preisHistorie": [],
-      "packungen": [
-        {
-          "id": 4,
-          "menge": 2,
-          "kaufdatum": "2026-06-30",
-          "ablaufdatum": "2026-12-07"
-        }
-      ]
-    },
-    {
-      "id": 54,
-      "name": "Tomatenpurée - Dreifach konzentriert",
-      "marke": "Hero",
-      "kat": "Gewürze & Saucen",
-      "lager": "Kühlschrank oben",
-      "kaufort": "Migros",
-      "menge": 1,
-      "einheit": "Stk",
-      "mindest": 1,
-      "barcode": "7614200092333",
-      "preis": 0,
-      "packMenge": 200,
-      "packEinheit": "g",
-      "kaufdatum": "2026-06-30",
-      "ablaufdatum": "2027-03-31",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782806647695_off.jpg",
-      "fotoPath": "1782806647695_off.jpg",
-      "preisHistorie": [],
-      "packungen": [
-        {
-          "id": 5,
-          "menge": 1,
-          "kaufdatum": "2026-06-30",
-          "ablaufdatum": "2027-03-31"
-        }
-      ]
-    },
-    {
-      "id": 55,
-      "name": "Tartare sauce",
-      "marke": "Thomy",
-      "kat": "Gewürze & Saucen",
-      "lager": "Kühlschrank oben",
-      "kaufort": "Migros",
-      "menge": 1,
-      "einheit": "Stk",
-      "mindest": 0,
-      "barcode": "12376797",
-      "preis": 0,
-      "packMenge": 180,
-      "packEinheit": "g",
-      "kaufdatum": "2026-06-30",
-      "ablaufdatum": "2026-12-21",
-      "notiz": "",
-      "foto": "",
-      "fotoPath": "",
-      "preisHistorie": [],
-      "packungen": [
-        {
-          "id": 6,
-          "menge": 1,
-          "kaufdatum": "2026-06-30",
-          "ablaufdatum": "2026-12-21"
-        }
-      ]
-    },
-    {
-      "id": 56,
-      "name": "Parmigiano reggiano",
-      "marke": "Aldi",
-      "kat": "Milchprodukte",
-      "lager": "Kühlschrank oben",
-      "kaufort": "Aldi",
-      "menge": 0,
-      "einheit": "Stk",
-      "mindest": 1,
-      "barcode": "4099200104430",
-      "preis": 0,
-      "packMenge": 250,
-      "packEinheit": "g",
-      "kaufdatum": "2026-06-30",
-      "ablaufdatum": "2026-06-16",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782806741419_off.jpg",
-      "fotoPath": "1782806741419_off.jpg",
-      "preisHistorie": [],
-      "packungen": [
-        {
-          "id": 7,
-          "menge": 0,
-          "kaufdatum": "2026-06-30",
-          "ablaufdatum": "2026-06-16"
-        }
-      ]
     }
   ],
   "lagerorte": [
@@ -1515,8 +1091,7 @@
     "Kühlschrank unten",
     "Schlof",
     "Gang unten",
-    "Garten",
-    "Bad unten"
+    "Garten"
   ],
   "kategorien": [
     "Milchprodukte",
@@ -1557,13 +1132,7 @@
     "Online",
     "Landi"
   ],
-  "einkauf": [
-    {
-      "id": 1782657617875,
-      "text": "Taschentuch Box",
-      "checked": false
-    }
-  ],
+  "einkauf": [],
   "log": [
     {
       "t": "ein",
@@ -2726,280 +2295,7 @@
       "aktion": false,
       "datum": "2026-06-28",
       "zeit": 1782648338012
-    },
-    {
-      "t": "ein",
-      "aid": 45,
-      "name": "Emmi Caffè Latte",
-      "lager": "Kühlschrank oben",
-      "kat": "Milchprodukte",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 2,
-      "aktion": false,
-      "datum": "2026-06-28",
-      "zeit": 1782653586713
-    },
-    {
-      "t": "aus",
-      "aid": 45,
-      "name": "Emmi Caffè Latte",
-      "lager": "Kühlschrank oben",
-      "kat": "Milchprodukte",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-28",
-      "zeit": 1782653604426
-    },
-    {
-      "t": "ein",
-      "aid": 46,
-      "name": "Sekt",
-      "lager": "Kühlschrank unten",
-      "kat": "Genussmittel",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-28",
-      "zeit": 1782657516086
-    },
-    {
-      "t": "aus",
-      "aid": 46,
-      "name": "Sekt",
-      "lager": "Kühlschrank unten",
-      "kat": "Genussmittel",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-28",
-      "zeit": 1782657522974
-    },
-    {
-      "t": "aus",
-      "aid": 39,
-      "name": "Big Feuerzeug",
-      "lager": "Küche",
-      "kat": "Diverses",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-29",
-      "zeit": 1782708794606
-    },
-    {
-      "t": "ein",
-      "aid": 47,
-      "name": "Fanta Berry",
-      "lager": "Kühlschrank oben",
-      "kat": "Getränke",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-29",
-      "zeit": 1782722402496
-    },
-    {
-      "t": "aus",
-      "aid": 47,
-      "name": "Fanta Berry",
-      "lager": "Kühlschrank oben",
-      "kat": "Getränke",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-29",
-      "zeit": 1782724272994
-    },
-    {
-      "t": "ein",
-      "aid": 48,
-      "name": "Regeneriersalz",
-      "lager": "Bad unten",
-      "kat": "Reinigung & Pflege",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-29",
-      "zeit": 1782741810865
-    },
-    {
-      "t": "aus",
-      "aid": 48,
-      "name": "Regeneriersalz",
-      "lager": "Bad unten",
-      "kat": "Reinigung & Pflege",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-29",
-      "zeit": 1782741832743
-    },
-    {
-      "t": "aus",
-      "aid": 48,
-      "name": "Regeneriersalz",
-      "lager": "Bad unten",
-      "kat": "Reinigung & Pflege",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-29",
-      "zeit": 1782741835256
-    },
-    {
-      "t": "aus",
-      "aid": 48,
-      "name": "Regeneriersalz",
-      "lager": "Bad unten",
-      "kat": "Reinigung & Pflege",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-29",
-      "zeit": 1782741837830
-    },
-    {
-      "t": "aus",
-      "aid": 14,
-      "name": "Passata 400g Mutti",
-      "lager": "Schlof",
-      "kat": "Gemüse & Früchte",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-29",
-      "zeit": 1782747505460
-    },
-    {
-      "t": "aus",
-      "aid": 14,
-      "name": "Passata 400g Mutti",
-      "lager": "Schlof",
-      "kat": "Gemüse & Früchte",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-29",
-      "zeit": 1782747525490
-    },
-    {
-      "t": "ein",
-      "aid": 49,
-      "name": "Geschirrspühler Reiniger",
-      "lager": "Bad unten",
-      "kat": "Reinigung & Pflege",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 2,
-      "aktion": true,
-      "datum": "2026-06-29",
-      "zeit": 1782747683631
-    },
-    {
-      "t": "ein",
-      "aid": 49,
-      "name": "Geschirrspühler Reiniger",
-      "lager": "Bad unten",
-      "kat": "Reinigung & Pflege",
-      "menge": 3,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-29",
-      "zeit": 1782747708552
-    },
-    {
-      "t": "ein",
-      "aid": 50,
-      "name": "French Dressing mit Kräutern",
-      "lager": "Kühlschrank oben",
-      "kat": "Gewürze & Saucen",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-30",
-      "zeit": 1782806483319
-    },
-    {
-      "t": "ein",
-      "aid": 51,
-      "name": "Senf Mild",
-      "lager": "Kühlschrank oben",
-      "kat": "Gewürze & Saucen",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-30",
-      "zeit": 1782806546086
-    },
-    {
-      "t": "ein",
-      "aid": 52,
-      "name": "Senf grobkörnig",
-      "lager": "Kühlschrank oben",
-      "kat": "Gewürze & Saucen",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-30",
-      "zeit": 1782806593154
-    },
-    {
-      "t": "ein",
-      "aid": 53,
-      "name": "Mayonaise",
-      "lager": "Kühlschrank oben",
-      "kat": "Gewürze & Saucen",
-      "menge": 2,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-30",
-      "zeit": 1782806638039
-    },
-    {
-      "t": "ein",
-      "aid": 54,
-      "name": "Tomatenpurée - Dreifach konzentriert",
-      "lager": "Kühlschrank oben",
-      "kat": "Gewürze & Saucen",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-30",
-      "zeit": 1782806684837
-    },
-    {
-      "t": "ein",
-      "aid": 55,
-      "name": "Tartare sauce",
-      "lager": "Kühlschrank oben",
-      "kat": "Gewürze & Saucen",
-      "menge": 1,
-      "einheit": "Stk",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-06-30",
-      "zeit": 1782806716339
     }
   ],
-  "aktualisiert": "2026-06-30T08:06:38.264Z"
+  "aktualisiert": "2026-06-30T10:21:35.504Z"
 }
