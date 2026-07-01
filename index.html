@@ -492,7 +492,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='9.9';
+const APP_VERSION='10.0';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1456,10 +1456,19 @@ function renderEingangArtikel(found){
     '<div class="fd" style="margin-bottom:14px"><label>Wo gekauft</label><div class="lcw" id="e-ge">'+
       S.ge.map(g=>'<button class="chip'+(found.kaufort===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#e-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+
     '</div></div>'+
-    '<button class="bp" style="width:100%;padding:14px;font-size:16px" onclick="confirmEingang('+found.id+','+!!found.ablaufdatum+')">Eingang bestätigen</button>';
+    '<button class="bp" style="width:100%;padding:14px;font-size:16px" onclick="confirmEingang('+found.id+','+!!found.ablaufdatum+')">'+
+      'Eingang bestätigen &nbsp;·&nbsp; '+found.menge+' → <span id="e-vorschau">'+(found.menge+1)+'</span> '+esc(found.einheit||'Stk')+
+    '</button>';
 
-    // Preis-Feld sofort fokussieren für schnelle Eingabe
-    setTimeout(()=>{const f=document.getElementById('e-pr');if(f){f.focus();f.select();}},100);
+    // Vorschau-Bestand live aktualisieren wenn Menge geändert wird
+    setTimeout(()=>{
+      const f=document.getElementById('e-pr');if(f){f.focus();f.select();}
+      const mgEl=document.getElementById('e-mg');
+      if(mgEl)mgEl.addEventListener('input',()=>{
+        const v=document.getElementById('e-vorschau');
+        if(v)v.textContent=found.menge+(parseInt(mgEl.value)||0);
+      });
+    },100);
 }
 function confirmEingang(id,ablaufPflicht){
   const a=S.a.find(x=>x.id===id);if(!a)return;
@@ -1594,12 +1603,48 @@ function processAusgangScan(code){
   ensurePackungen(found);
   const aktivePack=found.packungen.filter(p=>p.menge>0);
   if(aktivePack.length>1){
-    // Mehrere Packungen — Dialog zeigen
+    // Mehrere Packungen — Auswahl-Dialog zeigen
     showAusgangPackDialog(found,list);
   }else{
-    // Nur eine Packung — direkt abbuchen
-    ausgangPackAbbuchen(found,aktivePack[0]?aktivePack[0].id:null,1,list);
+    // Einzelne Packung — Bestätigungsdialog mit Vorher/Nachher
+    showAusgangConfirmDialog(found,aktivePack[0]?aktivePack[0].id:null,list);
   }
+}
+
+function showAusgangConfirmDialog(a,packId,list){
+  const existing=document.getElementById('ausgang-confirm-dlg');
+  if(existing)existing.remove();
+  const nachher=Math.max(0,a.menge-1);
+  const pack=a.packungen&&packId?a.packungen.find(p=>p.id===packId):null;
+  const mhdInfo=pack&&pack.ablaufdatum?'<div style="font-size:12px;color:var(--t2);margin-top:4px">MHD: '+fmtDateCH(pack.ablaufdatum)+'</div>':'';
+  const dlg=document.createElement('div');
+  dlg.id='ausgang-confirm-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:20px 16px calc(20px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">'+esc(a.name)+'</div>'+
+      '<div style="font-size:13px;color:var(--t2);margin-bottom:16px">'+esc(a.lager)+'</div>'+
+      // Vorher / Nachher
+      '<div style="display:flex;align-items:center;justify-content:center;gap:16px;padding:16px;background:var(--bg);border-radius:var(--r);margin-bottom:14px">'+
+        '<div style="text-align:center">'+
+          '<div style="font-size:28px;font-weight:700">'+a.menge+'</div>'+
+          '<div style="font-size:11px;color:var(--t2)">Vorher</div>'+
+        '</div>'+
+        '<div style="font-size:24px;color:var(--dg)">→</div>'+
+        '<div style="text-align:center">'+
+          '<div style="font-size:28px;font-weight:700;color:'+(nachher<=( a.mindest||0)?'var(--dg)':'var(--ok)')+'">'+nachher+'</div>'+
+          '<div style="font-size:11px;color:var(--t2)">Nachher</div>'+
+        '</div>'+
+        '<div style="font-size:13px;color:var(--t2);margin-left:4px">'+esc(a.einheit||'Stk')+'</div>'+
+      '</div>'+
+      mhdInfo+
+      (nachher<=(a.mindest||0)?'<div style="background:var(--dl);color:var(--dg);border-radius:var(--rs);padding:8px 12px;font-size:12px;margin-bottom:10px">⚠ Mindestbestand ('+a.mindest+') wird erreicht/unterschritten</div>':'')+
+      '<div style="display:flex;gap:8px">'+
+        '<button onclick="document.getElementById(\'ausgang-confirm-dlg\').remove()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+        '<button onclick="document.getElementById(\'ausgang-confirm-dlg\').remove();ausgangPackAbbuchen(S.a.find(x=>x.id==='+a.id+'),'+packId+',1,document.getElementById(\'ausgang-list\'))" style="flex:2;padding:12px;background:var(--dg);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">−1 entnehmen</button>'+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(dlg);
 }
 
 function showAusgangPackDialog(a,list){
@@ -1631,9 +1676,10 @@ function showAusgangPackDialog(a,list){
             (p.ablaufdatum?'MHD: '+fmtDateCH(p.ablaufdatum):'Kein MHD')+earliest+
           '</div>'+
           '<div style="font-size:12px;color:var(--t2)">Kauf: '+fmtDateCH(p.kaufdatum)+' · '+p.menge+' '+esc(a.einheit||'Stk')+' · '+badge+'</div>'+
+          '<div style="font-size:11px;color:var(--t2);margin-top:2px">Bestand: '+a.menge+' → <strong>'+(a.menge-1)+'</strong> '+esc(a.einheit||'Stk')+'</div>'+
         '</div>'+
         '<button onclick="ausgangPackAbbuchen(S.a.find(x=>x.id==='+a.id+'),'+p.id+',1,document.getElementById(\'ausgang-list\'));document.getElementById(\'pack-dialog\').remove()" '+
-          'style="background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:8px 14px;font-size:13px;cursor:pointer;flex-shrink:0;margin-left:8px">'+
+          'style="background:var(--dg);color:#fff;border:none;border-radius:var(--rs);padding:8px 14px;font-size:13px;cursor:pointer;flex-shrink:0;margin-left:8px">'+
           '−1 entnehmen'+
         '</button>'+
       '</div>';
