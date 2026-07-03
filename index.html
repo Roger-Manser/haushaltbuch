@@ -430,7 +430,15 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
       <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
     </button>
   </div>
-  <div class="scroll" style="padding:0" id="detail-body"></div>
+  <div class="scroll" style="padding:0" id="detail-body" onscroll="updateJumpBtns()"></div>
+  <div id="jump-btns" style="display:none;position:absolute;right:14px;bottom:calc(var(--nh) + 20px);flex-direction:column;gap:8px;z-index:50">
+    <button onclick="jumpDetail('top')" style="width:42px;height:42px;border-radius:50%;border:1px solid var(--bd);background:var(--sf);box-shadow:0 2px 8px rgba(0,0,0,.18);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ac)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:20px;height:20px"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+    <button onclick="jumpDetail('bottom')" style="width:42px;height:42px;border-radius:50%;border:1px solid var(--bd);background:var(--sf);box-shadow:0 2px 8px rgba(0,0,0,.18);cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--ac)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:20px;height:20px"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
+  </div>
 </div>
 
 <div class="sc" id="s-settings" style="overflow-y:auto">
@@ -498,7 +506,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='10.4';
+const APP_VERSION='10.6';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1126,6 +1134,10 @@ function showDet(id){
   const heroEl=document.getElementById('dh-hero-img');
   if(heroEl)heroEl.addEventListener('click',()=>openLightbox(a.foto));
   goScreen('s-detail');
+  // Sprung-Pfeile aktualisieren (nach Layout-Berechnung) + nach oben scrollen
+  const db=document.getElementById('detail-body');
+  if(db)db.scrollTop=0;
+  setTimeout(updateJumpBtns,150);
 }
 function editPreisHistorie(artikelId,idx){
   const a=S.a.find(x=>x.id===artikelId);
@@ -1314,6 +1326,20 @@ function onPh(ev){
   rd.readAsDataURL(file);
 }
 function rmPh(){fb64='';ffn='';document.getElementById('ppw').style.display='none';document.getElementById('pz').style.display='flex';document.getElementById('ppi').src='';document.getElementById('fph').value='';}
+/* ── Detail: Sprung-Pfeile (bei langem Inhalt) ───────────────────── */
+function jumpDetail(dir){
+  const body=document.getElementById('detail-body');
+  if(!body)return;
+  body.scrollTo({top:dir==='top'?0:body.scrollHeight,behavior:'smooth'});
+}
+function updateJumpBtns(){
+  const body=document.getElementById('detail-body');
+  const btns=document.getElementById('jump-btns');
+  if(!body||!btns)return;
+  // Nur zeigen wenn Inhalt deutlich länger als der sichtbare Bereich
+  btns.style.display=body.scrollHeight>body.clientHeight*1.5?'flex':'none';
+}
+
 /* ── Foodwaste: Verworfen-Buchung ────────────────────────────────── */
 function openVerworfen(id){
   const a=S.a.find(x=>x.id===id);if(!a)return;
@@ -1905,10 +1931,13 @@ function getAblaufdatum(a){
   return a.ablaufdatum||'';
 }
 
+let etikettPackung=null; // gewählte Packung {ablaufdatum,kaufdatum} für das Etikett
+
 function openEtikett(artikelId){
   const a=S.a.find(x=>x.id===artikelId);
   if(!a)return;
   etikettArtikelId=artikelId;
+  etikettPackung=null;
   // ablaufdatum immer aus Packungen synchronisieren
   a.ablaufdatum=getAblaufdatum(a);
   // Falls kein Barcode vorhanden, eigenen Code zuweisen (einmalig, dauerhaft)
@@ -1916,20 +1945,91 @@ function openEtikett(artikelId){
     a.ownCode=genOwnCode();
     saveL();
   }
+  // Mehrere Packungen mit unterschiedlichen MHDs? → Auswahl-Dialog
+  ensurePackungen(a);
+  const aktive=a.packungen.filter(p=>p.menge>0);
+  const uniqueMhd=[...new Set(aktive.map(p=>p.ablaufdatum||''))];
+  if(aktive.length>1&&uniqueMhd.length>1){
+    showEtikettPackDialog(a);
+    return;
+  }
+  // Nur eine Packung/ein MHD — direkt übernehmen
+  if(aktive.length)etikettPackung={ablaufdatum:aktive[0].ablaufdatum||'',kaufdatum:aktive[0].kaufdatum||a.kaufdatum||''};
   renderEtikettScreen();
   goScreen('s-etikett');
 }
 
-function renderEtikettScreen(){
+function showEtikettPackDialog(a){
+  const existing=document.getElementById('etikett-pack-dlg');
+  if(existing)existing.remove();
+  const sorted=a.packungen.filter(p=>p.menge>0).sort((x,y)=>{
+    if(!x.ablaufdatum&&!y.ablaufdatum)return x.kaufdatum.localeCompare(y.kaufdatum);
+    if(!x.ablaufdatum)return 1;if(!y.ablaufdatum)return -1;
+    return x.ablaufdatum.localeCompare(y.ablaufdatum);
+  });
+  const dlg=document.createElement('div');
+  dlg.id='etikett-pack-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="font-weight:600;font-size:15px;margin-bottom:4px">'+esc(a.name)+' — Etikett für welche Packung?</div>'+
+    '<div style="font-size:12px;color:var(--t2);margin-bottom:14px">Das gewählte MHD und Kaufdatum erscheinen auf dem Etikett</div>'+
+    sorted.map((p,i)=>{
+      const d=p.ablaufdatum?daysUntil(p.ablaufdatum):null;
+      const badge=p.ablaufdatum?'<span class="exp-badge '+expClass(d)+'" style="margin:0">'+expLabel(d)+'</span>':'';
+      return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd)">'+
+        '<div>'+
+          '<div style="font-size:14px;font-weight:500">'+(p.ablaufdatum?'MHD: '+fmtDateCH(p.ablaufdatum):'Kein MHD')+'</div>'+
+          '<div style="font-size:12px;color:var(--t2)">Kauf: '+fmtDateCH(p.kaufdatum)+' · '+p.menge+' '+esc(a.einheit||'Stk')+' '+badge+'</div>'+
+        '</div>'+
+        '<button onclick="chooseEtikettPack(\''+esc(p.ablaufdatum||'')+'\',\''+esc(p.kaufdatum||'')+'\')" '+
+          'style="background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:8px 14px;font-size:13px;cursor:pointer;flex-shrink:0;margin-left:8px">'+
+          'Wählen'+
+        '</button>'+
+      '</div>';
+    }).join('')+
+    '<button onclick="document.getElementById(\'etikett-pack-dlg\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+    '</div>';
+  document.body.appendChild(dlg);
+}
+
+function chooseEtikettPack(ablaufdatum,kaufdatum){
+  etikettPackung={ablaufdatum,kaufdatum};
+  const dlg=document.getElementById('etikett-pack-dlg');
+  if(dlg)dlg.remove();
+  renderEtikettScreen();
+  goScreen('s-etikett');
+}
+
+// Artikel-Objekt mit Packungs-Daten übersteuern (für Label-Rendering)
+function etikettArtikel(){
   const a=S.a.find(x=>x.id===etikettArtikelId);
+  if(!a)return null;
+  if(!etikettPackung)return a;
+  return {...a,ablaufdatum:etikettPackung.ablaufdatum,kaufdatum:etikettPackung.kaufdatum||a.kaufdatum};
+}
+
+function renderEtikettScreen(){
+  const a=etikettArtikel();
   if(!a)return;
   const code=a.barcode||a.ownCode;
   const isOwn=!a.barcode&&!!a.ownCode;
 
   const fmtChips=DK_FORMATS.map(f=>'<div class="label-format-opt'+(labelFormatId===f.id?' on':'')+'" onclick="setLabelFormat(\''+f.id+'\')"><div class="lf-name">'+esc(f.name)+'</div><div class="lf-dim">'+f.wmm+'×'+(f.hmm||'∞')+' mm</div></div>').join('');
 
+  // Packungs-Hinweis wenn Artikel mehrere Packungen hat
+  const orig=S.a.find(x=>x.id===etikettArtikelId);
+  const aktive=orig&&orig.packungen?orig.packungen.filter(p=>p.menge>0):[];
+  const uniqueMhd=[...new Set(aktive.map(p=>p.ablaufdatum||''))];
+  const packHinweis=(aktive.length>1&&uniqueMhd.length>1)?
+    '<div style="background:var(--al);border:1px solid var(--am);border-radius:var(--rs);padding:10px 12px;margin-bottom:12px;font-size:13px;display:flex;justify-content:space-between;align-items:center">'+
+      '<span>📦 Etikett für Packung: <strong>'+(a.ablaufdatum?'MHD '+fmtDateCH(a.ablaufdatum):'ohne MHD')+'</strong></span>'+
+      '<button onclick="showEtikettPackDialog(S.a.find(x=>x.id===etikettArtikelId))" style="background:none;border:none;color:var(--ac);font-size:13px;font-weight:600;cursor:pointer;padding:2px 4px">Ändern</button>'+
+    '</div>':'';
+
   document.getElementById('etikett-body').innerHTML=
     (isOwn?'<div class="own-code-box">'+I.tag+' Dieser Artikel hat keinen Barcode. Eigener interner Code wurde vergeben: <strong>'+esc(code)+'</strong></div>':'')+
+    packHinweis+
     '<div class="fd"><label>Etikettenformat (Brother DK)</label><div class="label-format-grid">'+fmtChips+'</div></div>'+
     '<div class="label-preview-wrap"><div id="label-preview-outer"><canvas id="label-canvas" style="max-width:100%;height:auto;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.12)"></canvas></div></div>'+
     '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">'+
@@ -1948,7 +2048,7 @@ function setLabelFormat(id){ labelFormatId=id; renderLabelPreview(); }
 function mmToPx(mm,dpi){ return Math.round(mm/25.4*(dpi||96)); }
 
 function renderLabelPreview(){
-  const a=S.a.find(x=>x.id===etikettArtikelId);
+  const a=etikettArtikel();
   if(!a)return;
   const fmt=DK_FORMATS.find(f=>f.id===labelFormatId)||DK_FORMATS[0];
   const code=a.barcode||a.ownCode;
@@ -2122,7 +2222,7 @@ function truncText(ctx,text,maxW){
 }
 
 async function copyLabelToClipboard(){
-  const a=S.a.find(x=>x.id===etikettArtikelId);
+  const a=etikettArtikel();
   if(!a){toast('Kein Artikel ausgewählt');return;}
   const fmt=DK_FORMATS.find(f=>f.id===labelFormatId)||DK_FORMATS[0];
   const code=a.barcode||a.ownCode;
