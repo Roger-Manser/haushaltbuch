@@ -506,7 +506,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='11.0';
+const APP_VERSION='11.1';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -978,9 +978,12 @@ function renderLager(){
   if(!fil.length){list.innerHTML='<div class="empty">'+I.pkg.replace('20px;height:20px','48px;height:48px')+'<p>'+(S.a.length?'Keine Artikel gefunden':'Noch keine Artikel')+'</p><small>'+(S.a.length?'Suchbegriff anpassen':'Tippe auf Neuer Artikel')+'</small></div>';nav();return;}
 
   if(sortMode==='ablauf'){
-    const withDate=fil.filter(a=>a.ablaufdatum).sort((a,b)=>a.ablaufdatum.localeCompare(b.ablaufdatum));
-    const withoutDate=fil.filter(a=>!a.ablaufdatum).sort((a,b)=>a.name.localeCompare(b.name,'de'));
-    fil=[...withDate,...withoutDate];
+    // Bestand 0 zwingend ans Ende (unabhängig vom MHD)
+    const mitBestand=fil.filter(a=>a.menge>0);
+    const ohneBestand=fil.filter(a=>a.menge<=0).sort((a,b)=>a.name.localeCompare(b.name,'de'));
+    const withDate=mitBestand.filter(a=>a.ablaufdatum).sort((a,b)=>a.ablaufdatum.localeCompare(b.ablaufdatum));
+    const withoutDate=mitBestand.filter(a=>!a.ablaufdatum).sort((a,b)=>a.name.localeCompare(b.name,'de'));
+    fil=[...withDate,...withoutDate,...ohneBestand];
   }else if(sortMode==='name'){
     fil=[...fil].sort((a,b)=>a.name.localeCompare(b.name,'de'));
   }else if(sortMode==='bestand'){
