@@ -506,7 +506,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='10.6';
+const APP_VERSION='10.8';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -990,7 +990,14 @@ function arRow(a){
   const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'');
   const eb=a.ablaufdatum?expBadge(a.ablaufdatum):'';
   const unitLabel=a.packMenge>0?esc(a.einheit||'Stk'):esc(a.einheit||'Stk');
-  return '<div class="ar" onclick="showDet('+a.id+')">'+th+'<div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+meta+'</div>'+eb+'</div><div class="abs"><div class="bn '+bc+'">'+a.menge+'</div><div class="bu">'+unitLabel+'</div></div></div>';
+  const aufListe=S.ek.some(e=>e.text.toLowerCase()===a.name.toLowerCase()&&!e.checked);
+  return '<div class="ar" onclick="showDet('+a.id+')">'+th+'<div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+meta+'</div>'+eb+'</div>'+
+    '<button onclick="event.stopPropagation();toEk('+a.id+')" title="Auf Einkaufsliste" style="background:none;border:none;cursor:pointer;padding:8px 6px;color:'+(aufListe?'var(--ok)':'var(--t3)')+';flex-shrink:0;display:flex;align-items:center">'+
+      (aufListe
+        ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:19px;height:19px"><polyline points="20 6 9 17 4 12"/></svg>'
+        :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" style="width:19px;height:19px"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>')+
+    '</button>'+
+    '<div class="abs"><div class="bn '+bc+'">'+a.menge+'</div><div class="bu">'+unitLabel+'</div></div></div>';
 }
 function setLF(f){lf=f;renderLager();}
 function togSec(h){const it=h.nextElementSibling;const op=h.classList.toggle('open');it.classList.toggle('hide',!op);}
@@ -1229,8 +1236,13 @@ function delA(id){
 }
 function toEk(id){
   const a=S.a.find(x=>x.id===id);if(!a)return;
+  // Duplikat-Schutz
+  if(S.ek.some(e=>e.text.toLowerCase()===a.name.toLowerCase()&&!e.checked)){
+    toast('«'+a.name+'» ist schon auf der Einkaufsliste');return;
+  }
   S.ek.push({id:Date.now(),text:a.name,sub:'mind. '+a.mindest+' '+(a.einheit||'Stk'),checked:false});
-  saveL();toast('Zur Einkaufsliste hinzugefügt');
+  saveL();toast('🛒 «'+a.name+'» zur Einkaufsliste hinzugefügt');
+  renderLager();
 }
 
 /* ── Form ─────────────────────────────────────────────────────────── */
@@ -2478,7 +2490,7 @@ function renderRezepte(){
   const q=(document.getElementById('rezept-search')?.value||'').toLowerCase().trim();
   const src=S.rz.length?S.rz.map(r=>{
     const zt=(r.zutaten||[]).map(z=>typeof z==='string'?z:(z.n||z.zutat||z.name||''));
-    return{id:r.id||r.titel,name:r.titel||r.name,emoji:r.emoji||'\uD83C\uDF7D',min:r.dauer||r.zeit||20,port:r.portionen||4,zt,img:r.img||''};
+    return{id:r.id||r.titel,name:r.titel||r.name,emoji:r.emoji||'\uD83C\uDF7D',min:r.dauer||r.zeit||20,port:r.portionen||4,zt,img:r.img||'',ings:r.ings||[],kat:r.kat||r.cat||''};
   }):[
     {id:1,name:'Pasta Carbonara',emoji:'\uD83C\uDF5D',min:20,port:4,zt:['Pasta','Eier','Speck','Parmesan','Rahm'],img:''},
     {id:2,name:'Gemüsesuppe',emoji:'\uD83C\uDF72',min:40,port:6,zt:['Karotten','Lauch','Sellerie','Kartoffeln','Bouillon'],img:''},
@@ -2518,7 +2530,11 @@ function rcCard(r){
   const f=r.pct===100;
   const miss=r.zt.filter(z=>!r.have.some(h=>h.toLowerCase()===z.toLowerCase()));
   const tags=[...r.have.map(z=>'<span class="zt ok">'+esc(z)+'</span>'),...miss.map(z=>'<span class="zt ms">'+esc(z)+' fehlt</span>')].join('');
-  const missJson=miss.length?'data-miss=\''+esc(JSON.stringify(miss))+'\' ':'';
+  const missObjs=miss.map(z=>{
+    const ing=(r.ings||[]).find(i=>(i.n||'')===z);
+    return{n:z,q:ing?(ing.q||''):'',u:ing?(ing.u||''):''};
+  });
+  const missJson=miss.length?'data-miss=\''+esc(JSON.stringify(missObjs))+'\' ':'';
   const buyBtn=miss.length?'<button '+missJson+'onclick="addMissingToEinkauf(this);event.stopPropagation()" style="margin-top:10px;width:100%;padding:8px;border:1px solid var(--am);background:var(--al);color:var(--ac);border-radius:var(--rs);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">'+I.cart+' '+miss.length+' fehlende Zutat'+(miss.length===1?'':'en')+' auf Einkaufsliste</button>':'';
   const imgUrl=rzImgUrl(r.img||'');
   const thumb=imgUrl
@@ -2567,7 +2583,11 @@ function showRezeptDetail(el,fromArtikelId){
     '</div>').join(''):ztHtml;
 
   const missCount=(r.zt||[]).filter(z=>!aiMatch(z,names)).length;
-  const buyBtn=missCount?'<button onclick="addMissingFromDetail()" data-miss=\''+esc(JSON.stringify((r.zt||[]).filter(z=>!aiMatch(z,names))))+'\' style="width:100%;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;margin-top:12px">'+I.cart+' '+missCount+' fehlende Zutaten auf Einkaufsliste</button>':'<div style="background:var(--ol);color:var(--ok);border-radius:var(--rs);padding:12px;text-align:center;font-weight:600;margin-top:12px">✓ Alle Zutaten vorhanden</div>';
+  const missZt=(r.zt||[]).filter(z=>!aiMatch(z,names)).map(z=>{
+    const ing=(r.ings||[]).find(i=>(i.n||'')===z);
+    return{n:z,q:ing?(ing.q||''):'',u:ing?(ing.u||''):''};
+  });
+  const buyBtn=missCount?'<button onclick="addMissingFromDetail()" data-miss=\''+esc(JSON.stringify(missZt))+'\' style="width:100%;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;margin-top:12px">'+I.cart+' '+missCount+' fehlende Zutaten auf Einkaufsliste</button>':'<div style="background:var(--ol);color:var(--ok);border-radius:var(--rs);padding:12px;text-align:center;font-weight:600;margin-top:12px">✓ Alle Zutaten vorhanden</div>';
 
   document.getElementById('rezept-detail-body').innerHTML=
     imgHtml+
@@ -2583,6 +2603,15 @@ function showRezeptDetail(el,fromArtikelId){
   goScreen('s-rezept-detail');
 }
 
+function ekAddZutat(z,existing){
+  // z kann String (alt) oder {n,q,u}-Objekt (neu, mit Menge) sein
+  const name=typeof z==='string'?z:(z.n||'');
+  if(!name||existing.has(name.toLowerCase()))return null;
+  const menge=typeof z==='object'&&(z.q||z.u)?((z.q||'')+' '+(z.u||'')).trim():'';
+  S.ek.push({id:Date.now()+Math.random(),text:name,menge,checked:false});
+  existing.add(name.toLowerCase());
+  return name;
+}
 function addMissingFromDetail(){
   const btn=event.currentTarget;
   let miss=[];
@@ -2590,14 +2619,8 @@ function addMissingFromDetail(){
   if(!S.ek)S.ek=[];
   const existing=new Set(S.ek.map(e=>e.text.toLowerCase()));
   const added=[];
-  miss.forEach(z=>{
-    if(!existing.has(z.toLowerCase())){
-      S.ek.push({id:Date.now()+Math.random(),text:z,checked:false});
-      existing.add(z.toLowerCase());
-      added.push(z);
-    }
-  });
-  if(added.length){saveL();toast(added.length+' Zutat'+(added.length===1?'':'en')+' auf Einkaufsliste');}
+  miss.forEach(z=>{const n=ekAddZutat(z,existing);if(n)added.push(n);});
+  if(added.length){saveL();toast(added.length+' Zutat'+(added.length===1?'':'en')+' auf Einkaufsliste (mit Menge)');}
   else toast('Alle schon auf der Einkaufsliste');
 }
 function addMissingToEinkauf(btn){
@@ -2606,13 +2629,7 @@ function addMissingToEinkauf(btn){
   if(!S.ek)S.ek=[];
   const existing=new Set(S.ek.map(e=>e.text.toLowerCase()));
   const added=[];
-  miss.forEach(z=>{
-    if(!existing.has(z.toLowerCase())){
-      S.ek.push({id:Date.now()+Math.random(),text:z,checked:false});
-      existing.add(z.toLowerCase());
-      added.push(z);
-    }
-  });
+  miss.forEach(z=>{const n=ekAddZutat(z,existing);if(n)added.push(n);});
   if(added.length){
     saveL();
     toast(added.length+' Zutat'+(added.length===1?'':'en')+' auf Einkaufsliste');
@@ -2891,7 +2908,7 @@ function renderEk(){
   h+='<div class="sh">Automatisch — unter Mindestbestand'+(ekShopFilter!=='alle'?' · '+esc(ekShopFilter):'')+'</div>';
   h+=auto.length?auto.map(a=>'<div class="ei" id="eia-'+a.id+'"><input type="checkbox" onchange="ckA('+a.id+',this.checked)"/><div><div class="eit">'+esc(a.name)+'</div><div class="eis">'+esc(a.lager)+(a.kaufort?' · '+esc(a.kaufort):'')+' · mind. '+(a.mindest-a.menge)+' '+esc(a.einheit||'Stk')+' kaufen</div></div></div>').join(''):'<div style="color:var(--t3);font-size:13px;padding:4px 0 12px">Alle Artikel im Soll</div>';
   h+='<div class="sh">Manuell</div><div class="mir"><input type="text" id="mi-i" placeholder="Artikel hinzufügen..." onkeydown="if(event.key===\'Enter\')addM()"/><button onclick="addM()">+</button></div><div id="mi-l">';
-  S.ek.forEach(e=>h+='<div class="ei'+(e.checked?' ck':'')+'" id="eim-'+e.id+'"><input type="checkbox" '+(e.checked?'checked':'')+' onchange="ckM('+e.id+',this.checked)"/><div class="eit">'+esc(e.text)+'</div><button class="eid" onclick="delM('+e.id+')">&#x2715;</button></div>');
+  S.ek.forEach(e=>h+='<div class="ei'+(e.checked?' ck':'')+'" id="eim-'+e.id+'"><input type="checkbox" '+(e.checked?'checked':'')+' onchange="ckM('+e.id+',this.checked)"/><div class="eit" style="flex:1">'+esc(e.text)+'</div><input type="text" value="'+esc(e.menge||'')+'" placeholder="Menge" onchange="setEkMenge('+e.id+',this.value)" onclick="event.stopPropagation()" style="width:82px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);text-align:right;flex-shrink:0"/><button class="eid" onclick="delM('+e.id+')">&#x2715;</button></div>');
   h+='</div>';
   document.getElementById('ek-body').innerHTML=h;
 }
@@ -2954,7 +2971,8 @@ function renderLadenModus(){
       const ck=!!ladenChecked[key];
       h+='<div onclick="toggleLadenM('+e.id+')" style="display:flex;align-items:center;gap:14px;padding:16px 12px;background:'+(ck?'var(--ol)':'var(--sf)')+';border:1px solid '+(ck?'var(--ok)':'var(--bd)')+';border-radius:var(--r);margin-bottom:8px;cursor:pointer">'+
         '<div style="width:32px;height:32px;border-radius:50%;border:2.5px solid '+(ck?'var(--ok)':'var(--b2)')+';background:'+(ck?'var(--ok)':'transparent')+';display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:18px;font-weight:700">'+(ck?'✓':'')+'</div>'+
-        '<div style="font-size:17px;font-weight:600;'+(ck?'text-decoration:line-through;color:var(--t3)':'')+'">'+esc(e.text)+'</div>'+
+        '<div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:600;'+(ck?'text-decoration:line-through;color:var(--t3)':'')+'">'+esc(e.text)+'</div>'+
+        (e.menge?'<div style="font-size:13px;color:var(--t2)">'+esc(e.menge)+'</div>':'')+'</div>'+
       '</div>';
     });
   }
@@ -3018,6 +3036,7 @@ function addGeschaeft(btn){
 }
 function addM(){const i=document.getElementById('mi-i');const t=i.value.trim();if(!t)return;S.ek.push({id:Date.now(),text:t,checked:false});i.value='';saveL();renderEk();}
 function ckM(id,v){const e=S.ek.find(x=>x.id===id);if(e){e.checked=v;saveL();}const el=document.getElementById('eim-'+id);if(el)el.classList.toggle('ck',v);}
+function setEkMenge(id,v){const e=S.ek.find(x=>x.id===id);if(e){e.menge=v.trim();saveL();}}
 function delM(id){S.ek=S.ek.filter(x=>x.id!==id);saveL();renderEk();}
 function clearCk(){S.ek=S.ek.filter(x=>!x.checked);saveL();renderEk();toast('Erledigte entfernt');}
 
