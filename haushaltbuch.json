@@ -1867,6 +1867,16 @@
       "id": 1782657617875,
       "text": "Taschentuch Box",
       "checked": false
+    },
+    {
+      "id": 1783140814840,
+      "text": "Champignon 400g",
+      "checked": false
+    },
+    {
+      "id": 1783140868105,
+      "text": "Zucchini 500g",
+      "checked": false
     }
   ],
   "log": [
@@ -3514,5 +3524,5 @@
       "zeit": 1783140348843
     }
   ],
-  "aktualisiert": "2026-07-04T04:52:50.044Z"
+  "aktualisiert": "2026-07-04T04:55:23.288Z"
 }
