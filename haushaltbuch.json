@@ -6,7 +6,7 @@
       "marke": "Landi",
       "kat": "Genussmittel",
       "lager": "Kühlschrank unten",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Kiste",
       "mindest": 2,
       "barcode": "7611703611962",
@@ -29,8 +29,33 @@
           "preis": 50.2,
           "menge": 1,
           "aktion": false
+        },
+        {
+          "datum": "2026-06-30",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-06-27",
+          "preis": 50.2,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "ein",
+          "aktion": false
         }
-      ]
+      ],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 2,
+          "kaufdatum": "2026-06-27",
+          "ablaufdatum": ""
+        }
+      ],
+      "kaufort": "Landi"
     },
     {
       "id": 3,
@@ -38,7 +63,7 @@
       "marke": "Lidl",
       "kat": "Genussmittel",
       "lager": "Küche",
-      "menge": 3,
+      "menge": 2,
       "einheit": "Stange",
       "mindest": 2,
       "barcode": "4006396071576",
@@ -61,12 +86,36 @@
           "preis": 57.5,
           "menge": 2,
           "aktion": false
+        },
+        {
+          "datum": "2026-07-01",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-01",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-01",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "ein",
+          "aktion": false
         }
       ],
       "packungen": [
         {
           "id": 1,
-          "menge": 3,
+          "menge": 1,
           "kaufdatum": "2026-06-27",
           "ablaufdatum": ""
         }
@@ -78,7 +127,7 @@
       "marke": "Eisenring",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "menge": 1,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "",
@@ -106,6 +155,14 @@
           "datum": "2026-06-20",
           "preis": 0.6,
           "menge": 1,
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-03",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
           "aktion": false
         }
       ],
@@ -826,7 +883,7 @@
       "marke": "Lovilio",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20631321",
@@ -844,6 +901,22 @@
           "preis": 0,
           "menge": 1,
           "aktion": false
+        },
+        {
+          "datum": "2026-07-03",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        }
+      ],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-27",
+          "ablaufdatum": "2026-07-18"
         }
       ]
     },
@@ -853,7 +926,7 @@
       "marke": "Italiamo",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20016012",
@@ -861,11 +934,28 @@
       "packMenge": 180,
       "packEinheit": "g",
       "kaufdatum": "2026-06-27",
-      "ablaufdatum": "2026-08-08",
+      "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542121912_off.jpg",
       "fotoPath": "1782542121912_off.jpg",
-      "preisHistorie": []
+      "preisHistorie": [
+        {
+          "datum": "2026-07-02",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        }
+      ],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-27",
+          "ablaufdatum": "2026-08-08"
+        }
+      ]
     },
     {
       "id": 36,
@@ -873,7 +963,7 @@
       "marke": "Bonvalle",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20813055",
@@ -891,12 +981,20 @@
           "preis": 0,
           "menge": 1,
           "aktion": false
+        },
+        {
+          "datum": "2026-07-01",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
         }
       ],
       "packungen": [
         {
           "id": 2,
-          "menge": 2,
+          "menge": 1,
           "kaufdatum": "2026-06-27",
           "ablaufdatum": "2026-07-03"
         }
@@ -941,7 +1039,7 @@
       "marke": "Milbona",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "4056489975267",
@@ -959,6 +1057,22 @@
           "preis": 0,
           "menge": 1,
           "aktion": false
+        },
+        {
+          "datum": "2026-07-01",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        }
+      ],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-27",
+          "ablaufdatum": "2026-10-06"
         }
       ]
     },
@@ -1091,7 +1205,7 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "20596149",
@@ -1099,11 +1213,28 @@
       "packMenge": 200,
       "packEinheit": "g",
       "kaufdatum": "2026-06-28",
-      "ablaufdatum": "2026-06-27",
+      "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648313250_17826483072308710239019996929871.jpg",
       "fotoPath": "1782648313250_17826483072308710239019996929871.jpg",
-      "preisHistorie": []
+      "preisHistorie": [
+        {
+          "datum": "2026-06-30",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        }
+      ],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-06-28",
+          "ablaufdatum": "2026-06-27"
+        }
+      ]
     },
     {
       "id": 45,
@@ -1606,6 +1737,74 @@
           "menge": 1,
           "kaufdatum": "2026-06-30",
           "ablaufdatum": "2026-07-15"
+        }
+      ]
+    },
+    {
+      "id": 60,
+      "name": "Valdobbiadene Prosecco Superiore",
+      "marke": "Valdo",
+      "kat": "Genussmittel",
+      "lager": "Schlof",
+      "kaufort": "Coop",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "8002335504064",
+      "preis": 0,
+      "packMenge": 6,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-07-01",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782913487315_off.jpg",
+      "fotoPath": "1782913487315_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-01",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 61,
+      "name": "Ristretto - Espresso",
+      "marke": "Bellarom",
+      "kat": "Getränke",
+      "lager": "Schlof",
+      "kaufort": "Lidl",
+      "menge": 10,
+      "einheit": "Stk",
+      "mindest": 2,
+      "barcode": "4056489122913",
+      "preis": 3.88,
+      "packMenge": 44,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-07-04",
+      "ablaufdatum": "2027-05-15",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783140253090_off.jpg",
+      "fotoPath": "1783140253090_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-07-04",
+          "preis": 3.88,
+          "menge": 10,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 10,
+          "kaufdatum": "2026-07-04",
+          "ablaufdatum": "2027-05-15"
         }
       ]
     }
@@ -3157,7 +3356,163 @@
       "aktion": false,
       "datum": "2026-06-30",
       "zeit": 1782821036983
+    },
+    {
+      "t": "aus",
+      "aid": 44,
+      "name": "speckwürfel",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-30",
+      "zeit": 1782830471328
+    },
+    {
+      "t": "aus",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Kühlschrank unten",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-06-30",
+      "zeit": 1782830880245
+    },
+    {
+      "t": "aus",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-01",
+      "zeit": 1782876736057
+    },
+    {
+      "t": "aus",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-01",
+      "zeit": 1782876747723
+    },
+    {
+      "t": "ein",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-01",
+      "zeit": 1782878031470
+    },
+    {
+      "t": "ein",
+      "aid": 60,
+      "name": "Valdobbiadene Prosecco Superiore",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-01",
+      "zeit": 1782913551530
+    },
+    {
+      "t": "aus",
+      "aid": 36,
+      "name": "Pouletschnitzel a la minute",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-01",
+      "zeit": 1782915933051
+    },
+    {
+      "t": "aus",
+      "aid": 38,
+      "name": "Vollrahm",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-01",
+      "zeit": 1782916151974
+    },
+    {
+      "t": "aus",
+      "aid": 35,
+      "name": "Salami",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-02",
+      "zeit": 1783006523580
+    },
+    {
+      "t": "ein",
+      "aid": 4,
+      "name": "Ei",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-03",
+      "zeit": 1783100659715
+    },
+    {
+      "t": "aus",
+      "aid": 34,
+      "name": "Morzarella",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-03",
+      "zeit": 1783101246549
+    },
+    {
+      "t": "ein",
+      "aid": 61,
+      "name": "Ristretto - Espresso",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 10,
+      "einheit": "Stk",
+      "preis": 3.88,
+      "aktion": false,
+      "datum": "2026-07-04",
+      "zeit": 1783140348843
     }
   ],
-  "aktualisiert": "2026-06-30T12:04:29.596Z"
+  "aktualisiert": "2026-07-04T04:52:50.044Z"
 }
