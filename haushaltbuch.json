@@ -1263,7 +1263,7 @@
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "20303402",
-      "preis": 0,
+      "preis": 2.39,
       "packMenge": 200,
       "packEinheit": "g",
       "kaufdatum": "2026-07-04",
@@ -1313,6 +1313,15 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 2.39,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -1965,7 +1974,7 @@
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "20365097",
-      "preis": 0,
+      "preis": 4.99,
       "packMenge": 250,
       "packEinheit": "g",
       "kaufdatum": "2026-07-04",
@@ -1973,7 +1982,17 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783147679436_off.jpg",
       "fotoPath": "1783147679436_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-04",
+          "preis": 4.99,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
       "packungen": [
         {
           "id": 1,
@@ -2023,7 +2042,7 @@
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20892623",
-      "preis": 0,
+      "preis": 1.59,
       "packMenge": 400,
       "packEinheit": "g",
       "kaufdatum": "2026-07-04",
@@ -2031,7 +2050,17 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783147884438_off.jpg",
       "fotoPath": "1783147884438_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-04",
+          "preis": 1.59,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
       "packungen": [
         {
           "id": 2,
@@ -2081,7 +2110,7 @@
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "7640179465984",
-      "preis": 0,
+      "preis": 3.49,
       "packMenge": 200,
       "packEinheit": "g",
       "kaufdatum": "2026-07-04",
@@ -2089,7 +2118,17 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783148111565_17831481041282243455064800368492.jpg",
       "fotoPath": "1783148111565_17831481041282243455064800368492.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-04",
+          "preis": 3.49,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
       "packungen": [
         {
           "id": 5,
@@ -4152,5 +4191,5 @@
       "zeit": 1783148856367
     }
   ],
-  "aktualisiert": "2026-07-04T07:09:50.805Z"
+  "aktualisiert": "2026-07-04T07:14:23.889Z"
 }
