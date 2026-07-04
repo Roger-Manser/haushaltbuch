@@ -2284,7 +2284,8 @@
           "kaufdatum": "2026-07-04",
           "ablaufdatum": "2026-07-18"
         }
-      ]
+      ],
+      "ownCode": "HB-000068"
     },
     {
       "id": 68,
@@ -2391,6 +2392,12 @@
     {
       "id": 1783156988211,
       "text": "Lauge",
+      "checked": false
+    },
+    {
+      "id": 1783165371487,
+      "text": "Zigaretten Goldfield Gold",
+      "sub": "mind. 2 Stange",
       "checked": false
     }
   ],
@@ -4417,5 +4424,5 @@
       "zeit": 1783153421761
     }
   ],
-  "aktualisiert": "2026-07-04T11:48:03.652Z"
+  "aktualisiert": "2026-07-04T12:09:29.893Z"
 }
