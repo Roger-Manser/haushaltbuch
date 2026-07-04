@@ -506,7 +506,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='10.8';
+const APP_VERSION='11.0';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -521,7 +521,7 @@ function licon(n){
 function lsm(n){return licon(n).replace('width:20px;height:20px','width:13px;height:13px');}
 
 /* ── State ────────────────────────────────────────────────────────── */
-let S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ge:[...GD],ek:[],nid:1,rz:[],log:[]};
+let S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ge:[...GD],ek:[],eko:{},nid:1,rz:[],log:[]};
 let deferredInstallPrompt=null;
 let gh={tok:'',own:'',repo:'',br:'main'};
 let opt={fotoZwang:false}; // App-Optionen
@@ -531,7 +531,14 @@ loadOpt();
 let dirty=false;
 
 function loadL(){
-  try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ge=d.ge||[...GD];S.ek=d.ek||[];S.rz=d.rz||[];S.log=d.log||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);}}catch(e){}
+  try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ge=d.ge||[...GD];S.ek=d.ek||[];S.eko=d.eko||{};S.rz=d.rz||[];S.log=d.log||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);}}catch(e){}
+  // Migration: alte kombinierte Mengen-Strings ("1,5 dl") in menge+einheit trennen
+  (S.ek||[]).forEach(e=>{
+    if(e.menge&&!e.einheit){
+      const m=String(e.menge).match(/^([\d.,]+)\s*(.*)$/);
+      if(m){e.menge=m[1];e.einheit=m[2]||'';}
+    }
+  });
   try{const r=localStorage.getItem('hbgh');if(r)gh=JSON.parse(r);}catch(e){}
   try{const c=localStorage.getItem('hb_ai_cache');if(c)aiMatchCache=JSON.parse(c);}catch(e){}
 }
@@ -635,7 +642,7 @@ async function doSync(){
       }catch(e){/* Backup-Fehler nicht kritisch */}
     }
 
-    const exp={artikel:S.a.map(a=>({...a})),lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,geschaefte:S.ge||[],einkauf:S.ek,log:S.log||[],aktualisiert:new Date().toISOString()};
+    const exp={artikel:S.a.map(a=>({...a})),lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,geschaefte:S.ge||[],einkauf:S.ek,einkaufOverrides:S.eko||{},log:S.log||[],aktualisiert:new Date().toISOString()};
     const expJson=JSON.stringify(exp,null,2);
     let putRes;
     let attempts=0;
@@ -698,7 +705,7 @@ async function loadFromGH(){
         }
         ldr('Lade von GitHub...');
       }
-      S.a=ghArtikel;S.ge=d.geschaefte||[...GD];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.log=d.log||[];
+      S.a=ghArtikel;S.ge=d.geschaefte||[...GD];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.eko=d.einkaufOverrides||{};S.log=d.log||[];
       S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;
       saveL();
     }
@@ -988,7 +995,7 @@ function arRow(a){
   const th=a.foto?'<div class="at has-photo" data-thumb-id="'+a.id+'"><img src="'+esc(a.foto)+'" loading="lazy"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div>';
   const pinfo=packInfo(a);
   const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'');
-  const eb=a.ablaufdatum?expBadge(a.ablaufdatum):'';
+  const eb=(a.ablaufdatum&&a.menge>0)?expBadge(a.ablaufdatum):'';
   const unitLabel=a.packMenge>0?esc(a.einheit||'Stk'):esc(a.einheit||'Stk');
   const aufListe=S.ek.some(e=>e.text.toLowerCase()===a.name.toLowerCase()&&!e.checked);
   return '<div class="ar" onclick="showDet('+a.id+')">'+th+'<div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+meta+'</div>'+eb+'</div>'+
@@ -1201,7 +1208,8 @@ function syncMenge(a){
     a.menge=a.packungen.reduce((s,p)=>s+(p.menge||0),0);
     a.packungen=a.packungen.filter(p=>p.menge>0);
     const withDate=a.packungen.filter(p=>p.ablaufdatum).sort((x,y)=>x.ablaufdatum.localeCompare(y.ablaufdatum));
-    a.ablaufdatum=withDate.length?withDate[0].ablaufdatum:'';
+    if(withDate.length)a.ablaufdatum=withDate[0].ablaufdatum;
+    // (kein Löschen mehr: letztes bekanntes MHD bleibt als Referenz)
     // kaufdatum = neuestes Kaufdatum
     const sorted=a.packungen.slice().sort((x,y)=>y.kaufdatum.localeCompare(x.kaufdatum));
     if(sorted.length)a.kaufdatum=sorted[0].kaufdatum;
@@ -1218,7 +1226,7 @@ function chgB(id,d){
     if(!a.preisHistorie)a.preisHistorie=[];
     a.preisHistorie.push({datum:todayISO(),preis:0,menge:Math.abs(actualDelta),einheit:a.einheit||'Stk',typ:actualDelta>0?'ein':'aus',aktion:false});
   }
-  if(a.menge===0&&a.ablaufdatum){a.ablaufdatum='';}  // Ablaufdatum löschen wenn leer
+  // MHD bleibt auch bei Bestand 0 als Referenz erhalten (Warnungen nur bei Bestand>0)
   const el=document.getElementById('sv-'+id);
   if(el){el.textContent=a.menge;el.className='spv '+(a.menge===0?'lo':a.menge<a.mindest?'wn':'ok');}
   saveL();toast(d>0?'+1 eingelagert':'−1 entnommen');
@@ -1240,7 +1248,8 @@ function toEk(id){
   if(S.ek.some(e=>e.text.toLowerCase()===a.name.toLowerCase()&&!e.checked)){
     toast('«'+a.name+'» ist schon auf der Einkaufsliste');return;
   }
-  S.ek.push({id:Date.now(),text:a.name,sub:'mind. '+a.mindest+' '+(a.einheit||'Stk'),checked:false});
+  const fehlmenge=Math.max(1,(a.mindest||0)-a.menge);
+  S.ek.push({id:Date.now(),text:a.name,menge:String(fehlmenge),einheit:a.einheit||'Stk',checked:false});
   saveL();toast('🛒 «'+a.name+'» zur Einkaufsliste hinzugefügt');
   renderLager();
 }
@@ -1265,7 +1274,7 @@ function openForm(id){
   '<div class="fd"><label>Kategorie</label><div class="lcw" id="f-ka">'+kc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Anfangsbestand</label><div class="ur"><input type="number" id="f-mg" min="0" value="'+(a?a.menge:1)+'"/><select id="f-ei" onchange="if(this.value===\'__add__\')addEinheit(this)">'+eo+'<option value="__add__">+ Neue Einheit...</option></select></div></div><div class="fd"><label>Mindestbestand</label><input type="number" id="f-mn" min="0" value="'+(a?a.mindest:1)+'"/></div></div>'+
   '<div class="fd"><label>Packungsgrösse <span style="color:var(--t3);font-weight:400">(optional, z.B. 2.5 dl pro Stück)</span></label><div class="ur"><input type="text" inputmode="decimal" id="f-pg" placeholder="z.B. 2.5" value="'+(a&&a.packMenge?esc(a.packMenge):'')+'"/><select id="f-pe">'+epo+'</select></div></div>'+
-  '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="text" inputmode="decimal" id="f-pr" placeholder="z.B. 1.95" value="'+(a?esc(a.preis||''):'')+'"/><label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg)"><input type="checkbox" id="f-aktion" style="width:18px;height:18px;accent-color:var(--wn);cursor:pointer"/><div><div style="font-size:14px;font-weight:500;color:var(--tx)">Aktionspreis</div><div style="font-size:12px;color:var(--t2)">Wird als Aktion geloggt, kein neuer Standardpreis</div></div></label></div>'+
+  '<div class="fd"><label>Kaufpreis pro '+(isDecUnit(found.einheit)?esc(found.einheit):'Einheit')+' (CHF)'+(isDecUnit(found.einheit)?' — Offen-Verkauf':'')+'</label><input type="text" inputmode="decimal" id="f-pr" placeholder="z.B. 1.95" value="'+(a?esc(a.preis||''):'')+'"/><label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg)"><input type="checkbox" id="f-aktion" style="width:18px;height:18px;accent-color:var(--wn);cursor:pointer"/><div><div style="font-size:14px;font-weight:500;color:var(--tx)">Aktionspreis</div><div style="font-size:12px;color:var(--t2)">Wird als Aktion geloggt, kein neuer Standardpreis</div></div></label></div>'+
   '<div class="fd"><label>Lagerort</label><div class="lcw" id="f-lo">'+lc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Kaufdatum</label>'+dateField('f-kd',a?a.kaufdatum||todayISO():todayISO())+'</div><div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('f-ad',a?a.ablaufdatum||'':'')+'</div></div>'+
   '<div class="fd"><label>Wo gekauft</label><div class="lcw" id="f-ge">'+S.ge.map(g=>'<button class="chip'+(a&&a.kaufort===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#f-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+'<button class="chip" onclick="addGeschaeft(this)">+ Neu...</button></div></div>'+
@@ -1443,7 +1452,7 @@ async function saveForm(){
   const standardPreis=isAktion?0:preis;
   const geChip=document.querySelector('#f-ge .chip.on[data-ge]');
   const kaufort=geChip?geChip.dataset.ge:'';
-  const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,kaufort,menge:parseInt(document.getElementById('f-mg').value)||0,einheit:document.getElementById('f-ei').value,mindest:Math.max(0,parseInt(document.getElementById('f-mn').value)||0),barcode:document.getElementById('f-bc').value.trim(),preis:standardPreis,packMenge,packEinheit,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
+  const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,kaufort,menge:(isDecUnit(document.getElementById('f-ei').value)?parseDecimal(document.getElementById('f-mg').value):parseInt(document.getElementById('f-mg').value))||0,einheit:document.getElementById('f-ei').value,mindest:Math.max(0,parseInt(document.getElementById('f-mn').value)||0),barcode:document.getElementById('f-bc').value.trim(),preis:standardPreis,packMenge,packEinheit,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
   if(!editId){
     // Neuer Artikel: Preis-Historie anlegen wenn Preis angegeben
     d.preisHistorie=preis>0?[{datum:kaufdatum,preis,menge:d.menge,einheit:d.einheit,typ:'ein',aktion:isAktion||false,kaufort:kaufort||''}]:[];
@@ -1670,7 +1679,8 @@ function renderEingangArtikel(found){
 }
 function confirmEingang(id,ablaufPflicht){
   const a=S.a.find(x=>x.id===id);if(!a)return;
-  const addMenge=parseInt(document.getElementById('e-mg').value)||1;
+  const decOk=isDecUnit(a.einheit);
+  const addMenge=decOk?(parseDecimal(document.getElementById('e-mg').value)||1):(parseInt(document.getElementById('e-mg').value)||1);
   const preis=parseDecimal(document.getElementById('e-pr').value)||0;
   const isAktion=document.getElementById('e-aktion')&&document.getElementById('e-aktion').checked;
   const kaufdatum=document.getElementById('e-kd').value||todayISO();
@@ -1697,7 +1707,7 @@ function confirmEingang(id,ablaufPflicht){
   addLogEntry('ein',a.id,a.name,a.lager,a.kat,addMenge,a.einheit,preis,isAktion||false);
   saveL();
   const aktionHinweis=isAktion?' (Aktionspreis, Standardpreis unverändert)':'';
-  toast('+'+addMenge+' '+esc(a.einheit||'Stk')+' · CHF '+(preis>0?preis.toFixed(2):'—')+aktionHinweis);
+  toast('+'+fmtMenge(addMenge)+' '+esc(a.einheit||'Stk')+' · CHF '+(preis>0?preis.toFixed(2):'—')+aktionHinweis);
   goScreen('s-lager');
 }
 function newFromBarcode(bc){
@@ -2607,8 +2617,9 @@ function ekAddZutat(z,existing){
   // z kann String (alt) oder {n,q,u}-Objekt (neu, mit Menge) sein
   const name=typeof z==='string'?z:(z.n||'');
   if(!name||existing.has(name.toLowerCase()))return null;
-  const menge=typeof z==='object'&&(z.q||z.u)?((z.q||'')+' '+(z.u||'')).trim():'';
-  S.ek.push({id:Date.now()+Math.random(),text:name,menge,checked:false});
+  const menge=typeof z==='object'?(z.q||''):'';
+  const einheit=typeof z==='object'?(z.u||''):'';
+  S.ek.push({id:Date.now()+Math.random(),text:name,menge,einheit,checked:false});
   existing.add(name.toLowerCase());
   return name;
 }
@@ -2655,7 +2666,7 @@ function setStatPeriod(d){statPeriod=d;renderStat();}
 function renderUeb(){
   const t=S.a.length;
   const w=S.a.filter(a=>a.menge<a.mindest);
-  const expSoon=S.a.filter(a=>a.ablaufdatum&&daysUntil(a.ablaufdatum)<=7).sort((a,b)=>a.ablaufdatum.localeCompare(b.ablaufdatum));
+  const expSoon=S.a.filter(a=>a.menge>0&&a.ablaufdatum&&daysUntil(a.ablaufdatum)<=7).sort((a,b)=>a.ablaufdatum.localeCompare(b.ablaufdatum));
   const nm=S.a.map(a=>a.name.toLowerCase());
   const k=(S.rz||[]).filter(r=>(r.zutaten||[]).every(z=>nm.some(n=>n.includes((typeof z==='string'?z:(z.n||z.zutat||'')).toLowerCase())))).length;
   let h='<div class="stg">'+
@@ -2906,9 +2917,22 @@ function renderEk(){
     h+='<button onclick="openLadenModus()" style="width:100%;padding:14px;margin-bottom:14px;background:var(--ac);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">🛒 Laden-Modus starten</button>';
   }
   h+='<div class="sh">Automatisch — unter Mindestbestand'+(ekShopFilter!=='alle'?' · '+esc(ekShopFilter):'')+'</div>';
-  h+=auto.length?auto.map(a=>'<div class="ei" id="eia-'+a.id+'"><input type="checkbox" onchange="ckA('+a.id+',this.checked)"/><div><div class="eit">'+esc(a.name)+'</div><div class="eis">'+esc(a.lager)+(a.kaufort?' · '+esc(a.kaufort):'')+' · mind. '+(a.mindest-a.menge)+' '+esc(a.einheit||'Stk')+' kaufen</div></div></div>').join(''):'<div style="color:var(--t3);font-size:13px;padding:4px 0 12px">Alle Artikel im Soll</div>';
+  h+=auto.length?auto.map(a=>{
+    const ov=(S.eko||{})[a.id]||{};
+    const mg=ov.menge!==undefined?ov.menge:String(Math.max(1,(a.mindest||0)-a.menge));
+    const eh=ov.einheit||a.einheit||'Stk';
+    return '<div class="ei" id="eia-'+a.id+'"><input type="checkbox" onchange="ckA('+a.id+',this.checked)"/>'+
+      '<div style="flex:1;min-width:0"><div class="eit">'+esc(a.name)+'</div><div class="eis">'+esc(a.lager)+(a.kaufort?' · '+esc(a.kaufort):'')+'</div></div>'+
+      '<input type="text" inputmode="decimal" value="'+esc(mg)+'" onchange="setEkoMenge('+a.id+',this.value)" onclick="event.stopPropagation()" style="width:54px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);text-align:right;flex-shrink:0"/>'+
+      '<select onchange="setEkoEinheit('+a.id+',this.value)" onclick="event.stopPropagation()" style="width:66px;padding:6px 4px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);flex-shrink:0">'+ekEinheitOptions(eh)+'</select>'+
+    '</div>';
+  }).join(''):'<div style="color:var(--t3);font-size:13px;padding:4px 0 12px">Alle Artikel im Soll</div>';
   h+='<div class="sh">Manuell</div><div class="mir"><input type="text" id="mi-i" placeholder="Artikel hinzufügen..." onkeydown="if(event.key===\'Enter\')addM()"/><button onclick="addM()">+</button></div><div id="mi-l">';
-  S.ek.forEach(e=>h+='<div class="ei'+(e.checked?' ck':'')+'" id="eim-'+e.id+'"><input type="checkbox" '+(e.checked?'checked':'')+' onchange="ckM('+e.id+',this.checked)"/><div class="eit" style="flex:1">'+esc(e.text)+'</div><input type="text" value="'+esc(e.menge||'')+'" placeholder="Menge" onchange="setEkMenge('+e.id+',this.value)" onclick="event.stopPropagation()" style="width:82px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);text-align:right;flex-shrink:0"/><button class="eid" onclick="delM('+e.id+')">&#x2715;</button></div>');
+  S.ek.forEach(e=>h+='<div class="ei'+(e.checked?' ck':'')+'" id="eim-'+e.id+'"><input type="checkbox" '+(e.checked?'checked':'')+' onchange="ckM('+e.id+',this.checked)"/>'+
+    '<div class="eit" style="flex:1;min-width:0">'+esc(e.text)+'</div>'+
+    '<input type="text" inputmode="decimal" value="'+esc(e.menge||'')+'" placeholder="Mge" onchange="setEkMenge('+e.id+',this.value)" onclick="event.stopPropagation()" style="width:54px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);text-align:right;flex-shrink:0"/>'+
+    '<select onchange="setEkEinheit('+e.id+',this.value)" onclick="event.stopPropagation()" style="width:66px;padding:6px 4px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);flex-shrink:0">'+ekEinheitOptions(e.einheit||'')+'</select>'+
+    '<button class="eid" onclick="delM('+e.id+')">&#x2715;</button></div>');
   h+='</div>';
   document.getElementById('ek-body').innerHTML=h;
 }
@@ -2955,11 +2979,13 @@ function renderLadenModus(){
       lastKat=a.kat;
     }
     const ck=!!ladenChecked[a.id];
-    const brauche=Math.max(1,a.mindest-a.menge);
+    const ovL=(S.eko||{})[a.id]||{};
+    const brauche=ovL.menge!==undefined?ovL.menge:Math.max(1,a.mindest-a.menge);
+    const braucheEh=ovL.einheit||a.einheit||'Stk';
     h+='<div onclick="toggleLaden('+a.id+')" style="display:flex;align-items:center;gap:14px;padding:16px 12px;background:'+(ck?'var(--ol)':'var(--sf)')+';border:1px solid '+(ck?'var(--ok)':'var(--bd)')+';border-radius:var(--r);margin-bottom:8px;cursor:pointer;transition:all .15s">'+
       '<div style="width:32px;height:32px;border-radius:50%;border:2.5px solid '+(ck?'var(--ok)':'var(--b2)')+';background:'+(ck?'var(--ok)':'transparent')+';display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:18px;font-weight:700">'+(ck?'✓':'')+'</div>'+
       '<div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:600;'+(ck?'text-decoration:line-through;color:var(--t3)':'')+'">'+esc(a.name)+'</div>'+
-      '<div style="font-size:13px;color:var(--t2)">'+brauche+' '+esc(a.einheit||'Stk')+(a.preis?' · zuletzt CHF '+a.preis.toFixed(2):'')+'</div></div>'+
+      '<div style="font-size:13px;color:var(--t2)">'+(ck&&typeof ladenChecked[a.id]==='object'?'✓ '+fmtMenge(ladenChecked[a.id].menge)+' '+esc(a.einheit||'Stk')+' · CHF '+ladenChecked[a.id].preis.toFixed(2)+(ladenChecked[a.id].kaufort?' · '+esc(ladenChecked[a.id].kaufort):''):esc(String(brauche))+' '+esc(braucheEh)+(a.preis?' · zuletzt CHF '+a.preis.toFixed(2):''))+'</div></div>'+
     '</div>';
   });
 
@@ -2983,7 +3009,59 @@ function renderLadenModus(){
   document.getElementById('laden-content').innerHTML=h;
 }
 function toggleLaden(id){
-  ladenChecked[id]=!ladenChecked[id];
+  if(ladenChecked[id]){
+    // Abwählen: Kaufdaten verwerfen
+    delete ladenChecked[id];
+    if(navigator.vibrate)navigator.vibrate(40);
+    renderLadenModus();
+    return;
+  }
+  // Anwählen: Kauf-Dialog mit vorbefüllten Daten
+  showLadenKaufDialog(id);
+}
+
+function showLadenKaufDialog(id){
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  const existing=document.getElementById('laden-kauf-dlg');
+  if(existing)existing.remove();
+  const ov=(S.eko||{})[a.id]||{};
+  const vorMenge=ov.menge!==undefined?ov.menge:String(Math.max(1,(a.mindest||0)-a.menge));
+  const vorPreis=a.preis>0?a.preis.toFixed(2):'';
+  const vorOrt=ekShopFilter!=='alle'?ekShopFilter:(a.kaufort||'');
+  const dlg=document.createElement('div');
+  dlg.id='laden-kauf-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:12px">'+esc(a.name)+'</div>'+
+      '<div class="tc" style="margin-bottom:10px">'+
+        '<div class="fd"><label>Anzahl / Menge'+(isDecUnit(a.einheit)?' ('+esc(a.einheit)+')':'')+'</label><input type="text" inputmode="decimal" id="lk-mg" value="'+esc(vorMenge)+'" style="width:100%;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/></div>'+
+        '<div class="fd"><label>Kaufdatum</label>'+dateField('lk-kd',todayISO())+'</div>'+
+      '</div>'+
+      '<div class="fd" style="margin-bottom:10px"><label>Preis pro '+(isDecUnit(a.einheit)?esc(a.einheit):'Einheit')+' (CHF)</label><input type="text" inputmode="decimal" id="lk-pr" value="'+vorPreis+'" placeholder="0.00" style="width:100%;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right;font-weight:600"/></div>'+
+      '<div class="fd" style="margin-bottom:14px"><label>Wo gekauft</label><div class="lcw" id="lk-ge">'+
+        S.ge.map(g=>'<button class="chip'+(vorOrt===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#lk-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+
+      '</div></div>'+
+      '<div style="display:flex;gap:8px">'+
+        '<button onclick="document.getElementById(\'laden-kauf-dlg\').remove()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+        '<button onclick="confirmLadenKauf('+a.id+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Gekauft</button>'+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(dlg);
+}
+
+function confirmLadenKauf(id){
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  const decOk=isDecUnit(a.einheit);
+  let menge=parseDecimal(document.getElementById('lk-mg').value)||1;
+  if(!decOk)menge=Math.max(1,Math.round(menge));
+  const datum=document.getElementById('lk-kd').value||todayISO();
+  const preis=parseDecimal(document.getElementById('lk-pr').value)||0;
+  const geChip=document.querySelector('#lk-ge .chip.on[data-ge]');
+  const kaufort=geChip?geChip.dataset.ge:(a.kaufort||'');
+  ladenChecked[id]={menge,datum,preis,kaufort};
+  const dlg=document.getElementById('laden-kauf-dlg');
+  if(dlg)dlg.remove();
   if(navigator.vibrate)navigator.vibrate(40);
   renderLadenModus();
 }
@@ -2994,31 +3072,27 @@ function toggleLadenM(id){
   renderLadenModus();
 }
 function finishLadenModus(){
-  // Abgehakte automatische Artikel → als Eingang vorschlagen
-  const autoChecked=S.a.filter(a=>ladenChecked[a.id]);
+  // Abgehakte automatische Artikel: mit bestätigten Kaufdaten buchen
+  const autoChecked=S.a.filter(a=>ladenChecked[a.id]&&typeof ladenChecked[a.id]==='object');
   // Abgehakte manuelle → aus Liste entfernen
   const manualCheckedIds=S.ek.filter(e=>ladenChecked['m'+e.id]).map(e=>e.id);
   S.ek=S.ek.filter(e=>!manualCheckedIds.includes(e.id));
-  saveL();
 
-  if(autoChecked.length){
-    // Nachfrage: als Eingang buchen?
-    const names=autoChecked.map(a=>a.name).join(', ');
-    if(confirm(autoChecked.length+' gekaufte Artikel als Eingang buchen?\n\n'+names+'\n\n(Menge = Differenz zum Mindestbestand, Kaufdatum = heute)')){
-      autoChecked.forEach(a=>{
-        const menge=Math.max(1,a.mindest-a.menge);
-        ensurePackungen(a);
-        a.packungen.push({id:newPackId(),menge,kaufdatum:todayISO(),ablaufdatum:''});
-        syncMenge(a);
-        a.kaufdatum=todayISO();
-        if(!a.preisHistorie)a.preisHistorie=[];
-        a.preisHistorie.push({datum:todayISO(),preis:a.preis||0,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:ekShopFilter!=='alle'?ekShopFilter:(a.kaufort||'')});
-        addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,a.einheit,a.preis||0,false);
-      });
-      saveL();
-      toast('✓ '+autoChecked.length+' Artikel als Eingang gebucht');
-    }
-  }
+  autoChecked.forEach(a=>{
+    const k=ladenChecked[a.id]; // {menge,datum,preis,kaufort}
+    if(S.eko&&S.eko[a.id])delete S.eko[a.id];
+    ensurePackungen(a);
+    a.packungen.push({id:newPackId(),menge:k.menge,kaufdatum:k.datum,ablaufdatum:''});
+    syncMenge(a);
+    a.kaufdatum=k.datum;
+    if(k.kaufort)a.kaufort=k.kaufort;
+    if(!a.preisHistorie)a.preisHistorie=[];
+    a.preisHistorie.push({datum:k.datum,preis:k.preis,menge:k.menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:k.kaufort||''});
+    if(k.preis>0)a.preis=k.preis;
+    addLogEntry('ein',a.id,a.name,a.lager,a.kat,k.menge,a.einheit,k.preis,false);
+  });
+  saveL();
+  if(autoChecked.length)toast('✓ '+autoChecked.length+' Artikel als Eingang gebucht');
   closeLadenModus();
   renderLager();
 }
@@ -3034,9 +3108,18 @@ function addGeschaeft(btn){
   document.querySelectorAll('#f-ge .chip[data-ge]').forEach(c=>c.classList.remove('on'));
   chip.classList.add('on');
 }
-function addM(){const i=document.getElementById('mi-i');const t=i.value.trim();if(!t)return;S.ek.push({id:Date.now(),text:t,checked:false});i.value='';saveL();renderEk();}
+function addM(){const i=document.getElementById('mi-i');const t=i.value.trim();if(!t)return;S.ek.push({id:Date.now(),text:t,menge:'1',einheit:'Stk',checked:false});i.value='';saveL();renderEk();}
 function ckM(id,v){const e=S.ek.find(x=>x.id===id);if(e){e.checked=v;saveL();}const el=document.getElementById('eim-'+id);if(el)el.classList.toggle('ck',v);}
 function setEkMenge(id,v){const e=S.ek.find(x=>x.id===id);if(e){e.menge=v.trim();saveL();}}
+function setEkEinheit(id,v){const e=S.ek.find(x=>x.id===id);if(e){e.einheit=v;saveL();}}
+// Overrides für automatische Einträge (unter Mindestbestand): {artikelId:{menge,einheit}}
+function setEkoMenge(aid,v){if(!S.eko)S.eko={};if(!S.eko[aid])S.eko[aid]={};S.eko[aid].menge=v.trim();saveL();}
+function setEkoEinheit(aid,v){if(!S.eko)S.eko={};if(!S.eko[aid])S.eko[aid]={};S.eko[aid].einheit=v;saveL();}
+function ekEinheitOptions(sel){
+  const base=[...new Set([...(S.ei||[]),'EL','TL'])];
+  if(sel&&!base.includes(sel))base.unshift(sel);
+  return base.map(u=>'<option value="'+esc(u)+'"'+(u===sel?' selected':'')+'>'+esc(u)+'</option>').join('');
+}
 function delM(id){S.ek=S.ek.filter(x=>x.id!==id);saveL();renderEk();}
 function clearCk(){S.ek=S.ek.filter(x=>!x.checked);saveL();renderEk();toast('Erledigte entfernt');}
 
@@ -3545,6 +3628,9 @@ function packTotal(a){
   return tot+' '+(a.packEinheit||'dl')+' gesamt';
 }
 function parseDecimal(v){return parseFloat(String(v).replace(',','.'))||0;}
+const DEC_UNITS=['kg','g','l','dl','ml'];
+function isDecUnit(e){return DEC_UNITS.includes(String(e||'').toLowerCase());}
+function fmtMenge(m){const n=parseFloat(m)||0;return Math.abs(n-Math.round(n))<0.001?String(Math.round(n)):String(Math.round(n*1000)/1000).replace('.',',');}
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function daysUntil(iso){
   if(!iso)return null;
