@@ -6,7 +6,7 @@
       "marke": "Landi",
       "kat": "Genussmittel",
       "lager": "Kühlschrank unten",
-      "menge": 3,
+      "menge": 2,
       "einheit": "Kiste",
       "mindest": 2,
       "barcode": "7611703611962",
@@ -54,12 +54,20 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "aus",
+          "aktion": false
         }
       ],
       "packungen": [
         {
           "id": 5,
-          "menge": 2,
+          "menge": 1,
           "kaufdatum": "2026-06-27",
           "ablaufdatum": ""
         },
@@ -355,14 +363,14 @@
       "marke": "",
       "kat": "Genussmittel",
       "lager": "Schlof",
-      "menge": 3,
+      "menge": 6,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610817037064",
       "preis": 0,
       "packMenge": 6,
       "packEinheit": "Flasche",
-      "kaufdatum": "2026-06-23",
+      "kaufdatum": "2026-06-30",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782209667895_17822096590365139673546504322018.jpg",
@@ -373,6 +381,39 @@
           "menge": 3,
           "kaufdatum": "2026-06-23",
           "ablaufdatum": ""
+        },
+        {
+          "id": 3,
+          "menge": 2,
+          "kaufdatum": "2026-06-30",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-06-30",
+          "ablaufdatum": ""
+        }
+      ],
+      "kaufort": "Coop",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-30",
+          "preis": 47.7,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-06-30",
+          "preis": 47.7,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Coop"
         }
       ]
     },
@@ -2351,6 +2392,11 @@
       "id": 1783153076389,
       "text": "Valdobbiadene Prosecco Superiore",
       "sub": "mind. 1 Stk",
+      "checked": true
+    },
+    {
+      "id": 1783156988211,
+      "text": "Lauge",
       "checked": false
     }
   ],
@@ -4335,7 +4381,46 @@
       "aktion": true,
       "datum": "2026-07-04",
       "zeit": 1783153220500
+    },
+    {
+      "t": "ein",
+      "aid": 10,
+      "name": "Weisswein Federweisser",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 47.7,
+      "aktion": true,
+      "datum": "2026-07-04",
+      "zeit": 1783153360193
+    },
+    {
+      "t": "ein",
+      "aid": 10,
+      "name": "Weisswein Federweisser",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 47.7,
+      "aktion": true,
+      "datum": "2026-07-04",
+      "zeit": 1783153386007
+    },
+    {
+      "t": "aus",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Kühlschrank unten",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-04",
+      "zeit": 1783153421761
     }
   ],
-  "aktualisiert": "2026-07-04T08:22:14.984Z"
+  "aktualisiert": "2026-07-04T11:11:40.899Z"
 }
