@@ -366,7 +366,15 @@
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782209667895_17822096590365139673546504322018.jpg",
-      "fotoPath": "1782209667895_17822096590365139673546504322018.jpg"
+      "fotoPath": "1782209667895_17822096590365139673546504322018.jpg",
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 3,
+          "kaufdatum": "2026-06-23",
+          "ablaufdatum": ""
+        }
+      ]
     },
     {
       "id": 11,
@@ -478,7 +486,7 @@
       "marke": "Barilla",
       "kat": "Getränke",
       "lager": "Schlof",
-      "menge": 3,
+      "menge": 6,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "8076809585194",
@@ -503,6 +511,30 @@
           "einheit": "Stk",
           "typ": "ein",
           "aktion": true
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false
         }
       ],
       "packungen": [
@@ -1902,24 +1934,40 @@
       "kat": "Genussmittel",
       "lager": "Schlof",
       "kaufort": "Coop",
-      "menge": 1,
+      "menge": 5,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "8002335504064",
       "preis": 0,
       "packMenge": 6,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-07-01",
+      "kaufdatum": "2026-06-30",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782913487315_off.jpg",
       "fotoPath": "1782913487315_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-06-30",
+          "preis": 44.7,
+          "menge": 4,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Coop"
+        }
+      ],
       "packungen": [
         {
           "id": 1,
           "menge": 1,
           "kaufdatum": "2026-07-01",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 1,
+          "menge": 4,
+          "kaufdatum": "2026-06-30",
           "ablaufdatum": ""
         }
       ]
@@ -2204,7 +2252,7 @@
       "kat": "Reinigung & Pflege",
       "lager": "Schlof",
       "kaufort": "Lidl",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "4056489110750",
@@ -2225,12 +2273,20 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
         }
       ],
       "packungen": [
         {
           "id": 4,
-          "menge": 2,
+          "menge": 1,
           "kaufdatum": "2026-07-04",
           "ablaufdatum": ""
         }
@@ -2290,7 +2346,14 @@
     "Landi",
     "Galaxus"
   ],
-  "einkauf": [],
+  "einkauf": [
+    {
+      "id": 1783153076389,
+      "text": "Valdobbiadene Prosecco Superiore",
+      "sub": "mind. 1 Stk",
+      "checked": false
+    }
+  ],
   "log": [
     {
       "t": "ein",
@@ -4207,7 +4270,72 @@
       "aktion": false,
       "datum": "2026-07-04",
       "zeit": 1783148856367
+    },
+    {
+      "t": "ein",
+      "aid": 15,
+      "name": "Barilla Al Bronzo Spaghetti Al Bronzo 500g",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-04",
+      "zeit": 1783152887819
+    },
+    {
+      "t": "ein",
+      "aid": 15,
+      "name": "Barilla Al Bronzo Spaghetti Al Bronzo 500g",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-04",
+      "zeit": 1783152888126
+    },
+    {
+      "t": "ein",
+      "aid": 15,
+      "name": "Barilla Al Bronzo Spaghetti Al Bronzo 500g",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-04",
+      "zeit": 1783152888354
+    },
+    {
+      "t": "aus",
+      "aid": 68,
+      "name": "Taschentücher-Box, 4-lagig",
+      "lager": "Schlof",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-04",
+      "zeit": 1783152955496
+    },
+    {
+      "t": "ein",
+      "aid": 60,
+      "name": "Valdobbiadene Prosecco Superiore",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 4,
+      "einheit": "Stk",
+      "preis": 44.7,
+      "aktion": true,
+      "datum": "2026-07-04",
+      "zeit": 1783153220500
     }
   ],
-  "aktualisiert": "2026-07-04T07:16:44.819Z"
+  "aktualisiert": "2026-07-04T08:22:14.984Z"
 }
