@@ -2013,7 +2013,7 @@
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "4056489025047",
-      "preis": 0,
+      "preis": 2.59,
       "packMenge": 12,
       "packEinheit": "Stk",
       "kaufdatum": "2026-07-04",
@@ -2021,7 +2021,17 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783147810240_off.jpg",
       "fotoPath": "1783147810240_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-04",
+          "preis": 2.59,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
       "packungen": [
         {
           "id": 1,
@@ -2081,7 +2091,7 @@
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "20238469",
-      "preis": 0,
+      "preis": 4.95,
       "packMenge": 3,
       "packEinheit": "Stk",
       "kaufdatum": "2026-07-04",
@@ -2089,7 +2099,17 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783147999247_off.jpg",
       "fotoPath": "1783147999247_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-04",
+          "preis": 4.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
       "packungen": [
         {
           "id": 4,
@@ -2149,15 +2169,25 @@
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
-      "preis": 0,
-      "packMenge": 200,
+      "preis": 2.05,
+      "packMenge": 512,
       "packEinheit": "g",
       "kaufdatum": "2026-07-04",
       "ablaufdatum": "2026-07-18",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783148356120_17831483388918595940673296879545.jpg",
       "fotoPath": "1783148356120_17831483388918595940673296879545.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-04",
+          "preis": 2.05,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
       "packungen": [
         {
           "id": 1,
@@ -2260,19 +2290,7 @@
     "Landi",
     "Galaxus"
   ],
-  "einkauf": [
-    {
-      "id": 1783140935617,
-      "text": "Fontina oder Taleggio, grob gerieben 200g",
-      "checked": false
-    },
-    {
-      "id": 1783147599540,
-      "text": "Parmigiano reggiano",
-      "sub": "mind. 1 Stk",
-      "checked": true
-    }
-  ],
+  "einkauf": [],
   "log": [
     {
       "t": "ein",
@@ -4191,5 +4209,5 @@
       "zeit": 1783148856367
     }
   ],
-  "aktualisiert": "2026-07-04T07:14:23.889Z"
+  "aktualisiert": "2026-07-04T07:16:44.819Z"
 }
