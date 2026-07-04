@@ -1458,7 +1458,7 @@
       "kat": "Reinigung & Pflege",
       "lager": "Bad unten",
       "kaufort": "Lidl",
-      "menge": 3,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610039000051",
@@ -1497,30 +1497,12 @@
         },
         {
           "datum": "2026-07-04",
-          "preis": 0,
-          "menge": 1,
+          "preis": 1.09,
+          "menge": 2,
           "einheit": "Stk",
           "typ": "ein",
-          "aktion": false,
+          "aktion": true,
           "kaufort": ""
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -2151,13 +2133,13 @@
       "name": "Taschentücher-Box, 4-lagig",
       "marke": "Floralys",
       "kat": "Reinigung & Pflege",
-      "lager": "Bad unten",
+      "lager": "Schlof",
       "kaufort": "Lidl",
       "menge": 2,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "4056489110750",
-      "preis": 0,
+      "preis": 1.79,
       "packMenge": 100,
       "packEinheit": "Stk",
       "kaufdatum": "2026-07-04",
@@ -2165,7 +2147,17 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783148455269_off.jpg",
       "fotoPath": "1783148455269_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-04",
+          "preis": 1.79,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
       "packungen": [
         {
           "id": 4,
@@ -4145,7 +4137,20 @@
       "aktion": false,
       "datum": "2026-07-04",
       "zeit": 1783148734098
+    },
+    {
+      "t": "aus",
+      "aid": 48,
+      "name": "Regeneriersalz",
+      "lager": "Bad unten",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-04",
+      "zeit": 1783148856367
     }
   ],
-  "aktualisiert": "2026-07-04T07:07:18.170Z"
+  "aktualisiert": "2026-07-04T07:09:50.805Z"
 }
