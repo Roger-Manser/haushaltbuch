@@ -2394,6 +2394,7 @@
       "checked": false
     }
   ],
+  "einkaufOverrides": {},
   "log": [
     {
       "t": "ein",
@@ -4416,5 +4417,5 @@
       "zeit": 1783153421761
     }
   ],
-  "aktualisiert": "2026-07-04T11:42:21.144Z"
+  "aktualisiert": "2026-07-04T11:48:03.652Z"
 }
