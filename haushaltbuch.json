@@ -2707,6 +2707,126 @@
           "ablaufdatum": "2021-12-31"
         }
       ]
+    },
+    {
+      "id": 81,
+      "name": "Penne rigate",
+      "marke": "la Molisana",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "8004690052044",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2028-05-13",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783269141418_off.jpg",
+      "fotoPath": "1783269141418_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2028-05-13"
+        }
+      ]
+    },
+    {
+      "id": 82,
+      "name": "Rohrzucker",
+      "marke": "Zmr",
+      "kat": "Gewürze & Saucen",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 8,
+      "barcode": "7610302010138",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 1,
+      "packEinheit": "kg",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783269246925_1783269240856683046383311667285.jpg",
+      "fotoPath": "1783269246925_1783269240856683046383311667285.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 6,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "name": "Mais grob",
+      "marke": "Zwicky",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7610027003842",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2022-05-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783269291587_off.jpg",
+      "fotoPath": "1783269291587_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 7,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2022-05-31"
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "name": "Puderzucker",
+      "marke": "M Classic",
+      "kat": "Süsswaren",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7610200010209",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2024-12-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783269384288_off.jpg",
+      "fotoPath": "1783269384288_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 8,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2024-12-31"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -5073,7 +5193,59 @@
       "aktion": false,
       "datum": "2026-07-05",
       "zeit": 1783268970099
+    },
+    {
+      "t": "ein",
+      "aid": 81,
+      "name": "Penne rigate",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783269180635
+    },
+    {
+      "t": "ein",
+      "aid": 82,
+      "name": "Rohrzucker",
+      "lager": "Schlof",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783269270214
+    },
+    {
+      "t": "ein",
+      "aid": 83,
+      "name": "Mais grob",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783269372116
+    },
+    {
+      "t": "ein",
+      "aid": 84,
+      "name": "Puderzucker",
+      "lager": "Schlof",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783269435689
     }
   ],
-  "aktualisiert": "2026-07-05T16:29:37.796Z"
+  "aktualisiert": "2026-07-05T16:37:49.893Z"
 }
