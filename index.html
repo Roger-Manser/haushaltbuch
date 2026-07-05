@@ -506,7 +506,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='11.2';
+const APP_VERSION='11.3';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1131,7 +1131,9 @@ function showDet(id){
       '</div>';
     }).join('')+
     '</div>':'';
-  const codeDisplay=a.barcode?esc(a.barcode):(a.ownCode?esc(a.ownCode)+' <span style="font-size:11px;color:var(--t2)">(eigener Code)</span>':'—');
+  const extraBcCount=Array.isArray(a.barcodes)?a.barcodes.filter(Boolean).length:0;
+  const extraBcHint=extraBcCount>0?' <span style="font-size:11px;color:var(--ac)">+'+extraBcCount+' weiter'+(extraBcCount===1?'er':'e')+'</span>':'';
+  const codeDisplay=(a.barcode?esc(a.barcode):(a.ownCode?esc(a.ownCode)+' <span style="font-size:11px;color:var(--t2)">(eigener Code)</span>':'—'))+extraBcHint;
   // Rezepte die diesen Artikel verwenden
   const artName=a.name.toLowerCase();
   const rzMit=(S.rz||[]).filter(r=>(r.zutaten||[]).some(z=>{
@@ -1194,6 +1196,24 @@ function delPreisHistorie(artikelId,idx){
 /* ── Packungen (Multi-MHD pro Artikel) ───────────────────────────── */
 let nextPackId=1;
 function newPackId(){return nextPackId++;}
+
+// Findet Artikel anhand Haupt-Barcode, Zusatz-Barcodes oder eigenem Code
+function artikelByCode(code){
+  if(!code)return null;
+  const c=String(code).trim();
+  return S.a.find(a=>
+    (a.barcode&&a.barcode===c)||
+    (a.ownCode&&a.ownCode===c)||
+    (Array.isArray(a.barcodes)&&a.barcodes.includes(c))
+  )||null;
+}
+// Alle Codes eines Artikels als Array
+function alleCodes(a){
+  const codes=[];
+  if(a.barcode)codes.push(a.barcode);
+  if(Array.isArray(a.barcodes))a.barcodes.forEach(b=>{if(b&&!codes.includes(b))codes.push(b);});
+  return codes;
+}
 
 // Migration: Artikel ohne packungen-Array bekommen einen Eintrag aus bestehendem MHD
 function ensurePackungen(a){
@@ -1259,9 +1279,39 @@ function toEk(id){
 
 /* ── Form ─────────────────────────────────────────────────────────── */
 let editId=null,fb64='',ffn='';
+let formExtraBarcodes=[]; // Zusatz-Barcodes im Formular
+
+function renderExtraBarcodes(){
+  const wrap=document.getElementById('extra-bc-wrap');
+  if(!wrap)return;
+  wrap.innerHTML=formExtraBarcodes.map((bc,i)=>
+    '<div style="display:flex;gap:8px;margin-top:6px;align-items:center">'+
+      '<input type="text" inputmode="numeric" value="'+esc(bc)+'" placeholder="Weiterer Barcode" onchange="formExtraBarcodes['+i+']=this.value.trim()" style="flex:1;padding:9px 10px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:14px"/>'+
+      '<button type="button" onclick="scanExtraBarcode('+i+')" style="padding:9px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);cursor:pointer;font-size:13px;color:var(--ac);white-space:nowrap">'+I.scan+'</button>'+
+      '<button type="button" onclick="removeExtraBarcode('+i+')" style="padding:9px 11px;background:none;border:1px solid var(--bd);border-radius:var(--rs);cursor:pointer;color:var(--dg);font-size:14px">✕</button>'+
+    '</div>'
+  ).join('');
+}
+function scanExtraBarcode(i){
+  // Nutzt den vorhandenen f-bc-Kamerabereich, schreibt Ergebnis aber ins Zusatz-Array
+  openScanner('f-bc',(code)=>{
+    formExtraBarcodes[i]=code.trim();
+    renderExtraBarcodes();
+    toast('Zusatz-Barcode erfasst: '+code);
+  });
+}
+function addExtraBarcode(){
+  formExtraBarcodes.push('');
+  renderExtraBarcodes();
+}
+function removeExtraBarcode(i){
+  formExtraBarcodes.splice(i,1);
+  renderExtraBarcodes();
+}
 function openForm(id){
   editId=id||null;fb64='';ffn='';
   const a=id?S.a.find(x=>x.id===id):null;
+  formExtraBarcodes=(a&&Array.isArray(a.barcodes))?[...a.barcodes]:[];
   document.getElementById('form-title').textContent=a?'Artikel bearbeiten':'Neuer Artikel';
   const lc=S.lo.map(l=>'<div class="chip'+(a&&a.lager===l?' on':'')+'" data-lager="'+esc(l)+'" onclick="plager(this)">'+lsm(l)+' '+esc(l)+'</div>').join('')+'<div class="chip" onclick="addLF()" style="border-style:dashed"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" style="width:12px;height:12px;stroke:currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Neu...</div>';
   const kc=S.ka.map(k=>'<div class="chip'+(a&&a.kat===k?' on':'')+'" data-kat="'+esc(k)+'" onclick="pkat(this)">'+KICON+' '+esc(k)+'</div>').join('')+'<div class="chip" onclick="addKF()" style="border-style:dashed"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" style="width:12px;height:12px;stroke:currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Neu...</div>';
@@ -1270,7 +1320,10 @@ function openForm(id){
   const packEinheiten=[...new Set([...PACK_EINS,...S.ei])];
   const epo=packEinheiten.map(u=>'<option'+(a&&a.packEinheit===u?' selected':(!a&&u==='dl'?' selected':''))+'>'+esc(u)+'</option>').join('');
   document.getElementById('form-body').innerHTML=
-  '<div class="fd"><label>Barcode</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="f-bc" placeholder="7610200071017" inputmode="numeric" value="'+(a?esc(a.barcode||''):'')+'" /></div><button class="scb" onclick="openScanner(\'f-bc\')">'+I.scan+' Scannen</button></div>'+camScannerHTML('f-bc')+'<div style="display:flex;gap:8px;margin-top:8px"><button type="button" class="lookup-btn" style="flex:1" onclick="doLookupForm()">'+I.globe+' Produktdaten online suchen</button></div><div class="lookup-status" id="lookup-status-f"></div></div>'+
+  '<div class="fd"><label>Barcode</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="f-bc" placeholder="7610200071017" inputmode="numeric" value="'+(a?esc(a.barcode||''):'')+'" /></div><button class="scb" onclick="openScanner(\'f-bc\')">'+I.scan+' Scannen</button></div>'+camScannerHTML('f-bc')+'<div style="display:flex;gap:8px;margin-top:8px"><button type="button" class="lookup-btn" style="flex:1" onclick="doLookupForm()">'+I.globe+' Produktdaten online suchen</button></div><div class="lookup-status" id="lookup-status-f"></div>'+
+  '<div id="extra-bc-wrap" style="margin-top:10px"></div>'+
+  '<button type="button" onclick="addExtraBarcode()" style="width:100%;margin-top:8px;padding:9px;background:var(--bg);border:1px dashed var(--bd);border-radius:var(--rs);font-size:13px;color:var(--ac);cursor:pointer">+ Weiteren Barcode hinzufügen</button>'+
+  '</div>'+
   '<div class="fd"><label>Foto</label><div id="pz" class="pz" onclick="document.getElementById(\'fph\').click()">'+I.cam+'<span>Von Kamera oder Galerie</span><small>Wird auf GitHub gespeichert</small><input type="file" id="fph" accept="image/*" capture="environment" style="display:none" onchange="onPh(event)"/></div><div id="ppw" class="ppw" style="'+(a&&a.foto?'display:block':'')+'"><img id="ppi" src="'+(a?esc(a.foto||''):'')+'" alt=""/><button class="rph" onclick="rmPh()">&#x2715;</button></div></div>'+
   '<div class="fd"><label>Bezeichnung *</label><input type="text" id="f-nm" placeholder="z.B. Vollmilch 3.5%" value="'+(a?esc(a.name):'')+'" oninput="checkDupHint(this.value)"/><div id="dup-hint" style="display:none;font-size:12px;color:var(--wn);background:var(--wl);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div></div>'+
   '<div class="fd"><label>Marke</label><input type="text" id="f-mk" placeholder="z.B. Emmi" value="'+(a?esc(a.marke||''):'')+'"/></div>'+
@@ -1284,6 +1337,7 @@ function openForm(id){
   '<div class="fd"><label>Notiz</label><textarea id="f-nt" placeholder="z.B. Bio, Lieblingsmarke...">'+(a?esc(a.notiz||''):'')+'</textarea></div>'+
   '<div class="br"><button class="bg2" onclick="closeForm()">Abbrechen</button><button class="bp" onclick="saveForm()">'+(a?'Speichern':'Hinzufügen')+'</button></div>';
   goScreen('s-form');
+  renderExtraBarcodes();
 }
 function addEinheit(sel){
   const n=prompt('Neue Einheit (z.B. Sack, Karton):');
@@ -1464,7 +1518,9 @@ async function saveForm(){
   const standardPreis=isAktion?0:preis;
   const geChip=document.querySelector('#f-ge .chip.on[data-ge]');
   const kaufort=geChip?geChip.dataset.ge:'';
-  const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,kaufort,menge:(isDecUnit(document.getElementById('f-ei').value)?parseDecimal(document.getElementById('f-mg').value):parseInt(document.getElementById('f-mg').value))||0,einheit:document.getElementById('f-ei').value,mindest:Math.max(0,parseInt(document.getElementById('f-mn').value)||0),barcode:document.getElementById('f-bc').value.trim(),preis:standardPreis,packMenge,packEinheit,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
+  const hauptBc=document.getElementById('f-bc').value.trim();
+  const extraBcs=[...new Set(formExtraBarcodes.map(b=>b.trim()).filter(b=>b&&b!==hauptBc))];
+  const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,kaufort,menge:(isDecUnit(document.getElementById('f-ei').value)?parseDecimal(document.getElementById('f-mg').value):parseInt(document.getElementById('f-mg').value))||0,einheit:document.getElementById('f-ei').value,mindest:Math.max(0,parseInt(document.getElementById('f-mn').value)||0),barcode:hauptBc,barcodes:extraBcs,preis:standardPreis,packMenge,packEinheit,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
   if(!editId){
     // Neuer Artikel: Preis-Historie anlegen wenn Preis angegeben
     d.preisHistorie=preis>0?[{datum:kaufdatum,preis,menge:d.menge,einheit:d.einheit,typ:'ein',aktion:isAktion||false,kaufort:kaufort||''}]:[];
@@ -1633,7 +1689,7 @@ function onScanEingang(code){
 function lookupBarcode(){
   const bc=document.getElementById('e-bc').value.trim();
   if(!bc){toast('Bitte Barcode eingeben');return;}
-  const found=S.a.find(a=>(a.barcode&&a.barcode===bc)||(a.ownCode&&a.ownCode===bc));
+  const found=artikelByCode(bc);
   const res=document.getElementById('eingang-result');
   if(found){
     renderEingangArtikel(found);
@@ -1810,7 +1866,7 @@ function toggleAusgangScan(){
 function processAusgangScan(code){
   if(!code)return;
   const list=document.getElementById('ausgang-list');
-  const found=S.a.find(a=>(a.barcode&&a.barcode===code)||(a.ownCode&&a.ownCode===code));
+  const found=artikelByCode(code);
   if(!found){
     if(list.children.length===1&&list.children[0].textContent.includes('Noch keine'))list.innerHTML='';
     const div=document.createElement('div');
