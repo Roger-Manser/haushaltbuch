@@ -459,6 +459,9 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   <button onclick="applyUpdate()">Aktualisieren</button>
 </div>
 
+<div id="invcap-overlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:6000;flex-direction:column">
+  <div id="invcap-content" style="display:flex;flex-direction:column;height:100%;overflow:hidden"></div>
+</div>
 <div id="inventur-overlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:6000;flex-direction:column">
   <div id="inventur-content" style="display:flex;flex-direction:column;height:100%;overflow:hidden"></div>
 </div>
@@ -506,7 +509,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='11.5';
+const APP_VERSION='12.0';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -528,6 +531,12 @@ let opt={fotoZwang:false}; // App-Optionen
 function loadOpt(){try{const r=localStorage.getItem('hbopt');if(r)opt={...opt,...JSON.parse(r)};}catch(e){}}
 function saveOpt(){try{localStorage.setItem('hbopt',JSON.stringify(opt));}catch(e){}}
 loadOpt();
+
+// Inventar-Zwischenspeicher: [{barcode,menge,mhd}]
+let invBuffer=[];
+function loadInvBuffer(){try{const r=localStorage.getItem('hb_inv_buffer');if(r)invBuffer=JSON.parse(r);}catch(e){invBuffer=[];}}
+function saveInvBuffer(){try{localStorage.setItem('hb_inv_buffer',JSON.stringify(invBuffer));}catch(e){}}
+loadInvBuffer();
 let dirty=false;
 
 function loadL(){
@@ -885,18 +894,67 @@ async function lookupOFF(barcode,statusElId){
       return null;
     }
     const p=data.product;
+    // Menge + Einheit aus quantity/product_quantity ableiten
+    let pkgMenge='',pkgEinheit='';
+    if(p.product_quantity&&p.product_quantity_unit){
+      pkgMenge=String(p.product_quantity);
+      pkgEinheit=mapOFFUnit(p.product_quantity_unit);
+    }else if(p.quantity){
+      const qm=String(p.quantity).match(/([\d.,]+)\s*(kg|g|l|dl|cl|ml|stk|stück|pièces?|x)/i);
+      if(qm){pkgMenge=qm[1].replace(',','.');pkgEinheit=mapOFFUnit(qm[2]);}
+    }
+    // Labels (Bio, Vegan etc.)
+    const labelsRaw=(p.labels_tags||[]).join(' ').toLowerCase();
+    const labels=[];
+    if(/organic|bio|biologique/.test(labelsRaw))labels.push('Bio');
+    if(/\bvegan\b/.test(labelsRaw))labels.push('Vegan');
+    if(/vegetarian|végétarien/.test(labelsRaw))labels.push('Vegetarisch');
+    if(/gluten-free|sans-gluten|glutenfrei/.test(labelsRaw))labels.push('Glutenfrei');
+    if(/lactose-free|sans-lactose|laktosefrei/.test(labelsRaw))labels.push('Laktosefrei');
+    // Nährwerte pro 100g/100ml
+    const n=p.nutriments||{};
+    const naehr={
+      kcal:n['energy-kcal_100g']!==undefined?Math.round(n['energy-kcal_100g']):null,
+      fett:n.fat_100g!==undefined?n.fat_100g:null,
+      kh:n.carbohydrates_100g!==undefined?n.carbohydrates_100g:null,
+      zucker:n.sugars_100g!==undefined?n.sugars_100g:null,
+      eiweiss:n.proteins_100g!==undefined?n.proteins_100g:null,
+      salz:n.salt_100g!==undefined?n.salt_100g:null,
+    };
+    const hatNaehr=Object.values(naehr).some(v=>v!==null);
     const result={
       name:p.product_name_de||p.product_name||p.generic_name||'',
       marke:p.brands?p.brands.split(',')[0].trim():'',
       foto:p.image_front_url||p.image_url||'',
       kat:mapOFFCategory(p.categories_tags||[]),
+      pkgMenge,pkgEinheit,
+      labels,
+      naehr:hatNaehr?naehr:null,
+      nutriscore:(p.nutriscore_grade||'').toUpperCase(),
     };
-    if(statusEl){statusEl.className='lookup-status ok';statusEl.innerHTML=I.chk+' Produkt gefunden: '+esc(result.name||barcode);}
+    if(statusEl){
+      const extras=[];
+      if(pkgMenge)extras.push(pkgMenge+' '+pkgEinheit);
+      if(labels.length)extras.push(labels.join(', '));
+      statusEl.className='lookup-status ok';
+      statusEl.innerHTML=I.chk+' Produkt gefunden: '+esc(result.name||barcode)+(extras.length?' <span style="color:var(--t2)">('+esc(extras.join(' · '))+')</span>':'');
+    }
     return result;
   }catch(e){
     if(statusEl){statusEl.className='lookup-status err';statusEl.innerHTML=I.xc+' Online-Suche fehlgeschlagen (keine Verbindung?).';}
     return null;
   }
+}
+function mapOFFUnit(u){
+  const x=String(u||'').toLowerCase().trim();
+  if(/^(g|gramm|gram)$/.test(x))return 'g';
+  if(/^(kg|kilo)/.test(x))return 'kg';
+  if(/^(l|liter|litre)$/.test(x))return 'l';
+  if(/^dl$/.test(x))return 'dl';
+  if(/^cl$/.test(x))return 'ml'; // cl → ml (×10 müsste separat, aber selten)
+  if(/^ml$/.test(x))return 'ml';
+  if(/^(stk|stück|pièce|piece|x)/.test(x))return 'Stk';
+  return x;
 }
 function mapOFFCategory(tags){
   const t=tags.join(' ').toLowerCase();
@@ -915,6 +973,22 @@ function mapOFFCategory(tags){
 
 /* ── Routing ──────────────────────────────────────────────────────── */
 let cur='s-lager';
+// Android/Chrome + Passwortmanager davon abhalten, Text-/Zahlenfelder als Login/Passwort zu behandeln
+function suppressAutofill(root){
+  const scope=root||document;
+  scope.querySelectorAll('input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="date"]),textarea').forEach(el=>{
+    if(el.dataset._afDone)return;
+    el.setAttribute('autocomplete','off');
+    el.setAttribute('autocorrect','off');
+    el.setAttribute('autocapitalize','off');
+    el.setAttribute('spellcheck','false');
+    el.setAttribute('data-1p-ignore','');   // 1Password
+    el.setAttribute('data-lpignore','true'); // LastPass
+    el.setAttribute('data-form-type','other');
+    el.dataset._afDone='1';
+  });
+}
+
 function goScreen(id){
   if(cur!==id&&(cur==='s-eingang'||cur==='s-ausgang')&&qRunning){closeScanner();}
   document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
@@ -1276,20 +1350,31 @@ function openMergeDialog(id){
   dlg.id='merge-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;max-height:80vh;overflow-y:auto;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;max-height:80vh;display:flex;flex-direction:column;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">«'+esc(a.name)+'» zusammenführen mit…</div>'+
-      '<div style="font-size:12px;color:var(--t2);margin-bottom:14px">Der gewählte Artikel wird in «'+esc(a.name)+'» eingegliedert: Bestände addiert, Barcodes übernommen, danach gelöscht. Name, Kategorie und Lagerort von «'+esc(a.name)+'» bleiben erhalten.</div>'+
-      andere.map(o=>{
-        const codes=alleCodes(o).length;
-        return '<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--bd)">'+
-          '<div style="min-width:0"><div style="font-size:14px;font-weight:500">'+esc(o.name)+'</div>'+
-          '<div style="font-size:12px;color:var(--t2)">'+o.menge+' '+esc(o.einheit||'Stk')+' · '+esc(o.lager)+(codes?' · '+codes+' Barcode'+(codes===1?'':'s'):'')+'</div></div>'+
-          '<button onclick="mergeArtikel('+id+','+o.id+')" style="background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:8px 14px;font-size:13px;cursor:pointer;flex-shrink:0;margin-left:8px">Zusammenführen</button>'+
-        '</div>';
-      }).join('')+
-      '<button onclick="document.getElementById(\'merge-dlg\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+      '<div style="font-size:12px;color:var(--t2);margin-bottom:12px">Der gewählte Artikel wird in «'+esc(a.name)+'» eingegliedert: Bestände addiert, Barcodes übernommen, danach gelöscht. Name, Kategorie und Lagerort von «'+esc(a.name)+'» bleiben erhalten.</div>'+
+      '<input type="text" id="merge-search" placeholder="🔍 Artikel suchen…" oninput="filterMergeList('+id+')" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:14px;margin-bottom:10px;flex-shrink:0"/>'+
+      '<div id="merge-list" style="overflow-y:auto;flex:1"></div>'+
+      '<button onclick="document.getElementById(\'merge-dlg\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2);flex-shrink:0">Abbrechen</button>'+
     '</div>';
   document.body.appendChild(dlg);
+  filterMergeList(id);
+}
+
+function filterMergeList(id){
+  const q=(document.getElementById('merge-search')?.value||'').toLowerCase().trim();
+  const andere=S.a.filter(x=>x.id!==id&&(!q||x.name.toLowerCase().includes(q)||(x.marke||'').toLowerCase().includes(q)||alleCodes(x).some(c=>c.includes(q)))).sort((x,y)=>x.name.localeCompare(y.name,'de'));
+  const list=document.getElementById('merge-list');
+  if(!list)return;
+  if(!andere.length){list.innerHTML='<div style="text-align:center;padding:24px;color:var(--t3);font-size:13px">Kein Artikel gefunden</div>';return;}
+  list.innerHTML=andere.map(o=>{
+    const codes=alleCodes(o).length;
+    return '<div style="display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--bd)">'+
+      '<div style="min-width:0"><div style="font-size:14px;font-weight:500">'+esc(o.name)+(o.marke?' <span style="font-size:11px;color:var(--t2)">'+esc(o.marke)+'</span>':'')+'</div>'+
+      '<div style="font-size:12px;color:var(--t2)">'+o.menge+' '+esc(o.einheit||'Stk')+' · '+esc(o.lager)+(codes?' · '+codes+' Barcode'+(codes===1?'':'s'):'')+'</div></div>'+
+      '<button onclick="mergeArtikel('+id+','+o.id+')" style="background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:8px 14px;font-size:13px;cursor:pointer;flex-shrink:0;margin-left:8px">Zusammenführen</button>'+
+    '</div>';
+  }).join('');
 }
 
 function mergeArtikel(zielId,quelleId){
@@ -1356,6 +1441,21 @@ function renderExtraBarcodes(){
     '</div>'
   ).join('');
 }
+function checkBarcodeDup(val){
+  const el=document.getElementById('bc-dup-hint');
+  if(!el)return;
+  const code=(val||'').trim();
+  if(code.length<6){el.style.display='none';return;}
+  const found=artikelByCode(code);
+  // Nicht warnen wenn es der aktuell bearbeitete Artikel selbst ist
+  if(found&&found.id!==editId){
+    el.innerHTML='⚠ Barcode bereits vergeben an: <strong>'+esc(found.name)+'</strong> ('+found.menge+' '+esc(found.einheit||'Stk')+' · '+esc(found.lager)+')';
+    el.style.display='block';
+  }else{
+    el.style.display='none';
+  }
+}
+
 function scanExtraBarcode(i){
   // Nutzt den vorhandenen f-bc-Kamerabereich, schreibt Ergebnis aber ins Zusatz-Array
   openScanner('f-bc',(code)=>{
@@ -1384,7 +1484,7 @@ function openForm(id){
   const packEinheiten=[...new Set([...PACK_EINS,...S.ei])];
   const epo=packEinheiten.map(u=>'<option'+(a&&a.packEinheit===u?' selected':(!a&&u==='dl'?' selected':''))+'>'+esc(u)+'</option>').join('');
   document.getElementById('form-body').innerHTML=
-  '<div class="fd"><label>Barcode</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="f-bc" placeholder="7610200071017" inputmode="numeric" value="'+(a?esc(a.barcode||''):'')+'" /></div><button class="scb" onclick="openScanner(\'f-bc\')">'+I.scan+' Scannen</button></div>'+camScannerHTML('f-bc')+'<div style="display:flex;gap:8px;margin-top:8px"><button type="button" class="lookup-btn" style="flex:1" onclick="doLookupForm()">'+I.globe+' Produktdaten online suchen</button></div><div class="lookup-status" id="lookup-status-f"></div>'+
+  '<div class="fd"><label>Barcode</label><div class="bcr"><div class="fd" style="margin-bottom:0"><input type="text" id="f-bc" placeholder="7610200071017" inputmode="numeric" value="'+(a?esc(a.barcode||''):'')+'" oninput="checkBarcodeDup(this.value)" /></div><button class="scb" onclick="openScanner(\'f-bc\')">'+I.scan+' Scannen</button></div>'+camScannerHTML('f-bc')+'<div id="bc-dup-hint" style="display:none;font-size:12px;color:var(--wn);background:var(--wl);border-radius:var(--rs);padding:6px 10px;margin-top:6px"></div><div style="display:flex;gap:8px;margin-top:8px"><button type="button" class="lookup-btn" style="flex:1" onclick="doLookupForm()">'+I.globe+' Produktdaten online suchen</button></div><div class="lookup-status" id="lookup-status-f"></div>'+
   '<div id="extra-bc-wrap" style="margin-top:10px"></div>'+
   '<button type="button" onclick="addExtraBarcode()" style="width:100%;margin-top:8px;padding:9px;background:var(--bg);border:1px dashed var(--bd);border-radius:var(--rs);font-size:13px;color:var(--ac);cursor:pointer">+ Weiteren Barcode hinzufügen</button>'+
   '</div>'+
@@ -1443,6 +1543,40 @@ async function doLookupForm(){
   if(result.kat){
     const kc=document.querySelector('#f-ka .chip[data-kat="'+result.kat+'"]');
     if(kc){document.querySelectorAll('#f-ka .chip[data-kat]').forEach(c=>c.classList.remove('on'));kc.classList.add('on');}
+  }
+  // Verpackungsmenge + Einheit
+  if(result.pkgMenge&&result.pkgEinheit){
+    // Bei Gewicht/Volumen (Offen-Verkauf-Einheiten) → als Packungsgrösse
+    const pgEl=document.getElementById('f-pg');
+    const peEl=document.getElementById('f-pe');
+    if(pgEl&&!pgEl.value.trim())pgEl.value=result.pkgMenge;
+    if(peEl){
+      const opt=[...peEl.options].find(o=>o.value===result.pkgEinheit);
+      if(opt)peEl.value=result.pkgEinheit;
+    }
+    // Einheit des Artikels passend setzen wenn noch Default
+    const eiEl=document.getElementById('f-ei');
+    if(eiEl&&isDecUnit(result.pkgEinheit)){
+      const opt=[...eiEl.options].find(o=>o.value===result.pkgEinheit);
+      if(opt)eiEl.value=result.pkgEinheit;
+    }
+  }
+  // Labels + Nährwerte in Notiz einfügen (nur wenn Notiz leer)
+  const ntEl=document.getElementById('f-nt');
+  if(ntEl&&!ntEl.value.trim()){
+    const teile=[];
+    if(result.labels&&result.labels.length)teile.push(result.labels.join(', '));
+    if(result.nutriscore&&/^[A-E]$/.test(result.nutriscore))teile.push('Nutri-Score '+result.nutriscore);
+    if(result.naehr){
+      const n=result.naehr;
+      const nz=[];
+      if(n.kcal!==null)nz.push(n.kcal+' kcal');
+      if(n.fett!==null)nz.push('Fett '+n.fett+'g');
+      if(n.kh!==null)nz.push('KH '+n.kh+'g');
+      if(n.eiweiss!==null)nz.push('Eiweiss '+n.eiweiss+'g');
+      if(nz.length)teile.push('Pro 100g/ml: '+nz.join(', '));
+    }
+    if(teile.length)ntEl.value=teile.join('\n');
   }
   if(result.foto&&!fb64){
     try{
@@ -1583,6 +1717,14 @@ async function saveForm(){
   const geChip=document.querySelector('#f-ge .chip.on[data-ge]');
   const kaufort=geChip?geChip.dataset.ge:'';
   const hauptBc=document.getElementById('f-bc').value.trim();
+  // Barcode-Konflikt-Prüfung: gehört der Barcode bereits einem ANDEREN Artikel?
+  if(hauptBc){
+    const bcOwner=artikelByCode(hauptBc);
+    if(bcOwner&&bcOwner.id!==editId){
+      const weiter=confirm('⚠ Der Barcode '+hauptBc+' gehört bereits zu:\n\n«'+bcOwner.name+'» ('+bcOwner.menge+' '+(bcOwner.einheit||'Stk')+' · '+bcOwner.lager+')\n\nTrotzdem speichern? (Beim Scannen wird dann weiterhin «'+bcOwner.name+'» gefunden.)\n\nTipp: Nutze stattdessen «Zusammenführen», wenn es dasselbe Produkt ist.');
+      if(!weiter)return;
+    }
+  }
   const extraBcs=[...new Set(formExtraBarcodes.map(b=>b.trim()).filter(b=>b&&b!==hauptBc))];
   const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,kaufort,menge:(isDecUnit(document.getElementById('f-ei').value)?parseDecimal(document.getElementById('f-mg').value):parseInt(document.getElementById('f-mg').value))||0,einheit:document.getElementById('f-ei').value,mindest:Math.max(0,parseInt(document.getElementById('f-mn').value)||0),barcode:hauptBc,barcodes:extraBcs,preis:standardPreis,packMenge,packEinheit,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
   if(!editId){
@@ -1631,10 +1773,35 @@ async function saveForm(){
     const newA=S.a.find(x=>x.id===newId);
     if(newA){newA.packungen=[{id:newPackId(),menge:d.menge,kaufdatum,ablaufdatum:d.ablaufdatum||''}];}
   }
-  fb64='';ffn='';saveL();hideLdr();closeForm();
+  fb64='';ffn='';saveL();hideLdr();
+  invSaving=true;closeForm();invSaving=false;
   toast(editId?'Artikel aktualisiert':'Artikel hinzugefügt');
+  // Inventar-Übernahme: wenn dieser Artikel aus dem Zwischenspeicher kam, weiter mit dem nächsten
+  if(invBufferCurrent){
+    const e=invBufferCurrent;
+    invBufferCurrent=null;
+    removeFromBufferAndQueue(e);
+    setTimeout(()=>naechsteInvUebernahme(),400);
+  }
 }
-function closeForm(){editId=null;fb64='';ffn='';goScreen('s-lager');}
+let invSaving=false;
+function closeForm(){
+  editId=null;fb64='';ffn='';goScreen('s-lager');
+  // Nur beim echten Abbrechen (nicht beim Speichern) die Inventar-Abfrage zeigen
+  if(invBufferCurrent&&!invSaving){
+    const e=invBufferCurrent;
+    invBufferCurrent=null;
+    setTimeout(()=>{
+      if(invUebernahmeQueue.length&&confirm('Diesen Artikel überspringen und mit dem nächsten fortfahren?\n\n(Abbrechen beendet die Inventar-Übernahme, der Rest bleibt im Zwischenspeicher.)')){
+        invUebernahmeQueue.shift();
+        naechsteInvUebernahme();
+      }else{
+        invUebernahmeQueue=[];
+        toast('Inventar-Übernahme beendet — Rest bleibt im Zwischenspeicher');
+      }
+    },200);
+  }
+}
 
 function openEingangFuerArtikel(artikelId,menge,preis,isAktion,kaufdatum,ablaufdatum){
   const a=S.a.find(x=>x.id===artikelId);if(!a)return;
@@ -2613,8 +2780,17 @@ let aiMatchCache={};
 let aiMatchLoading=false;
 async function buildAiMatchCache(){}
 
+// Grundzutaten: immer als vorhanden gewertet (Selbstverständlichkeiten, nicht im Lager getrackt)
+const GRUNDZUTATEN=['wasser','salz','pfeffer','öl','olivenöl','rapsöl','sonnenblumenöl','pflanzenöl','zucker','mehl','essig'];
+function istGrundzutat(z){
+  const w=z.toLowerCase().trim();
+  return GRUNDZUTATEN.some(g=>w===g||w.includes(g)||g.includes(w)&&w.length>=3);
+}
+
 function aiMatch(zutat,lagerNamen){
   const z=zutat.toLowerCase().trim();
+  // Grundzutaten gelten immer als vorhanden
+  if(istGrundzutat(z))return true;
   const zGruppe=getSynonymGruppe(z);
   return lagerNamen.some(n=>{
     const nl=n.toLowerCase().trim();
@@ -2709,11 +2885,13 @@ function showRezeptDetail(el,fromArtikelId){
   // Zutaten mit Lager-Status
   const names=S.a.map(a=>a.name.toLowerCase());
   const ztHtml=(r.zt||[]).map(z=>{
-    const ok=aiMatch(z,names);
+    const grund=istGrundzutat(z);
+    const ok=grund||aiMatch(z,names);
+    const label=grund?'<span style="font-size:11px;color:var(--t3)">immer da</span>':(ok?'<span style="font-size:11px;color:var(--ok)">vorhanden</span>':'<span style="font-size:11px;color:var(--dg)">fehlt</span>');
     return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd)">'+
-      '<span style="font-size:16px">'+(ok?'✓':'✗')+'</span>'+
+      '<span style="font-size:16px">'+(grund?'∞':ok?'✓':'✗')+'</span>'+
       '<span style="flex:1;font-size:14px;color:'+(ok?'var(--tx)':'var(--t2)')+'">'+esc(z)+'</span>'+
-      (ok?'<span style="font-size:11px;color:var(--ok)">vorhanden</span>':'<span style="font-size:11px;color:var(--dg)">fehlt</span>')+
+      label+
     '</div>';
   }).join('');
 
@@ -3353,7 +3531,167 @@ function invConfirm(){
 }
 function invSkip(){invIdx++;renderInventur();}
 
-/* ── Settings ─────────────────────────────────────────────────────── */
+/* ── Inventar-Erfassung: Barcodes zwischenspeichern, später übernehmen ── */
+function openInvCapture(){
+  renderInvCapture();
+  document.getElementById('invcap-overlay').style.display='flex';
+}
+function closeInvCapture(){
+  document.getElementById('invcap-overlay').style.display='none';
+  if(qRunning){try{Quagga.stop();}catch(e){}qRunning=false;}
+  renderSt();
+}
+function renderInvCapture(){
+  const c=document.getElementById('invcap-content');
+  const anzahl=invBuffer.length;
+  c.innerHTML=
+    '<div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd);background:var(--sf)">'+
+      '<div><div style="font-weight:700;font-size:16px">\ud83d\udce5 Inventar erfassen</div>'+
+      '<div style="font-size:12px;color:var(--t2)">'+anzahl+' im Zwischenspeicher</div></div>'+
+      '<button onclick="closeInvCapture()" style="background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:8px 14px;font-size:13px;cursor:pointer;color:var(--t2)">Schliessen</button>'+
+    '</div>'+
+    '<div style="flex:1;overflow-y:auto;padding:16px 16px calc(20px + env(safe-area-inset-bottom))">'+
+      '<button onclick="startInvScan()" style="width:100%;padding:16px;background:var(--ac);color:#fff;border:none;border-radius:var(--r);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">'+I.scan+' Barcode scannen</button>'+
+      '<div style="display:flex;gap:8px;margin-bottom:14px">'+
+        '<input type="text" id="invcap-manual" inputmode="numeric" placeholder="oder Barcode eintippen\u2026" onkeydown="if(event.key===\'Enter\')addInvManual()" style="flex:1;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--sf);color:var(--tx);font-size:14px"/>'+
+        '<button onclick="addInvManual()" style="padding:11px 16px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);cursor:pointer;color:var(--ac);font-weight:600">+</button>'+
+      '</div>'+
+      camScannerHTML('invcap-scan')+
+      (anzahl?
+        '<div style="font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px">Zwischenspeicher</div>'+
+        invBuffer.map((e,i)=>{
+          const imLager=artikelByCode(e.barcode);
+          return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)">'+
+            '<div style="flex:1;min-width:0">'+
+              '<div style="font-size:14px;font-weight:600;font-family:monospace">'+esc(e.barcode)+'</div>'+
+              '<div style="font-size:12px;color:var(--t2)">'+fmtMenge(e.menge)+' Stk'+(e.mhd?' \u00b7 MHD '+fmtDateCH(e.mhd):'')+(imLager?' \u00b7 <span style="color:var(--ok)">im Lager: '+esc(imLager.name)+'</span>':'')+'</div>'+
+            '</div>'+
+            '<button onclick="editInvBufferEntry('+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:5px 9px;cursor:pointer;font-size:12px;color:var(--ac)">\u270f\ufe0f</button>'+
+            '<button onclick="delInvBufferEntry('+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:5px 9px;cursor:pointer;font-size:12px;color:var(--dg)">\u2715</button>'+
+          '</div>';
+        }).join('')+
+        '<button onclick="startInvUebernahme()" style="width:100%;margin-top:16px;padding:15px;background:var(--ok);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer">\u2192 In Lager \u00fcbernehmen ('+anzahl+')</button>'+
+        '<button onclick="clearInvBuffer()" style="width:100%;margin-top:8px;padding:11px;background:none;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;cursor:pointer;color:var(--t2)">Zwischenspeicher leeren</button>'
+        :'<div style="text-align:center;padding:40px 20px;color:var(--t3)"><div style="font-size:40px;margin-bottom:8px">\ud83d\udce6</div><div style="font-size:14px">Noch keine Barcodes erfasst.<br>Scanne oder tippe einen Barcode ein.</div></div>'
+      )+
+    '</div>';
+}
+function startInvScan(){
+  openScanner('invcap-scan',(code)=>{
+    if(qRunning){try{Quagga.stop();}catch(e){}qRunning=false;}
+    const w=document.getElementById('cam-invcap-scan');if(w)w.style.display='none';
+    askInvMengeMhd(code);
+  });
+}
+function addInvManual(){
+  const el=document.getElementById('invcap-manual');
+  const code=el.value.trim();
+  if(!code)return;
+  el.value='';
+  askInvMengeMhd(code);
+}
+function askInvMengeMhd(barcode,editIndex){
+  const existing=document.getElementById('invcap-mhd-dlg');
+  if(existing)existing.remove();
+  const cur=editIndex!==undefined?invBuffer[editIndex]:null;
+  const imLager=artikelByCode(barcode);
+  const dlg=document.createElement('div');
+  dlg.id='invcap-mhd-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:2px;font-family:monospace">'+esc(barcode)+'</div>'+
+      (imLager?'<div style="font-size:12px;color:var(--ok);margin-bottom:12px">\u2713 Bereits im Lager: '+esc(imLager.name)+'</div>':'<div style="font-size:12px;color:var(--t2);margin-bottom:12px">Neuer Barcode</div>')+
+      '<div class="tc" style="margin-bottom:14px">'+
+        '<div class="fd"><label>Anzahl</label><input type="text" inputmode="decimal" id="invcap-mg" value="'+(cur?esc(String(cur.menge)):'1')+'" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:17px;text-align:right;font-weight:600"/></div>'+
+        '<div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('invcap-mhd',cur&&cur.mhd?cur.mhd:'')+'</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:8px">'+
+        '<button onclick="document.getElementById(\'invcap-mhd-dlg\').remove()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+        '<button onclick="saveInvBufferEntry(\''+esc(barcode)+'\','+(editIndex!==undefined?editIndex:-1)+')" style="flex:2;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">'+(editIndex!==undefined?'Speichern':'\u2713 Hinzuf\u00fcgen & weiter')+'</button>'+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(dlg);
+  setTimeout(()=>{const m=document.getElementById('invcap-mg');if(m){m.focus();m.select();}},100);
+}
+function saveInvBufferEntry(barcode,editIndex){
+  const menge=parseDecimal(document.getElementById('invcap-mg').value)||1;
+  const mhd=document.getElementById('invcap-mhd').value||'';
+  if(editIndex>=0){
+    invBuffer[editIndex]={barcode,menge,mhd};
+  }else{
+    invBuffer.push({barcode,menge,mhd});
+  }
+  saveInvBuffer();
+  const dlg=document.getElementById('invcap-mhd-dlg');
+  if(dlg)dlg.remove();
+  if(navigator.vibrate)navigator.vibrate(40);
+  renderInvCapture();
+  if(editIndex<0)setTimeout(()=>startInvScan(),300);
+}
+function editInvBufferEntry(i){
+  const e=invBuffer[i];if(!e)return;
+  askInvMengeMhd(e.barcode,i);
+}
+function delInvBufferEntry(i){
+  invBuffer.splice(i,1);saveInvBuffer();renderInvCapture();
+}
+function clearInvBuffer(){
+  if(!confirm('Zwischenspeicher wirklich leeren? Alle '+invBuffer.length+' erfassten Barcodes gehen verloren.'))return;
+  invBuffer=[];saveInvBuffer();renderInvCapture();
+}
+let invUebernahmeQueue=[];
+let invBufferCurrent=null;
+function startInvUebernahme(){
+  if(!invBuffer.length)return;
+  invUebernahmeQueue=[...invBuffer];
+  closeInvCapture();
+  naechsteInvUebernahme();
+}
+function naechsteInvUebernahme(){
+  if(!invUebernahmeQueue.length){
+    toast('Alle Eintr\u00e4ge \u00fcbernommen');
+    invBufferCurrent=null;
+    return;
+  }
+  const e=invUebernahmeQueue[0];
+  const imLager=artikelByCode(e.barcode);
+  if(imLager){
+    if(confirm('\u00ab'+imLager.name+'\u00bb ist bereits im Lager.\n\n'+fmtMenge(e.menge)+' Stk als Eingang buchen'+(e.mhd?' (MHD '+fmtDateCH(e.mhd)+')':'')+'?')){
+      ensurePackungen(imLager);
+      imLager.packungen.push({id:newPackId(),menge:e.menge,kaufdatum:todayISO(),ablaufdatum:e.mhd||''});
+      syncMenge(imLager);
+      if(!imLager.preisHistorie)imLager.preisHistorie=[];
+      imLager.preisHistorie.push({datum:todayISO(),preis:imLager.preis||0,menge:e.menge,einheit:imLager.einheit||'Stk',typ:'ein',aktion:false,kaufort:''});
+      addLogEntry('ein',imLager.id,imLager.name,imLager.lager,imLager.kat,e.menge,imLager.einheit,imLager.preis||0,false);
+      saveL();
+      toast('\u2713 '+imLager.name+': Bestand erh\u00f6ht');
+    }
+    removeFromBufferAndQueue(e);
+    naechsteInvUebernahme();
+  }else{
+    openFormFromInvBuffer(e);
+  }
+}
+function removeFromBufferAndQueue(e){
+  invUebernahmeQueue.shift();
+  const bi=invBuffer.findIndex(x=>x.barcode===e.barcode&&x.menge===e.menge&&x.mhd===e.mhd);
+  if(bi>=0){invBuffer.splice(bi,1);saveInvBuffer();}
+}
+function openFormFromInvBuffer(e){
+  invBufferCurrent=e;
+  openForm();
+  setTimeout(()=>{
+    const bc=document.getElementById('f-bc');if(bc){bc.value=e.barcode;checkBarcodeDup(e.barcode);}
+    const mg=document.getElementById('f-mg');if(mg)mg.value=e.menge;
+    const ad=document.getElementById('f-ad');if(ad)ad.value=e.mhd||'';
+    const ft=document.getElementById('form-title');
+    if(ft)ft.textContent='Inventar '+(invBuffer.length-invUebernahmeQueue.length+1)+'/'+invBuffer.length;
+    doLookupForm();
+  },150);
+}
+
+/* \u2500\u2500 Settings \u2500────────────────────────────────────────────────────── */
 function renderSt(){
   const con=gh.tok&&gh.own&&gh.repo;
   const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -3389,6 +3727,8 @@ function renderSt(){
       '<span style="position:absolute;inset:0;background:'+(opt.fotoZwang?'var(--ac)':'var(--b2)')+';border-radius:13px;transition:.2s;cursor:pointer" onclick="event.preventDefault();document.getElementById(\'opt-fotozwang\').click()"><span style="position:absolute;top:3px;left:'+(opt.fotoZwang?'23px':'3px')+';width:20px;height:20px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)"></span></span>'+
     '</label></div>'+
     '<p style="font-size:12px;color:var(--t3);margin-top:6px;line-height:1.5">Neue Artikel können nur mit Foto gespeichert werden. Duplikat-Warnung ist immer aktiv.</p>'+
+    '<button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="openInvCapture()">📥 Inventar erfassen (Barcodes sammeln)</button>'+
+    '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Barcodes mit Anzahl und MHD zwischenspeichern, dann einzeln ins Lager übernehmen. Ideal fürs Grundinventar.'+(invBuffer.length?' <strong style="color:var(--ac)">'+invBuffer.length+' im Zwischenspeicher.</strong>':'')+'</p>'+
     '<button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="openInventur()">📋 Inventur starten</button>'+
     '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Alle Artikel durchgehen und Bestände mit der Realität abgleichen.</p>'+
   '</div>'+
@@ -3834,6 +4174,21 @@ if(!S.a.length){
   saveL();
 }
 nav();sdot(gh.tok?'dt':'ok');renderLager();
+// Autofill-Unterdrückung: initial + bei neu eingefügten Feldern (Dialoge)
+suppressAutofill();
+try{
+  const _afObserver=new MutationObserver(muts=>{
+    for(const m of muts){
+      for(const n of m.addedNodes){
+        if(n.nodeType===1){
+          if(n.matches&&n.matches('input,textarea'))suppressAutofill(n.parentNode||document);
+          else if(n.querySelector&&n.querySelector('input,textarea'))suppressAutofill(n);
+        }
+      }
+    }
+  });
+  _afObserver.observe(document.body,{childList:true,subtree:true});
+}catch(e){}
 const vBadge=document.getElementById('app-version-badge');
 if(vBadge)vBadge.textContent='v'+APP_VERSION;
 
