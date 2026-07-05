@@ -62,6 +62,15 @@
           "einheit": "Kiste",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 50.2,
+          "menge": 2,
+          "einheit": "Kiste",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
       "packungen": [
@@ -78,7 +87,10 @@
           "ablaufdatum": ""
         }
       ],
-      "kaufort": "Landi"
+      "kaufort": "Landi",
+      "barcodes": [
+        "7611703211964"
+      ]
     },
     {
       "id": 3,
@@ -4905,5 +4917,5 @@
       "zeit": 1783265193966
     }
   ],
-  "aktualisiert": "2026-07-05T15:27:03.041Z"
+  "aktualisiert": "2026-07-05T16:21:00.468Z"
 }
