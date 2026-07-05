@@ -38,7 +38,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .chip{padding:5px 13px;border-radius:20px;border:1px solid var(--bd);font-size:13px;background:transparent;color:var(--t2);white-space:nowrap;cursor:pointer;display:flex;align-items:center;gap:5px}
 .chip svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
 .chip.on{background:var(--al);border-color:var(--am);color:var(--ac);font-weight:500}
-.scroll{flex:1;overflow-y:auto;padding:12px 16px calc(var(--nh) + 16px);-webkit-overflow-scrolling:touch}
+.scroll{flex:1;overflow-y:auto;padding:12px 16px calc(var(--nh) + 16px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
 .sc[style*="overflow-y:auto"]{padding-bottom:calc(var(--nh) + env(safe-area-inset-bottom))!important}
 .scroll::-webkit-scrollbar{width:3px}
 .scroll::-webkit-scrollbar-thumb{background:var(--b2);border-radius:2px}
@@ -506,7 +506,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='11.1';
+const APP_VERSION='11.2';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1277,7 +1277,7 @@ function openForm(id){
   '<div class="fd"><label>Kategorie</label><div class="lcw" id="f-ka">'+kc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Anfangsbestand</label><div class="ur"><input type="number" id="f-mg" min="0" value="'+(a?a.menge:1)+'"/><select id="f-ei" onchange="if(this.value===\'__add__\')addEinheit(this)">'+eo+'<option value="__add__">+ Neue Einheit...</option></select></div></div><div class="fd"><label>Mindestbestand</label><input type="number" id="f-mn" min="0" value="'+(a?a.mindest:1)+'"/></div></div>'+
   '<div class="fd"><label>Packungsgrösse <span style="color:var(--t3);font-weight:400">(optional, z.B. 2.5 dl pro Stück)</span></label><div class="ur"><input type="text" inputmode="decimal" id="f-pg" placeholder="z.B. 2.5" value="'+(a&&a.packMenge?esc(a.packMenge):'')+'"/><select id="f-pe">'+epo+'</select></div></div>'+
-  '<div class="fd"><label>Kaufpreis pro '+(isDecUnit(found.einheit)?esc(found.einheit):'Einheit')+' (CHF)'+(isDecUnit(found.einheit)?' — Offen-Verkauf':'')+'</label><input type="text" inputmode="decimal" id="f-pr" placeholder="z.B. 1.95" value="'+(a?esc(a.preis||''):'')+'"/><label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg)"><input type="checkbox" id="f-aktion" style="width:18px;height:18px;accent-color:var(--wn);cursor:pointer"/><div><div style="font-size:14px;font-weight:500;color:var(--tx)">Aktionspreis</div><div style="font-size:12px;color:var(--t2)">Wird als Aktion geloggt, kein neuer Standardpreis</div></div></label></div>'+
+  '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="text" inputmode="decimal" id="f-pr" placeholder="z.B. 1.95" value="'+(a?esc(a.preis||''):'')+'"/><label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg)"><input type="checkbox" id="f-aktion" style="width:18px;height:18px;accent-color:var(--wn);cursor:pointer"/><div><div style="font-size:14px;font-weight:500;color:var(--tx)">Aktionspreis</div><div style="font-size:12px;color:var(--t2)">Wird als Aktion geloggt, kein neuer Standardpreis</div></div></label></div>'+
   '<div class="fd"><label>Lagerort</label><div class="lcw" id="f-lo">'+lc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Kaufdatum</label>'+dateField('f-kd',a?a.kaufdatum||todayISO():todayISO())+'</div><div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('f-ad',a?a.ablaufdatum||'':'')+'</div></div>'+
   '<div class="fd"><label>Wo gekauft</label><div class="lcw" id="f-ge">'+S.ge.map(g=>'<button class="chip'+(a&&a.kaufort===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#f-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+'<button class="chip" onclick="addGeschaeft(this)">+ Neu...</button></div></div>'+
@@ -1403,12 +1403,16 @@ function checkDupHint(val){
   if(!el)return;
   const v=(val||'').trim().toLowerCase();
   if(v.length<3||editId){el.style.display='none';return;}
+  const vGrp=getSynonymGruppe(v);
   const dup=S.a.find(a=>{
     const an=a.name.toLowerCase();
-    return an===v||an.includes(v)||v.includes(an)&&an.length>3;
+    if(an===v||an.includes(v)||v.includes(an)&&an.length>3)return true;
+    const aGrp=getSynonymGruppe(an);
+    return vGrp.some(x=>aGrp.includes(x));
   });
   if(dup){
-    el.innerHTML='⚠ Ähnlicher Artikel vorhanden: <strong>'+esc(dup.name)+'</strong> ('+dup.menge+' '+esc(dup.einheit||'Stk')+')';
+    const syn=dup.name.toLowerCase()!==v&&!dup.name.toLowerCase().includes(v)&&!v.includes(dup.name.toLowerCase());
+    el.innerHTML=(syn?'⚠ Gleiches Produkt als: ':'⚠ Ähnlicher Artikel vorhanden: ')+'<strong>'+esc(dup.name)+'</strong> ('+dup.menge+' '+esc(dup.einheit||'Stk')+')';
     el.style.display='block';
   }else{
     el.style.display='none';
@@ -1427,15 +1431,20 @@ async function saveForm(){
     alert('Foto erforderlich — bitte zuerst ein Foto aufnehmen oder auswählen.\n\n(Diese Pflicht kannst du in den Einstellungen deaktivieren.)');
     return;
   }
-  // Duplikat-Prüfung (nur bei neuen Artikeln)
+  // Duplikat-Prüfung (nur bei neuen Artikeln) — inkl. Synonyme
   if(!editId){
     const nameLc=name.toLowerCase();
+    const nameGrp=getSynonymGruppe(nameLc);
     const dup=S.a.find(a=>{
       const an=a.name.toLowerCase();
-      return an===nameLc||an.includes(nameLc)&&nameLc.length>3||nameLc.includes(an)&&an.length>3;
+      if(an===nameLc||an.includes(nameLc)&&nameLc.length>3||nameLc.includes(an)&&an.length>3)return true;
+      // Synonym-Treffer (z.B. Zucchini ↔ Zucchetti)
+      const aGrp=getSynonymGruppe(an);
+      return nameGrp.some(x=>aGrp.includes(x));
     });
     if(dup){
-      const weiter=confirm('⚠ Ähnlicher Artikel existiert bereits:\n\n«'+dup.name+'» ('+dup.menge+' '+(dup.einheit||'Stk')+' · '+dup.lager+')\n\nTrotzdem als neuen Artikel anlegen?\n\nTipp: Für Bestandserhöhung besser den Eingang-Scan nutzen.');
+      const syn=dup.name.toLowerCase()!==nameLc&&!dup.name.toLowerCase().includes(nameLc)&&!nameLc.includes(dup.name.toLowerCase());
+      const weiter=confirm('⚠ '+(syn?'Gleiches Produkt unter anderem Namen':'Ähnlicher Artikel')+' existiert bereits:\n\n«'+dup.name+'» ('+dup.menge+' '+(dup.einheit||'Stk')+' · '+dup.lager+')\n\nTrotzdem als neuen Artikel anlegen?\n\nTipp: Für Bestandserhöhung besser den Eingang-Scan nutzen.');
       if(!weiter)return;
     }
   }

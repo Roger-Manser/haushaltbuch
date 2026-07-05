@@ -1,4 +1,4 @@
-const CACHE = 'haushaltbuch-v94';
+const CACHE = 'haushaltbuch-v95';
 const ASSETS = [
   './index.html',
   './manifest.json?v=10',
