@@ -1276,7 +1276,15 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648018150_off.jpg",
       "fotoPath": "1782648018150_off.jpg",
-      "preisHistorie": []
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-28",
+          "ablaufdatum": ""
+        }
+      ]
     },
     {
       "id": 42,
@@ -2655,13 +2663,6 @@
       "checked": false,
       "menge": "2",
       "einheit": "Pkg"
-    },
-    {
-      "id": 1783264265573,
-      "text": "Senf Mild",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
     }
   ],
   "einkaufOverrides": {
@@ -4849,5 +4850,5 @@
       "zeit": 1783261199146
     }
   ],
-  "aktualisiert": "2026-07-05T15:11:07.476Z"
+  "aktualisiert": "2026-07-05T15:15:37.909Z"
 }
