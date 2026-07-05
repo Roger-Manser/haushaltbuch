@@ -2655,6 +2655,13 @@
       "checked": false,
       "menge": "2",
       "einheit": "Pkg"
+    },
+    {
+      "id": 1783264265573,
+      "text": "Senf Mild",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
     }
   ],
   "einkaufOverrides": {
@@ -4842,5 +4849,5 @@
       "zeit": 1783261199146
     }
   ],
-  "aktualisiert": "2026-07-05T15:10:45.206Z"
+  "aktualisiert": "2026-07-05T15:11:07.476Z"
 }
