@@ -2495,6 +2495,96 @@
           "ablaufdatum": "2027-03-31"
         }
       ]
+    },
+    {
+      "id": 74,
+      "name": "Kartoffelpüree",
+      "marke": "Aldi",
+      "kat": "Konserven & Trockenware",
+      "lager": "Küche",
+      "kaufort": "Aldi",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "4099200014753",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 3,
+      "packEinheit": "Pkg",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2027-07-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783260923743_off.jpg",
+      "fotoPath": "1783260923743_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2027-07-31"
+        }
+      ]
+    },
+    {
+      "id": 76,
+      "name": "Lasagne Blätter",
+      "marke": "Barilla",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Denner",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "8076809523738",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2027-12-06",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783261084867_off.jpg",
+      "fotoPath": "1783261084867_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2027-12-06"
+        }
+      ]
+    },
+    {
+      "id": 77,
+      "name": "Maiskörner",
+      "marke": "Denner",
+      "kat": "Gemüse & Früchte",
+      "lager": "Vorratsschrank",
+      "kaufort": "Denner",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7610029028652",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 285,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2028-10-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783261156063_off.jpg",
+      "fotoPath": "1783261156063_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 6,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2028-10-31"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -4697,7 +4787,60 @@
       "aktion": false,
       "datum": "2026-07-05",
       "zeit": 1783260884234
+    },
+    {
+      "t": "ein",
+      "aid": 74,
+      "name": "Kartoffelpüree",
+      "lager": "Küche",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783260965161
+    },
+    {
+      "t": "ein",
+      "aid": 75,
+      "name": "Fisch Thunfisch Filets in eigenem Saft",
+      "lager": "Vorratsschrank",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783261025578,
+      "geloescht": true
+    },
+    {
+      "t": "ein",
+      "aid": 76,
+      "name": "Lasagne Blätter",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783261136678
+    },
+    {
+      "t": "ein",
+      "aid": 77,
+      "name": "Maiskörner",
+      "lager": "Vorratsschrank",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783261199146
     }
   ],
-  "aktualisiert": "2026-07-05T14:14:51.809Z"
+  "aktualisiert": "2026-07-05T14:20:04.008Z"
 }
