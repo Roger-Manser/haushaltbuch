@@ -2284,7 +2284,8 @@
           "kaufdatum": "2026-07-04",
           "ablaufdatum": "2026-07-18"
         }
-      ]
+      ],
+      "ownCode": "HB-000068"
     },
     {
       "id": 68,
@@ -2332,6 +2333,36 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 69,
+      "name": "Petersilie",
+      "marke": "",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "",
+      "preis": 0,
+      "packMenge": 2,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783249810246_17832498025133846087262185417538.jpg",
+      "fotoPath": "1783249810246_17832498025133846087262185417538.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": ""
+        }
+      ],
+      "ownCode": "HB-000069"
     }
   ],
   "lagerorte": [
@@ -2391,10 +2422,25 @@
     {
       "id": 1783156988211,
       "text": "Lauge",
-      "checked": false
+      "checked": false,
+      "menge": "1",
+      "einheit": ""
+    },
+    {
+      "id": 1783165371487,
+      "text": "Zigaretten Goldfield Gold",
+      "sub": "mind. 2 Stange",
+      "checked": false,
+      "menge": "2",
+      "einheit": "Pkg"
     }
   ],
-  "einkaufOverrides": {},
+  "einkaufOverrides": {
+    "40": {
+      "einheit": "Pkg",
+      "menge": "4"
+    }
+  },
   "log": [
     {
       "t": "ein",
@@ -4415,7 +4461,20 @@
       "aktion": false,
       "datum": "2026-07-04",
       "zeit": 1783153421761
+    },
+    {
+      "t": "ein",
+      "aid": 69,
+      "name": "Petersilie",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783249819933
     }
   ],
-  "aktualisiert": "2026-07-05T11:16:58.201Z"
+  "aktualisiert": "2026-07-05T11:17:28.745Z"
 }
