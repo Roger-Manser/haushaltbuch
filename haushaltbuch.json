@@ -2601,6 +2601,112 @@
           "ablaufdatum": "2028-10-31"
         }
       ]
+    },
+    {
+      "id": 78,
+      "name": "S. Andrea Risotto-Reis",
+      "marke": "M-Classic",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "4061461011536",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 1,
+      "packEinheit": "kg",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2021-11-30",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783268769358_off.jpg",
+      "fotoPath": "1783268769358_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-07-05",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2021-11-30"
+        },
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2022-12-31"
+        }
+      ]
+    },
+    {
+      "id": 79,
+      "name": "Langkornreis",
+      "marke": "M-Classic",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7610200010902",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 1,
+      "packEinheit": "kg",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2026-10-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783268893197_off.jpg",
+      "fotoPath": "1783268893197_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 2,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2026-10-31"
+        }
+      ]
+    },
+    {
+      "id": 80,
+      "name": "Hartweizengriess",
+      "marke": "M Classic",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7613312078808",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2021-12-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783268935054_off.jpg",
+      "fotoPath": "1783268935054_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 2,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2021-12-31"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -4915,7 +5021,59 @@
       "aktion": false,
       "datum": "2026-07-05",
       "zeit": 1783265193966
+    },
+    {
+      "t": "ein",
+      "aid": 78,
+      "name": "S. Andrea Risotto-Reis",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783268721764
+    },
+    {
+      "t": "ein",
+      "aid": 78,
+      "name": "S. Andrea Risotto-Reis",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783268877960
+    },
+    {
+      "t": "ein",
+      "aid": 79,
+      "name": "Langkornreis",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783268916340
+    },
+    {
+      "t": "ein",
+      "aid": 80,
+      "name": "Hartweizengriess",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783268970099
     }
   ],
-  "aktualisiert": "2026-07-05T16:22:29.928Z"
+  "aktualisiert": "2026-07-05T16:29:37.796Z"
 }
