@@ -1074,7 +1074,7 @@
       "marke": "Bonvalle",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20813055",
@@ -1082,7 +1082,7 @@
       "packMenge": 330,
       "packEinheit": "g",
       "kaufdatum": "2026-07-04",
-      "ablaufdatum": "2026-07-03",
+      "ablaufdatum": "2026-07-11",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542205864_off.jpg",
       "fotoPath": "1782542205864_off.jpg",
@@ -1109,15 +1109,17 @@
           "typ": "ein",
           "aktion": true,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-05",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
         }
       ],
       "packungen": [
-        {
-          "id": 2,
-          "menge": 1,
-          "kaufdatum": "2026-06-27",
-          "ablaufdatum": "2026-07-03"
-        },
         {
           "id": 3,
           "menge": 1,
@@ -2363,6 +2365,136 @@
         }
       ],
       "ownCode": "HB-000069"
+    },
+    {
+      "id": 70,
+      "name": "WC-Papier",
+      "marke": "Tempo 5-Lagig",
+      "kat": "Reinigung & Pflege",
+      "lager": "Schlof",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 1,
+      "barcode": "7322541154329",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 16,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783260037948_17832600252182022123947108572965.jpg",
+      "fotoPath": "1783260037948_17832600252182022123947108572965.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 71,
+      "name": "Curry Madras Fort Mc Cormick 38 Gr, 1 Bocal",
+      "marke": "Mccormick",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Denner",
+      "menge": 0,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7610071221063",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-06-08",
+      "ablaufdatum": "2028-11-27",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783260709238_off.jpg",
+      "fotoPath": "1783260709238_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-07-05",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-05",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        }
+      ],
+      "packungen": []
+    },
+    {
+      "id": 72,
+      "name": "Meersalz",
+      "marke": "Leibundgut",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7611337293619",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783260825426_off.jpg",
+      "fotoPath": "1783260825426_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 73,
+      "name": "Muskatnuss",
+      "marke": "Kania",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "4056489441335",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2027-03-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783260859356_off.jpg",
+      "fotoPath": "1783260859356_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2027-03-31"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -4474,7 +4606,98 @@
       "aktion": false,
       "datum": "2026-07-05",
       "zeit": 1783249819933
+    },
+    {
+      "t": "ein",
+      "aid": 70,
+      "name": "WC-Papier",
+      "lager": "Schlof",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783260100613
+    },
+    {
+      "t": "aus",
+      "aid": 36,
+      "name": "Pouletschnitzel a la minute",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783260426256
+    },
+    {
+      "t": "ein",
+      "aid": 71,
+      "name": "Curry Madras Fort Mc Cormick 38 Gr, 1 Bocal",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783260757189
+    },
+    {
+      "t": "aus",
+      "aid": 71,
+      "name": "Curry Madras Fort Mc Cormick 38 Gr, 1 Bocal",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783260773929
+    },
+    {
+      "t": "aus",
+      "aid": 71,
+      "name": "Curry Madras Fort Mc Cormick 38 Gr, 1 Bocal",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783260790429
+    },
+    {
+      "t": "ein",
+      "aid": 72,
+      "name": "Meersalz",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783260838393
+    },
+    {
+      "t": "ein",
+      "aid": 73,
+      "name": "Muskatnuss",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783260884234
     }
   ],
-  "aktualisiert": "2026-07-05T13:58:19.410Z"
+  "aktualisiert": "2026-07-05T14:14:51.809Z"
 }
