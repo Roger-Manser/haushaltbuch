@@ -3414,6 +3414,36 @@
           "ablaufdatum": "2023-05-31"
         }
       ]
+    },
+    {
+      "id": 104,
+      "name": "Sambal Oelek",
+      "marke": "Avopri",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7610948070107",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-07-07",
+      "ablaufdatum": "2027-09-30",
+      "notiz": "Nutri-Score E\nPro 100g/ml: 42 kcal, Fett 0.7g, KH 4.4g, Eiweiss 2.1g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783416243542_off.jpg",
+      "fotoPath": "1783416243542_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-07",
+          "ablaufdatum": "2027-09-30"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -6110,7 +6140,20 @@
       "aktion": false,
       "datum": "2026-07-07",
       "zeit": 1783411432030
+    },
+    {
+      "t": "ein",
+      "aid": 104,
+      "name": "Sambal Oelek",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783416287159
     }
   ],
-  "aktualisiert": "2026-07-07T08:08:06.870Z"
+  "aktualisiert": "2026-07-07T09:30:56.811Z"
 }
