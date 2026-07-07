@@ -509,7 +509,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='13.1';
+const APP_VERSION='13.4';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -554,6 +554,14 @@ function loadL(){
       const m=String(e.menge).match(/^([\d.,]+)\s*(.*)$/);
       if(m){e.menge=m[1];e.einheit=m[2]||'';}
     }
+  });
+  // Bereinigung: kaputte "undefined"/"null"-Strings in Artikelfeldern korrigieren
+  (S.a||[]).forEach(a=>{
+    const pm=parseFloat(a.packMenge);
+    if(isNaN(pm)||pm<=0){a.packMenge=0;}else{a.packMenge=pm;}
+    if(a.packEinheit==='undefined'||a.packEinheit==='null'||a.packEinheit===undefined)a.packEinheit='';
+    if(a.einheit==='undefined'||a.einheit==='null'||!a.einheit)a.einheit='Stk';
+    if(a.marke==='undefined'||a.marke==='null')a.marke='';
   });
   try{const r=localStorage.getItem('hbgh');if(r)gh=JSON.parse(r);}catch(e){}
   try{const c=localStorage.getItem('hb_ai_cache');if(c)aiMatchCache=JSON.parse(c);}catch(e){}
@@ -1349,7 +1357,7 @@ function showDet(id){
       return '<div class="ir" style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showRezeptDetail(this,'+id+')" data-r=\''+rJson+'\'>'+thumb+'<div><div style="font-size:13px;font-weight:500">'+esc(r.name)+'</div><div style="font-size:11px;color:var(--t2)">'+r.port+' Port. · '+r.min+' min</div></div></div>';
     }).join('')+'</div>':
     '';
-  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span><span class="iv">'+(a.ablaufdatum?expBadgeKurz(a)+' '+fmtDateCH(a.ablaufdatum):'—')+'</span></div>'+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+(opt.fwAnbruch?'<div class="acr" style="margin-top:8px"><button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen (abgelaufen)</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>':'<div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>')+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
+  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span>'+(a.ablaufdatum?'<span style="flex:1;text-align:center">'+expBadgeKurz(a)+'</span><span class="iv" style="flex:none">'+fmtDateCH(a.ablaufdatum)+'</span>':'<span class="iv">—</span>')+'</div>'+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+(opt.fwAnbruch?'<div class="acr" style="margin-top:8px"><button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen (abgelaufen)</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>':'<div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>')+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
   const heroEl=document.getElementById('dh-hero-img');
   if(heroEl)heroEl.addEventListener('click',()=>openLightbox(a.foto));
   goScreen('s-detail');
@@ -4028,6 +4036,45 @@ function openFormFromInvBuffer(e){
 }
 
 /* \u2500\u2500 Settings \u2500────────────────────────────────────────────────────── */
+// Haltbarkeits-Puffer-Übersicht in Einstellungen (pro Kategorie, anpassbar)
+function renderPufferSektion(){
+  const kats=Object.keys(KAT_PUFFER_DEFAULT);
+  const zeilen=kats.map(k=>{
+    const verderblich=VERDERBLICH.includes(k);
+    const wert=katPuffer(k);
+    const istStandard=!opt.katPuffer||typeof opt.katPuffer[k]!=='number';
+    if(verderblich){
+      return '<div class="lmi" style="align-items:center;opacity:.6"><span style="flex:1">'+esc(k)+'</span><span style="font-size:12px;color:var(--dg)">verderblich · 0 Tage</span></div>';
+    }
+    return '<div class="lmi" style="align-items:center"><span style="flex:1">'+esc(k)+(istStandard?'':' <span style="font-size:10px;color:var(--ac)">●</span>')+'</span>'+
+      '<div style="display:flex;align-items:center;gap:4px;flex-shrink:0">'+
+        '<input type="text" inputmode="numeric" value="'+wert+'" onchange="setKatPuffer(\''+esc(k).replace(/'/g,"\\'")+'\',this.value)" style="width:64px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:13px;text-align:right"/>'+
+        '<span style="font-size:12px;color:var(--t3)">Tage</span>'+
+      '</div></div>';
+  }).join('');
+  return '<div class="ss"><div class="ssl">Haltbarkeits-Puffer über MHD</div>'+
+    '<p style="font-size:12px;color:var(--t3);margin:0 0 10px;line-height:1.5">Wie viele Tage ein Produkt der Kategorie typisch über dem MHD noch geniessbar ist (Richtwerte: Tafel/Verbraucherzentrale). <span style="color:var(--ac)">●</span> = von dir angepasst. Verderbliche Kategorien bleiben immer 0.</p>'+
+    zeilen+
+    '<button class="bg2" style="width:100%;margin-top:10px;font-size:13px" onclick="resetKatPuffer()">Auf Standardwerte zurücksetzen</button>'+
+    '<p style="font-size:11px;color:var(--t3);margin-top:8px;line-height:1.5">Hinweis: Nur ein Richtwert — bei Zweifel gilt «gucken, riechen, schmecken». Pro Artikel kannst du den Wert im Formular überschreiben.</p>'+
+  '</div>';
+}
+function setKatPuffer(kat,val){
+  const n=parseInt(val);
+  if(!opt.katPuffer)opt.katPuffer={};
+  if(isNaN(n)||n<0){
+    delete opt.katPuffer[kat];
+  }else{
+    opt.katPuffer[kat]=n;
+  }
+  saveOpt();renderSt();
+}
+function resetKatPuffer(){
+  if(!confirm('Alle Haltbarkeits-Puffer auf die Standard-Richtwerte zurücksetzen?'))return;
+  opt.katPuffer={};saveOpt();renderSt();
+  toast('Puffer auf Standardwerte zurückgesetzt');
+}
+
 // Wiederverwendbarer Toggle-Schalter für opt-Flags
 function optToggle(key,label,beschreibung){
   const on=!!opt[key];
@@ -4078,7 +4125,7 @@ function renderSt(){
     '<button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="openInventur()">📋 Inventur starten</button>'+
     '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Alle Artikel durchgehen und Bestände mit der Realität abgleichen.</p>'+
   '</div>'+
-  '<div class="ss"><div class="ssl">Anti-Foodwaste</div>'+'<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Funktionen gegen Lebensmittelverschwendung — einzeln ein-/ausschaltbar.</p>'+optToggle('fwDashboard','⏰ Ablauf-Dashboard','Zeigt oben in der Lagerliste, was in den nächsten 3 Tagen verbraucht werden sollte.')+optToggle('fwAuswertung','🔍 Foodwaste-Muster','Auswertung in der Statistik: welche Artikel/Kategorien du am häufigsten wegwirfst.')+optToggle('fwMengenWarnung','💡 Mengen-Warnung beim Einkauf','Hinweis, wenn du einen oft verworfenen Artikel auf die Einkaufsliste setzt.')+optToggle('fwAnbruch','📂 Anbruch-Verwaltung','«Geöffnet»-Knopf im Artikel verkürzt die Haltbarkeit passend zur Kategorie.')+optToggle('fwGefrier','❄️ Gefrier-Empfehlung','Schlägt bei bald ablaufenden, einfrierbaren Artikeln das Einfrieren vor.')+optToggle('fwUeberkauf','📊 Überkauf-Erkennung','Erkennt aus der Kaufhistorie, wenn du mehr kaufst als verbrauchst.')+'</div>'+'<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong>v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button></div>'+
+  '<div class="ss"><div class="ssl">Anti-Foodwaste</div>'+'<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Funktionen gegen Lebensmittelverschwendung — einzeln ein-/ausschaltbar.</p>'+optToggle('fwDashboard','⏰ Ablauf-Dashboard','Zeigt oben in der Lagerliste, was in den nächsten 3 Tagen verbraucht werden sollte.')+optToggle('fwAuswertung','🔍 Foodwaste-Muster','Auswertung in der Statistik: welche Artikel/Kategorien du am häufigsten wegwirfst.')+optToggle('fwMengenWarnung','💡 Mengen-Warnung beim Einkauf','Hinweis, wenn du einen oft verworfenen Artikel auf die Einkaufsliste setzt.')+optToggle('fwAnbruch','📂 Anbruch-Verwaltung','«Geöffnet»-Knopf im Artikel verkürzt die Haltbarkeit passend zur Kategorie.')+optToggle('fwGefrier','❄️ Gefrier-Empfehlung','Schlägt bei bald ablaufenden, einfrierbaren Artikeln das Einfrieren vor.')+optToggle('fwUeberkauf','📊 Überkauf-Erkennung','Erkennt aus der Kaufhistorie, wenn du mehr kaufst als verbrauchst.')+'</div>'+renderPufferSektion()+'<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong>v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button></div>'+
   '<div class="ss"><div class="ssl">Daten</div><button class="db-btn" onclick="expJ()">'+I.dl+' Lokaler Export (JSON)</button><button class="db-btn" onclick="document.getElementById(\'imp\').click()">'+I.ul+' Lokaler Import (JSON)<input type="file" id="imp" accept=".json" style="display:none" onchange="impJ(event)"/></button><button class="db-btn d" onclick="clearLog()">'+I.trash+' Bewegungsprotokoll löschen</button><button class="db-btn d" onclick="resetAll()">'+I.trash+' Alle Daten löschen</button></div>';
 }
 function saveGHcfg(){gh={tok:document.getElementById('gh-t').value.trim(),own:document.getElementById('gh-o').value.trim(),repo:document.getElementById('gh-r').value.trim(),br:document.getElementById('gh-b').value.trim()||'main',rzrepo:document.getElementById('gh-rz').value.trim()||''};saveGH();toast('GitHub gespeichert');renderSt();}
@@ -4442,9 +4489,13 @@ function hideLdr(){document.getElementById('ldr').classList.remove('on');}
 /* ── Utils ────────────────────────────────────────────────────────── */
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function packInfo(a){
-  if(!a.packMenge||a.packMenge<=0)return '';
-  const pm=a.packMenge%1===0?a.packMenge:a.packMenge.toFixed(1);
-  return pm+' '+(a.packEinheit||'dl')+'/'+(a.einheit==='Stk'?'Stk':a.einheit||'Stk');
+  const pmNum=parseFloat(a.packMenge);
+  if(!pmNum||pmNum<=0||isNaN(pmNum))return '';
+  const pm=pmNum%1===0?pmNum:pmNum.toFixed(1);
+  let pe=a.packEinheit;
+  if(!pe||pe==='undefined'||pe==='null')pe='dl';
+  const eh=(!a.einheit||a.einheit==='undefined')?'Stk':a.einheit;
+  return pm+' '+pe+'/'+(eh==='Stk'?'Stk':eh);
 }
 function packTotal(a){
   if(!a.packMenge||a.packMenge<=0)return '';
@@ -4468,7 +4519,7 @@ function daysUntil(iso){
 // Quelle: Tafel Deutschland / Verbraucherzentrale Hamburg (Richtwerte «Haltbarkeit über MHD hinaus»),
 // konservativ auf Kategorien übertragen. Nur für MHD, nie für Verbrauchsdatum («zu verbrauchen bis»).
 // Verderbliche Kategorien bewusst 0 (Sicherheitsschranke, siehe VERDERBLICH).
-const KAT_PUFFER={
+const KAT_PUFFER_DEFAULT={
   'Milchprodukte':0,        // frisch 0; H-Milch/Käse länger, aber pro Artikel-Override
   'Fleisch & Fisch':0,      // meist Verbrauchsdatum → immer 0
   'Gemüse & Früchte':0,     // frisch, sensorisch prüfen
@@ -4481,6 +4532,11 @@ const KAT_PUFFER={
   'Reinigung & Pflege':365, // kein Lebensmittel
   'Diverses':0,
 };
+// Effektiver Kategorie-Puffer: benutzerdefiniert (opt.katPuffer) vor Standard
+function katPuffer(kat){
+  if(opt.katPuffer&&typeof opt.katPuffer[kat]==='number')return opt.katPuffer[kat];
+  return KAT_PUFFER_DEFAULT[kat]||0;
+}
 // Kategorien, die nie einen Puffer bekommen (frisch / meist Verbrauchsdatum)
 const VERDERBLICH=['Fleisch & Fisch','Gemüse & Früchte'];
 
@@ -4553,10 +4609,10 @@ function frischeHaltbarkeit(name){
 }
 
 function getPuffer(a){
-  // Pro-Artikel-Override (a.puffer) hat Vorrang; sonst Kategorie-Standard
+  // Pro-Artikel-Override (a.puffer) hat Vorrang; sonst Kategorie-Puffer
   if(VERDERBLICH.includes(a.kat))return 0; // Sicherheitsschranke: verderblich nie puffern
   if(typeof a.puffer==='number'&&a.puffer>=0)return a.puffer;
-  return KAT_PUFFER[a.kat]||0;
+  return katPuffer(a.kat);
 }
 // Effektive Resttage inkl. Puffer (für Artikel-Objekt)
 function effektiveTage(a){
