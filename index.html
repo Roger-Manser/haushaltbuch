@@ -236,7 +236,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .ir:last-child{border-bottom:none}
 .ik{color:var(--t2);display:flex;align-items:center;gap:8px}
 .ik svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.75}
-.iv{font-weight:500}
+.iv{font-weight:500;text-align:right}
 .spr{display:flex;align-items:center;gap:12px}
 .spb{width:32px;height:32px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);font-size:20px;font-weight:300;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1}
 .spv{font-size:20px;font-weight:700;min-width:32px;text-align:center}
@@ -509,7 +509,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='12.3';
+const APP_VERSION='13.0';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -527,7 +527,14 @@ function lsm(n){return licon(n).replace('width:20px;height:20px','width:13px;hei
 let S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ge:[...GD],ek:[],eko:{},nid:1,rz:[],log:[]};
 let deferredInstallPrompt=null;
 let gh={tok:'',own:'',repo:'',br:'main'};
-let opt={fotoZwang:false}; // App-Optionen
+let opt={fotoZwang:false,
+  fwDashboard:true,      // Ablauf-Dashboard auf Lager-Screen
+  fwAuswertung:true,     // Foodwaste-Muster in Statistik
+  fwMengenWarnung:true,  // Warnung beim Einkauf bei oft verworfenen Artikeln
+  fwAnbruch:true,        // Anbruch-/Geöffnet-Verwaltung
+  fwGefrier:true,        // Gefrier-Empfehlung bei bald ablaufend
+  fwUeberkauf:true,      // Überkauf-Erkennung aus Kaufhistorie
+}; // App-Optionen
 function loadOpt(){try{const r=localStorage.getItem('hbopt');if(r)opt={...opt,...JSON.parse(r)};}catch(e){}}
 function saveOpt(){try{localStorage.setItem('hbopt',JSON.stringify(opt));}catch(e){}}
 loadOpt();
@@ -661,6 +668,33 @@ async function doSync(){
 
     let ex=await ghGet('haushaltbuch.json');
 
+    // Sicherheitscheck: Hat GitHub mehr Artikel als lokal? → vor Überschreiben warnen
+    if(ex&&ex.content){
+      try{
+        const ghData=JSON.parse(b64DecodeUtf8(ex.content.replace(/\n/g,'')));
+        const ghCount=(ghData.artikel||[]).length;
+        const lokalCount=S.a.length;
+        if(ghCount>lokalCount){
+          hideLdr();
+          const diff=ghCount-lokalCount;
+          const ghZeit=ghData.aktualisiert?new Date(ghData.aktualisiert).toLocaleString('de-CH',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'unbekannt';
+          const wahl=confirm(
+            '⚠️ ACHTUNG — möglicher Datenverlust!\n\n'+
+            'Auf GitHub liegen MEHR Artikel als auf diesem Gerät:\n\n'+
+            '   GitHub: '+ghCount+' Artikel (Stand '+ghZeit+')\n'+
+            '   Dieses Gerät: '+lokalCount+' Artikel\n\n'+
+            'Wenn du jetzt hochlädst, werden die '+diff+' zusätzlichen Artikel auf GitHub ÜBERSCHRIEBEN.\n\n'+
+            '• ABBRECHEN (empfohlen): Erst «Von GitHub laden», um den grösseren Stand zu holen.\n'+
+            '• OK: Trotzdem hochladen und GitHub mit diesem Gerät überschreiben.'
+          );
+          if(!wahl){
+            sdot('dt');renderLager();return;
+          }
+          ldr('Synchronisiere mit GitHub...');
+        }
+      }catch(e){/* Vergleich fehlgeschlagen — normal fortfahren */}
+    }
+
     // Backup-Rotation: max. 1x täglich den alten Stand als Backup sichern (5er-Rotation)
     if(ex&&ex.content){
       try{
@@ -743,7 +777,8 @@ async function loadFromGH(){
       if(S.a.length>ghArtikel.length){
         hideLdr();
         const diff=S.a.length-ghArtikel.length;
-        if(!confirm('Achtung: Lokal sind '+S.a.length+' Artikel vorhanden, auf GitHub nur '+ghArtikel.length+' ('+diff+' mehr lokal).\n\nMöglicherweise wurde der letzte Sync vergessen. Trotzdem von GitHub laden und lokale Daten überschreiben?\n\nAlternativ: Erst synchronisieren (Sync-Button oben rechts), dann laden.')){
+        const ghZeit=d.aktualisiert?new Date(d.aktualisiert).toLocaleString('de-CH',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'unbekannt';
+        if(!confirm('⚠️ Achtung: Dieses Gerät hat MEHR Artikel als GitHub!\n\n   Dieses Gerät: '+S.a.length+' Artikel\n   GitHub: '+ghArtikel.length+' Artikel (Stand '+ghZeit+')\n\nWenn du lädst, werden die '+diff+' zusätzlichen lokalen Artikel ÜBERSCHRIEBEN.\n\n• ABBRECHEN (empfohlen): Erst synchronisieren (Sync-Button), um dieses Gerät auf GitHub zu sichern.\n• OK: Trotzdem laden und lokale Daten überschreiben.')){
           return;
         }
         ldr('Lade von GitHub...');
@@ -1116,8 +1151,31 @@ function renderLager(){
     fil=[...fil].sort((a,b)=>(a.menge-a.mindest)-(b.menge-b.mindest));
   }
   const rows=fil.map(a=>arRow(a)).join('');
-  list.innerHTML='<div class="lgi" style="border-radius:var(--r)">'+rows+'</div>';
+  list.innerHTML=renderAblaufDashboard()+'<div class="lgi" style="border-radius:var(--r)">'+rows+'</div>';
   nav();
+}
+
+// Ablauf-Dashboard: was muss in den nächsten Tagen verbraucht werden?
+function renderAblaufDashboard(){
+  if(!opt.fwDashboard)return '';
+  // Nur auf "alle"-Ansicht ohne Suche zeigen
+  const q=(document.getElementById('lager-search')?.value||'').trim();
+  if(q||lf!=='alle')return '';
+  const kandidaten=S.a.filter(a=>a.menge>0&&a.ablaufdatum&&effektiveTage(a)!==null).map(a=>({a,tage:effektiveTage(a)})).filter(x=>x.tage<=3).sort((x,y)=>x.tage-y.tage);
+  if(!kandidaten.length)return '';
+  const chips=kandidaten.slice(0,8).map(x=>{
+    const farbe=x.tage<0?'var(--dg)':x.tage<=1?'var(--dg)':'var(--wn)';
+    const bg=x.tage<0?'var(--dl)':x.tage<=1?'var(--dl)':'var(--wl)';
+    const txt=x.tage<0?'überfällig':x.tage===0?'heute':x.tage===1?'morgen':x.tage+'d';
+    return '<div onclick="showDet('+x.a.id+')" style="flex-shrink:0;background:'+bg+';color:'+farbe+';border-radius:var(--rs);padding:8px 12px;cursor:pointer;min-width:90px"><div style="font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px">'+esc(x.a.name)+'</div><div style="font-size:11px;font-weight:700">'+txt+'</div></div>';
+  }).join('');
+  return '<div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:12px;margin-bottom:12px">'+
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">'+
+      '<span style="font-size:14px;font-weight:700">⏰ Bald verbrauchen ('+kandidaten.length+')</span>'+
+      '<span style="font-size:11px;color:var(--ac);cursor:pointer" onclick="goScreen(\'s-rezepte\')">Rezepte →</span>'+
+    '</div>'+
+    '<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">'+chips+'</div>'+
+  '</div>';
 }
 function relTime(a){
   // Letzter Eingang aus Log, sonst kaufdatum
@@ -1138,7 +1196,7 @@ function arRow(a){
   const th=a.foto?'<div class="at has-photo" data-thumb-id="'+a.id+'"><img src="'+esc(a.foto)+'" loading="lazy"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div>';
   const pinfo=packInfo(a);
   const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'')+(sortMode==='neu'?' · '+relTime(a):'');
-  const eb=(a.ablaufdatum&&a.menge>0)?expBadge(a.ablaufdatum):'';
+  const eb=(a.ablaufdatum&&a.menge>0)?expBadgeA(a):'';
   const unitLabel=a.packMenge>0?esc(a.einheit||'Stk'):esc(a.einheit||'Stk');
   const aufListe=S.ek.some(e=>e.text.toLowerCase()===a.name.toLowerCase()&&!e.checked);
   return '<div class="ar" onclick="showDet('+a.id+')">'+th+'<div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+meta+'</div>'+eb+'</div>'+
@@ -1162,7 +1220,9 @@ function showDet(id){
   const bc=a.menge===0?'lo':a.menge<a.mindest?'wn':'ok';
   const hero=a.foto?'<div class="dh" style="padding:0" id="dh-hero-img"><img src="'+esc(a.foto)+'" style="width:100%;height:100%;object-fit:cover"/></div>':'<div class="dh">'+I.pkg.replace('20px;height:20px','64px;height:64px')+'</div>';
   const expDays=a.ablaufdatum?daysUntil(a.ablaufdatum):null;
-  const expBanner=(expDays!==null&&expDays<=3)?'<div style="margin-bottom:14px;padding:11px 14px;background:'+(expDays<0?'var(--dl)':'var(--wl)')+';color:'+(expDays<0?'var(--dg)':'var(--wn)')+';border-radius:var(--rs);font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px;">'+I.calx.replace('15px;height:15px','18px;height:18px')+' '+(expDays<0?'Abgelaufen — seit '+Math.abs(expDays)+' Tag'+(Math.abs(expDays)===1?'':'en'):expDays===0?'Läuft heute ab':expDays===1?'Läuft morgen ab':'Läuft in '+expDays+' Tagen ab')+'</div>':'';
+  const geoeffnetBanner=a.geoeffnet?'<div style="margin-bottom:10px;padding:8px 12px;background:var(--al);color:var(--ac);border-radius:var(--rs);font-size:13px;display:flex;align-items:center;gap:6px">📂 Geöffnet am '+fmtDateCH(a.geoeffnet)+' — verkürzte Haltbarkeit</div>':'';
+  const gefrierHinweis=(opt.fwGefrier&&a.menge>0&&expDays!==null&&expDays<=3&&expDays>=0&&istEinfrierbar(a))?'<div style="margin-bottom:14px;padding:11px 14px;background:var(--al);color:var(--ac);border-radius:var(--rs);font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:8px"><span>❄️ Läuft bald ab — einfrieren verlängert die Haltbarkeit</span><button onclick="markEingefroren('+id+')" style="background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;flex-shrink:0">Einfrieren</button></div>':'';
+  const expBanner=geoeffnetBanner+gefrierHinweis+((expDays!==null&&expDays<=3)?'<div style="margin-bottom:14px;padding:11px 14px;background:'+(expDays<0?'var(--dl)':'var(--wl)')+';color:'+(expDays<0?'var(--dg)':'var(--wn)')+';border-radius:var(--rs);font-size:14px;font-weight:500;display:flex;align-items:center;gap:8px;">'+I.calx.replace('15px;height:15px','18px;height:18px')+' '+(expDays<0?'Abgelaufen — seit '+Math.abs(expDays)+' Tag'+(Math.abs(expDays)===1?'':'en'):expDays===0?'Läuft heute ab':expDays===1?'Läuft morgen ab':'Läuft in '+expDays+' Tagen ab')+'</div>':'');
   const preisRow=a.preis?'<div class="ir"><span class="ik">'+I.cart+' Preis/Einheit</span><span class="iv">CHF '+a.preis.toFixed(2)+'</span></div>':'';
   const pinfo=packInfo(a);
   const ptotal=packTotal(a);
@@ -1289,7 +1349,7 @@ function showDet(id){
       return '<div class="ir" style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showRezeptDetail(this,'+id+')" data-r=\''+rJson+'\'>'+thumb+'<div><div style="font-size:13px;font-weight:500">'+esc(r.name)+'</div><div style="font-size:11px;color:var(--t2)">'+r.port+' Port. · '+r.min+' min</div></div></div>';
     }).join('')+'</div>':
     '';
-  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span><span class="iv">'+(a.ablaufdatum?fmtDateCH(a.ablaufdatum)+' '+expBadge(a.ablaufdatum):'—')+'</span></div>'+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+packHtml+chartHtml+histHtml+rzHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button><button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen (abgelaufen)</button></div><div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>'+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
+  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span><span class="iv">'+(a.ablaufdatum?fmtDateCH(a.ablaufdatum)+' '+expBadgeKurz(a):'—')+'</span></div>'+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+(opt.fwAnbruch?'<div class="acr" style="margin-top:8px"><button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen (abgelaufen)</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>':'<div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>')+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
   const heroEl=document.getElementById('dh-hero-img');
   if(heroEl)heroEl.addEventListener('click',()=>openLightbox(a.foto));
   goScreen('s-detail');
@@ -1486,6 +1546,13 @@ function toEk(id){
   if(S.ek.some(e=>e.text.toLowerCase()===a.name.toLowerCase()&&!e.checked)){
     toast('«'+a.name+'» ist schon auf der Einkaufsliste');return;
   }
+  // Mengen-Warnung: wurde dieser Artikel oft verworfen?
+  if(opt.fwMengenWarnung){
+    const wegCount=(S.log||[]).filter(l=>l.t==='weg'&&l.name&&l.name.toLowerCase()===a.name.toLowerCase()).length;
+    if(wegCount>=2){
+      toast('💡 «'+a.name+'» hast du '+wegCount+'× verworfen — evtl. kleinere Menge kaufen');
+    }
+  }
   const fehlmenge=Math.max(1,(a.mindest||0)-a.menge);
   S.ek.push({id:Date.now(),text:a.name,menge:String(fehlmenge),einheit:a.einheit||'Stk',checked:false});
   saveL();toast('🛒 «'+a.name+'» zur Einkaufsliste hinzugefügt');
@@ -1555,7 +1622,7 @@ function openForm(id){
   '<button type="button" onclick="addExtraBarcode()" style="width:100%;margin-top:8px;padding:9px;background:var(--bg);border:1px dashed var(--bd);border-radius:var(--rs);font-size:13px;color:var(--ac);cursor:pointer">+ Weiteren Barcode hinzufügen</button>'+
   '</div>'+
   '<div class="fd"><label>Foto</label><div id="pz" class="pz" onclick="document.getElementById(\'fph\').click()">'+I.cam+'<span>Von Kamera oder Galerie</span><small>Wird auf GitHub gespeichert</small><input type="file" id="fph" accept="image/*" capture="environment" style="display:none" onchange="onPh(event)"/></div><div id="ppw" class="ppw" style="'+(a&&a.foto?'display:block':'')+'"><img id="ppi" src="'+(a?esc(a.foto||''):'')+'" alt=""/><button class="rph" onclick="rmPh()">&#x2715;</button></div></div>'+
-  '<div class="fd"><label>Bezeichnung *</label><input type="text" id="f-nm" placeholder="z.B. Vollmilch 3.5%" value="'+(a?esc(a.name):'')+'" oninput="checkDupHint(this.value)"/><div id="dup-hint" style="display:none;font-size:12px;color:var(--wn);background:var(--wl);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div></div>'+
+  '<div class="fd"><label>Bezeichnung *</label><input type="text" id="f-nm" placeholder="z.B. Vollmilch 3.5%" value="'+(a?esc(a.name):'')+'" oninput="checkDupHint(this.value);checkFrischeHint(this.value)"/><div id="dup-hint" style="display:none;font-size:12px;color:var(--wn);background:var(--wl);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div><div id="frische-hint" style="display:none;font-size:12px;color:var(--ok);background:var(--ol);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div></div>'+
   '<div class="fd"><label>Marke</label><input type="text" id="f-mk" placeholder="z.B. Emmi" value="'+(a?esc(a.marke||''):'')+'"/></div>'+
   '<div class="fd"><label>Kategorie</label><div class="lcw" id="f-ka">'+kc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Anfangsbestand</label><div class="ur"><input type="number" id="f-mg" min="0" value="'+(a?a.menge:1)+'"/><select id="f-ei" onchange="if(this.value===\'__add__\')addEinheit(this)">'+eo+'<option value="__add__">+ Neue Einheit...</option></select></div></div><div class="fd"><label>Mindestbestand</label><input type="number" id="f-mn" min="0" value="'+(a?a.mindest:1)+'"/></div></div>'+
@@ -1563,6 +1630,7 @@ function openForm(id){
   '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="text" inputmode="decimal" id="f-pr" placeholder="z.B. 1.95" value="'+(a?esc(a.preis||''):'')+'"/><label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg)"><input type="checkbox" id="f-aktion" style="width:18px;height:18px;accent-color:var(--wn);cursor:pointer"/><div><div style="font-size:14px;font-weight:500;color:var(--tx)">Aktionspreis</div><div style="font-size:12px;color:var(--t2)">Wird als Aktion geloggt, kein neuer Standardpreis</div></div></label></div>'+
   '<div class="fd"><label>Lagerort</label><div class="lcw" id="f-lo">'+lc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Kaufdatum</label>'+dateField('f-kd',a?a.kaufdatum||todayISO():todayISO())+'</div><div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('f-ad',a?a.ablaufdatum||'':'')+'</div></div>'+
+  '<div class="fd"><label>Haltbarkeit über MHD <span style="color:var(--t3);font-weight:400">(optional, Tage — Richtwert)</span></label><input type="text" inputmode="numeric" id="f-puffer" placeholder="'+(a?getPuffer(a):0)+' (Kategorie-Standard)" value="'+(a&&typeof a.puffer==="number"?a.puffer:"")+'"/><div style="font-size:11px;color:var(--t3);margin-top:4px">Leer = Kategorie-Standard. Richtwerte (Tafel/Verbraucherzentrale): Konserven/Reis/Nudeln/Mehl +365, Butter +21, H-Milch +28, Käse ~14, Brot +2, Wurst/Schinken +5, Eier +21. Fleisch &amp; Fisch sowie frisches Gemüse/Obst: immer 0 (Verbrauchsdatum beachten).</div></div>'+
   '<div class="fd"><label>Wo gekauft</label><div class="lcw" id="f-ge">'+S.ge.map(g=>'<button class="chip'+(a&&a.kaufort===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#f-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+'<button class="chip" onclick="addGeschaeft(this)">+ Neu...</button></div></div>'+
   '<div class="fd"><label>Notiz</label><textarea id="f-nt" placeholder="z.B. Bio, Lieblingsmarke...">'+(a?esc(a.notiz||''):'')+'</textarea></div>'+
   '<div class="br"><button class="bg2" onclick="closeForm()">Abbrechen</button><button class="bp" onclick="saveForm()">'+(a?'Speichern':'Hinzufügen')+'</button></div>';
@@ -1682,6 +1750,81 @@ function updateJumpBtns(){
   btns.style.display=body.scrollHeight>body.clientHeight*1.5?'flex':'none';
 }
 
+/* ── Foodwaste: Überkauf-Erkennung ───────────────────────────────── */
+// Analysiert Kauf- vs. Verbrauchsrhythmus eines Artikels aus dem Log
+function ueberkaufHinweis(a){
+  if(!opt.fwUeberkauf)return '';
+  const eintraege=(S.log||[]).filter(l=>l.aid===a.id).sort((x,y)=>(x.zeit||0)-(y.zeit||0));
+  const kaeufe=eintraege.filter(l=>l.t==='ein');
+  const wegwerf=eintraege.filter(l=>l.t==='weg');
+  // Nur aussagekräftig ab 3 Käufen
+  if(kaeufe.length<3)return '';
+  // Durchschnittlicher Kaufabstand in Tagen
+  let summe=0,n=0;
+  for(let i=1;i<kaeufe.length;i++){
+    const d=((kaeufe[i].zeit||0)-(kaeufe[i-1].zeit||0))/86400000;
+    if(d>0){summe+=d;n++;}
+  }
+  if(!n)return '';
+  const schnitt=Math.round(summe/n);
+  // Wenn oft weggeworfen wird → Überkauf-Signal
+  if(wegwerf.length>=2){
+    return '<div style="margin-top:14px;padding:11px 14px;background:var(--wl);color:var(--wn);border-radius:var(--rs);font-size:13px;line-height:1.5">📊 Du kaufst «'+esc(a.name)+'» ca. alle '+schnitt+' Tage, hast ihn aber schon '+wegwerf.length+'× weggeworfen. Eventuell seltener oder in kleinerer Menge kaufen.</div>';
+  }
+  return '';
+}
+
+/* ── Foodwaste: Gefrier-Empfehlung ───────────────────────────────── */
+// Kategorien/Namen, die sich gut einfrieren lassen
+const EINFRIERBAR_KAT=['Fleisch & Fisch','Backwaren & Brot','Gemüse & Früchte'];
+const NICHT_EINFRIERBAR=['salat','gurke','tomate','ei ','eier','rahm','joghurt','kartoffel'];
+function istEinfrierbar(a){
+  const n=(a.name||'').toLowerCase();
+  if(NICHT_EINFRIERBAR.some(x=>n.includes(x)))return false;
+  if(a.lager&&/gefrier|tiefk/i.test(a.lager))return false; // schon tiefgekühlt
+  return EINFRIERBAR_KAT.includes(a.kat);
+}
+function markEingefroren(id){
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  // Gefriertruhe als Lagerort suchen
+  const gefrierLager=S.lo.find(l=>/gefrier|tiefk/i.test(l));
+  const neu=new Date();neu.setMonth(neu.getMonth()+3); // konservativ 3 Monate
+  const iso=neu.getFullYear()+'-'+String(neu.getMonth()+1).padStart(2,'0')+'-'+String(neu.getDate()).padStart(2,'0');
+  if(!confirm('«'+a.name+'» einfrieren?\n\n• Neues Haltbarkeitsdatum: '+fmtDateCH(iso)+' (ca. 3 Monate)'+(gefrierLager?'\n• Lagerort wird auf «'+gefrierLager+'» gesetzt':'')+'\n\nGefrorene Lebensmittel bleiben mehrere Monate haltbar.'))return;
+  a.ablaufdatum=iso;
+  if(gefrierLager)a.lager=gefrierLager;
+  ensurePackungen(a);
+  a.packungen.filter(p=>p.menge>0).forEach(p=>p.ablaufdatum=iso);
+  a.eingefroren=todayISO();
+  saveL();toast('❄️ Eingefroren — haltbar bis '+fmtDateCH(iso));
+  showDet(id);
+}
+
+/* ── Foodwaste: Anbruch/Geöffnet-Markierung ──────────────────────── */
+function markGeoeffnet(id){
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  const tage=anbruchHaltbarkeit(a.kat);
+  const neu=new Date();neu.setDate(neu.getDate()+tage);
+  const iso=neu.getFullYear()+'-'+String(neu.getMonth()+1).padStart(2,'0')+'-'+String(neu.getDate()).padStart(2,'0');
+  let msg='«'+a.name+'» als geöffnet markieren?\n\nNach dem Öffnen ist '+a.kat+' typisch noch ca. '+tage+' Tag'+(tage===1?'':'e')+' haltbar.\n\n';
+  if(a.ablaufdatum&&a.ablaufdatum<iso){
+    msg+='Das aktuelle MHD ('+fmtDateCH(a.ablaufdatum)+') liegt früher — es bleibt bestehen.';
+    if(!confirm(msg+'\n\nTrotzdem als geöffnet markieren?'))return;
+    a.geoeffnet=todayISO();
+  }else{
+    msg+='Neues «Frisch bis»: '+fmtDateCH(iso)+' (statt '+(a.ablaufdatum?fmtDateCH(a.ablaufdatum):'ohne MHD')+')';
+    if(!confirm(msg))return;
+    a.geoeffnet=todayISO();
+    a.ablaufdatum=iso;
+    // Packungen-MHD anpassen (die aktuell offene = früheste)
+    ensurePackungen(a);
+    const offen=a.packungen.filter(p=>p.menge>0).sort((x,y)=>(x.ablaufdatum||'9999').localeCompare(y.ablaufdatum||'9999'))[0];
+    if(offen)offen.ablaufdatum=iso;
+  }
+  saveL();toast('📂 Als geöffnet markiert — frisch bis '+fmtDateCH(a.ablaufdatum));
+  showDet(id);
+}
+
 /* ── Foodwaste: Verworfen-Buchung ────────────────────────────────── */
 function openVerworfen(id){
   const a=S.a.find(x=>x.id===id);if(!a)return;
@@ -1714,6 +1857,26 @@ function openVerworfen(id){
   saveL();
   toast('🗑 '+menge+' '+(a.einheit||'Stk')+' als verworfen gebucht');
   showDet(id);
+}
+
+// Frische-Vorschlag: bei bekanntem Gemüse/Obst automatisch «Frisch bis»-Datum anbieten
+function checkFrischeHint(val){
+  const el=document.getElementById('frische-hint');
+  if(!el)return;
+  const tage=frischeHaltbarkeit(val);
+  const adEl=document.getElementById('f-ad');
+  const hatMhd=adEl&&adEl.value;
+  if(tage===null||hatMhd){el.style.display='none';return;}
+  // Datum = heute + tage
+  const d=new Date();d.setDate(d.getDate()+tage);
+  const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+  el.innerHTML='🥬 Frischware — typische Haltbarkeit ca. '+tage+' Tage. <button type="button" onclick="applyFrischeDatum(\''+iso+'\')" style="background:var(--ok);color:#fff;border:none;border-radius:var(--rs);padding:3px 10px;font-size:12px;font-weight:600;cursor:pointer;margin-left:4px">Frisch bis '+fmtDateCH(iso)+' setzen</button>';
+  el.style.display='block';
+}
+function applyFrischeDatum(iso){
+  setDateField('f-ad',iso);
+  const el=document.getElementById('frische-hint');
+  if(el)el.innerHTML='✓ Frisch bis '+fmtDateCH(iso)+' gesetzt (Richtwert — bitte anpassen falls nötig)';
 }
 
 function checkDupHint(val){
@@ -1793,6 +1956,12 @@ async function saveForm(){
   }
   const extraBcs=[...new Set(formExtraBarcodes.map(b=>b.trim()).filter(b=>b&&b!==hauptBc))];
   const d={name,marke:document.getElementById('f-mk').value.trim(),kat:kc.dataset.kat,lager:lc.dataset.lager,kaufort,menge:(isDecUnit(document.getElementById('f-ei').value)?parseDecimal(document.getElementById('f-mg').value):parseInt(document.getElementById('f-mg').value))||0,einheit:document.getElementById('f-ei').value,mindest:Math.max(0,parseInt(document.getElementById('f-mn').value)||0),barcode:hauptBc,barcodes:extraBcs,preis:standardPreis,packMenge,packEinheit,kaufdatum,ablaufdatum:document.getElementById('f-ad').value||'',notiz:document.getElementById('f-nt').value.trim(),foto:furl,fotoPath:fpth};
+  // Haltbarkeits-Puffer (Override): nur speichern wenn eingegeben und Zahl
+  const pufferRaw=document.getElementById('f-puffer');
+  if(pufferRaw&&pufferRaw.value.trim()!==''){
+    const pv=parseInt(pufferRaw.value);
+    if(!isNaN(pv)&&pv>=0)d.puffer=pv;
+  }
   if(!editId){
     // Neuer Artikel: Preis-Historie anlegen wenn Preis angegeben
     d.preisHistorie=preis>0?[{datum:kaufdatum,preis,menge:d.menge,einheit:d.einheit,typ:'ein',aktion:isAktion||false,kaufort:kaufort||''}]:[];
@@ -2870,7 +3039,7 @@ function aiMatch(zutat,lagerNamen){
 }
 
 function renderRezepte(){
-  const names=S.a.map(a=>a.name.toLowerCase());
+  const names=S.a.filter(a=>a.menge>0).map(a=>a.name.toLowerCase());
   const q=(document.getElementById('rezept-search')?.value||'').toLowerCase().trim();
   const src=S.rz.length?S.rz.map(r=>{
     const zt=(r.zutaten||[]).map(z=>typeof z==='string'?z:(z.n||z.zutat||z.name||''));
@@ -2886,16 +3055,42 @@ function renderRezepte(){
     (r.zt||[]).some(z=>z.toLowerCase().includes(q))||
     (r.kat||'').toLowerCase().includes(q)
   ):src;
+  // Bald ablaufende Lager-Artikel ermitteln (Bestand>0, effektiv ≤7 Tage)
+  const ablaufArtikel=S.a.filter(a=>a.menge>0&&a.ablaufdatum&&effektiveTage(a)!==null&&effektiveTage(a)<=7);
+  const ablaufNamen=ablaufArtikel.map(a=>({name:a.name.toLowerCase(),tage:effektiveTage(a)}));
+
   const sc=filtered.map(r=>{
     const have=r.zt.filter(z=>aiMatch(z,names));
-    return{...r,have,pct:Math.round(have.length/Math.max(r.zt.length,1)*100)};
-  }).sort((a,b)=>b.pct-a.pct);
-  const full=sc.filter(r=>r.pct===100),part=sc.filter(r=>r.pct>=50&&r.pct<100),miss=sc.filter(r=>r.pct<50);
+    // Welche vorhandenen Zutaten laufen bald ab?
+    const ablaufZutaten=[];
+    let minTage=999;
+    r.zt.forEach(z=>{
+      const zl=z.toLowerCase();
+      ablaufNamen.forEach(an=>{
+        if(zl===an.name||(zl.length>=5&&an.name.length>=5&&(zl.includes(an.name)||an.name.includes(zl)))){
+          ablaufZutaten.push(z);
+          if(an.tage<minTage)minTage=an.tage;
+        }
+      });
+    });
+    return{...r,have,pct:Math.round(have.length/Math.max(r.zt.length,1)*100),ablaufZutaten:[...new Set(ablaufZutaten)],minAblaufTage:ablaufZutaten.length?minTage:null};
+  }).sort((a,b)=>{
+    // Zuerst: kochbare Rezepte mit bald ablaufenden Zutaten (dringlichste zuerst)
+    const aDring=a.pct>=50&&a.minAblaufTage!==null;
+    const bDring=b.pct>=50&&b.minAblaufTage!==null;
+    if(aDring&&bDring)return a.minAblaufTage-b.minAblaufTage;
+    if(aDring!==bDring)return aDring?-1:1;
+    return b.pct-a.pct;
+  });
+  // Rezepte mit bald ablaufenden Zutaten (und mind. halb kochbar)
+  const dringend=sc.filter(r=>r.pct>=50&&r.minAblaufTage!==null);
+  const full=sc.filter(r=>r.pct===100&&r.minAblaufTage===null),part=sc.filter(r=>r.pct>=50&&r.pct<100&&r.minAblaufTage===null),miss=sc.filter(r=>r.pct<50);
   let h='';
   if(q&&!sc.length){
     h='<div style="text-align:center;padding:32px 16px;color:var(--t3);font-size:14px">Kein Rezept gefunden für «'+esc(q)+'»</div>';
   }else{
     if(!src.length)h='<div class="empty">'+I.pkg+'<p>Keine Rezepte</p><small>GitHub synchronisieren um rezepte.json zu laden</small></div>';
+    if(dringend.length)h+='<div class="sh" style="color:var(--wn)">⏰ Bald ablaufende Zutaten verwerten ('+dringend.length+')</div>'+dringend.map(rcCard).join('');
     if(full.length)h+='<div class="sh">Vollständig kochbar ('+full.length+')</div>'+full.map(rcCard).join('');
     if(part.length)h+='<div class="sh">Fast kochbar</div>'+part.map(rcCard).join('');
     if(miss.length)h+='<div class="sh">Zutaten fehlen</div>'+miss.map(rcCard).join('');
@@ -2925,7 +3120,13 @@ function rcCard(r){
     ?'<img src="'+esc(imgUrl)+'" style="width:48px;height:48px;border-radius:var(--rs);object-fit:cover;flex-shrink:0" onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'" /><div class="rci'+(f?'':" p")+'" style="display:none">'+r.emoji+'</div>'
     :'<div class="rci'+(f?'':" p")+'">'+r.emoji+'</div>';
   const rJson=esc(JSON.stringify(r));
-  return '<div class="rc" onclick="showRezeptDetail(this)" data-r=\''+rJson+'\' style="cursor:pointer"><div class="rct">'+thumb+'<div><div class="rct-n">'+esc(r.name)+'</div><div class="rct-s">'+r.port+' Port. · '+r.min+' min</div></div></div><div class="mr"><span>Zutaten vorhanden</span><span class="mp '+(f?'f':'p')+'">'+r.have.length+'/'+r.zt.length+'</span></div><div class="mt"><div class="mf '+(f?'f':'')+'" style="width:'+r.pct+'%"></div></div><div class="ztgs">'+tags+'</div>'+buyBtn+'</div>';
+  // Hinweis auf bald ablaufende Zutaten
+  let ablaufHint='';
+  if(r.ablaufZutaten&&r.ablaufZutaten.length){
+    const tageStr=r.minAblaufTage<0?'überfällig':r.minAblaufTage===0?'heute':r.minAblaufTage===1?'morgen':'in '+r.minAblaufTage+' Tagen';
+    ablaufHint='<div style="margin-top:8px;background:var(--wl);color:var(--wn);border-radius:var(--rs);padding:6px 10px;font-size:12px;font-weight:500">⏰ Verbraucht bald ablaufende Zutaten: '+r.ablaufZutaten.map(esc).join(', ')+' ('+tageStr+')</div>';
+  }
+  return '<div class="rc" onclick="showRezeptDetail(this)" data-r=\''+rJson+'\' style="cursor:pointer"><div class="rct">'+thumb+'<div><div class="rct-n">'+esc(r.name)+'</div><div class="rct-s">'+r.port+' Port. · '+r.min+' min</div></div></div><div class="mr"><span>Zutaten vorhanden</span><span class="mp '+(f?'f':'p')+'">'+r.have.length+'/'+r.zt.length+'</span></div><div class="mt"><div class="mf '+(f?'f':'')+'" style="width:'+r.pct+'%"></div></div><div class="ztgs">'+tags+'</div>'+ablaufHint+buyBtn+'</div>';
 }
 
 let rezeptDetailOrigin={screen:'s-rezepte',artikelId:null};
@@ -2949,7 +3150,7 @@ function showRezeptDetail(el,fromArtikelId){
   const imgHtml=imgUrl?'<img src="'+esc(imgUrl)+'" style="width:100%;max-height:220px;object-fit:cover;border-radius:var(--r);margin-bottom:14px" onerror="this.style.display=\'none\'"/>':'';
 
   // Zutaten mit Lager-Status
-  const names=S.a.map(a=>a.name.toLowerCase());
+  const names=S.a.filter(a=>a.menge>0).map(a=>a.name.toLowerCase());
   const ztHtml=(r.zt||[]).map(z=>{
     const grund=istGrundzutat(z);
     const ok=grund||aiMatch(z,names);
@@ -3042,7 +3243,7 @@ function setStatPeriod(d){statPeriod=d;renderStat();}
 function renderUeb(){
   const t=S.a.length;
   const w=S.a.filter(a=>a.menge<a.mindest);
-  const expSoon=S.a.filter(a=>a.menge>0&&a.ablaufdatum&&daysUntil(a.ablaufdatum)<=7).sort((a,b)=>a.ablaufdatum.localeCompare(b.ablaufdatum));
+  const expSoon=S.a.filter(a=>a.menge>0&&a.ablaufdatum&&effektiveTage(a)<=7).sort((a,b)=>a.ablaufdatum.localeCompare(b.ablaufdatum));
   const nm=S.a.map(a=>a.name.toLowerCase());
   const k=(S.rz||[]).filter(r=>(r.zutaten||[]).every(z=>nm.some(n=>n.includes((typeof z==='string'?z:(z.n||z.zutat||'')).toLowerCase())))).length;
   let h='<div class="stg">'+
@@ -3053,7 +3254,7 @@ function renderUeb(){
   '</div>';
   if(expSoon.length){
     h+='<div class="sh">Bald ablaufend</div>';
-    h+=expSoon.map(a=>{const d=daysUntil(a.ablaufdatum);return '<div class="ar" onclick="showDet('+a.id+')"><div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div><div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+esc(a.lager)+'</div></div><div class="abs"><span class="exp-badge '+expClass(d)+'" style="margin-top:0">'+expLabel(d)+'</span></div></div>';}).join('');
+    h+=expSoon.map(a=>{return '<div class="ar" onclick="showDet('+a.id+')"><div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div><div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+esc(a.lager)+'</div></div><div class="abs">'+expBadgeA(a)+'</div></div>';}).join('');
   }
   if(w.length){
     h+='<div class="sh">Unter Mindestbestand</div>';
@@ -3113,6 +3314,31 @@ function renderStat(){
       (totalWeg>0?'<div class="stc"><div class="stl">🗑 Verworfen</div><div class="stn" style="color:var(--wn)">'+totalWeg+' Stk</div><div style="font-size:11px;color:var(--t2);margin-top:2px">≈ CHF '+totalWegWert.toFixed(2)+' Wert</div></div>':'')+
       (ersparnis>0?'<div class="stc"><div class="stl">💰 Aktions-Ersparnis</div><div class="stn ok">CHF '+ersparnis.toFixed(2)+'</div><div style="font-size:11px;color:var(--t2);margin-top:2px">'+aktionen.length+' Aktionskäufe</div></div>':'')+
     '</div>';
+  }
+
+  // Foodwaste-Muster-Auswertung
+  if(opt.fwAuswertung&&weg.length>=2){
+    // Nach Artikelname gruppieren
+    const proArtikel={};
+    weg.forEach(e=>{const k=e.name||'?';if(!proArtikel[k])proArtikel[k]={anzahl:0,wert:0,menge:0};proArtikel[k].anzahl++;proArtikel[k].menge+=e.menge;proArtikel[k].wert+=(e.preis||0)*e.menge;});
+    const topArtikel=Object.entries(proArtikel).sort((a,b)=>b[1].anzahl-a[1].anzahl).slice(0,5);
+    // Nach Kategorie gruppieren
+    const proKat={};
+    weg.forEach(e=>{const k=e.kat||'?';if(!proKat[k])proKat[k]=0;proKat[k]+=(e.preis||0)*e.menge;});
+    const topKat=Object.entries(proKat).sort((a,b)=>b[1]-a[1])[0];
+    h+='<div class="stat-chart-card" style="margin-top:8px"><div class="stat-chart-title">🔍 Foodwaste-Muster</div>';
+    if(topKat&&totalWegWert>0){
+      const pct=Math.round(topKat[1]/totalWegWert*100);
+      h+='<div style="font-size:13px;color:var(--t2);margin:6px 0 10px">Grösster Verlust-Bereich: <strong style="color:var(--wn)">'+esc(topKat[0])+'</strong> ('+pct+'% des Wertes)</div>';
+    }
+    h+=topArtikel.map(([name,d])=>
+      '<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd)">'+
+        '<span style="font-size:13px">'+esc(name)+'</span>'+
+        '<span style="font-size:12px;color:var(--wn);font-weight:600">'+d.anzahl+'× · CHF '+d.wert.toFixed(2)+'</span>'+
+      '</div>'
+    ).join('');
+    h+='<div style="font-size:11px;color:var(--t3);margin-top:8px;line-height:1.5">💡 Tipp: Bei häufig verworfenen Artikeln kleinere Mengen kaufen oder den Mindestbestand senken.</div>';
+    h+='</div>';
   }
 
   // 2. Ausgaben gesamt + Aktionen
@@ -3598,6 +3824,17 @@ function invConfirm(){
 function invSkip(){invIdx++;renderInventur();}
 
 /* ── Inventar-Erfassung: Barcodes zwischenspeichern, später übernehmen ── */
+// Vorgewählter Lagerort für Inventar-Erfassung + automatische Kategorie-Zuordnung
+let invCapLager='';
+function lagerStandardKat(lager){
+  const l=(lager||'').toLowerCase();
+  if(/kühl|kuhl/.test(l))return 'Milchprodukte'; // Kühlschrank → gekühlte Ware (Standard)
+  if(/gefrier|tiefk/.test(l))return 'Tiefkühl';
+  if(/vorrat|schrank|keller|speis/.test(l))return 'Konserven & Trockenware';
+  return 'Konserven & Trockenware'; // Küche/Schlof etc.
+}
+function setInvCapLager(l){invCapLager=l;renderInvCapture();}
+
 function openInvCapture(){
   renderInvCapture();
   document.getElementById('invcap-overlay').style.display='flex';
@@ -3617,6 +3854,11 @@ function renderInvCapture(){
       '<button onclick="closeInvCapture()" style="background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:8px 14px;font-size:13px;cursor:pointer;color:var(--t2)">Schliessen</button>'+
     '</div>'+
     '<div style="flex:1;overflow-y:auto;padding:16px 16px calc(20px + env(safe-area-inset-bottom))">'+
+      '<div style="font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px">Lagerort für diese Erfassung</div>'+
+      '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px">'+
+        S.lo.map(l=>'<button onclick="setInvCapLager(\''+esc(l).replace(/'/g,"\\'")+'\')" style="padding:8px 12px;border-radius:var(--rs);border:1px solid '+(invCapLager===l?'var(--ac)':'var(--bd)')+';background:'+(invCapLager===l?'var(--al)':'var(--sf)')+';color:'+(invCapLager===l?'var(--ac)':'var(--tx)')+';font-size:13px;font-weight:'+(invCapLager===l?'600':'400')+';cursor:pointer">'+lsm(l)+' '+esc(l)+'</button>').join('')+
+      '</div>'+
+      (invCapLager?'<p style="font-size:11px;color:var(--t3);margin:4px 0 14px;line-height:1.5">Neue Artikel bekommen automatisch: Lagerort «'+esc(invCapLager)+'», Kategorie «'+esc(lagerStandardKat(invCapLager))+'», Mindestbestand 0.</p>':'<p style="font-size:11px;color:var(--t3);margin:4px 0 14px;line-height:1.5">Ohne Vorwahl: Felder werden wie üblich leer/aus Online-Suche gefüllt.</p>')+
       '<button onclick="startInvScan()" style="width:100%;padding:16px;background:var(--ac);color:#fff;border:none;border-radius:var(--r);font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px">'+I.scan+' Barcode scannen</button>'+
       '<div style="display:flex;gap:8px;margin-bottom:14px">'+
         '<input type="text" id="invcap-manual" inputmode="numeric" placeholder="oder Barcode eintippen\u2026" onkeydown="if(event.key===\'Enter\')addInvManual()" style="flex:1;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--sf);color:var(--tx);font-size:14px"/>'+
@@ -3769,10 +4011,33 @@ function openFormFromInvBuffer(e){
       const pe=document.getElementById('f-pe');
       if(pe&&e.pkgEinheit){const o=[...pe.options].find(x=>x.value===e.pkgEinheit);if(o)pe.value=e.pkgEinheit;}
     }
+    // Lagerort-Vorwahl anwenden: Lagerort, Standard-Kategorie, Mindestbestand 0
+    if(invCapLager){
+      const lc=document.querySelector('#f-lo .chip[data-lager="'+invCapLager+'"]');
+      if(lc){document.querySelectorAll('#f-lo .chip[data-lager]').forEach(c=>c.classList.remove('on'));lc.classList.add('on');}
+      // Standard-Kategorie nur setzen, wenn die Online-Suche keine geliefert hat
+      const aktiveKat=document.querySelector('#f-ka .chip.on[data-kat]');
+      if(!aktiveKat){
+        const stdKat=lagerStandardKat(invCapLager);
+        const kc=document.querySelector('#f-ka .chip[data-kat="'+stdKat+'"]');
+        if(kc){document.querySelectorAll('#f-ka .chip[data-kat]').forEach(c=>c.classList.remove('on'));kc.classList.add('on');}
+      }
+      const mn=document.getElementById('f-mn');if(mn&&!mn.value)mn.value='0';
+    }
   },150);
 }
 
 /* \u2500\u2500 Settings \u2500────────────────────────────────────────────────────── */
+// Wiederverwendbarer Toggle-Schalter für opt-Flags
+function optToggle(key,label,beschreibung){
+  const on=!!opt[key];
+  return '<div class="lmi" style="align-items:center"><span style="flex:1">'+esc(label)+'</span>'+
+    '<label style="position:relative;display:inline-block;width:46px;height:26px;flex-shrink:0">'+
+      '<input type="checkbox" id="opt-'+key+'" '+(on?'checked':'')+' onchange="opt.'+key+'=this.checked;saveOpt();renderSt()" style="opacity:0;width:0;height:0"/>'+
+      '<span style="position:absolute;inset:0;background:'+(on?'var(--ac)':'var(--b2)')+';border-radius:13px;transition:.2s;cursor:pointer" onclick="event.preventDefault();document.getElementById(\'opt-'+key+'\').click()"><span style="position:absolute;top:3px;left:'+(on?'23px':'3px')+';width:20px;height:20px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)"></span></span>'+
+    '</label></div>'+
+    (beschreibung?'<p style="font-size:12px;color:var(--t3);margin:2px 0 10px;line-height:1.5">'+esc(beschreibung)+'</p>':'');
+}
 function renderSt(){
   const con=gh.tok&&gh.own&&gh.repo;
   const isIOS=/iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -3813,7 +4078,7 @@ function renderSt(){
     '<button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="openInventur()">📋 Inventur starten</button>'+
     '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Alle Artikel durchgehen und Bestände mit der Realität abgleichen.</p>'+
   '</div>'+
-  '<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong>v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button></div>'+
+  '<div class="ss"><div class="ssl">Anti-Foodwaste</div>'+'<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Funktionen gegen Lebensmittelverschwendung — einzeln ein-/ausschaltbar.</p>'+optToggle('fwDashboard','⏰ Ablauf-Dashboard','Zeigt oben in der Lagerliste, was in den nächsten 3 Tagen verbraucht werden sollte.')+optToggle('fwAuswertung','🔍 Foodwaste-Muster','Auswertung in der Statistik: welche Artikel/Kategorien du am häufigsten wegwirfst.')+optToggle('fwMengenWarnung','💡 Mengen-Warnung beim Einkauf','Hinweis, wenn du einen oft verworfenen Artikel auf die Einkaufsliste setzt.')+optToggle('fwAnbruch','📂 Anbruch-Verwaltung','«Geöffnet»-Knopf im Artikel verkürzt die Haltbarkeit passend zur Kategorie.')+optToggle('fwGefrier','❄️ Gefrier-Empfehlung','Schlägt bei bald ablaufenden, einfrierbaren Artikeln das Einfrieren vor.')+optToggle('fwUeberkauf','📊 Überkauf-Erkennung','Erkennt aus der Kaufhistorie, wenn du mehr kaufst als verbrauchst.')+'</div>'+'<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong>v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button></div>'+
   '<div class="ss"><div class="ssl">Daten</div><button class="db-btn" onclick="expJ()">'+I.dl+' Lokaler Export (JSON)</button><button class="db-btn" onclick="document.getElementById(\'imp\').click()">'+I.ul+' Lokaler Import (JSON)<input type="file" id="imp" accept=".json" style="display:none" onchange="impJ(event)"/></button><button class="db-btn d" onclick="clearLog()">'+I.trash+' Bewegungsprotokoll löschen</button><button class="db-btn d" onclick="resetAll()">'+I.trash+' Alle Daten löschen</button></div>';
 }
 function saveGHcfg(){gh={tok:document.getElementById('gh-t').value.trim(),own:document.getElementById('gh-o').value.trim(),repo:document.getElementById('gh-r').value.trim(),br:document.getElementById('gh-b').value.trim()||'main',rzrepo:document.getElementById('gh-rz').value.trim()||''};saveGH();toast('GitHub gespeichert');renderSt();}
@@ -4198,6 +4463,108 @@ function daysUntil(iso){
   const d=new Date(iso+'T00:00:00');
   return Math.round((d-today)/86400000);
 }
+
+// Haltbarkeits-Puffer nach MHD (Tage), pro Kategorie.
+// Quelle: Tafel Deutschland / Verbraucherzentrale Hamburg (Richtwerte «Haltbarkeit über MHD hinaus»),
+// konservativ auf Kategorien übertragen. Nur für MHD, nie für Verbrauchsdatum («zu verbrauchen bis»).
+// Verderbliche Kategorien bewusst 0 (Sicherheitsschranke, siehe VERDERBLICH).
+const KAT_PUFFER={
+  'Milchprodukte':0,        // frisch 0; H-Milch/Käse länger, aber pro Artikel-Override
+  'Fleisch & Fisch':0,      // meist Verbrauchsdatum → immer 0
+  'Gemüse & Früchte':0,     // frisch, sensorisch prüfen
+  'Tiefkühl':60,            // «mehrere Monate», konservativ 2 Monate
+  'Getränke':90,
+  'Konserven & Trockenware':365, // Konserven/Reis/Nudeln/Mehl: +1 Jahr
+  'Backwaren & Brot':2,     // Brot & Brötchen: +2 Tage
+  'Gewürze & Saucen':180,   // hoher Zucker/Essig/Salzgehalt konserviert
+  'Süsswaren':90,
+  'Reinigung & Pflege':365, // kein Lebensmittel
+  'Diverses':0,
+};
+// Kategorien, die nie einen Puffer bekommen (frisch / meist Verbrauchsdatum)
+const VERDERBLICH=['Fleisch & Fisch','Gemüse & Früchte'];
+
+// Typische Haltbarkeit frischer Gemüse-/Obstsorten in Tagen ab Kauf (Richtwerte).
+// Quellen: Verbraucherzentrale, BMEL «Richtwerte Lagerhaltung», BMLUK A-Z der Lagerung.
+// Für Produkte ohne aufgedrucktes MHD → automatische Vorbelegung eines «Frisch bis»-Datums.
+const FRISCHE_HALTBARKEIT={
+  // lange haltbar (Wurzeln, Kohl, Zwiebeln)
+  'kartoffel':60,'kartoffeln':60,'zwiebel':60,'zwiebeln':60,'knoblauch':90,
+  'karotte':21,'karotten':21,'rüebli':21,'möhre':21,'möhren':21,'randen':30,'rote bete':30,
+  'kürbis':60,'kohl':21,'weisskohl':21,'rotkohl':21,'wirsing':14,'rotkabis':21,'weisskabis':21,
+  'sellerie':14,'lauch':10,'kohlrabi':14,'rettich':7,'rande':30,
+  'apfel':30,'äpfel':30,'birne':10,'birnen':10,'orange':21,'orangen':21,'zitrone':21,'zitronen':21,
+  // mittel
+  'paprika':10,'peperoni':10,'gurke':7,'zucchini':7,'zucchetti':7,'aubergine':7,'auberginen':7,
+  'brokkoli':5,'broccoli':5,'blumenkohl':7,'fenchel':10,
+  'tomate':7,'tomaten':7,'avocado':5,'mango':5,'kiwi':7,'ananas':4,
+  'orange':21,'mandarine':14,'clementine':14,'grapefruit':21,
+  // kurz haltbar (Blattgemüse, Beeren, Pilze, Kräuter)
+  'salat':4,'kopfsalat':4,'blattsalat':4,'spinat':3,'feldsalat':3,'nüsslisalat':3,'rucola':3,
+  'pilz':4,'pilze':4,'champignon':4,'champignons':4,
+  'erdbeere':3,'erdbeeren':3,'himbeere':2,'himbeeren':2,'heidelbeere':5,'heidelbeeren':5,
+  'brombeere':3,'brombeeren':3,'kirsche':5,'kirschen':5,'traube':7,'trauben':7,
+  'banane':5,'bananen':5,'pfirsich':5,'nektarine':5,'aprikose':5,'pflaume':7,'pflaumen':7,
+  'spargel':4,'bohne':5,'bohnen':5,'erbse':4,'erbsen':4,'radieschen':5,
+  'basilikum':3,'petersilie':5,'schnittlauch':5,'koriander':4,'dill':4,'kräuter':4,
+};
+// Haltbarkeit nach dem Öffnen (Tage), pro Kategorie. Richtwerte (Verbraucherzentrale).
+const ANBRUCH_HALTBARKEIT={
+  'Milchprodukte':3,        // offene Milch/Rahm 2-3 Tage
+  'Fleisch & Fisch':1,      // offen sehr kurz
+  'Gemüse & Früchte':2,
+  'Getränke':3,             // offener Saft
+  'Konserven & Trockenware':3, // offene Konserve (umgefüllt)
+  'Gewürze & Saucen':30,    // offene Sauce im Kühlschrank
+  'Backwaren & Brot':3,
+  'Süsswaren':14,
+  'Tiefkühl':1,             // aufgetaut
+  'Diverses':5,
+};
+function anbruchHaltbarkeit(kat){return ANBRUCH_HALTBARKEIT[kat]!==undefined?ANBRUCH_HALTBARKEIT[kat]:5;}
+
+// Kompaktes Ablauf-Badge für Detailzeile: rot mit − wenn abgelaufen, grün mit + wenn haltbar
+function expBadgeKurz(a){
+  const roh=daysUntil(a.ablaufdatum);
+  if(roh===null)return '';
+  const puffer=getPuffer(a);
+  const eff=roh+puffer;
+  if(roh<0){
+    // über MHD
+    if(eff>=0){
+      // laut Puffer noch ok
+      return '<span style="color:var(--wn);font-weight:600">🟡 −'+Math.abs(roh)+'d</span>';
+    }
+    return '<span style="color:var(--dg);font-weight:600">−'+Math.abs(roh)+'d</span>';
+  }
+  if(roh===0)return '<span style="color:var(--wn);font-weight:600">heute</span>';
+  return '<span style="color:var(--ok);font-weight:600">+'+roh+'d</span>';
+}
+function frischeHaltbarkeit(name){
+  const n=(name||'').toLowerCase().trim();
+  // Exakter Treffer
+  if(FRISCHE_HALTBARKEIT[n]!==undefined)return FRISCHE_HALTBARKEIT[n];
+  // Teilstring: längste passende Schlüssel bevorzugen
+  let best=null,bestLen=0;
+  for(const k in FRISCHE_HALTBARKEIT){
+    if((n.includes(k)||k.includes(n))&&k.length>bestLen){best=FRISCHE_HALTBARKEIT[k];bestLen=k.length;}
+  }
+  return best; // null wenn nichts passt
+}
+
+function getPuffer(a){
+  // Pro-Artikel-Override (a.puffer) hat Vorrang; sonst Kategorie-Standard
+  if(VERDERBLICH.includes(a.kat))return 0; // Sicherheitsschranke: verderblich nie puffern
+  if(typeof a.puffer==='number'&&a.puffer>=0)return a.puffer;
+  return KAT_PUFFER[a.kat]||0;
+}
+// Effektive Resttage inkl. Puffer (für Artikel-Objekt)
+function effektiveTage(a){
+  if(!a.ablaufdatum)return null;
+  const roh=daysUntil(a.ablaufdatum);
+  if(roh===null)return null;
+  return roh+getPuffer(a);
+}
 function fmtDateCH(iso){
   if(!iso)return '—';
   const p=iso.split('-');if(p.length!==3)return iso;
@@ -4222,6 +4589,22 @@ function expBadge(iso){
   const d=daysUntil(iso);
   const cls=expClass(d);
   return '<span class="exp-badge '+cls+'">'+expLabel(d)+'</span>';
+}
+// Puffer-bewusstes Badge: berücksichtigt Haltbarkeits-Richtwert der Kategorie/Artikels
+function expBadgeA(a){
+  if(!a.ablaufdatum)return '';
+  const roh=daysUntil(a.ablaufdatum);
+  const puffer=getPuffer(a);
+  // Normal (kein Puffer oder noch vor MHD): wie gehabt
+  if(puffer<=0||roh>=0)return expBadge(a.ablaufdatum);
+  // Über MHD, aber Puffer greift
+  const eff=roh+puffer;
+  if(eff>=0){
+    // laut Richtwert noch geniessbar
+    return '<span class="exp-badge soon" title="MHD überschritten, laut Richtwert (+'+puffer+' Tage) meist noch geniessbar — bitte prüfen">🟡 MHD +'+Math.abs(roh)+'d · meist noch ok</span>';
+  }
+  // Auch über Puffer hinaus → wirklich abgelaufen
+  return '<span class="exp-badge over">abgelaufen seit '+Math.abs(roh)+' Tagen</span>';
 }
 
 /* ── Init ─────────────────────────────────────────────────────────── */
