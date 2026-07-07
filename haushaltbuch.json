@@ -988,7 +988,7 @@
       "marke": "Lidl",
       "kat": "Gemüse & Früchte",
       "lager": "Kühlschrank oben",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20316488",
@@ -1000,7 +1000,17 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782541986317_off.jpg",
       "fotoPath": "1782541986317_off.jpg",
-      "preisHistorie": []
+      "preisHistorie": [
+        {
+          "datum": "2026-07-07",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        }
+      ],
+      "packungen": []
     },
     {
       "id": 34,
@@ -1008,7 +1018,7 @@
       "marke": "Lovilio",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20631321",
@@ -1034,16 +1044,17 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-07",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
         }
       ],
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-06-27",
-          "ablaufdatum": "2026-07-18"
-        }
-      ]
+      "packungen": []
     },
     {
       "id": 35,
@@ -6153,7 +6164,33 @@
       "aktion": false,
       "datum": "2026-07-07",
       "zeit": 1783416287159
+    },
+    {
+      "t": "aus",
+      "aid": 34,
+      "name": "Morzarella",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783417828797
+    },
+    {
+      "t": "aus",
+      "aid": 33,
+      "name": "Dattelcherrytomaten",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783417838947
     }
   ],
-  "aktualisiert": "2026-07-07T09:48:06.839Z"
+  "aktualisiert": "2026-07-07T09:57:28.941Z"
 }
