@@ -3428,8 +3428,8 @@
       "barcode": "7610948070107",
       "barcodes": [],
       "preis": 0,
-      "packMenge": 0,
-      "packEinheit": "dl",
+      "packMenge": 100,
+      "packEinheit": "g",
       "kaufdatum": "2026-07-07",
       "ablaufdatum": "2027-09-30",
       "notiz": "Nutri-Score E\nPro 100g/ml: 42 kcal, Fett 0.7g, KH 4.4g, Eiweiss 2.1g",
@@ -6155,5 +6155,5 @@
       "zeit": 1783416287159
     }
   ],
-  "aktualisiert": "2026-07-07T09:31:48.716Z"
+  "aktualisiert": "2026-07-07T09:36:11.720Z"
 }
