@@ -62,6 +62,15 @@
           "einheit": "Kiste",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 50.2,
+          "menge": 2,
+          "einheit": "Kiste",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
       "packungen": [
@@ -78,7 +87,10 @@
           "ablaufdatum": ""
         }
       ],
-      "kaufort": "Landi"
+      "kaufort": "Landi",
+      "barcodes": [
+        "7611703211964"
+      ]
     },
     {
       "id": 3,
@@ -86,7 +98,7 @@
       "marke": "Lidl",
       "kat": "Genussmittel",
       "lager": "Küche",
-      "menge": 4,
+      "menge": 2,
       "einheit": "Stange",
       "mindest": 2,
       "barcode": "4006396071576",
@@ -150,15 +162,17 @@
           "einheit": "Stange",
           "typ": "ein",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-06",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "aus",
+          "aktion": false
         }
       ],
       "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-06-27",
-          "ablaufdatum": ""
-        },
         {
           "id": 2,
           "menge": 2,
@@ -1276,15 +1290,7 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648018150_off.jpg",
       "fotoPath": "1782648018150_off.jpg",
-      "preisHistorie": [],
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-06-28",
-          "ablaufdatum": ""
-        }
-      ]
+      "preisHistorie": []
     },
     {
       "id": 42,
@@ -1845,53 +1851,6 @@
       ]
     },
     {
-      "id": 56,
-      "name": "Parmigiano reggiano",
-      "marke": "Aldi",
-      "kat": "Milchprodukte",
-      "lager": "Kühlschrank oben",
-      "kaufort": "Aldi",
-      "menge": 0,
-      "einheit": "Stk",
-      "mindest": 1,
-      "barcode": "4099200104430",
-      "preis": 0,
-      "packMenge": 250,
-      "packEinheit": "g",
-      "kaufdatum": "2026-07-04",
-      "ablaufdatum": "",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782806741419_off.jpg",
-      "fotoPath": "1782806741419_off.jpg",
-      "preisHistorie": [
-        {
-          "datum": "2026-07-04",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Aldi"
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        }
-      ],
-      "packungen": [
-        {
-          "id": 5,
-          "menge": 1,
-          "kaufdatum": "2026-07-04",
-          "ablaufdatum": ""
-        }
-      ]
-    },
-    {
       "id": 57,
       "name": "Cleanic dent",
       "marke": "Kerr",
@@ -1985,10 +1944,10 @@
       "kat": "Genussmittel",
       "lager": "Schlof",
       "kaufort": "Coop",
-      "menge": 5,
+      "menge": 4,
       "einheit": "Stk",
       "mindest": 1,
-      "barcode": "8002335504064",
+      "barcode": "8002335104066",
       "preis": 0,
       "packMenge": 6,
       "packEinheit": "Stk",
@@ -2006,22 +1965,25 @@
           "typ": "ein",
           "aktion": true,
           "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-07-06",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
         }
       ],
       "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-07-01",
-          "ablaufdatum": ""
-        },
         {
           "id": 1,
           "menge": 4,
           "kaufdatum": "2026-06-30",
           "ablaufdatum": ""
         }
-      ]
+      ],
+      "barcodes": []
     },
     {
       "id": 61,
@@ -2090,6 +2052,31 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-05",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
         }
       ],
       "packungen": [
@@ -2098,7 +2085,16 @@
           "menge": 1,
           "kaufdatum": "2026-07-04",
           "ablaufdatum": "2026-10-13"
+        },
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-04",
+          "ablaufdatum": ""
         }
+      ],
+      "barcodes": [
+        "4099200104430"
       ]
     },
     {
@@ -2381,7 +2377,7 @@
       "kat": "Reinigung & Pflege",
       "lager": "Schlof",
       "kaufort": "",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 1,
       "barcode": "7322541154329",
@@ -2394,11 +2390,28 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783260037948_17832600252182022123947108572965.jpg",
       "fotoPath": "1783260037948_17832600252182022123947108572965.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-05",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-05",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false
+        }
+      ],
       "packungen": [
         {
           "id": 1,
-          "menge": 1,
+          "menge": 0,
           "kaufdatum": "2026-07-05",
           "ablaufdatum": ""
         }
@@ -2593,6 +2606,574 @@
           "ablaufdatum": "2028-10-31"
         }
       ]
+    },
+    {
+      "id": 78,
+      "name": "S. Andrea Risotto-Reis",
+      "marke": "M-Classic",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "4061461011536",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 1,
+      "packEinheit": "kg",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2021-11-30",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783268769358_off.jpg",
+      "fotoPath": "1783268769358_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-07-05",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2021-11-30"
+        },
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2022-12-31"
+        }
+      ]
+    },
+    {
+      "id": 79,
+      "name": "Langkornreis",
+      "marke": "M-Classic",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7610200010902",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 1,
+      "packEinheit": "kg",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2026-10-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783268893197_off.jpg",
+      "fotoPath": "1783268893197_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 2,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2026-10-31"
+        }
+      ]
+    },
+    {
+      "id": 80,
+      "name": "Hartweizengriess",
+      "marke": "M Classic",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7613312078808",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2021-12-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783268935054_off.jpg",
+      "fotoPath": "1783268935054_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 2,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2021-12-31"
+        }
+      ]
+    },
+    {
+      "id": 81,
+      "name": "Penne rigate",
+      "marke": "la Molisana",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "8004690052044",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2028-05-13",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783269141418_off.jpg",
+      "fotoPath": "1783269141418_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2028-05-13"
+        }
+      ]
+    },
+    {
+      "id": 82,
+      "name": "Rohrzucker",
+      "marke": "Zmr",
+      "kat": "Gewürze & Saucen",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7610302010138",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 1,
+      "packEinheit": "kg",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783269246925_1783269240856683046383311667285.jpg",
+      "fotoPath": "1783269246925_1783269240856683046383311667285.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 6,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 83,
+      "name": "Mais grob",
+      "marke": "Zwicky",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7610027003842",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2022-05-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783269291587_off.jpg",
+      "fotoPath": "1783269291587_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 7,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2022-05-31"
+        }
+      ]
+    },
+    {
+      "id": 84,
+      "name": "Puderzucker",
+      "marke": "M Classic",
+      "kat": "Süsswaren",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "7610200010209",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-05",
+      "ablaufdatum": "2024-12-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783269384288_off.jpg",
+      "fotoPath": "1783269384288_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 8,
+          "menge": 1,
+          "kaufdatum": "2026-07-05",
+          "ablaufdatum": "2024-12-31"
+        }
+      ]
+    },
+    {
+      "id": 85,
+      "name": "Bio Curry  - Fach 8",
+      "marke": "Kania",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "g",
+      "mindest": 0,
+      "barcode": "4056489113737",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 40,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-06",
+      "ablaufdatum": "2028-05-31",
+      "notiz": "Bio\nPro 100g/ml: 382 kcal, Fett 13.5g, KH 43.7g, Eiweiss 14.5g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783349788591_off.jpg",
+      "fotoPath": "1783349788591_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-06",
+          "ablaufdatum": "2028-05-31"
+        }
+      ]
+    },
+    {
+      "id": 86,
+      "name": "Aromat chili",
+      "marke": "Knorr",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 1,
+      "barcode": "8720182688408",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-07-06",
+      "ablaufdatum": "2025-11-30",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783349842594_off.jpg",
+      "fotoPath": "1783349842594_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-07-06",
+          "ablaufdatum": "2025-11-30"
+        }
+      ]
+    },
+    {
+      "id": 87,
+      "name": "Curry Pulver",
+      "marke": "Aldi",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Aldi",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4061461247959",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 45,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-06",
+      "ablaufdatum": "2028-02-29",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783349896900_17833498904578792545148257863773.jpg",
+      "fotoPath": "1783349896900_17833498904578792545148257863773.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-07-06",
+          "ablaufdatum": "2028-02-29"
+        }
+      ]
+    },
+    {
+      "id": 88,
+      "name": "Kurkuma (Gewürz)",
+      "marke": "Migros",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "g",
+      "mindest": 0,
+      "barcode": "7613312433478",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 55,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-06",
+      "ablaufdatum": "2026-10-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783350011215_17833500057322621161892223402902.jpg",
+      "fotoPath": "1783350011215_17833500057322621161892223402902.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-07-06",
+          "ablaufdatum": "2026-10-31"
+        }
+      ]
+    },
+    {
+      "id": 89,
+      "name": "Paprika delikatess",
+      "marke": "M Classic",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7613312411988",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 54,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-06",
+      "ablaufdatum": "2026-08-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783350026531_off.jpg",
+      "fotoPath": "1783350026531_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-07-06",
+          "ablaufdatum": "2026-08-31"
+        }
+      ]
+    },
+    {
+      "id": 90,
+      "name": "Gewürz Mischung Hot & Spicy",
+      "marke": "Gourmet",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Aldi",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4099200202549",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 45,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-06",
+      "ablaufdatum": "2027-08-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783350060613_off.jpg",
+      "fotoPath": "1783350060613_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 6,
+          "menge": 1,
+          "kaufdatum": "2026-07-06",
+          "ablaufdatum": "2027-08-31"
+        }
+      ]
+    },
+    {
+      "id": 91,
+      "name": "Aigle Les Murailles Aoc 2012 70 cl, 1 Bouteille",
+      "marke": "",
+      "kat": "Genussmittel",
+      "lager": "Schlof",
+      "kaufort": "Coop",
+      "menge": 0,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7612666001746",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 0.75,
+      "packEinheit": "l",
+      "kaufdatum": "2026-07-06",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783359192748_off.jpg",
+      "fotoPath": "1783359192748_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-07-06",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        }
+      ],
+      "packungen": []
+    },
+    {
+      "id": 92,
+      "name": "Geflügel Gewürz",
+      "marke": "Délicat AG Migros",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7613312009307",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 49,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-07",
+      "ablaufdatum": "2021-06-30",
+      "notiz": "Pro 100g/ml: 339 kcal, Fett 11g, KH 35g, Eiweiss 18g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783398900428_off.jpg",
+      "fotoPath": "1783398900428_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-07",
+          "ablaufdatum": "2021-06-30"
+        }
+      ]
+    },
+    {
+      "id": 93,
+      "name": "Fondue & Raclette",
+      "marke": "M Classic",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7613312412909",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 60,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-07",
+      "ablaufdatum": "2026-09-30",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783398953813_off.jpg",
+      "fotoPath": "1783398953813_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-07-07",
+          "ablaufdatum": "2026-09-30"
+        }
+      ]
+    },
+    {
+      "id": 94,
+      "name": "Geräucherter Paprika",
+      "marke": "",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4000068036290",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 60,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-07",
+      "ablaufdatum": "2024-09-30",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783398987965_off.jpg",
+      "fotoPath": "1783398987965_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-07-07",
+          "ablaufdatum": "2024-09-30"
+        }
+      ]
+    },
+    {
+      "id": 95,
+      "name": "Speisesalz",
+      "marke": "JuraSel",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7610039001430",
+      "barcodes": [],
+      "preis": 1.5,
+      "packMenge": 125,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-07",
+      "ablaufdatum": "2026-07-07",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783399017743_off.jpg",
+      "fotoPath": "1783399017743_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-07-07",
+          "preis": 1.5,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        }
+      ],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-07-07",
+          "ablaufdatum": "2026-07-07"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -2657,12 +3238,11 @@
       "einheit": ""
     },
     {
-      "id": 1783165371487,
-      "text": "Zigaretten Goldfield Gold",
-      "sub": "mind. 2 Stange",
-      "checked": false,
-      "menge": "2",
-      "einheit": "Pkg"
+      "id": 1783264265573,
+      "text": "Senf Mild",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
     }
   ],
   "einkaufOverrides": {
@@ -4356,8 +4936,8 @@
     },
     {
       "t": "ein",
-      "aid": 56,
-      "name": "Parmigiano reggiano",
+      "aid": 62,
+      "name": "Parmigiano Reggiano",
       "lager": "Kühlschrank oben",
       "kat": "Milchprodukte",
       "menge": 1,
@@ -4369,8 +4949,8 @@
     },
     {
       "t": "aus",
-      "aid": 56,
-      "name": "Parmigiano reggiano",
+      "aid": 62,
+      "name": "Parmigiano Reggiano",
       "lager": "Kühlschrank oben",
       "kat": "Milchprodukte",
       "menge": 1,
@@ -4848,7 +5428,345 @@
       "aktion": false,
       "datum": "2026-07-05",
       "zeit": 1783261199146
+    },
+    {
+      "t": "aus",
+      "aid": 70,
+      "name": "WC-Papier",
+      "lager": "Schlof",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783264853500
+    },
+    {
+      "t": "ein",
+      "aid": 70,
+      "name": "WC-Papier",
+      "lager": "Schlof",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783264857526
+    },
+    {
+      "t": "aus",
+      "aid": 70,
+      "name": "WC-Papier",
+      "lager": "Schlof",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783264871851
+    },
+    {
+      "t": "aus",
+      "aid": 62,
+      "name": "Parmigiano Reggiano",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783265193966
+    },
+    {
+      "t": "ein",
+      "aid": 78,
+      "name": "S. Andrea Risotto-Reis",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783268721764
+    },
+    {
+      "t": "ein",
+      "aid": 78,
+      "name": "S. Andrea Risotto-Reis",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783268877960
+    },
+    {
+      "t": "ein",
+      "aid": 79,
+      "name": "Langkornreis",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783268916340
+    },
+    {
+      "t": "ein",
+      "aid": 80,
+      "name": "Hartweizengriess",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783268970099
+    },
+    {
+      "t": "ein",
+      "aid": 81,
+      "name": "Penne rigate",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783269180635
+    },
+    {
+      "t": "ein",
+      "aid": 82,
+      "name": "Rohrzucker",
+      "lager": "Schlof",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783269270214
+    },
+    {
+      "t": "ein",
+      "aid": 83,
+      "name": "Mais grob",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783269372116
+    },
+    {
+      "t": "ein",
+      "aid": 84,
+      "name": "Puderzucker",
+      "lager": "Schlof",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-05",
+      "zeit": 1783269435689
+    },
+    {
+      "t": "aus",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-06",
+      "zeit": 1783311051257
+    },
+    {
+      "t": "ein",
+      "aid": 85,
+      "name": "Bio Curry  - Fach 8",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "g",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-06",
+      "zeit": 1783349841590
+    },
+    {
+      "t": "ein",
+      "aid": 86,
+      "name": "Aromat chili",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-06",
+      "zeit": 1783349862988
+    },
+    {
+      "t": "ein",
+      "aid": 87,
+      "name": "Curry Pulver",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-06",
+      "zeit": 1783349947050
+    },
+    {
+      "t": "ein",
+      "aid": 88,
+      "name": "Kurkuma (Gewürz)",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "g",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-06",
+      "zeit": 1783350025607
+    },
+    {
+      "t": "ein",
+      "aid": 89,
+      "name": "Paprika delikatess",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-06",
+      "zeit": 1783350059800
+    },
+    {
+      "t": "ein",
+      "aid": 90,
+      "name": "Gewürz Mischung Hot & Spicy",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-06",
+      "zeit": 1783350090320
+    },
+    {
+      "t": "aus",
+      "aid": 60,
+      "name": "Valdobbiadene Prosecco Superiore",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-06",
+      "zeit": 1783350655644
+    },
+    {
+      "t": "ein",
+      "aid": 91,
+      "name": "Aigle Les Murailles Aoc 2012 70 cl, 1 Bouteille",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-06",
+      "zeit": 1783359229729
+    },
+    {
+      "t": "aus",
+      "aid": 91,
+      "name": "Aigle Les Murailles Aoc 2012 70 cl, 1 Bouteille",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-06",
+      "zeit": 1783359252062
+    },
+    {
+      "t": "ein",
+      "aid": 92,
+      "name": "Geflügel Gewürz",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783398952484
+    },
+    {
+      "t": "ein",
+      "aid": 93,
+      "name": "Fondue & Raclette",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783398986089
+    },
+    {
+      "t": "ein",
+      "aid": 94,
+      "name": "Geräucherter Paprika",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783399016275
+    },
+    {
+      "t": "ein",
+      "aid": 95,
+      "name": "Speisesalz",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 1.5,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783399053855
     }
   ],
-  "aktualisiert": "2026-07-07T04:56:40.163Z"
+  "aktualisiert": "2026-07-07T05:02:54.011Z"
 }
