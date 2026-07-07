@@ -3174,6 +3174,246 @@
           "ablaufdatum": "2026-07-07"
         }
       ]
+    },
+    {
+      "id": 96,
+      "name": "Seasoning papprika",
+      "marke": "Zweifel",
+      "kat": "Getränke",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7610095227799",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 70,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-07",
+      "ablaufdatum": "2020-08-31",
+      "notiz": "Pro 100g/ml: 269 kcal, Fett 2.8g, KH 57g, Eiweiss 2.6g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783411202191_off.jpg",
+      "fotoPath": "1783411202191_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-07",
+          "ablaufdatum": "2020-08-31"
+        }
+      ]
+    },
+    {
+      "id": 97,
+      "name": "Knoblauchpulver",
+      "marke": "Mccormick",
+      "kat": "Getränke",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7610071221148",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 50,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-07",
+      "ablaufdatum": "2027-07-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783411223781_off.jpg",
+      "fotoPath": "1783411223781_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-07-07",
+          "ablaufdatum": "2027-07-31"
+        }
+      ]
+    },
+    {
+      "id": 98,
+      "name": "Maggi Würze",
+      "marke": "Maggi",
+      "kat": "Konserven & Trockenware",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Flasche",
+      "mindest": 0,
+      "barcode": "4005500016236",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 250,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-07",
+      "ablaufdatum": "2025-12-31",
+      "notiz": "Vegan, Vegetarisch\nNutri-Score E\nPro 100g/ml: 69 kcal, Fett 0.2g, KH 6.5g, Eiweiss 9.8g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783411240927_off.jpg",
+      "fotoPath": "1783411240927_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-07-07",
+          "ablaufdatum": "2025-12-31"
+        }
+      ]
+    },
+    {
+      "id": 99,
+      "name": "LiLiBiGGS Honey",
+      "marke": "Lilibiggs",
+      "kat": "Süsswaren",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Flasche",
+      "mindest": 0,
+      "barcode": "7617027052665",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 250,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-07",
+      "ablaufdatum": "2019-10-31",
+      "notiz": "Nutri-Score E\nPro 100g/ml: 340 kcal, Fett 0.5g, KH 82g, Eiweiss 0.5g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783411260844_off.jpg",
+      "fotoPath": "1783411260844_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-07-07",
+          "ablaufdatum": "2019-10-31"
+        }
+      ]
+    },
+    {
+      "id": 100,
+      "name": "Safran",
+      "marke": "Le Gusto",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4099200048673",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 5,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-07-07",
+      "ablaufdatum": "2023-07-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783411277610_off.jpg",
+      "fotoPath": "1783411277610_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-07-07",
+          "ablaufdatum": "2023-07-31"
+        }
+      ]
+    },
+    {
+      "id": 101,
+      "name": "Safran (4 Briefchen à je 0.125 g)",
+      "marke": "M-Classic",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7613312346754",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 0.5,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-07",
+      "ablaufdatum": "2023-07-07",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783411340248_off.jpg",
+      "fotoPath": "1783411340248_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 6,
+          "menge": 1,
+          "kaufdatum": "2026-07-07",
+          "ablaufdatum": "2023-07-07"
+        }
+      ]
+    },
+    {
+      "id": 102,
+      "name": "Sirop d'érable",
+      "marke": "Nectaflor",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7610184019410",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 250,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-07-07",
+      "ablaufdatum": "2024-07-31",
+      "notiz": "Pro 100g/ml: 265 kcal, Fett 0.1g, KH 68g, Eiweiss 0.1g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783411382098_off.jpg",
+      "fotoPath": "1783411382098_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 7,
+          "menge": 1,
+          "kaufdatum": "2026-07-07",
+          "ablaufdatum": "2024-07-31"
+        }
+      ]
+    },
+    {
+      "id": 103,
+      "name": "Blütenhonig",
+      "marke": "Alnatura",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4104420024403",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 350,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-07",
+      "ablaufdatum": "2023-05-31",
+      "notiz": "Bio\nNutri-Score E",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783411409995_off.jpg",
+      "fotoPath": "1783411409995_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 8,
+          "menge": 1,
+          "kaufdatum": "2026-07-07",
+          "ablaufdatum": "2023-05-31"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -5766,7 +6006,111 @@
       "aktion": false,
       "datum": "2026-07-07",
       "zeit": 1783399053855
+    },
+    {
+      "t": "ein",
+      "aid": 96,
+      "name": "Seasoning papprika",
+      "lager": "Küche",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "g",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783411222721
+    },
+    {
+      "t": "ein",
+      "aid": 97,
+      "name": "Knoblauchpulver",
+      "lager": "Küche",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "g",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783411240133
+    },
+    {
+      "t": "ein",
+      "aid": 98,
+      "name": "Maggi Würze",
+      "lager": "Küche",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "g",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783411259691
+    },
+    {
+      "t": "ein",
+      "aid": 99,
+      "name": "LiLiBiGGS Honey",
+      "lager": "Küche",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "g",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783411276789
+    },
+    {
+      "t": "ein",
+      "aid": 100,
+      "name": "Safran",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783411339297
+    },
+    {
+      "t": "ein",
+      "aid": 101,
+      "name": "Safran (4 Briefchen à je 0.125 g)",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "g",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783411380426
+    },
+    {
+      "t": "ein",
+      "aid": 102,
+      "name": "Sirop d'érable",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783411409186
+    },
+    {
+      "t": "ein",
+      "aid": 103,
+      "name": "Blütenhonig",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-07",
+      "zeit": 1783411432030
     }
   ],
-  "aktualisiert": "2026-07-07T05:09:38.660Z"
+  "aktualisiert": "2026-07-07T08:08:06.870Z"
 }
