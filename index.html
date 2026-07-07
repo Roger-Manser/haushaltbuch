@@ -509,7 +509,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='12.2';
+const APP_VERSION='12.3';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -579,7 +579,33 @@ async function ghReq(path,method,body){
     ...(isGet?{cache:'no-store'}:{}),
     body:body?JSON.stringify(body):undefined
   });
-  if(!r.ok){const t=await r.text();throw new Error('GitHub '+r.status+': '+t.slice(0,100));}
+  if(!r.ok){
+    const t=await r.text();
+    let msg='GitHub '+r.status;
+    // Verständliche Meldungen für häufige Fehler
+    if(r.status===401){
+      msg='Token ungültig oder abgelaufen (401). Bitte in den Einstellungen ein neues GitHub-Token eintragen.';
+    }else if(r.status===403){
+      // 403 kann Rate-Limit ODER fehlende Berechtigung sein
+      const remaining=r.headers.get('x-ratelimit-remaining');
+      if(remaining==='0'){
+        const reset=r.headers.get('x-ratelimit-reset');
+        const resetTime=reset?new Date(parseInt(reset)*1000).toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit'}):'';
+        msg='GitHub-Limit erreicht (403). Bitte später erneut versuchen'+(resetTime?' (zurückgesetzt um '+resetTime+')':'')+'.';
+      }else if(/rate limit/i.test(t)){
+        msg='GitHub-Limit erreicht (403). Bitte einige Minuten warten.';
+      }else{
+        msg='Zugriff verweigert (403). Token braucht «repo»-Scope (classic) bzw. «Contents: Read and write» (fine-grained) für dieses Repo. Ggf. Token neu erstellen.';
+      }
+    }else if(r.status===404){
+      msg='Repository nicht gefunden (404). Prüfe Benutzername «'+esc(gh.own)+'» und Repo «'+esc(gh.repo)+'» in den Einstellungen.';
+    }else if(r.status===409){
+      msg='Konflikt (409) — bitte erneut synchronisieren.';
+    }else{
+      msg='GitHub '+r.status+': '+t.slice(0,120);
+    }
+    const err=new Error(msg);err.status=r.status;throw err;
+  }
   return r.status===204?null:r.json();
 }
 async function ghGet(path){try{return await ghReq('/contents/'+path);}catch(e){return null;}}
@@ -694,7 +720,15 @@ async function doSync(){
     dirty=false;sdot('ok');hideLdr();
     toast('Synchronisiert: '+S.a.length+' Artikel auf GitHub geschrieben');
     renderLager();
-  }catch(err){hideLdr();sdot('dt');toast('Fehler: '+err.message.slice(0,60));}
+  }catch(err){
+    hideLdr();sdot('dt');
+    // Bei Token-/Berechtigungsfehlern die volle Erklärung zeigen (nicht abschneiden)
+    if(err.status===401||err.status===403||err.status===404){
+      alert('Synchronisierung fehlgeschlagen\n\n'+err.message);
+    }else{
+      toast('Fehler: '+err.message.slice(0,70));
+    }
+  }
 }
 
 async function loadFromGH(){
