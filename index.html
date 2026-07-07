@@ -509,7 +509,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='12.0';
+const APP_VERSION='12.1';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1025,6 +1025,7 @@ let sortMode='ablauf'; // 'ablauf' | 'name' | 'bestand'
 function renderSortBar(){
   const modes=[
     {id:'ablauf',l:'Nach Ablaufdatum',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'},
+    {id:'neu',l:'Zuletzt erfasst',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 8v4l3 3"/><path d="M3.05 11a9 9 0 1 1 .5 4"/><polyline points="3 16 3 11 8 11"/></svg>'},
     {id:'name',l:'Nach Name (A-Z)',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="9" y2="18"/></svg>'},
     {id:'bestand',l:'Nach Bestand',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>'},
   ];
@@ -1060,6 +1061,17 @@ function renderLager(){
     fil=[...withDate,...withoutDate,...ohneBestand];
   }else if(sortMode==='name'){
     fil=[...fil].sort((a,b)=>a.name.localeCompare(b.name,'de'));
+  }else if(sortMode==='neu'){
+    // Letzten Eingang-Zeitstempel pro Artikel aus dem Log ermitteln
+    const letzterEingang={};
+    (S.log||[]).forEach(l=>{
+      if(l.t==='ein'&&l.aid!=null){
+        if(!letzterEingang[l.aid]||l.zeit>letzterEingang[l.aid])letzterEingang[l.aid]=l.zeit;
+      }
+    });
+    // Fallback: kaufdatum in ms, sonst 0
+    const stamp=a=>letzterEingang[a.id]||(a.kaufdatum?new Date(a.kaufdatum).getTime():0);
+    fil=[...fil].sort((a,b)=>stamp(b)-stamp(a));
   }else if(sortMode==='bestand'){
     fil=[...fil].sort((a,b)=>(a.menge-a.mindest)-(b.menge-b.mindest));
   }
@@ -1067,11 +1079,25 @@ function renderLager(){
   list.innerHTML='<div class="lgi" style="border-radius:var(--r)">'+rows+'</div>';
   nav();
 }
+function relTime(a){
+  // Letzter Eingang aus Log, sonst kaufdatum
+  let ms=0;
+  (S.log||[]).forEach(l=>{if(l.t==='ein'&&l.aid===a.id&&l.zeit>ms)ms=l.zeit;});
+  if(!ms&&a.kaufdatum)ms=new Date(a.kaufdatum).getTime();
+  if(!ms)return 'unbekannt';
+  const diff=Date.now()-ms;
+  const tag=Math.floor(diff/(24*3600*1000));
+  if(tag<=0)return 'heute';
+  if(tag===1)return 'gestern';
+  if(tag<7)return 'vor '+tag+' Tagen';
+  if(tag<30)return 'vor '+Math.floor(tag/7)+' Woche'+(Math.floor(tag/7)===1?'':'n');
+  return fmtDateCH(new Date(ms).toISOString().slice(0,10));
+}
 function arRow(a){
   const bc=a.menge===0?'lo':a.menge<a.mindest?'wn':'ok';
   const th=a.foto?'<div class="at has-photo" data-thumb-id="'+a.id+'"><img src="'+esc(a.foto)+'" loading="lazy"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div>';
   const pinfo=packInfo(a);
-  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'');
+  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'')+(sortMode==='neu'?' · '+relTime(a):'');
   const eb=(a.ablaufdatum&&a.menge>0)?expBadge(a.ablaufdatum):'';
   const unitLabel=a.packMenge>0?esc(a.einheit||'Stk'):esc(a.einheit||'Stk');
   const aufListe=S.ek.some(e=>e.text.toLowerCase()===a.name.toLowerCase()&&!e.checked);
