@@ -317,7 +317,14 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   </button></div>
   <div class="chips" id="lager-chips"></div>
   <div class="sort-bar" id="sort-bar"></div>
-  <div id="cam-lager-scan-tmp" style="display:none"></div>
+  <div id="lager-scan-overlay" style="display:none;position:fixed;inset:0;z-index:7000;background:#000">
+    <div id="cam-lager-scan-tmp" style="position:relative;height:100%">
+      <button onclick="closeLagerScan()" style="position:absolute;top:16px;right:16px;z-index:10;background:rgba(0,0,0,.6);border:none;border-radius:50%;width:44px;height:44px;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+      <div id="camv-lager-scan-tmp" style="width:100%;height:100%;position:relative"></div>
+      <div class="cam-frame"></div>
+      <div class="cam-hint">Barcode scannen → Artikel wird direkt geöffnet</div>
+    </div>
+  </div>
   <div class="scroll" id="lager-list"></div>
   <div style="display:flex;gap:8px;margin:10px 16px 4px">
     <button class="add-btn" style="margin:0;flex:1" onclick="openEingang()">
@@ -513,7 +520,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='13.5';
+const APP_VERSION='13.6';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1111,26 +1118,23 @@ let sortMode='ablauf'; // 'ablauf' | 'name' | 'bestand'
 
 // Barcode-Scanner für Artikelsuche in der Lagerliste
 function scanLagerSearch(){
-  // Temporäres Kamera-Overlay (nutzt vorhandene Scanner-Infrastruktur mit Callback)
-  openScanner('lager-scan-tmp', (code)=>{
-    if(qRunning){try{Quagga.stop();}catch(e){}qRunning=false;}
-    const cam=document.getElementById('cam-lager-scan-tmp');
-    if(cam)cam.style.display='none';
+  document.getElementById('lager-scan-overlay').style.display='block';
+  openScanner('lager-scan-tmp',(code)=>{
+    closeLagerScan();
     const a=artikelByCode(code);
     if(a){
-      // Artikel gefunden → Detail öffnen
       toast('📦 '+a.name+' gefunden');
       showDet(a.id);
     }else{
-      // Nicht gefunden → Code ins Suchfeld eintragen
       const inp=document.getElementById('lager-search');
-      if(inp){
-        inp.value=code;
-        inp.dispatchEvent(new Event('input'));
-      }
-      toast('⚠ Kein Artikel für Barcode '+code+' — Suche gesetzt');
+      if(inp){inp.value=code;inp.dispatchEvent(new Event('input'));}
+      toast('⚠ Kein Artikel für Barcode '+code);
     }
   });
+}
+function closeLagerScan(){
+  if(qRunning){try{Quagga.stop();}catch(e){}qRunning=false;}
+  document.getElementById('lager-scan-overlay').style.display='none';
 }
 function renderSortBar(){
   const modes=[
@@ -1163,12 +1167,15 @@ function renderLager(){
   if(!fil.length){list.innerHTML='<div class="empty">'+I.pkg.replace('20px;height:20px','48px;height:48px')+'<p>'+(S.a.length?'Keine Artikel gefunden':'Noch keine Artikel')+'</p><small>'+(S.a.length?'Suchbegriff anpassen':'Tippe auf Neuer Artikel')+'</small></div>';nav();return;}
 
   if(sortMode==='ablauf'){
-    // Bestand 0 zwingend ans Ende (unabhängig vom MHD)
-    const mitBestand=fil.filter(a=>a.menge>0);
-    const ohneBestand=fil.filter(a=>a.menge<=0).sort((a,b)=>a.name.localeCompare(b.name,'de'));
+    // Bestand 0 und manuell ignorierte ans Ende
+    const ignoriert=fil.filter(a=>a.ablaufIgnoriert);
+    const aktiv=fil.filter(a=>!a.ablaufIgnoriert);
+    const mitBestand=aktiv.filter(a=>a.menge>0);
+    const ohneBestand=aktiv.filter(a=>a.menge<=0).sort((a,b)=>a.name.localeCompare(b.name,'de'));
     const withDate=mitBestand.filter(a=>a.ablaufdatum).sort((a,b)=>a.ablaufdatum.localeCompare(b.ablaufdatum));
     const withoutDate=mitBestand.filter(a=>!a.ablaufdatum).sort((a,b)=>a.name.localeCompare(b.name,'de'));
-    fil=[...withDate,...withoutDate,...ohneBestand];
+    const ignorSorted=ignoriert.sort((a,b)=>a.name.localeCompare(b.name,'de'));
+    fil=[...withDate,...withoutDate,...ohneBestand,...ignorSorted];
   }else if(sortMode==='name'){
     fil=[...fil].sort((a,b)=>a.name.localeCompare(b.name,'de'));
   }else if(sortMode==='neu'){
@@ -1384,7 +1391,9 @@ function showDet(id){
       return '<div class="ir" style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showRezeptDetail(this,'+id+')" data-r=\''+rJson+'\'>'+thumb+'<div><div style="font-size:13px;font-weight:500">'+esc(r.name)+'</div><div style="font-size:11px;color:var(--t2)">'+r.port+' Port. · '+r.min+' min</div></div></div>';
     }).join('')+'</div>':
     '';
-  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span>'+(a.ablaufdatum?'<span style="flex:1;text-align:center">'+expBadgeKurz(a)+'</span><span class="iv" style="flex:none">'+fmtDateCH(a.ablaufdatum)+'</span>':'<span class="iv">—</span>')+'</div>'+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+(opt.fwAnbruch?'<div class="acr" style="margin-top:8px"><button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen (abgelaufen)</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>':'<div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>')+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
+  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span>'+(a.ablaufdatum?'<span style="flex:1;text-align:center">'+expBadgeKurz(a)+'</span><span class="iv" style="flex:none">'+fmtDateCH(a.ablaufdatum)+'</span>':'<span class="iv">—</span>')+'</div>'+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+
+    (a.ablaufdatum?'<div class="acr" style="margin-top:8px"><button class="acb" onclick="toggleAblaufIgnoriert('+id+')" style="'+(a.ablaufIgnoriert?'color:var(--ac)':'')+'">'+(a.ablaufIgnoriert?'↑ Wieder einreihen (Ablauf aktiv)':'↓ Bei Ablauf ans Ende setzen')+'</button></div>':'')+
+    (opt.fwAnbruch?'<div class="acr" style="margin-top:8px"><button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen (abgelaufen)</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>':'<div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>')+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
   const heroEl=document.getElementById('dh-hero-img');
   if(heroEl)heroEl.addEventListener('click',()=>openLightbox(a.foto));
   goScreen('s-detail');
@@ -1488,6 +1497,13 @@ function chgB(id,d){
   const el=document.getElementById('sv-'+id);
   if(el){el.textContent=a.menge;el.className='spv '+(a.menge===0?'lo':a.menge<a.mindest?'wn':'ok');}
   saveL();toast(d>0?'+1 eingelagert':'−1 entnommen');
+}
+function toggleAblaufIgnoriert(id){
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  a.ablaufIgnoriert=!a.ablaufIgnoriert;
+  saveL();
+  toast(a.ablaufIgnoriert?'↓ Wird bei Ablauf-Sortierung ans Ende gesetzt':'↑ Wieder normal eingereiht');
+  showDet(id);
 }
 function delA(id){
   if(!confirm('Artikel wirklich löschen?'))return;
