@@ -3320,7 +3320,8 @@
           "kaufdatum": "2026-07-07",
           "ablaufdatum": "2019-10-31"
         }
-      ]
+      ],
+      "ablaufIgnoriert": true
     },
     {
       "id": 100,
@@ -6264,5 +6265,5 @@
       "zeit": 1783751827766
     }
   ],
-  "aktualisiert": "2026-07-11T07:22:25.543Z"
+  "aktualisiert": "2026-07-11T13:07:45.297Z"
 }
