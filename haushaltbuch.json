@@ -4015,7 +4015,7 @@
       "kaufort": "Migros",
       "menge": 2,
       "einheit": "Stk",
-      "mindest": 8,
+      "mindest": 0,
       "barcode": "7614200011648",
       "barcodes": [],
       "preis": 0,
@@ -7302,5 +7302,5 @@
       "zeit": 1783864708739
     }
   ],
-  "aktualisiert": "2026-07-12T13:58:41.062Z"
+  "aktualisiert": "2026-07-12T14:10:19.099Z"
 }
