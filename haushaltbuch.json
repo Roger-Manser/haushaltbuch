@@ -6,7 +6,7 @@
       "marke": "Landi",
       "kat": "Genussmittel",
       "lager": "Kühlschrank unten",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Kiste",
       "mindest": 2,
       "barcode": "7611703611962",
@@ -15,7 +15,7 @@
       "packEinheit": "Flasche",
       "kaufdatum": "2026-07-04",
       "ablaufdatum": "",
-      "notiz": "2014",
+      "notiz": "DE - Nährwert und Zutatenverzeichnis Zutaten: Trauben, rektifiziertes Traubenmostkonzentrat, Saccharose, Säureregulatoren: Apfelsäure, Milchsäure, Weinsäure, Stabilisatoren: Citronensäure, Hefe-Mannoproteine zur Weinsteinstabilisierung, Kaliumpolyaspartat, Metaweinsäure, Antioxidantien: Kaliumsorbat, L-Ascorbinsäure, Sulfite, Gase und Packgase: unter Schutzatmosphäre abgefüllt\n 100 ml enthalten durchschnittlich Energie Fett ..davon gesättigte Fettsäuren Kohlenhydrate ..davon Zucker Eiweiss Salz 307 kJ (73 kcal) 0 g 0 g 1.3 g 0.5 g 0 g 0 g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781961271197_17819612557295906724604013972.jpg",
       "fotoPath": "1781961271197_17819612557295906724604013972.jpg",
       "preisHistorie": [
@@ -71,15 +71,35 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-07-12",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 50.2,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 50.2,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
       "packungen": [
-        {
-          "id": 5,
-          "menge": 1,
-          "kaufdatum": "2026-06-27",
-          "ablaufdatum": ""
-        },
         {
           "id": 1,
           "menge": 1,
@@ -4187,6 +4207,38 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 124,
+      "name": "Collezione Oro Rosato Toscana",
+      "marke": "Piccini",
+      "kat": "Genussmittel",
+      "lager": "Kühlschrank unten",
+      "kaufort": "Geschenk",
+      "menge": 0,
+      "einheit": "Flasche",
+      "mindest": 0,
+      "barcode": "8002793017649",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 750,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-07-12",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783867930588_off.jpg",
+      "fotoPath": "1783867930588_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-07-12",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Flasche",
+          "typ": "aus",
+          "aktion": false
+        }
+      ],
+      "packungen": []
     }
   ],
   "lagerorte": [
@@ -4241,7 +4293,8 @@
     "Online",
     "Landi",
     "Galaxus",
-    "Spar"
+    "Spar",
+    "Geschenk"
   ],
   "einkauf": [
     {
@@ -7300,7 +7353,46 @@
       "aktion": false,
       "datum": "2026-07-12",
       "zeit": 1783864708739
+    },
+    {
+      "t": "aus",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Kühlschrank unten",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-12",
+      "zeit": 1783865741354
+    },
+    {
+      "t": "ein",
+      "aid": 124,
+      "name": "Collezione Oro Rosato Toscana",
+      "lager": "Kühlschrank unten",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Flasche",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-12",
+      "zeit": 1783868002747
+    },
+    {
+      "t": "aus",
+      "aid": 124,
+      "name": "Collezione Oro Rosato Toscana",
+      "lager": "Kühlschrank unten",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Flasche",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-12",
+      "zeit": 1783868010951
     }
   ],
-  "aktualisiert": "2026-07-12T14:10:19.099Z"
+  "aktualisiert": "2026-07-12T14:53:41.280Z"
 }
