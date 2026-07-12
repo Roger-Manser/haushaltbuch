@@ -520,7 +520,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='13.7';
+const APP_VERSION='13.8';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1485,18 +1485,101 @@ function syncMenge(a){
 
 function chgB(id,d){
   const a=S.a.find(x=>x.id===id);if(!a)return;
-  const before=a.menge;
-  a.menge=Math.max(0,a.menge+d);
-  const actualDelta=a.menge-before;
-  if(actualDelta!==0){
-    addLogEntry(actualDelta>0?'ein':'aus',a.id,a.name,a.lager,a.kat,Math.abs(actualDelta),a.einheit,0);
-    if(!a.preisHistorie)a.preisHistorie=[];
-    a.preisHistorie.push({datum:todayISO(),preis:0,menge:Math.abs(actualDelta),einheit:a.einheit||'Stk',typ:actualDelta>0?'ein':'aus',aktion:false});
+  ensurePackungen(a);
+  const aktive=a.packungen.filter(p=>p.menge>0);
+  
+  if(d>0){
+    // EINGANG: +1 — Packung wählen oder neue anlegen
+    if(aktive.length<=1){
+      // Nur eine Packung → direkt erhöhen
+      if(aktive.length===1){aktive[0].menge++;}
+      else{a.packungen.push({id:newPackId(),menge:1,kaufdatum:todayISO(),ablaufdatum:a.ablaufdatum||''});}
+      syncMenge(a);saveL();
+      addLogEntry('ein',a.id,a.name,a.lager,a.kat,1,a.einheit,0);
+      toast('+1 eingelagert');showDet(id);
+    }else{
+      // Mehrere Packungen → fragen welche, oder neue
+      showPackDialog(a,'ein');
+    }
+    return;
   }
-  // MHD bleibt auch bei Bestand 0 als Referenz erhalten (Warnungen nur bei Bestand>0)
-  const el=document.getElementById('sv-'+id);
-  if(el){el.textContent=a.menge;el.className='spv '+(a.menge===0?'lo':a.menge<a.mindest?'wn':'ok');}
-  saveL();toast(d>0?'+1 eingelagert':'−1 entnommen');
+  
+  // AUSGANG: −1
+  if(a.menge<=0){toast('Bestand bereits 0');return;}
+  if(aktive.length<=1){
+    // Nur eine Packung → direkt verringern
+    if(aktive.length===1){
+      aktive[0].menge=Math.max(0,aktive[0].menge-1);
+    }
+    syncMenge(a);saveL();
+    addLogEntry('aus',a.id,a.name,a.lager,a.kat,1,a.einheit,0);
+    toast('−1 entnommen');showDet(id);
+  }else{
+    // Mehrere Packungen mit verschiedenen MHDs → Auswahl
+    const uniqueMhd=[...new Set(aktive.map(p=>p.ablaufdatum||''))];
+    if(uniqueMhd.length<=1){
+      // Alle gleich → älteste direkt reduzieren
+      aktive.sort((x,y)=>(x.kaufdatum||'').localeCompare(y.kaufdatum||''));
+      aktive[0].menge=Math.max(0,aktive[0].menge-1);
+      syncMenge(a);saveL();
+      addLogEntry('aus',a.id,a.name,a.lager,a.kat,1,a.einheit,0);
+      toast('−1 entnommen');showDet(id);
+    }else{
+      showPackDialog(a,'aus');
+    }
+  }
+}
+
+function showPackDialog(a,typ){
+  const existing=document.getElementById('pack-dlg');if(existing)existing.remove();
+  const aktive=a.packungen.filter(p=>p.menge>0).sort((x,y)=>(x.ablaufdatum||'9999').localeCompare(y.ablaufdatum||'9999'));
+  const dlg=document.createElement('div');
+  dlg.id='pack-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">'+(typ==='ein'?'Eingang: Welche Packung?':'Ausgang: Welche Packung entnehmen?')+'</div>'+
+      '<div style="font-size:12px;color:var(--t2);margin-bottom:12px">'+(typ==='aus'?'Empfehlung: Älteste zuerst (FIFO) — ganz oben.':'Packung auswählen, der 1 Stk hinzugefügt wird.')+'</div>'+
+      aktive.map(p=>{
+        const mhdTxt=p.ablaufdatum?fmtDateCH(p.ablaufdatum):'ohne MHD';
+        const days=p.ablaufdatum?daysUntil(p.ablaufdatum):null;
+        const daysTxt=days!==null?(days<0?' · <span style="color:var(--dg)">−'+Math.abs(days)+'d</span>':days===0?' · heute':' · <span style="color:var(--ok)">+'+days+'d</span>'):'';
+        const kdTxt=p.kaufdatum?' · gekauft '+fmtDateCH(p.kaufdatum):'';
+        return '<div onclick="doPackChange('+a.id+','+p.id+',\''+ typ +'\')" style="display:flex;align-items:center;justify-content:space-between;padding:14px 10px;border-bottom:1px solid var(--bd);cursor:pointer">'+
+          '<div><div style="font-size:14px;font-weight:500">'+fmtMenge(p.menge)+' '+esc(a.einheit||'Stk')+'</div>'+
+          '<div style="font-size:12px;color:var(--t2)">MHD '+mhdTxt+daysTxt+kdTxt+'</div></div>'+
+          '<span style="font-size:12px;color:var(--ac);font-weight:600">'+(typ==='ein'?'+1':'−1')+'</span>'+
+        '</div>';
+      }).join('')+
+      (typ==='ein'?'<div onclick="doPackNew('+a.id+')" style="display:flex;align-items:center;justify-content:space-between;padding:14px 10px;cursor:pointer;color:var(--ac)"><span style="font-size:14px;font-weight:500">+ Neue Packung anlegen</span></div>':'')+
+      '<button onclick="document.getElementById(\'pack-dlg\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+    '</div>';
+  document.body.appendChild(dlg);
+}
+
+function doPackChange(artikelId,packId,typ){
+  const a=S.a.find(x=>x.id===artikelId);if(!a)return;
+  const p=a.packungen.find(x=>x.id===packId);if(!p)return;
+  if(typ==='ein'){
+    p.menge++;
+  }else{
+    p.menge=Math.max(0,p.menge-1);
+  }
+  syncMenge(a);saveL();
+  addLogEntry(typ,a.id,a.name,a.lager,a.kat,1,a.einheit,0);
+  const dlg=document.getElementById('pack-dlg');if(dlg)dlg.remove();
+  toast(typ==='ein'?'+1 eingelagert (MHD '+(p.ablaufdatum?fmtDateCH(p.ablaufdatum):'—')+')':'−1 entnommen (MHD '+(p.ablaufdatum?fmtDateCH(p.ablaufdatum):'—')+')');
+  showDet(artikelId);
+}
+
+function doPackNew(artikelId){
+  const a=S.a.find(x=>x.id===artikelId);if(!a)return;
+  a.packungen.push({id:newPackId(),menge:1,kaufdatum:todayISO(),ablaufdatum:''});
+  syncMenge(a);saveL();
+  addLogEntry('ein',a.id,a.name,a.lager,a.kat,1,a.einheit,0);
+  const dlg=document.getElementById('pack-dlg');if(dlg)dlg.remove();
+  toast('+1 neue Packung angelegt');
+  showDet(artikelId);
 }
 function toggleAblaufIgnoriert(id){
   const a=S.a.find(x=>x.id===id);if(!a)return;
