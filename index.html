@@ -520,7 +520,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='13.8';
+const APP_VERSION='14.0';
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -1010,6 +1010,8 @@ async function lookupOFF(barcode,statusElId){
       salz:n.salt_100g!==undefined?n.salt_100g:null,
     };
     const hatNaehr=Object.values(naehr).some(v=>v!==null);
+    // Kaufort-Hinweis (oft leer, aber manchmal nützlich)
+    const storesRaw=(p.stores||'').split(',').map(s=>s.trim()).filter(Boolean);
     const result={
       name:p.product_name_de||p.product_name||p.generic_name||'',
       marke:p.brands?p.brands.split(',')[0].trim():'',
@@ -1019,11 +1021,13 @@ async function lookupOFF(barcode,statusElId){
       labels,
       naehr:hatNaehr?naehr:null,
       nutriscore:(p.nutriscore_grade||'').toUpperCase(),
+      stores:storesRaw,
     };
     if(statusEl){
       const extras=[];
       if(pkgMenge)extras.push(pkgMenge+' '+pkgEinheit);
       if(labels.length)extras.push(labels.join(', '));
+      if(storesRaw.length)extras.push('Kaufort: '+storesRaw.join(', '));
       statusEl.className='lookup-status ok';
       statusEl.innerHTML=I.chk+' Produkt gefunden: '+esc(result.name||barcode)+(extras.length?' <span style="color:var(--t2)">('+esc(extras.join(' · '))+')</span>':'');
     }
@@ -1268,7 +1272,7 @@ function showDet(id){
   const preisRow=a.preis?'<div class="ir"><span class="ik">'+I.cart+' Preis/Einheit</span><span class="iv">CHF '+a.preis.toFixed(2)+'</span></div>':'';
   const pinfo=packInfo(a);
   const ptotal=packTotal(a);
-  const packRow=pinfo?'<div class="ir"><span class="ik">'+I.stack+' Packungsgrösse</span><span class="iv">'+esc(pinfo.split('/')[0])+' pro '+esc(a.einheit||'Stk')+'</span></div>':'';
+  const packRow=(pinfo&&!pinfo.includes('undefined'))?'<div class="ir"><span class="ik">'+I.stack+' Packungsgrösse</span><span class="iv">'+esc(pinfo.split('/')[0])+' pro '+esc(a.einheit||'Stk')+'</span></div>':'';
   const hist=(a.preisHistorie||[]).slice().reverse();
 
   // Günstigster Anbieter berechnen (aus Eingängen mit Preis + Kaufort)
@@ -1489,18 +1493,8 @@ function chgB(id,d){
   const aktive=a.packungen.filter(p=>p.menge>0);
   
   if(d>0){
-    // EINGANG: +1 — Packung wählen oder neue anlegen
-    if(aktive.length<=1){
-      // Nur eine Packung → direkt erhöhen
-      if(aktive.length===1){aktive[0].menge++;}
-      else{a.packungen.push({id:newPackId(),menge:1,kaufdatum:todayISO(),ablaufdatum:a.ablaufdatum||''});}
-      syncMenge(a);saveL();
-      addLogEntry('ein',a.id,a.name,a.lager,a.kat,1,a.einheit,0);
-      toast('+1 eingelagert');showDet(id);
-    }else{
-      // Mehrere Packungen → fragen welche, oder neue
-      showPackDialog(a,'ein');
-    }
+    // EINGANG: +1 — immer nach neuem MHD fragen (optional)
+    showEingangMhdDialog(a);
     return;
   }
   
@@ -1530,6 +1524,42 @@ function chgB(id,d){
   }
 }
 
+function showEingangMhdDialog(a){
+  const existing=document.getElementById('pack-dlg');if(existing)existing.remove();
+  const dlg=document.createElement('div');
+  dlg.id='pack-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:12px">+1 «'+esc(a.name)+'» einlagern</div>'+
+      '<div class="tc" style="margin-bottom:14px">'+
+        '<div class="fd"><label>Menge</label><input type="text" inputmode="decimal" id="eingang-schnell-mg" value="1" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:17px;text-align:right;font-weight:600"/></div>'+
+        '<div class="fd"><label>Ablaufdatum (optional)</label>'+dateField('eingang-schnell-mhd','')+'</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:8px">'+
+        '<button onclick="document.getElementById(\'pack-dlg\').remove()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+        '<button onclick="doEingangSchnell('+a.id+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Einlagern</button>'+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(dlg);
+  setTimeout(()=>suppressAutofill(dlg),0);
+}
+
+function doEingangSchnell(artikelId){
+  const a=S.a.find(x=>x.id===artikelId);if(!a)return;
+  const decOk=isDecUnit(a.einheit);
+  let menge=parseDecimal(document.getElementById('eingang-schnell-mg').value)||1;
+  if(!decOk)menge=Math.max(1,Math.round(menge));
+  const mhd=document.getElementById('eingang-schnell-mhd').value||'';
+  ensurePackungen(a);
+  a.packungen.push({id:newPackId(),menge,kaufdatum:todayISO(),ablaufdatum:mhd});
+  syncMenge(a);saveL();
+  addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,a.einheit,0);
+  const dlg=document.getElementById('pack-dlg');if(dlg)dlg.remove();
+  toast('+'+fmtMenge(menge)+' eingelagert'+(mhd?' (MHD '+fmtDateCH(mhd)+')':''));
+  showDet(artikelId);
+}
+
 function showPackDialog(a,typ){
   const existing=document.getElementById('pack-dlg');if(existing)existing.remove();
   const aktive=a.packungen.filter(p=>p.menge>0).sort((x,y)=>(x.ablaufdatum||'9999').localeCompare(y.ablaufdatum||'9999'));
@@ -1538,8 +1568,8 @@ function showPackDialog(a,typ){
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
-      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">'+(typ==='ein'?'Eingang: Welche Packung?':'Ausgang: Welche Packung entnehmen?')+'</div>'+
-      '<div style="font-size:12px;color:var(--t2);margin-bottom:12px">'+(typ==='aus'?'Empfehlung: Älteste zuerst (FIFO) — ganz oben.':'Packung auswählen, der 1 Stk hinzugefügt wird.')+'</div>'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">'+'Ausgang: Welche Packung entnehmen?'+'</div>'+
+      '<div style="font-size:12px;color:var(--t2);margin-bottom:12px">'+'Empfehlung: Älteste zuerst (FIFO) — ganz oben.'+'</div>'+
       aktive.map(p=>{
         const mhdTxt=p.ablaufdatum?fmtDateCH(p.ablaufdatum):'ohne MHD';
         const days=p.ablaufdatum?daysUntil(p.ablaufdatum):null;
@@ -1759,8 +1789,8 @@ function openForm(id){
   '<div class="fd"><label>Bezeichnung *</label><input type="text" id="f-nm" placeholder="z.B. Vollmilch 3.5%" value="'+(a?esc(a.name):'')+'" oninput="checkDupHint(this.value);checkFrischeHint(this.value)"/><div id="dup-hint" style="display:none;font-size:12px;color:var(--wn);background:var(--wl);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div><div id="frische-hint" style="display:none;font-size:12px;color:var(--ok);background:var(--ol);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div></div>'+
   '<div class="fd"><label>Marke</label><input type="text" id="f-mk" placeholder="z.B. Emmi" value="'+(a?esc(a.marke||''):'')+'"/></div>'+
   '<div class="fd"><label>Kategorie</label><div class="lcw" id="f-ka">'+kc+'</div></div>'+
-  '<div class="tc"><div class="fd"><label>Anfangsbestand</label><div class="ur"><input type="number" id="f-mg" min="0" value="'+(a?a.menge:1)+'"/><select id="f-ei" onchange="if(this.value===\'__add__\')addEinheit(this)">'+eo+'<option value="__add__">+ Neue Einheit...</option></select></div></div><div class="fd"><label>Mindestbestand</label><input type="number" id="f-mn" min="0" value="'+(a?a.mindest:1)+'"/></div></div>'+
-  '<div class="fd"><label>Packungsgrösse <span style="color:var(--t3);font-weight:400">(optional, z.B. 2.5 dl pro Stück)</span></label><div class="ur"><input type="text" inputmode="decimal" id="f-pg" placeholder="z.B. 2.5" value="'+(a&&a.packMenge?esc(a.packMenge):'')+'"/><select id="f-pe">'+epo+'</select></div></div>'+
+  '<div class="tc"><div class="fd"><label>Anfangsbestand</label><div class="ur"><input type="number" id="f-mg" min="0" value="'+(a?a.menge:1)+'"/><select id="f-ei" onchange="if(this.value===\'__add__\')addEinheit(this)">'+eo+'<option value="__add__">+ Neue Einheit...</option></select></div></div><div class="fd"><label>Mindestbestand</label><input type="number" id="f-mn" min="0" value="'+(a?a.mindest:0)+'"/></div></div>'+
+  '<div class="fd"><label>Packungsgrösse <span style="color:var(--t3);font-weight:400">(optional, z.B. 2.5 dl pro Stück)</span></label><div class="ur"><input type="text" inputmode="decimal" id="f-pg" placeholder="z.B. 2.5" value="'+(a&&a.packMenge&&a.packMenge!=='undefined'&&!isNaN(parseFloat(a.packMenge))?esc(a.packMenge):'')+'"/><select id="f-pe">'+epo+'</select></div></div>'+
   '<div class="fd"><label>Kaufpreis pro Einheit (CHF)</label><input type="text" inputmode="decimal" id="f-pr" placeholder="z.B. 1.95" value="'+(a?esc(a.preis||''):'')+'"/><label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg)"><input type="checkbox" id="f-aktion" style="width:18px;height:18px;accent-color:var(--wn);cursor:pointer"/><div><div style="font-size:14px;font-weight:500;color:var(--tx)">Aktionspreis</div><div style="font-size:12px;color:var(--t2)">Wird als Aktion geloggt, kein neuer Standardpreis</div></div></label></div>'+
   '<div class="fd"><label>Lagerort</label><div class="lcw" id="f-lo">'+lc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Kaufdatum</label>'+dateField('f-kd',a?a.kaufdatum||todayISO():todayISO())+'</div><div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('f-ad',a?a.ablaufdatum||'':'')+'</div></div>'+
@@ -1845,6 +1875,25 @@ async function doLookupForm(){
       if(nz.length)teile.push('Pro 100g/ml: '+nz.join(', '));
     }
     if(teile.length)ntEl.value=teile.join('\n');
+  }
+  // Kaufort-Vorschlag aus OFF (nur als Hinweis, wenn kein Kaufort gesetzt)
+  if(result.stores&&result.stores.length){
+    const geChips=document.querySelectorAll('#f-ge .chip.on[data-ge]');
+    const hatKaufort=geChips&&geChips.length>0;
+    if(!hatKaufort){
+      // Hinweis unter Kaufort-Chips anzeigen
+      let hint=document.getElementById('off-store-hint');
+      if(!hint){
+        hint=document.createElement('div');
+        hint.id='off-store-hint';
+        hint.style.cssText='font-size:12px;color:var(--ac);margin-top:6px;line-height:1.5';
+        const geWrap=document.getElementById('f-ge');
+        if(geWrap)geWrap.parentNode.insertBefore(hint,geWrap.nextSibling);
+      }
+      if(hint){
+        hint.innerHTML='💡 Open Food Facts nennt: '+result.stores.map(s=>'<button type="button" onclick="applyStoreHint(this,\''+esc(s).replace(/'/g,"\\'")+'\');document.getElementById(\'off-store-hint\').remove()" style="background:var(--al);color:var(--ac);border:1px solid var(--ac);border-radius:var(--rs);padding:3px 10px;font-size:12px;cursor:pointer;margin:2px">'+esc(s)+'</button>').join(' ')+'<span style="color:var(--t3);margin-left:4px">(ungeprüft)</span>';
+      }
+    }
   }
   if(result.foto&&!fb64){
     try{
@@ -1994,6 +2043,27 @@ function openVerworfen(id){
 }
 
 // Frische-Vorschlag: bei bekanntem Gemüse/Obst automatisch «Frisch bis»-Datum anbieten
+function applyStoreHint(btn,storeName){
+  // Kaufort aus OFF-Vorschlag übernehmen: Chip aktivieren oder neuen erstellen
+  const geWrap=document.getElementById('f-ge');
+  if(!geWrap)return;
+  // Gibt es den Laden schon als Chip?
+  const existing=geWrap.querySelector('.chip[data-ge="'+storeName+'"]');
+  if(existing){
+    geWrap.querySelectorAll('.chip[data-ge]').forEach(c=>c.classList.remove('on'));
+    existing.classList.add('on');
+  }else{
+    // Neuen Chip hinzufügen und selektieren
+    if(!S.ge.includes(storeName)){S.ge.push(storeName);saveL();}
+    geWrap.querySelectorAll('.chip[data-ge]').forEach(c=>c.classList.remove('on'));
+    const chip=document.createElement('div');
+    chip.className='chip on';chip.dataset.ge=storeName;chip.textContent=storeName;
+    chip.onclick=function(){geWrap.querySelectorAll('.chip[data-ge]').forEach(c=>c.classList.remove('on'));this.classList.add('on');};
+    geWrap.insertBefore(chip,geWrap.lastElementChild); // vor dem "+ Neu..." Chip
+  }
+  toast('Kaufort «'+storeName+'» übernommen');
+}
+
 function checkFrischeHint(val){
   const el=document.getElementById('frische-hint');
   if(!el)return;
