@@ -118,7 +118,7 @@
       "marke": "Lidl",
       "kat": "Genussmittel",
       "lager": "Küche",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stange",
       "mindest": 2,
       "barcode": "4006396071576",
@@ -195,7 +195,7 @@
       "packungen": [
         {
           "id": 2,
-          "menge": 2,
+          "menge": 1,
           "kaufdatum": "2026-07-04",
           "ablaufdatum": ""
         }
@@ -4225,7 +4225,7 @@
       "packEinheit": "ml",
       "kaufdatum": "2026-07-12",
       "ablaufdatum": "",
-      "notiz": "",
+      "notiz": "sehr fruchtig, Apéro ja, \"güdlä\" nein",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783867930588_off.jpg",
       "fotoPath": "1783867930588_off.jpg",
       "preisHistorie": [
@@ -4238,7 +4238,14 @@
           "aktion": false
         }
       ],
-      "packungen": []
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 0,
+          "kaufdatum": "2026-07-12",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -7394,5 +7401,5 @@
       "zeit": 1783868010951
     }
   ],
-  "aktualisiert": "2026-07-12T14:53:41.280Z"
+  "aktualisiert": "2026-07-13T11:21:59.980Z"
 }
