@@ -561,7 +561,7 @@
       "marke": "Barilla",
       "kat": "Getränke",
       "lager": "Schlof",
-      "menge": 6,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "8076809585194",
@@ -610,12 +610,28 @@
           "einheit": "Stk",
           "typ": "ein",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-13",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-15",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
         }
       ],
       "packungen": [
         {
           "id": 1,
-          "menge": 3,
+          "menge": 1,
           "kaufdatum": "2026-06-30",
           "ablaufdatum": "2028-12-11"
         }
@@ -754,7 +770,7 @@
       "marke": "Mutti",
       "kat": "Gemüse & Früchte",
       "lager": "Schlof",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "80042563",
@@ -766,16 +782,18 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782306015140_off.jpg",
       "fotoPath": "1782306015140_off.jpg",
-      "packungen": [
+      "packungen": [],
+      "kaufort": "",
+      "preisHistorie": [
         {
-          "id": 1,
+          "datum": "2026-07-15",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-06-24",
-          "ablaufdatum": "2029-01-31"
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
         }
       ],
-      "kaufort": "",
-      "preisHistorie": [],
       "barcodes": []
     },
     {
@@ -1437,14 +1455,14 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "20303402",
       "preis": 2.39,
       "packMenge": 200,
       "packEinheit": "g",
-      "kaufdatum": "2026-07-04",
+      "kaufdatum": "2026-06-28",
       "ablaufdatum": "2026-06-27",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648313250_17826483072308710239019996929871.jpg",
@@ -1500,28 +1518,34 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 2.39,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-15",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
         }
       ],
       "packungen": [
         {
-          "id": 4,
-          "menge": 1,
+          "id": 1,
+          "menge": 0,
           "kaufdatum": "2026-06-28",
           "ablaufdatum": "2026-06-27"
-        },
-        {
-          "id": 2,
-          "menge": 1,
-          "kaufdatum": "2026-07-04",
-          "ablaufdatum": ""
-        },
-        {
-          "id": 6,
-          "menge": 1,
-          "kaufdatum": "2026-07-04",
-          "ablaufdatum": "2026-07-20"
         }
-      ]
+      ],
+      "barcodes": []
     },
     {
       "id": 45,
@@ -2281,7 +2305,7 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "20238469",
@@ -2302,16 +2326,17 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-14",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false
         }
       ],
-      "packungen": [
-        {
-          "id": 4,
-          "menge": 1,
-          "kaufdatum": "2026-07-04",
-          "ablaufdatum": "2026-07-13"
-        }
-      ]
+      "packungen": []
     },
     {
       "id": 66,
@@ -4314,6 +4339,13 @@
     {
       "id": 1783264265573,
       "text": "Senf Mild",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1784126525779,
+      "text": "zwiebeln",
       "menge": "1",
       "einheit": "Stk",
       "checked": false
@@ -7399,7 +7431,98 @@
       "aktion": false,
       "datum": "2026-07-12",
       "zeit": 1783868010951
+    },
+    {
+      "t": "aus",
+      "aid": 15,
+      "name": "Barilla Al Bronzo Spaghetti Al Bronzo 500g",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-13",
+      "zeit": 1783949861982
+    },
+    {
+      "t": "aus",
+      "aid": 65,
+      "name": "Salametti Milano",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-14",
+      "zeit": 1784057070695
+    },
+    {
+      "t": "aus",
+      "aid": 44,
+      "name": "speckwürfel",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-15",
+      "zeit": 1784126464675
+    },
+    {
+      "t": "aus",
+      "aid": 15,
+      "name": "Barilla Al Bronzo Spaghetti Al Bronzo 500g",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-15",
+      "zeit": 1784126477575
+    },
+    {
+      "t": "aus",
+      "aid": 22,
+      "name": "Mutti Solo Pomodoro Parma Passierte italienische Tomaten",
+      "lager": "Schlof",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-15",
+      "zeit": 1784126493814
+    },
+    {
+      "t": "aus",
+      "aid": 44,
+      "name": "speckwürfel",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-15",
+      "zeit": 1784126569636
+    },
+    {
+      "t": "aus",
+      "aid": 44,
+      "name": "speckwürfel",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-15",
+      "zeit": 1784126572026
     }
   ],
-  "aktualisiert": "2026-07-13T11:21:59.980Z"
+  "aktualisiert": "2026-07-15T14:53:33.709Z"
 }
