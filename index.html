@@ -523,10 +523,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='14.5';
+const APP_VERSION='14.6';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'14.6',d:'07.2026',items:['Versionshistorie auch via Klick auf Versionsnummer in der Lager-Toolbar']},
   {v:'14.5',d:'07.2026',items:['Quittungsscan: Bild-Typ aus Base64-Daten erkennen statt file.type (Android-Fix)']},
   {v:'14.4',d:'07.2026',items:['Quittungsscan: anthropic-version Header, Fehlerbehandlung (401/403/429/529)','Klare Fehlermeldungen statt kryptischem JSON-Fehler','Link zu Einstellungen bei API-Problemen']},
   {v:'14.3',d:'07.2026',items:['Quittungsscan-Button in der Lager-Toolbar']},
@@ -5021,7 +5022,7 @@ try{
   _afObserver.observe(document.body,{childList:true,subtree:true});
 }catch(e){}
 const vBadge=document.getElementById('app-version-badge');
-if(vBadge)vBadge.textContent='v'+APP_VERSION;
+if(vBadge){vBadge.textContent='v'+APP_VERSION;vBadge.style.cursor='pointer';vBadge.style.color='var(--ac)';vBadge.style.textDecoration='underline';vBadge.onclick=showVersionHistory;}
 
 // PWA-Shortcut Aktionen (?action=ausgang/eingang/einkauf)
 (function(){
