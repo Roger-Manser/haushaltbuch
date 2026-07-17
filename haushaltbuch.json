@@ -119,14 +119,14 @@
       "marke": "Lidl",
       "kat": "Genussmittel",
       "lager": "Küche",
-      "menge": 0,
+      "menge": 4,
       "einheit": "Stange",
       "mindest": 2,
       "barcode": "4006396071576",
       "preis": 57.5,
       "packMenge": 10,
       "packEinheit": "Pkg",
-      "kaufdatum": "2026-07-04",
+      "kaufdatum": "2026-07-17",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781961409294_17819613986793355689367163798127.jpg",
@@ -199,9 +199,26 @@
           "einheit": "Stange",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-17",
+          "preis": 57.5,
+          "menge": 4,
+          "einheit": "Stange",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
-      "packungen": []
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 4,
+          "kaufdatum": "2026-07-17",
+          "ablaufdatum": ""
+        }
+      ],
+      "kaufort": "Lidl"
     },
     {
       "id": 4,
@@ -1091,15 +1108,15 @@
       "marke": "Lovilio",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "menge": 0,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20631321",
-      "preis": 0,
+      "preis": 2.85,
       "packMenge": 300,
       "packEinheit": "g",
-      "kaufdatum": "2026-06-27",
-      "ablaufdatum": "2026-07-18",
+      "kaufdatum": "2026-07-17",
+      "ablaufdatum": "2026-08-05",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542043787_off.jpg",
       "fotoPath": "1782542043787_off.jpg",
@@ -1125,9 +1142,41 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-17",
+          "preis": 2.85,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-17",
+          "preis": 2.85,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
-      "packungen": []
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-07-17",
+          "ablaufdatum": "2026-08-07"
+        },
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-07-17",
+          "ablaufdatum": "2026-08-05"
+        }
+      ],
+      "kaufort": "Lidl"
     },
     {
       "id": 35,
@@ -7655,7 +7704,46 @@
       "aktion": false,
       "datum": "2026-07-16",
       "zeit": 1784229203517
+    },
+    {
+      "t": "ein",
+      "aid": 3,
+      "name": "Zigaretten Goldfield Gold",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 4,
+      "einheit": "Stange",
+      "preis": 57.5,
+      "aktion": false,
+      "datum": "2026-07-17",
+      "zeit": 1784294118390
+    },
+    {
+      "t": "ein",
+      "aid": 34,
+      "name": "Morzarella",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.85,
+      "aktion": false,
+      "datum": "2026-07-17",
+      "zeit": 1784294171851
+    },
+    {
+      "t": "ein",
+      "aid": 34,
+      "name": "Morzarella",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.85,
+      "aktion": false,
+      "datum": "2026-07-17",
+      "zeit": 1784294202676
     }
   ],
-  "aktualisiert": "2026-07-17T13:14:31.558Z"
+  "aktualisiert": "2026-07-17T13:17:21.606Z"
 }
