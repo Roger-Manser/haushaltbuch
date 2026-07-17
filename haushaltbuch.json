@@ -4506,7 +4506,7 @@
       "packMenge": 3,
       "packEinheit": "Stk",
       "kaufdatum": "2026-07-17",
-      "ablaufdatum": "2026-08-03",
+      "ablaufdatum": "2026-07-31",
       "notiz": "Pro 100g/ml: 365 kcal, Fett 13g, KH 53g, Eiweiss 8g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784294568571_off.jpg",
       "fotoPath": "1784294568571_off.jpg",
@@ -4526,9 +4526,10 @@
           "id": 8,
           "menge": 1,
           "kaufdatum": "2026-07-17",
-          "ablaufdatum": "2026-08-03"
+          "ablaufdatum": "2026-07-31"
         }
-      ]
+      ],
+      "geoeffnet": "2026-07-17"
     },
     {
       "id": 128,
@@ -8310,5 +8311,5 @@
       "zeit": 1784295479136
     }
   ],
-  "aktualisiert": "2026-07-17T13:43:22.063Z"
+  "aktualisiert": "2026-07-17T13:52:32.995Z"
 }
