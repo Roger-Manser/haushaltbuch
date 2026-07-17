@@ -6,7 +6,7 @@
       "marke": "Landi",
       "kat": "Genussmittel",
       "lager": "Kühlschrank unten",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Kiste",
       "mindest": 2,
       "barcode": "7611703611962",
@@ -97,16 +97,17 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Landi"
-        }
-      ],
-      "packungen": [
+        },
         {
-          "id": 1,
+          "datum": "2026-07-16",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-07-04",
-          "ablaufdatum": ""
+          "einheit": "Kiste",
+          "typ": "aus",
+          "aktion": false
         }
       ],
+      "packungen": [],
       "kaufort": "Landi",
       "barcodes": [
         "7611703211964"
@@ -2032,7 +2033,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Kühlschrank oben",
       "kaufort": "Coop",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "7627536820808",
@@ -2047,8 +2048,8 @@
       "preisHistorie": [],
       "packungen": [
         {
-          "id": 3,
-          "menge": 1,
+          "id": 1,
+          "menge": 0,
           "kaufdatum": "2026-06-30",
           "ablaufdatum": "2026-07-15"
         }
@@ -2221,7 +2222,7 @@
       "kat": "Backwaren & Brot",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "4056489025047",
@@ -2246,8 +2247,8 @@
       ],
       "packungen": [
         {
-          "id": 1,
-          "menge": 1,
+          "id": 2,
+          "menge": 0,
           "kaufdatum": "2026-07-04",
           "ablaufdatum": "2026-07-24"
         }
@@ -4385,10 +4386,10 @@
       "checked": false
     },
     {
-      "id": 1784126525779,
-      "text": "zwiebeln",
-      "menge": "1",
-      "einheit": "Stk",
+      "id": 1784217944118.68,
+      "text": "Jungspinat",
+      "menge": "100",
+      "einheit": "g",
       "checked": false
     }
   ],
@@ -7615,7 +7616,46 @@
       "aktion": false,
       "datum": "2026-07-16",
       "zeit": 1784176021051
+    },
+    {
+      "t": "aus",
+      "aid": 59,
+      "name": "Chili Sauce",
+      "lager": "Kühlschrank oben",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-16",
+      "zeit": 1784176048561
+    },
+    {
+      "t": "aus",
+      "aid": 63,
+      "name": "Milchbrötchen",
+      "lager": "Küche",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-16",
+      "zeit": 1784176059331
+    },
+    {
+      "t": "aus",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Kühlschrank unten",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-16",
+      "zeit": 1784229203517
     }
   ],
-  "aktualisiert": "2026-07-16T04:27:11.705Z"
+  "aktualisiert": "2026-07-17T13:14:31.558Z"
 }
