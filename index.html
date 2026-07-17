@@ -520,7 +520,76 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='14.0';
+const APP_VERSION='14.2';
+
+/* ── Versionshistorie ─────────────────────────────────────────────── */
+const VERSION_HISTORY=[
+  {v:'14.2',d:'07.2026',items:['Versionshistorie: klickbar auf Versionsnummer in Einstellungen','Komplette Historie v10.5 → v14.2']},
+  {v:'14.1',d:'07.2026',items:['Anthropic API Key Eingabe in Einstellungen','Quittungsscan: fehlender x-api-key Header gefixt','Kaufort-Vorschlag aus Open Food Facts stores-Feld']},
+  {v:'14.0',d:'07.2026',items:['OFF-Lookup: Kaufort-Hinweis als klickbarer Vorschlag','Status-Meldung zeigt gefundene Extras (Menge, Labels, Kaufort)']},
+  {v:'13.9',d:'07.2026',items:['Standardwert Mindestbestand 0 für neue Artikel','undefined-Packungsgrösse endgültig behoben (Anzeige + Datenbereinigung)','Eingang (+1): fragt nach neuem MHD statt bestehende Packung']},
+  {v:'13.8',d:'07.2026',items:['Packungsauswahl bei +/− im Detail (Multi-MHD)','Ausgang: FIFO-Empfehlung, älteste Packung zuerst','Log-Einträge bei jeder Bestandsänderung']},
+  {v:'13.7',d:'07.2026',items:['Detailansicht: Button-Beschriftung sichtbar (explizite Textfarbe)','Schriftgrösse und Umbruch für Aktions-Buttons optimiert']},
+  {v:'13.6',d:'07.2026',items:['Suchscanner repariert (vollständiges Kamera-Overlay)','Abgelaufene Artikel manuell ans Ende sortieren (ablaufIgnoriert-Flag)']},
+  {v:'13.5',d:'07.2026',items:['Barcode-Scanner in der Lager-Suchleiste','Scan → Artikel direkt öffnen oder Code ins Suchfeld']},
+  {v:'13.4',d:'07.2026',items:['Haltbarkeits-Puffer in Einstellungen anpassbar (pro Kategorie)','Reset auf Standardwerte, benutzerdefinierte Werte markiert']},
+  {v:'13.3',d:'07.2026',items:['undefined-Packungsgrösse Fix (robuste packInfo-Funktion)','Datenbereinigung beim Start: kaputte Werte in packMenge/packEinheit/einheit/marke']},
+  {v:'13.2',d:'07.2026',items:['Ablaufdatum Detail: 3-spaltig (Label links, +/−Tage mittig, Datum rechts)']},
+  {v:'13.1',d:'07.2026',items:['Ablaufdatum Detail: zuerst +/− Badge, dann Datum']},
+  {v:'13.0',d:'07.2026',items:['Inventar-Erfassung: Lagerort-Vorwahl mit automatischer Kategorie','Ablaufdatum Detail: kompaktes farbiges +/−Tage-Badge, rechtsbündig']},
+  {v:'12.9',d:'07.2026',items:['Anti-Foodwaste-Paket: 6 Features mit Ein/Aus-Schaltern','Ablauf-Dashboard, Foodwaste-Muster, Mengen-Warnung','Anbruch-Verwaltung, Gefrier-Empfehlung, Überkauf-Erkennung']},
+  {v:'12.8',d:'07.2026',items:['Frische-Vorbelegung für Gemüse/Obst (BMEL/Verbraucherzentrale-Richtwerte)','Automatischer «Frisch bis»-Vorschlag beim Artikelnamen']},
+  {v:'12.7',d:'07.2026',items:['Haltbarkeits-Puffer auf belegte Quellen umgestellt (Tafel/Verbraucherzentrale)','Milchprodukte + Backwaren aus harter Sperre genommen','Hilfetext mit konkreten Richtwerten im Formular']},
+  {v:'12.6',d:'07.2026',items:['Rezeptvorschläge: nur Bestand>0 zählt als vorhanden','Neue Rubrik «Bald ablaufende Zutaten verwerten»','Ablaufdatum bei Rezept-Sortierung berücksichtigt']},
+  {v:'12.5',d:'07.2026',items:['Haltbarkeits-Puffer über MHD pro Kategorie','Pro-Artikel-Override im Formular','Verderblich-Sicherheitsschranke (Fleisch/Fisch, Gemüse immer 0)']},
+  {v:'12.4',d:'07.2026',items:['Überschreib-Schutz: Warnung wenn GitHub mehr Artikel hat als Gerät','loadFromGH: verbesserte Warnung mit Zahlen + Zeitstempel']},
+  {v:'12.3',d:'07.2026',items:['GitHub-Sync Fehlermeldungen verständlich (401/403/404/409)','Rate-Limit mit Reset-Zeit, voller Dialog bei Auth-Fehlern']},
+  {v:'12.2',d:'07.2026',items:['Inventar-Erfassung: Packungsgrösse-Feld','MHD-Sichtbarkeits-Fix (setDateField aktualisiert Label)','Passwort-Vorschläge: Token-Feld autocomplete=new-password, suppressAutofill nach goScreen']},
+  {v:'12.1',d:'07.2026',items:['Sortiermodus «Zuletzt erfasst» mit relativem Zeitstempel']},
+  {v:'12.0',d:'07.2026',items:['Autofill-Unterdrückung (suppressAutofill + MutationObserver)']},
+  {v:'11.9',d:'07.2026',items:['Inventar-Erfassung 2-stufig (Barcodes zwischenspeichern → einzeln übernehmen)','Start via Einstellungen, Scan→Anzahl+MHD→weiter, Übernahme mit Auto-Lookup']},
+  {v:'11.8',d:'07.2026',items:['OFF-Lookup erweitert: Verpackungsmenge+Einheit, Kategorie, Labels, Nährwerte, Nutriscore']},
+  {v:'11.7',d:'07.2026',items:['Suche im Zusammenführen-Dialog','Barcode-Duplikat-Check beim Anlegen (live + Speichern)']},
+  {v:'11.6',d:'07.2026',items:['Grundzutaten (Wasser/Salz/Pfeffer/Öl/Zucker/Mehl/Essig) immer vorhanden in Rezeptprüfung']},
+  {v:'11.5',d:'07.2026',items:['Artikel zusammenführen (Bestände addiert, Barcodes+Packungen+preisHistorie zusammengeführt)']},
+  {v:'11.4',d:'07.2026',items:['Detail-Ansicht: Nav-Überdeckung behoben (inline padding-bottom)']},
+  {v:'11.3',d:'07.2026',items:['Mehrfach-Barcodes: barcodes[], zentrales artikelByCode(), Formular-UI']},
+  {v:'11.2',d:'07.2026',items:['Editieren repariert (found.einheit ReferenceError)','Zucchini=Zucchetti Synonym in Duplikatprüfung','Nav-Überdeckung: .scroll padding-bottom + safe-area-inset']},
+  {v:'11.1',d:'07.2026',items:['Sortierung Ablauf: Bestand-0 Artikel zwingend ans Ende']},
+  {v:'11.0',d:'07.2026',items:['Offen-Verkauf: Dezimalmengen für kg/g/l/dl/ml','MHD bleibt bei Bestand 0 erhalten','Laden-Modus: Kauf-Dialog mit Anzahl/Datum/Preis/Kaufort']},
+  {v:'10.9',d:'07.2026',items:['Einkaufsliste: Menge+Einheit getrennt editierbar','Einheit-Dropdown für alle Einträge, S.eko Overrides']},
+  {v:'10.8',d:'07.2026',items:['Rezept-Zutaten mit Menge auf Einkaufsliste']},
+  {v:'10.7',d:'07.2026',items:['Einkaufswagen-Icon je Lagerzeile mit Duplikat-Schutz']},
+  {v:'10.6',d:'07.2026',items:['Sprung-Pfeile ↑↓ in Detailansicht (bei langem Inhalt)']},
+  {v:'10.5',d:'07.2026',items:['Etikett-Packungsauswahl bei mehreren MHDs']},
+];
+function showVersionHistory(){
+  const existing=document.getElementById('vh-modal');if(existing)existing.remove();
+  const dlg=document.createElement('div');
+  dlg.id='vh-modal';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:480px;max-height:80vh;overflow-y:auto;padding:0">'+
+      '<div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:var(--sf);z-index:1">'+
+        '<span style="font-weight:700;font-size:16px">📋 Versionshistorie</span>'+
+        '<button onclick="document.getElementById(\'vh-modal\').remove()" style="background:none;border:none;cursor:pointer;color:var(--t2);font-size:22px;line-height:1">×</button>'+
+      '</div>'+
+      '<div style="padding:12px 16px">'+
+        VERSION_HISTORY.map(v=>
+          '<div style="margin-bottom:16px">'+
+            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'+
+              '<span style="font-weight:700;font-size:14px;'+(v.v===APP_VERSION?'color:var(--ok)':'')+'">v'+esc(v.v)+'</span>'+
+              (v.v===APP_VERSION?'<span style="font-size:10px;background:var(--ol);color:var(--ok);border-radius:8px;padding:1px 7px;font-weight:600">aktuell</span>':'')+
+              '<span style="font-size:11px;color:var(--t3)">'+esc(v.d)+'</span>'+
+            '</div>'+
+            v.items.map(it=>'<div style="font-size:13px;color:var(--t2);padding:2px 0 2px 12px;line-height:1.5">· '+esc(it)+'</div>').join('')+
+          '</div>'
+        ).join('')+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(dlg);
+  dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.remove();});
+}
 const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
@@ -4306,6 +4375,11 @@ function renderSt(){
   '<button class="db-btn" onclick="loadFromGH()">'+I.dl+' Daten von GitHub laden</button>'+
   '<button class="db-btn" onclick="doSync()"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:18px;height:18px;stroke:var(--ac)"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.21-4.45"/></svg> Jetzt synchronisieren</button>'+
   '<p style="font-size:12px;color:var(--t3);margin-top:6px;line-height:1.6">Token braucht <strong>repo</strong> Scope. Fotos &rarr; <code>bilder/</code>. Daten &rarr; <code>haushaltbuch.json</code>. Rezepte &larr; <code>rezepte.json</code> im selben Repo.</p></div>'+
+  '<div class="ss"><div class="ssl">Anthropic API (Quittungsscan)</div>'+
+    '<div class="ghf"><label>API Key</label><input type="password" id="ai-key" placeholder="sk-ant-..." value="'+esc(localStorage.getItem('hb_ai_key')||'')+'"/></div>'+
+    '<button class="db-btn" onclick="localStorage.setItem(\'hb_ai_key\',document.getElementById(\'ai-key\').value.trim());toast(\'API Key gespeichert\')">💾 API Key speichern</button>'+
+    '<p style="font-size:12px;color:var(--t3);margin-top:6px;line-height:1.6">Für den Quittungsscan wird ein <strong>Anthropic API Key</strong> benötigt. Erstellen unter <code>console.anthropic.com</code> → API Keys. Der Key wird nur lokal auf diesem Gerät gespeichert.</p>'+
+  '</div>'+
   '<div class="ss"><div class="ssl">Lagerorte</div><div>'+S.lo.map((l,i)=>'<div class="lmi">'+licon(l).replace('20px;height:20px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(l)+'</span><button onclick="editLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=LD.length?'<button onclick="delLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addLo()">+ Neuer Lagerort</button></div>'+
   '<div class="ss"><div class="ssl">Kategorien</div><div>'+S.ka.map((k,i)=>'<div class="lmi">'+KICON.replace('13px;height:13px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(k)+'</span><button onclick="editKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=KD.length?'<button onclick="delKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addKat()">+ Neue Kategorie</button></div>'+
   '<div class="ss"><div class="ssl">Einheiten</div><div>'+S.ei.map((u,i)=>'<div class="lmi"><span style="flex:1">'+esc(u)+'</span>'+(i>=ED.length?'<button onclick="delEinheit(\''+esc(u)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addEinheitSettings()">+ Neue Einheit</button></div>'+
@@ -4321,7 +4395,7 @@ function renderSt(){
     '<button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="openInventur()">📋 Inventur starten</button>'+
     '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Alle Artikel durchgehen und Bestände mit der Realität abgleichen.</p>'+
   '</div>'+
-  '<div class="ss"><div class="ssl">Anti-Foodwaste</div>'+'<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Funktionen gegen Lebensmittelverschwendung — einzeln ein-/ausschaltbar.</p>'+optToggle('fwDashboard','⏰ Ablauf-Dashboard','Zeigt oben in der Lagerliste, was in den nächsten 3 Tagen verbraucht werden sollte.')+optToggle('fwAuswertung','🔍 Foodwaste-Muster','Auswertung in der Statistik: welche Artikel/Kategorien du am häufigsten wegwirfst.')+optToggle('fwMengenWarnung','💡 Mengen-Warnung beim Einkauf','Hinweis, wenn du einen oft verworfenen Artikel auf die Einkaufsliste setzt.')+optToggle('fwAnbruch','📂 Anbruch-Verwaltung','«Geöffnet»-Knopf im Artikel verkürzt die Haltbarkeit passend zur Kategorie.')+optToggle('fwGefrier','❄️ Gefrier-Empfehlung','Schlägt bei bald ablaufenden, einfrierbaren Artikeln das Einfrieren vor.')+optToggle('fwUeberkauf','📊 Überkauf-Erkennung','Erkennt aus der Kaufhistorie, wenn du mehr kaufst als verbrauchst.')+'</div>'+renderPufferSektion()+'<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong>v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button></div>'+
+  '<div class="ss"><div class="ssl">Anti-Foodwaste</div>'+'<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Funktionen gegen Lebensmittelverschwendung — einzeln ein-/ausschaltbar.</p>'+optToggle('fwDashboard','⏰ Ablauf-Dashboard','Zeigt oben in der Lagerliste, was in den nächsten 3 Tagen verbraucht werden sollte.')+optToggle('fwAuswertung','🔍 Foodwaste-Muster','Auswertung in der Statistik: welche Artikel/Kategorien du am häufigsten wegwirfst.')+optToggle('fwMengenWarnung','💡 Mengen-Warnung beim Einkauf','Hinweis, wenn du einen oft verworfenen Artikel auf die Einkaufsliste setzt.')+optToggle('fwAnbruch','📂 Anbruch-Verwaltung','«Geöffnet»-Knopf im Artikel verkürzt die Haltbarkeit passend zur Kategorie.')+optToggle('fwGefrier','❄️ Gefrier-Empfehlung','Schlägt bei bald ablaufenden, einfrierbaren Artikeln das Einfrieren vor.')+optToggle('fwUeberkauf','📊 Überkauf-Erkennung','Erkennt aus der Kaufhistorie, wenn du mehr kaufst als verbrauchst.')+'</div>'+renderPufferSektion()+'<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong style="color:var(--ac);cursor:pointer;text-decoration:underline" onclick="showVersionHistory()">v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button></div>'+
   '<div class="ss"><div class="ssl">Daten</div><button class="db-btn" onclick="expJ()">'+I.dl+' Lokaler Export (JSON)</button><button class="db-btn" onclick="document.getElementById(\'imp\').click()">'+I.ul+' Lokaler Import (JSON)<input type="file" id="imp" accept=".json" style="display:none" onchange="impJ(event)"/></button><button class="db-btn d" onclick="clearLog()">'+I.trash+' Bewegungsprotokoll löschen</button><button class="db-btn d" onclick="resetAll()">'+I.trash+' Alle Daten löschen</button></div>';
 }
 function saveGHcfg(){gh={tok:document.getElementById('gh-t').value.trim(),own:document.getElementById('gh-o').value.trim(),repo:document.getElementById('gh-r').value.trim(),br:document.getElementById('gh-b').value.trim()||'main',rzrepo:document.getElementById('gh-rz').value.trim()||''};saveGH();toast('GitHub gespeichert');renderSt();}
@@ -4450,9 +4524,14 @@ async function handleQuittungFile(input){
       '- datum: Datum im Format JJJJ-MM-TT (oder heutiges Datum falls nicht lesbar)\n'+
       '- Nur echte Produkte, keine Rabatte/Steuern/Totals als eigene Artikel';
 
+    const aiKey=localStorage.getItem('hb_ai_key')||'';
+    if(!aiKey){
+      body.innerHTML='<div style="text-align:center;padding:24px;color:var(--wn)"><div style="font-size:36px;margin-bottom:8px">🔑</div>Kein Anthropic API Key hinterlegt.<br><br><button onclick="closeQuittung();goScreen(\'s-settings\')" style="padding:10px 20px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-weight:600">Zu den Einstellungen</button></div>';
+      return;
+    }
     const res=await fetch('https://api.anthropic.com/v1/messages',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{'Content-Type':'application/json','x-api-key':aiKey,'anthropic-dangerous-direct-browser-access':'true'},
       body:JSON.stringify({
         model:'claude-sonnet-4-6',
         max_tokens:1500,
