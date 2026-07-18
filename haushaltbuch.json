@@ -2274,14 +2274,14 @@
       "kat": "Getränke",
       "lager": "Schlof",
       "kaufort": "Lidl",
-      "menge": 10,
+      "menge": 11,
       "einheit": "Stk",
       "mindest": 2,
       "barcode": "4056489122913",
       "preis": 3.88,
       "packMenge": 44,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-07-04",
+      "kaufdatum": "2026-07-18",
       "ablaufdatum": "2027-05-15",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783140253090_off.jpg",
@@ -2303,6 +2303,12 @@
           "menge": 10,
           "kaufdatum": "2026-07-04",
           "ablaufdatum": "2027-05-15"
+        },
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2027-05-31"
         }
       ]
     },
@@ -8534,7 +8540,20 @@
       "aktion": false,
       "datum": "2026-07-18",
       "zeit": 1784357600049
+    },
+    {
+      "t": "ein",
+      "aid": 61,
+      "name": "Ristretto - Espresso",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 3.88,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784359508952
     }
   ],
-  "aktualisiert": "2026-07-18T07:23:34.317Z"
+  "aktualisiert": "2026-07-18T07:28:54.204Z"
 }
