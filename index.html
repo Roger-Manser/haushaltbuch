@@ -250,6 +250,12 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .db-btn.d svg{stroke:var(--dg)}.db-btn.d{color:var(--dg)}
 .ss{margin-bottom:20px}
 .ssl{font-size:15px;font-weight:600;margin-bottom:10px}
+.sg-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);margin-bottom:8px;cursor:pointer;user-select:none}
+.sg-hdr .sg-title{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.sg-hdr .sg-arrow{transition:transform .2s;font-size:12px;color:var(--t3)}
+.sg-hdr.open .sg-arrow{transform:rotate(180deg)}
+.sg-body{display:none;margin-bottom:16px}
+.sg-hdr.open+.sg-body{display:block}
 .lmi{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:6px;font-size:14px}
 .lmi svg{width:18px;height:18px;stroke:var(--t2);fill:none;stroke-width:1.75}
 .ghf{margin-bottom:12px}
@@ -523,10 +529,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='15.0';
+const APP_VERSION='15.1';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'15.1',d:'07.2026',items:['Einstellungen: aufklappbare Kapitel (Verbindungen, Stammdaten, Erfassung, Anti-Foodwaste, App)']},
   {v:'15.0',d:'07.2026',items:['Inventar-Erfassung: automatischer OFF-Lookup nach Scan (Name + Foto + Marke)','Buffer-Liste zeigt Produktbild, Name, Barcode und Status','Scan-Dialog zeigt Foto und Produktname statt nur Barcode']},
   {v:'14.9',d:'07.2026',items:['API-Verbrauchsstatistik in Einstellungen (lokal getrackt)','Token-Verbrauch, Kosten-Schätzung, Historie der letzten 10 Scans']},
   {v:'14.8',d:'07.2026',items:['Einkaufsliste: Klick auf Artikel zeigt Info-Popup (Bild, Packungsgrösse, letzter Preis, Kaufort)']},
@@ -4575,6 +4582,18 @@ function renderAiUsageSektion(){
     '<p style="font-size:11px;color:var(--t3);margin-top:8px;line-height:1.5">⚠ Dies ist eine lokale Schätzung basierend auf Token-Verbrauch (Sonnet-Preise). Den echten Kontostand siehst du unter <code>console.anthropic.com</code> → Usage.</p>'+
   '</div>';
 }
+// Aufklappbares Einstellungs-Kapitel
+let sgOpen={};
+function settingsGroup(id,icon,title,contentHtml,defaultOpen){
+  if(sgOpen[id]===undefined)sgOpen[id]=!!defaultOpen;
+  const open=sgOpen[id];
+  return '<div class="sg-hdr'+(open?' open':'')+'" onclick="sgOpen[\''+id+'\']=!sgOpen[\''+id+'\'];renderSt()">'+
+    '<span class="sg-title">'+icon+' '+esc(title)+'</span>'+
+    '<span class="sg-arrow">▼</span>'+
+  '</div>'+
+  '<div class="sg-body"'+(open?' style="display:block"':'')+'>'+contentHtml+'</div>';
+}
+
 function renderPufferSektion(){
   const kats=Object.keys(KAT_PUFFER_DEFAULT);
   const zeilen=kats.map(k=>{
@@ -4666,7 +4685,68 @@ function renderSt(){
   '</div>'+
   '<div class="ss"><div class="ssl">Anti-Foodwaste</div>'+'<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Funktionen gegen Lebensmittelverschwendung — einzeln ein-/ausschaltbar.</p>'+optToggle('fwDashboard','⏰ Ablauf-Dashboard','Zeigt oben in der Lagerliste, was in den nächsten 3 Tagen verbraucht werden sollte.')+optToggle('fwAuswertung','🔍 Foodwaste-Muster','Auswertung in der Statistik: welche Artikel/Kategorien du am häufigsten wegwirfst.')+optToggle('fwMengenWarnung','💡 Mengen-Warnung beim Einkauf','Hinweis, wenn du einen oft verworfenen Artikel auf die Einkaufsliste setzt.')+optToggle('fwAnbruch','📂 Anbruch-Verwaltung','«Geöffnet»-Knopf im Artikel verkürzt die Haltbarkeit passend zur Kategorie.')+optToggle('fwGefrier','❄️ Gefrier-Empfehlung','Schlägt bei bald ablaufenden, einfrierbaren Artikeln das Einfrieren vor.')+optToggle('fwUeberkauf','📊 Überkauf-Erkennung','Erkennt aus der Kaufhistorie, wenn du mehr kaufst als verbrauchst.')+'</div>'+renderPufferSektion()+'<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong style="color:var(--ac);cursor:pointer;text-decoration:underline" onclick="showVersionHistory()">v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button></div>'+
   '<div class="ss"><div class="ssl">Daten</div><button class="db-btn" onclick="expJ()">'+I.dl+' Lokaler Export (JSON)</button><button class="db-btn" onclick="document.getElementById(\'imp\').click()">'+I.ul+' Lokaler Import (JSON)<input type="file" id="imp" accept=".json" style="display:none" onchange="impJ(event)"/></button><button class="db-btn d" onclick="clearLog()">'+I.trash+' Bewegungsprotokoll löschen</button><button class="db-btn d" onclick="resetAll()">'+I.trash+' Alle Daten löschen</button></div>';
+  setTimeout(()=>{groupSettingsSections();suppressAutofill(document.getElementById('s-settings'));},0);
 }
+
+function groupSettingsSections(){
+  const body=document.getElementById('st-body');
+  if(!body||body.dataset.grouped)return;
+  const sections=[...body.querySelectorAll(':scope > .ss')];
+  if(sections.length<4)return;
+  
+  // Gruppierung definieren: [Gruppen-ID, Icon, Titel, CSS-Klassen-Liste der Sections, default offen?]
+  const groups=[
+    {id:'sg-verbindung',icon:'🔗',title:'Verbindungen & API',keywords:['GitHub','Anthropic'],open:false},
+    {id:'sg-stamm',icon:'📋',title:'Stammdaten',keywords:['Lagerorte','Kategorien','Einheiten'],open:false},
+    {id:'sg-erfassung',icon:'📥',title:'Erfassung & Inventur',keywords:['Erfassung'],open:false},
+    {id:'sg-foodwaste',icon:'♻️',title:'Anti-Foodwaste & Haltbarkeit',keywords:['Anti-Foodwaste','Haltbarkeits-Puffer'],open:false},
+    {id:'sg-app',icon:'⚙️',title:'App & Daten',keywords:['App','Daten','installieren','installiert'],open:false},
+  ];
+  
+  const used=new Set();
+  const frags=[];
+  
+  groups.forEach(g=>{
+    const matching=sections.filter(s=>{
+      if(used.has(s))return false;
+      const label=s.querySelector('.ssl');
+      if(!label)return false;
+      return g.keywords.some(kw=>label.textContent.includes(kw));
+    });
+    if(!matching.length)return;
+    matching.forEach(s=>used.add(s));
+    
+    if(sgOpen[g.id]===undefined)sgOpen[g.id]=g.open;
+    const isOpen=sgOpen[g.id];
+    
+    const wrapper=document.createElement('div');
+    const hdr=document.createElement('div');
+    hdr.className='sg-hdr'+(isOpen?' open':'');
+    hdr.innerHTML='<span class="sg-title">'+g.icon+' '+g.title+'</span><span class="sg-arrow">▼</span>';
+    hdr.onclick=()=>{sgOpen[g.id]=!sgOpen[g.id];renderSt();};
+    
+    const bodyDiv=document.createElement('div');
+    bodyDiv.className='sg-body';
+    if(isOpen)bodyDiv.style.display='block';
+    matching.forEach(s=>bodyDiv.appendChild(s));
+    
+    wrapper.appendChild(hdr);
+    wrapper.appendChild(bodyDiv);
+    frags.push(wrapper);
+  });
+  
+  // Ungruppierte Sections (z.B. Install) oben lassen
+  const ungrouped=sections.filter(s=>!used.has(s));
+  
+  // DOM neu aufbauen
+  const container=document.createDocumentFragment();
+  ungrouped.forEach(s=>container.appendChild(s));
+  frags.forEach(f=>container.appendChild(f));
+  body.innerHTML='';
+  body.appendChild(container);
+  body.dataset.grouped='1';
+}
+
 function saveGHcfg(){gh={tok:document.getElementById('gh-t').value.trim(),own:document.getElementById('gh-o').value.trim(),repo:document.getElementById('gh-r').value.trim(),br:document.getElementById('gh-b').value.trim()||'main',rzrepo:document.getElementById('gh-rz').value.trim()||''};saveGH();toast('GitHub gespeichert');renderSt();}
 function addLo(){const n=prompt('Neuer Lagerort:');if(!n||!n.trim())return;const nm=n.trim();if(!S.lo.includes(nm)){S.lo.push(nm);saveL();}renderSt();}
 function delLo(n){if(S.a.some(a=>a.lager===n)){alert('Lagerort «'+n+'» wird noch verwendet.');return;}S.lo=S.lo.filter(l=>l!==n);saveL();renderSt();}
