@@ -5308,6 +5308,37 @@
           "ablaufdatum": "2027-07-01"
         }
       ]
+    },
+    {
+      "id": 146,
+      "name": "Traubenzucker",
+      "marke": "Hänseler",
+      "kat": "Süsswaren",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7612669000043",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 100,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2026-08-01",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784380128886_17843801206261890022866229285958.jpg",
+      "fotoPath": "1784380128886_17843801206261890022866229285958.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2026-08-01"
+        }
+      ],
+      "geoeffnet": "2026-07-18"
     }
   ],
   "lagerorte": [
@@ -9083,7 +9114,20 @@
       "aktion": false,
       "datum": "2026-07-18",
       "zeit": 1784380053933
+    },
+    {
+      "t": "ein",
+      "aid": 146,
+      "name": "Traubenzucker",
+      "lager": "Vorratsschrank",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380190393
     }
   ],
-  "aktualisiert": "2026-07-18T13:08:05.675Z"
+  "aktualisiert": "2026-07-18T13:10:12.478Z"
 }
