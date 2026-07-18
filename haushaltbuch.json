@@ -2918,7 +2918,7 @@
       "packMenge": 500,
       "packEinheit": "g",
       "kaufdatum": "2026-07-05",
-      "ablaufdatum": "2027-12-06",
+      "ablaufdatum": "2026-07-21",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783261084867_off.jpg",
       "fotoPath": "1783261084867_off.jpg",
@@ -2928,9 +2928,10 @@
           "id": 5,
           "menge": 1,
           "kaufdatum": "2026-07-05",
-          "ablaufdatum": "2027-12-06"
+          "ablaufdatum": "2026-07-21"
         }
-      ]
+      ],
+      "geoeffnet": "2026-07-18"
     },
     {
       "id": 77,
@@ -3198,7 +3199,7 @@
       "kat": "Süsswaren",
       "lager": "Schlof",
       "kaufort": "Migros",
-      "menge": 1,
+      "menge": 3,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610200010209",
@@ -3206,7 +3207,7 @@
       "preis": 0,
       "packMenge": 500,
       "packEinheit": "g",
-      "kaufdatum": "2026-07-05",
+      "kaufdatum": "2026-07-18",
       "ablaufdatum": "2024-12-31",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783269384288_off.jpg",
@@ -3218,9 +3219,22 @@
           "menge": 1,
           "kaufdatum": "2026-07-05",
           "ablaufdatum": "2024-12-31"
+        },
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
         }
       ],
-      "ablaufIgnoriert": true
+      "ablaufIgnoriert": true,
+      "geoeffnet": "2026-07-18"
     },
     {
       "id": 85,
@@ -3847,13 +3861,13 @@
     },
     {
       "id": 105,
-      "name": "Wild Rice Mix",
+      "name": "Wild Rice Mix Reis",
       "marke": "Mister Rice",
       "kat": "Konserven & Trockenware",
-      "lager": "Küche",
+      "lager": "Schlof",
       "kaufort": "Migros",
       "menge": 1,
-      "einheit": "Stk",
+      "einheit": "Pkg",
       "mindest": 1,
       "barcode": "7613312525043",
       "barcodes": [],
@@ -5202,6 +5216,96 @@
           "menge": 0,
           "kaufdatum": "2026-07-18",
           "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 143,
+      "name": "Löffelbisquit",
+      "marke": "Italiamo",
+      "kat": "Süsswaren",
+      "lager": "Vorratsschrank",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "20034153",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 400,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2028-03-31",
+      "notiz": "Nutri-Score D\nPro 100g/ml: 378 kcal, Fett 3.8g, KH 76.5g, Eiweiss 8.5g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784379655503_off.jpg",
+      "fotoPath": "1784379655503_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2028-03-31"
+        }
+      ]
+    },
+    {
+      "id": 144,
+      "name": "Tiramisu",
+      "marke": "Dr. Oetker",
+      "kat": "Süsswaren",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610089076280",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 240,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score D\nPro 100g/ml: 188 kcal, Fett 6.7g, KH 29g, Eiweiss 2.8g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784379728803_off.jpg",
+      "fotoPath": "1784379728803_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 145,
+      "name": "Oxtaul Suppe",
+      "marke": "Knorr",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Coop",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "8720182942418",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 71,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2027-07-01",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784379885996_17843798552033156154533136400708.jpg",
+      "fotoPath": "1784379885996_17843798552033156154533136400708.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2027-07-01"
         }
       ]
     }
@@ -8914,7 +9018,72 @@
       "aktion": false,
       "datum": "2026-07-18",
       "zeit": 1784377932155
+    },
+    {
+      "t": "ein",
+      "aid": 143,
+      "name": "Löffelbisquit",
+      "lager": "Vorratsschrank",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784379718432
+    },
+    {
+      "t": "ein",
+      "aid": 144,
+      "name": "Tiramisu",
+      "lager": "Vorratsschrank",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784379754478
+    },
+    {
+      "t": "ein",
+      "aid": 145,
+      "name": "Oxtaul Suppe",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784379982200
+    },
+    {
+      "t": "ein",
+      "aid": 84,
+      "name": "Puderzucker",
+      "lager": "Schlof",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380043352
+    },
+    {
+      "t": "ein",
+      "aid": 84,
+      "name": "Puderzucker",
+      "lager": "Schlof",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380053933
     }
   ],
-  "aktualisiert": "2026-07-18T12:37:41.276Z"
+  "aktualisiert": "2026-07-18T13:08:05.675Z"
 }
