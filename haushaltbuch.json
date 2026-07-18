@@ -1484,7 +1484,7 @@
       "lager": "Küche",
       "kaufort": "Migros",
       "menge": 0,
-      "einheit": "Stk",
+      "einheit": "Pkg",
       "mindest": 1,
       "barcode": "3086126790503",
       "preis": 0,
@@ -1495,7 +1495,14 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782557891926_1782557848003181302118987887147.jpg",
       "fotoPath": "1782557891926_1782557848003181302118987887147.jpg",
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 0,
+          "kaufdatum": "2026-06-27",
+          "ablaufdatum": ""
+        }
+      ],
       "preisHistorie": [
         {
           "datum": "2026-06-29",
@@ -1505,7 +1512,8 @@
           "typ": "aus",
           "aktion": false
         }
-      ]
+      ],
+      "barcodes": []
     },
     {
       "id": 40,
@@ -4868,20 +4876,20 @@
       "name": "Rasensamen Univert 500",
       "marke": "",
       "kat": "Diverses",
-      "lager": "Kühlschrank oben",
+      "lager": "Garten",
       "kaufort": "Landi",
       "menge": 2,
       "einheit": "Stk",
-      "mindest": 1,
-      "barcode": "",
+      "mindest": 0,
+      "barcode": "7611330335132",
       "preis": 8.2,
       "packMenge": 0,
-      "packEinheit": "",
+      "packEinheit": "dl",
       "kaufdatum": "2026-07-18",
-      "ablaufdatum": "",
+      "ablaufdatum": "2027-10-31",
       "notiz": "",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784357657326_17843576488438473338605375827507.jpg",
+      "fotoPath": "1784357657326_17843576488438473338605375827507.jpg",
       "packungen": [
         {
           "id": 3,
@@ -4899,8 +4907,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-07-18",
+          "preis": 8.2,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
         }
-      ]
+      ],
+      "barcodes": []
     }
   ],
   "lagerorte": [
@@ -8518,5 +8536,5 @@
       "zeit": 1784357600049
     }
   ],
-  "aktualisiert": "2026-07-18T06:54:22.242Z"
+  "aktualisiert": "2026-07-18T07:23:34.317Z"
 }
