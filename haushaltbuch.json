@@ -4847,8 +4847,8 @@
       "mindest": 0,
       "barcode": "7613312034965",
       "preis": 1.3,
-      "packMenge": 50,
-      "packEinheit": "g",
+      "packMenge": 5,
+      "packEinheit": "Stk",
       "kaufdatum": "2026-07-18",
       "ablaufdatum": "2027-11-22",
       "notiz": "",
@@ -4891,6 +4891,15 @@
           "datum": "2026-07-18",
           "preis": 1.3,
           "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-07-18",
+          "preis": 1.3,
+          "menge": 2,
           "einheit": "Pkg",
           "typ": "ein",
           "aktion": false,
@@ -5674,6 +5683,156 @@
           "menge": 1,
           "kaufdatum": "2026-07-18",
           "ablaufdatum": "2027-05-31"
+        }
+      ]
+    },
+    {
+      "id": 158,
+      "name": "Coconut Milk",
+      "marke": "Thai Kitchen",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "5021047105027",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 250,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2026-12-31",
+      "notiz": "Nutri-Score E\nPro 100g/ml: 172 kcal, Fett 17.4g, KH 2.4g, Eiweiss 1.3g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784382470805_off.jpg",
+      "fotoPath": "1784382470805_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 15,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2026-12-31"
+        }
+      ]
+    },
+    {
+      "id": 159,
+      "name": "Tomaten passiert",
+      "marke": "Cucina",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Aldi",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4061459102284",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2028-12-31",
+      "notiz": "Nutri-Score A\nPro 100g/ml: 25 kcal, Fett 0.5g, KH 4.3g, Eiweiss 1.2g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784382514503_off.jpg",
+      "fotoPath": "1784382514503_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 16,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2028-12-31"
+        }
+      ]
+    },
+    {
+      "id": 160,
+      "name": "Hollandaise",
+      "marke": "Thomy",
+      "kat": "Gewürze & Saucen",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "ml",
+      "mindest": 0,
+      "barcode": "7610100055607",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 250,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2027-02-28",
+      "notiz": "Nutri-Score D\nPro 100g/ml: 233 kcal, Fett 23g, KH 5.1g, Eiweiss 0.8g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784382554756_off.jpg",
+      "fotoPath": "1784382554756_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 17,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2027-02-28"
+        }
+      ]
+    },
+    {
+      "id": 161,
+      "name": "Frühlingsrollenblätter",
+      "marke": "Thai Kitchen",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "5021047102286",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 120,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score E\nPro 100g/ml: 330 kcal, Fett 0.2g, KH 74.1g, Eiweiss 6.6g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784382569905_off.jpg",
+      "fotoPath": "1784382569905_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 18,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 162,
+      "name": "Reinweinstein Backpulver",
+      "marke": "Alnatura",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "40045399",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 4,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2028-04-30",
+      "notiz": "Bio, Vegan, Vegetarisch\nPro 100g/ml: 176 kcal, Fett 0.5g, KH 44g, Eiweiss 0.5g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784382678207_off.jpg",
+      "fotoPath": "1784382678207_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2028-04-30"
         }
       ]
     }
@@ -9646,7 +9805,72 @@
       "aktion": false,
       "datum": "2026-07-18",
       "zeit": 1784380987271
+    },
+    {
+      "t": "ein",
+      "aid": 158,
+      "name": "Coconut Milk",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784382513349
+    },
+    {
+      "t": "ein",
+      "aid": 159,
+      "name": "Tomaten passiert",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784382553934
+    },
+    {
+      "t": "ein",
+      "aid": 160,
+      "name": "Hollandaise",
+      "lager": "Vorratsschrank",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "ml",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784382569157
+    },
+    {
+      "t": "ein",
+      "aid": 161,
+      "name": "Frühlingsrollenblätter",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784382589011
+    },
+    {
+      "t": "ein",
+      "aid": 162,
+      "name": "Reinweinstein Backpulver",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784382731464
     }
   ],
-  "aktualisiert": "2026-07-18T13:23:47.658Z"
+  "aktualisiert": "2026-07-18T13:52:18.908Z"
 }
