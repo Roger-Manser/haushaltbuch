@@ -5,15 +5,15 @@
       "name": "Grüner Veltliner",
       "marke": "Landi",
       "kat": "Genussmittel",
-      "lager": "Kühlschrank unten",
-      "menge": 0,
+      "lager": "Schlof",
+      "menge": 3,
       "einheit": "Kiste",
       "mindest": 2,
       "barcode": "7611703611962",
-      "preis": 50.2,
+      "preis": 25.2,
       "packMenge": 6,
       "packEinheit": "Flasche",
-      "kaufdatum": "2026-07-04",
+      "kaufdatum": "2026-07-18",
       "ablaufdatum": "",
       "notiz": "DE - Nährwert und Zutatenverzeichnis Zutaten: Trauben, rektifiziertes Traubenmostkonzentrat, Saccharose, Säureregulatoren: Apfelsäure, Milchsäure, Weinsäure, Stabilisatoren: Citronensäure, Hefe-Mannoproteine zur Weinsteinstabilisierung, Kaliumpolyaspartat, Metaweinsäure, Antioxidantien: Kaliumsorbat, L-Ascorbinsäure, Sulfite, Gase und Packgase: unter Schutzatmosphäre abgefüllt\n 100 ml enthalten durchschnittlich Energie Fett ..davon gesättigte Fettsäuren Kohlenhydrate ..davon Zucker Eiweiss Salz 307 kJ (73 kcal) 0 g 0 g 1.3 g 0.5 g 0 g 0 g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781961271197_17819612557295906724604013972.jpg",
@@ -105,9 +105,34 @@
           "einheit": "Kiste",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-18",
+          "preis": 25.2,
+          "menge": 3,
+          "einheit": "Kiste",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-07-18",
+          "preis": 25.2,
+          "menge": 3,
+          "einheit": "Kiste",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 3,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ],
       "kaufort": "Landi",
       "barcodes": [
         "7611703211964"
@@ -233,7 +258,7 @@
       "preis": 0.6,
       "packMenge": 6,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-06-20",
+      "kaufdatum": "2026-07-17",
       "ablaufdatum": "2026-07-17",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782190086786_17821900533123253954791247278943.jpg",
@@ -263,6 +288,15 @@
           "einheit": "Stk",
           "typ": "ein",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-17",
+          "preis": 0.6,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
         }
       ],
       "ownCode": "HB-000009",
@@ -272,6 +306,12 @@
           "menge": 1,
           "kaufdatum": "2026-06-20",
           "ablaufdatum": "2026-07-17"
+        },
+        {
+          "id": 6,
+          "menge": 1,
+          "kaufdatum": "2026-07-17",
+          "ablaufdatum": "2026-08-14"
         }
       ],
       "kaufort": ""
@@ -1049,7 +1089,7 @@
       "marke": "Lidl",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "4056489147268",
@@ -1057,7 +1097,7 @@
       "packMenge": 125,
       "packEinheit": "g",
       "kaufdatum": "2026-07-17",
-      "ablaufdatum": "2026-06-28",
+      "ablaufdatum": "2026-07-29",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782551885501_off.jpg",
       "fotoPath": "1782551885501_off.jpg",
@@ -1074,12 +1114,6 @@
       ],
       "kaufort": "Lidl",
       "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-06-27",
-          "ablaufdatum": "2026-06-28"
-        },
         {
           "id": 7,
           "menge": 1,
@@ -1450,7 +1484,7 @@
       "lager": "Küche",
       "kaufort": "Migros",
       "menge": 0,
-      "einheit": "Stk",
+      "einheit": "Pkg",
       "mindest": 1,
       "barcode": "3086126790503",
       "preis": 0,
@@ -1461,7 +1495,14 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782557891926_1782557848003181302118987887147.jpg",
       "fotoPath": "1782557891926_1782557848003181302118987887147.jpg",
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 0,
+          "kaufdatum": "2026-06-27",
+          "ablaufdatum": ""
+        }
+      ],
       "preisHistorie": [
         {
           "datum": "2026-06-29",
@@ -1471,7 +1512,8 @@
           "typ": "aus",
           "aktion": false
         }
-      ]
+      ],
+      "barcodes": []
     },
     {
       "id": 40,
@@ -2232,14 +2274,14 @@
       "kat": "Getränke",
       "lager": "Schlof",
       "kaufort": "Lidl",
-      "menge": 10,
+      "menge": 11,
       "einheit": "Stk",
       "mindest": 2,
       "barcode": "4056489122913",
       "preis": 3.88,
       "packMenge": 44,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-07-04",
+      "kaufdatum": "2026-07-18",
       "ablaufdatum": "2027-05-15",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783140253090_off.jpg",
@@ -2261,6 +2303,12 @@
           "menge": 10,
           "kaufdatum": "2026-07-04",
           "ablaufdatum": "2027-05-15"
+        },
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2027-05-31"
         }
       ]
     },
@@ -4491,7 +4539,7 @@
       "packMenge": 3,
       "packEinheit": "Stk",
       "kaufdatum": "2026-07-17",
-      "ablaufdatum": "2026-08-03",
+      "ablaufdatum": "2026-07-31",
       "notiz": "Pro 100g/ml: 365 kcal, Fett 13g, KH 53g, Eiweiss 8g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784294568571_off.jpg",
       "fotoPath": "1784294568571_off.jpg",
@@ -4511,9 +4559,10 @@
           "id": 8,
           "menge": 1,
           "kaufdatum": "2026-07-17",
-          "ablaufdatum": "2026-08-03"
+          "ablaufdatum": "2026-07-31"
         }
-      ]
+      ],
+      "geoeffnet": "2026-07-17"
     },
     {
       "id": 128,
@@ -4729,6 +4778,153 @@
           "ablaufdatum": "2026-09-18"
         }
       ]
+    },
+    {
+      "id": 133,
+      "name": "Natron 50g",
+      "marke": "Migros",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7613312034965",
+      "preis": 0.75,
+      "packMenge": 50,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2029-05-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784357248898_off.jpg",
+      "fotoPath": "1784357248898_off.jpg",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-18",
+          "preis": 0.75,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-07-18",
+          "preis": 0.75,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "barcodes": []
+    },
+    {
+      "id": 134,
+      "name": "Blattspinat",
+      "marke": "Farmer's Best",
+      "kat": "Gemüse & Früchte",
+      "lager": "Gefrierschrank unten",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7616800810492",
+      "preis": 3.2,
+      "packMenge": 800,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2027-10-31",
+      "notiz": "Nutri-Score A\nPro 100g/ml: 28 kcal, Fett 0.6g, KH 1.5g, Eiweiss 3g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784357202103_off.jpg",
+      "fotoPath": "1784357202103_off.jpg",
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-18",
+          "preis": 3.2,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-07-18",
+          "preis": 3.2,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "barcodes": []
+    },
+    {
+      "id": 135,
+      "name": "Rasensamen Univert 500",
+      "marke": "",
+      "kat": "Diverses",
+      "lager": "Garten",
+      "kaufort": "Landi",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7611330335132",
+      "preis": 8.2,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2027-10-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784357657326_17843576488438473338605375827507.jpg",
+      "fotoPath": "1784357657326_17843576488438473338605375827507.jpg",
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 2,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-18",
+          "preis": 8.2,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-07-18",
+          "preis": 8.2,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
+        }
+      ],
+      "barcodes": []
     }
   ],
   "lagerorte": [
@@ -4789,24 +4985,10 @@
   ],
   "einkauf": [
     {
-      "id": 1783156988211,
-      "text": "Lauge",
-      "checked": false,
-      "menge": "1",
-      "einheit": ""
-    },
-    {
       "id": 1783264265573,
       "text": "Senf Mild",
       "menge": "1",
       "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1784217944118.68,
-      "text": "Jungspinat",
-      "menge": "100",
-      "einheit": "g",
       "checked": false
     }
   ],
@@ -8280,7 +8462,98 @@
       "aktion": false,
       "datum": "2026-07-17",
       "zeit": 1784295353211
+    },
+    {
+      "t": "ein",
+      "aid": 4,
+      "name": "Ei",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0.6,
+      "aktion": false,
+      "datum": "2026-07-17",
+      "zeit": 1784295479136
+    },
+    {
+      "t": "aus",
+      "aid": 32,
+      "name": "Forellenfilets",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-17",
+      "zeit": 1784298058995
+    },
+    {
+      "t": "ein",
+      "aid": 133,
+      "name": "Natron 50g",
+      "lager": "Kühlschrank oben",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0.75,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784357157352
+    },
+    {
+      "t": "ein",
+      "aid": 134,
+      "name": "Blattspinat",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 3.2,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784357168640
+    },
+    {
+      "t": "ein",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Kühlschrank unten",
+      "kat": "Genussmittel",
+      "menge": 3,
+      "einheit": "Pkg",
+      "preis": 25.2,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784357344270
+    },
+    {
+      "t": "ein",
+      "aid": 135,
+      "name": "Rasensamen Univert 500",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 8.2,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784357600049
+    },
+    {
+      "t": "ein",
+      "aid": 61,
+      "name": "Ristretto - Espresso",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 3.88,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784359508952
     }
   ],
-  "aktualisiert": "2026-07-17T13:36:14.880Z"
+  "aktualisiert": "2026-07-18T07:28:54.204Z"
 }
