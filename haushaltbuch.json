@@ -4519,8 +4519,8 @@
       "kaufdatum": "2026-07-15",
       "ablaufdatum": "2026-08-19",
       "notiz": "",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784392394723_17843923880276982037855487631665.jpg",
+      "fotoPath": "1784392394723_17843923880276982037855487631665.jpg",
       "puffer": 10,
       "preisHistorie": [],
       "packungen": [
@@ -5792,7 +5792,7 @@
       "packMenge": 120,
       "packEinheit": "g",
       "kaufdatum": "2026-07-18",
-      "ablaufdatum": "",
+      "ablaufdatum": "2027-07-21",
       "notiz": "Nutri-Score E\nPro 100g/ml: 330 kcal, Fett 0.2g, KH 74.1g, Eiweiss 6.6g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784382569905_off.jpg",
       "fotoPath": "1784382569905_off.jpg",
@@ -5909,13 +5909,6 @@
       "text": "Butter",
       "menge": "1",
       "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1784378236144,
-      "text": "Gurken Sandwich",
-      "menge": "1",
-      "einheit": "Glas",
       "checked": false
     }
   ],
@@ -9872,5 +9865,5 @@
       "zeit": 1784382731464
     }
   ],
-  "aktualisiert": "2026-07-18T13:52:18.908Z"
+  "aktualisiert": "2026-07-18T16:44:04.719Z"
 }
