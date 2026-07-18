@@ -5031,6 +5031,179 @@
         }
       ],
       "barcodes": []
+    },
+    {
+      "id": 137,
+      "name": "Gurken Sandwich",
+      "marke": "Condy",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Glas",
+      "mindest": 0,
+      "barcode": "7613269303091",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 190,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score C\nPro 100g/ml: 24 kcal, Fett 0.5g, KH 4.9g, Eiweiss 0.6g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784377867158_off.jpg",
+      "fotoPath": "1784377867158_off.jpg",
+      "preisHistorie": [],
+      "packungen": []
+    },
+    {
+      "id": 138,
+      "name": "Alino Oliven",
+      "marke": "Alino",
+      "kat": "Getränke",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Glas",
+      "mindest": 0,
+      "barcode": "4099200011240",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 200,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score D\nPro 100g/ml: 144 kcal, Fett 15g, KH 0g, Eiweiss 0.9g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784377951840_off.jpg",
+      "fotoPath": "1784377951840_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 0,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 139,
+      "name": "Sandwich-Gurken",
+      "marke": "Freshona",
+      "kat": "Gemüse & Früchte",
+      "lager": "Schlof",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Glas",
+      "mindest": 0,
+      "barcode": "20047252",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 290,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "",
+      "notiz": "Bio\nNutri-Score C\nPro 100g/ml: 39 kcal, Fett 0.1g, KH 7g, Eiweiss 0.4g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784377993245_off.jpg",
+      "fotoPath": "1784377993245_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 0,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 140,
+      "name": "Kaffeepulver",
+      "marke": "Nestle norge",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Dose",
+      "mindest": 0,
+      "barcode": "7613035850194",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 100,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784378029835_off.jpg",
+      "fotoPath": "1784378029835_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 0,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 141,
+      "name": "Weisse Bohnen",
+      "marke": "Konserven",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Dose",
+      "mindest": 0,
+      "barcode": "7616800800400",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 440,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score B\nPro 100g/ml: 87 kcal, Fett 1.6g, KH 11g, Eiweiss 5g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784378105408_off.jpg",
+      "fotoPath": "1784378105408_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 0,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 142,
+      "name": "Olives Vertes Manzanilla Crespo",
+      "marke": "Crespo",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "Spar",
+      "menge": 0,
+      "einheit": "Dose",
+      "mindest": 0,
+      "barcode": "3076821002148",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 314,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score E\nPro 100g/ml: 155 kcal, Fett 16g, KH 0g, Eiweiss 1.3g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784378161721_off.jpg",
+      "fotoPath": "1784378161721_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 6,
+          "menge": 0,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -5076,7 +5249,8 @@
     "Stange",
     "Portion",
     "Tube",
-    "Rolle"
+    "Rolle",
+    "Glas"
   ],
   "geschaefte": [
     "Migros",
@@ -5104,6 +5278,13 @@
       "text": "Butter",
       "menge": "1",
       "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1784378236144,
+      "text": "Gurken Sandwich",
+      "menge": "1",
+      "einheit": "Glas",
       "checked": false
     }
   ],
@@ -8720,7 +8901,20 @@
       "aktion": false,
       "datum": "2026-07-18",
       "zeit": 1784370080588
+    },
+    {
+      "t": "ein",
+      "aid": 137,
+      "name": "Gurken Sandwich",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Glas",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784377932155
     }
   ],
-  "aktualisiert": "2026-07-18T12:24:59.675Z"
+  "aktualisiert": "2026-07-18T12:37:41.276Z"
 }
