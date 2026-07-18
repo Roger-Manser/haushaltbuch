@@ -5339,6 +5339,343 @@
         }
       ],
       "geoeffnet": "2026-07-18"
+    },
+    {
+      "id": 147,
+      "name": "Matcha Grüntee lose",
+      "marke": "Alnatura",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4104420145900",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 30,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2028-03-31",
+      "notiz": "Bio, Vegan, Vegetarisch\nNutri-Score B\nPro 100g/ml: 1 kcal, Fett 0g, KH 0.2g, Eiweiss 0.1g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784380226155_off.jpg",
+      "fotoPath": "1784380226155_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2028-03-31"
+        }
+      ]
+    },
+    {
+      "id": 148,
+      "name": "Birkenzucker",
+      "marke": "",
+      "kat": "Süsswaren",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 30,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 5,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784380313322_178438029615791563131513069179.jpg",
+      "fotoPath": "1784380313322_178438029615791563131513069179.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 30,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 149,
+      "name": "Dekorzucker Schwarz",
+      "marke": "",
+      "kat": "Süsswaren",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4260143400136",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 90,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784380411615_17843803922622096670867004928981.jpg",
+      "fotoPath": "1784380411615_17843803922622096670867004928981.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 150,
+      "name": "Dekorzuker Gold",
+      "marke": "",
+      "kat": "Süsswaren",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4260143400259",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 90,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784380484027_17843804706638732455400174247091.jpg",
+      "fotoPath": "1784380484027_17843804706638732455400174247091.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 151,
+      "name": "Bittermandelaroma",
+      "marke": "",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7613312407516",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 4,
+      "packEinheit": "Glas",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2027-03-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784380546328_17843805411211135483435229576761.jpg",
+      "fotoPath": "1784380546328_17843805411211135483435229576761.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2027-03-31"
+        }
+      ]
+    },
+    {
+      "id": 152,
+      "name": "Agar Agar",
+      "marke": "Midor",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "76242090",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 4,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2026-10-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784380612750_off.jpg",
+      "fotoPath": "1784380612750_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 6,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2026-10-31"
+        }
+      ]
+    },
+    {
+      "id": 153,
+      "name": "Kakao-Pulver",
+      "marke": "Patissier",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Dose",
+      "mindest": 0,
+      "barcode": "7613312262153",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 200,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2026-07-21",
+      "notiz": "Vegan, Vegetarisch\nPro 100g/ml: 369 kcal, Fett 21.2g, KH 11.2g, Eiweiss 20g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784380688802_off.jpg",
+      "fotoPath": "1784380688802_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 7,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2026-07-21"
+        }
+      ],
+      "geoeffnet": "2026-07-18"
+    },
+    {
+      "id": 154,
+      "name": "Blatt Gelatine",
+      "marke": "bella",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "Aldi",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "24715836",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 30,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784380758216_17843807526182724409691492199318.jpg",
+      "fotoPath": "1784380758216_17843807526182724409691492199318.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 8,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 155,
+      "name": "Blattgelatine",
+      "marke": "Migros - Patissier",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 2,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "76102622",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 20,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784380803049_off.jpg",
+      "fotoPath": "1784380803049_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 11,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 12,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 156,
+      "name": "Vanilleschote",
+      "marke": "Belbake",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4056489410799",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 2,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2027-12-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784380859476_off.jpg",
+      "fotoPath": "1784380859476_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 13,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2027-12-31"
+        }
+      ]
+    },
+    {
+      "id": 157,
+      "name": "Trockenhefe",
+      "marke": "Belbake",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "20358228",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 6,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2027-05-31",
+      "notiz": "Vegan, Vegetarisch",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784380930383_off.jpg",
+      "fotoPath": "1784380930383_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 14,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2027-05-31"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -9127,7 +9464,189 @@
       "aktion": false,
       "datum": "2026-07-18",
       "zeit": 1784380190393
+    },
+    {
+      "t": "ein",
+      "aid": 147,
+      "name": "Matcha Grüntee lose",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380267396
+    },
+    {
+      "t": "ein",
+      "aid": 148,
+      "name": "Birkenzucker",
+      "lager": "Vorratsschrank",
+      "kat": "Süsswaren",
+      "menge": 30,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380373864
+    },
+    {
+      "t": "ein",
+      "aid": 149,
+      "name": "Dekorzucker Schwarz",
+      "lager": "Vorratsschrank",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380455507
+    },
+    {
+      "t": "ein",
+      "aid": 150,
+      "name": "Dekorzuker Gold",
+      "lager": "Vorratsschrank",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380518498
+    },
+    {
+      "t": "ein",
+      "aid": 151,
+      "name": "Bittermandelaroma",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380596205
+    },
+    {
+      "t": "ein",
+      "aid": 152,
+      "name": "Agar Agar",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380660071
+    },
+    {
+      "t": "ein",
+      "aid": 153,
+      "name": "Kakao-Pulver",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Dose",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380705981
+    },
+    {
+      "t": "ein",
+      "aid": 154,
+      "name": "Blatt Gelatine",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380791382
+    },
+    {
+      "t": "ein",
+      "aid": 155,
+      "name": "Blattgelatine",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380819441
+    },
+    {
+      "t": "aus",
+      "aid": 155,
+      "name": "Blattgelatine",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380834391
+    },
+    {
+      "t": "ein",
+      "aid": 155,
+      "name": "Blattgelatine",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380837656
+    },
+    {
+      "t": "ein",
+      "aid": 155,
+      "name": "Blattgelatine",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380839165
+    },
+    {
+      "t": "ein",
+      "aid": 156,
+      "name": "Vanilleschote",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380919757
+    },
+    {
+      "t": "ein",
+      "aid": 157,
+      "name": "Trockenhefe",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784380987271
     }
   ],
-  "aktualisiert": "2026-07-18T13:10:12.478Z"
+  "aktualisiert": "2026-07-18T13:23:13.082Z"
 }
