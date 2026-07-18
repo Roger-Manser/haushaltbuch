@@ -2111,17 +2111,17 @@
       "lager": "Kühlschrank oben",
       "kaufort": "Migros",
       "menge": 1,
-      "einheit": "Stk",
+      "einheit": "Tube",
       "mindest": 0,
-      "barcode": "12376797",
+      "barcode": "7613036762779",
       "preis": 0,
       "packMenge": 180,
       "packEinheit": "g",
       "kaufdatum": "2026-06-30",
       "ablaufdatum": "2026-12-21",
-      "notiz": "",
-      "foto": "",
-      "fotoPath": "",
+      "notiz": "Nutri-Score E\nPro 100g/ml: 610 kcal, Fett 66.2g, KH 1.5g, Eiweiss 1.1g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784359960584_off.jpg",
+      "fotoPath": "1784359960584_off.jpg",
       "preisHistorie": [],
       "packungen": [
         {
@@ -2130,7 +2130,8 @@
           "kaufdatum": "2026-06-30",
           "ablaufdatum": "2026-12-21"
         }
-      ]
+      ],
+      "barcodes": []
     },
     {
       "id": 57,
@@ -4968,7 +4969,8 @@
     "Flasche",
     "Kiste",
     "Stange",
-    "Portion"
+    "Portion",
+    "Tube"
   ],
   "geschaefte": [
     "Migros",
@@ -4987,6 +4989,13 @@
     {
       "id": 1783264265573,
       "text": "Senf Mild",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1784359795406,
+      "text": "Butter",
       "menge": "1",
       "einheit": "Stk",
       "checked": false
@@ -8555,5 +8564,5 @@
       "zeit": 1784359508952
     }
   ],
-  "aktualisiert": "2026-07-18T07:28:54.204Z"
+  "aktualisiert": "2026-07-18T09:59:34.786Z"
 }
