@@ -530,10 +530,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='15.3';
+const APP_VERSION='15.5';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'15.5',d:'07.2026',items:['Inventar-Dialog: kein auto-focus (Tastatur klappt nur bei Antippen hoch)','Inventar-Dialog: suppressAutofill vor Anzeige (kein Passwort-Bestätigen)','Inventar-Dialog: "Neu"-Button zum Wiederholen des Scans']},
+  {v:'15.4',d:'07.2026',items:['Foodwaste-Dashboard: gleiche Regeln wie Ablauf-Sortierung (Puffer, ablaufIgnoriert, Bestand>0)']},
   {v:'15.3',d:'07.2026',items:['Einstellungen: aufklappbare Gruppen korrekt (öffnen/schliessen einzeln)','Gruppierung direkt im Render statt DOM-Nachbearbeitung']},
   {v:'15.2',d:'07.2026',items:['Offline-Modus: persistentes dirty-Flag (überlebt App-Neustart)','Auto-Sync sobald wieder online (mit Retry)','Offline-Badge am Sync-Button (roter Punkt)','SW: Stale-While-Revalidate für index.html, skipWaiting auf Install','SW: 3s Timeout mit Cache-Fallback bei schlechtem Netz']},
   {v:'15.1',d:'07.2026',items:['Einstellungen: aufklappbare Kapitel (Verbindungen, Stammdaten, Erfassung, Anti-Foodwaste, App)']},
@@ -1301,7 +1303,16 @@ function renderAblaufDashboard(){
   // Nur auf "alle"-Ansicht ohne Suche zeigen
   const q=(document.getElementById('lager-search')?.value||'').trim();
   if(q||lf!=='alle')return '';
-  const kandidaten=S.a.filter(a=>a.menge>0&&a.ablaufdatum&&effektiveTage(a)!==null).map(a=>({a,tage:effektiveTage(a)})).filter(x=>x.tage<=3).sort((x,y)=>x.tage-y.tage);
+  const kandidaten=S.a
+    .filter(a=>
+      a.menge>0&&                    // Bestand 0 → nicht zeigen
+      !a.ablaufIgnoriert&&           // manuell ignorierte → nicht zeigen
+      a.ablaufdatum&&
+      effektiveTage(a)!==null&&
+      effektiveTage(a)<=3            // effektiv (inkl. Puffer) ≤ 3 Tage
+    )
+    .map(a=>({a,tage:effektiveTage(a)}))
+    .sort((x,y)=>x.tage-y.tage);
   if(!kandidaten.length)return '';
   const chips=kandidaten.slice(0,8).map(x=>{
     const farbe=x.tage<0?'var(--dg)':x.tage<=1?'var(--dg)':'var(--wn)';
@@ -4398,12 +4409,15 @@ function askInvMengeMhd(barcode,editIndex){
         ['','g','kg','ml','dl','l','Stk'].map(u=>'<option value="'+u+'"'+(cur&&cur.pkgEinheit===u?' selected':'')+'>'+(u||'—')+'</option>').join('')+
       '</select></div></div>'+
       '<div style="display:flex;gap:8px">'+
+        '<button onclick="document.getElementById(\'invcap-mhd-dlg\').remove();startInvScan()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:13px;cursor:pointer;color:var(--t2);display:flex;align-items:center;justify-content:center;gap:6px">'+I.scan+' Neu</button>'+
         '<button onclick="document.getElementById(\'invcap-mhd-dlg\').remove()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
-        '<button onclick="saveInvBufferEntry(\''+esc(barcode)+'\','+(editIndex!==undefined?editIndex:-1)+')" style="flex:2;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">'+(editIndex!==undefined?'Speichern':'\u2713 Hinzuf\u00fcgen & weiter')+'</button>'+
+        '<button onclick="saveInvBufferEntry(\''+esc(barcode)+'\','+(editIndex!==undefined?editIndex:-1)+')" style="flex:2;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">'+(editIndex!==undefined?'Speichern':'✓ Weiter')+'</button>'+
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
-  setTimeout(()=>{const m=document.getElementById('invcap-mg');if(m){m.focus();m.select();}},100);
+  // Autofill unterdrücken VOR focus() — verhindert Passwort-Bestätigen-Dialog
+  suppressAutofill(dlg);
+  // Kein automatisches focus() → Tastatur klappt nur hoch wenn User ins Feld tippt
 }
 function saveInvBufferEntry(barcode,editIndex){
   const menge=parseDecimal(document.getElementById('invcap-mg').value)||1;
