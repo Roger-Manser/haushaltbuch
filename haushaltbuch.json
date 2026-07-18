@@ -349,24 +349,40 @@
       "marke": "Schützengarten",
       "kat": "Genussmittel",
       "lager": "Kühlschrank unten",
-      "menge": 1,
+      "menge": 5,
       "einheit": "Pkg",
       "mindest": 1,
       "barcode": "76137099",
-      "preis": 0,
+      "preis": 26.95,
       "packMenge": 24,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-06-20",
+      "kaufdatum": "2026-07-18",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781972385102_off.jpg",
       "fotoPath": "1781972385102_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-18",
+          "preis": 26.95,
+          "menge": 4,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
+        }
+      ],
       "packungen": [
         {
           "id": 1,
           "menge": 1,
           "kaufdatum": "2026-06-20",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 3,
+          "menge": 4,
+          "kaufdatum": "2026-07-18",
           "ablaufdatum": ""
         }
       ],
@@ -2737,8 +2753,8 @@
       "marke": "Mccormick",
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
-      "kaufort": "Denner",
-      "menge": 0,
+      "kaufort": "Coop",
+      "menge": 4,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610071221063",
@@ -2746,8 +2762,8 @@
       "preis": 0,
       "packMenge": 0,
       "packEinheit": "dl",
-      "kaufdatum": "2026-06-08",
-      "ablaufdatum": "2028-11-27",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "2029-04-08",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783260709238_off.jpg",
       "fotoPath": "1783260709238_off.jpg",
@@ -2767,9 +2783,34 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-18",
+          "preis": 3.7,
+          "menge": 4,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-07-18",
+          "preis": 3.7,
+          "menge": 4,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Coop"
         }
       ],
-      "packungen": []
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 4,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2029-04-08"
+        }
+      ]
     },
     {
       "id": 72,
@@ -4786,16 +4827,16 @@
       "marke": "Migros",
       "kat": "Backwaren & Brot",
       "lager": "Vorratsschrank",
-      "kaufort": "Migros",
-      "menge": 1,
+      "kaufort": "Coop",
+      "menge": 2,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "7613312034965",
-      "preis": 0.75,
+      "preis": 1.3,
       "packMenge": 50,
       "packEinheit": "g",
       "kaufdatum": "2026-07-18",
-      "ablaufdatum": "2029-05-31",
+      "ablaufdatum": "2027-11-22",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784357248898_off.jpg",
       "fotoPath": "1784357248898_off.jpg",
@@ -4805,6 +4846,12 @@
           "menge": 1,
           "kaufdatum": "2026-07-18",
           "ablaufdatum": ""
+        },
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": "2027-11-22"
         }
       ],
       "preisHistorie": [
@@ -4825,6 +4872,15 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-07-18",
+          "preis": 1.3,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
         }
       ],
       "barcodes": []
@@ -4926,6 +4982,55 @@
         }
       ],
       "barcodes": []
+    },
+    {
+      "id": 136,
+      "name": "Gebührenkehrichtsack Region St. Gallen",
+      "marke": "",
+      "kat": "Reinigung & Pflege",
+      "lager": "Küche",
+      "kaufort": "Coop",
+      "menge": 1,
+      "einheit": "Rolle",
+      "mindest": 1,
+      "barcode": "7629999001688",
+      "preis": 20,
+      "packMenge": 10,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-07-18",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784370238968_17843702292053351732228893764645.jpg",
+      "fotoPath": "1784370238968_17843702292053351732228893764645.jpg",
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-07-18",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-18",
+          "preis": 20,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-07-18",
+          "preis": 20,
+          "menge": 1,
+          "einheit": "Rolle",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
+        }
+      ],
+      "barcodes": []
     }
   ],
   "lagerorte": [
@@ -4970,7 +5075,8 @@
     "Kiste",
     "Stange",
     "Portion",
-    "Tube"
+    "Tube",
+    "Rolle"
   ],
   "geschaefte": [
     "Migros",
@@ -8562,7 +8668,59 @@
       "aktion": false,
       "datum": "2026-07-18",
       "zeit": 1784359508952
+    },
+    {
+      "t": "ein",
+      "aid": 71,
+      "name": "Curry Madras Fort Mc Cormick 38 Gr, 1 Bocal",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 4,
+      "einheit": "Stk",
+      "preis": 3.7,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784369993863
+    },
+    {
+      "t": "ein",
+      "aid": 6,
+      "name": "Schützengarten Lager Bier",
+      "lager": "Kühlschrank unten",
+      "kat": "Genussmittel",
+      "menge": 4,
+      "einheit": "Stk",
+      "preis": 26.95,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784370025760
+    },
+    {
+      "t": "ein",
+      "aid": 136,
+      "name": "Gebührenkehrichtsack Region St. Gallen",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 20,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784370046510
+    },
+    {
+      "t": "ein",
+      "aid": 133,
+      "name": "Natron 50g",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 1.3,
+      "aktion": false,
+      "datum": "2026-07-18",
+      "zeit": 1784370080588
     }
   ],
-  "aktualisiert": "2026-07-18T10:00:52.930Z"
+  "aktualisiert": "2026-07-18T10:25:34.564Z"
 }
