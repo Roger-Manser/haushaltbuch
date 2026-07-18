@@ -24,7 +24,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 #global-nav{background:var(--sf);border-top:1px solid var(--bd);display:flex;height:var(--nh);padding-bottom:env(safe-area-inset-bottom)}.tb{background:var(--sf);border-bottom:1px solid var(--bd);padding:0 16px;height:var(--th);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:10px}
 .tb-t{font-size:18px;font-weight:700;letter-spacing:-.3px}
 .tb-r{display:flex;gap:6px}
-.ib{width:36px;height:36px;border-radius:var(--rs);border:1px solid var(--bd);background:transparent;display:flex;align-items:center;justify-content:center;color:var(--t2);cursor:pointer}
+.ib{width:36px;height:36px;border-radius:var(--rs);border:1px solid var(--bd);background:transparent;display:flex;align-items:center;justify-content:center;color:var(--t2);cursor:pointer;position:relative}
 .ib:hover{background:var(--bg)}
 .ib.a{background:var(--al);border-color:var(--am);color:var(--ac)}
 .ib svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.75}
@@ -306,6 +306,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/><line x1="13" y1="13" x2="17" y2="13"/><line x1="13" y1="17" x2="17" y2="17"/></svg>
       </button>
       <button class="ib" id="sync-btn" title="GitHub Sync" onclick="doSync()">
+        <span id="offline-badge" style="display:none;position:absolute;top:-2px;right:-2px;width:8px;height:8px;background:#e53e3e;border-radius:50%;border:1px solid var(--sf)"></span>
         <span class="sdot" id="sdot"></span>
         <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.21-4.45"/></svg>
       </button>
@@ -529,10 +530,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='15.1';
+const APP_VERSION='15.3';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'15.3',d:'07.2026',items:['Einstellungen: aufklappbare Gruppen korrekt (öffnen/schliessen einzeln)','Gruppierung direkt im Render statt DOM-Nachbearbeitung']},
+  {v:'15.2',d:'07.2026',items:['Offline-Modus: persistentes dirty-Flag (überlebt App-Neustart)','Auto-Sync sobald wieder online (mit Retry)','Offline-Badge am Sync-Button (roter Punkt)','SW: Stale-While-Revalidate für index.html, skipWaiting auf Install','SW: 3s Timeout mit Cache-Fallback bei schlechtem Netz']},
   {v:'15.1',d:'07.2026',items:['Einstellungen: aufklappbare Kapitel (Verbindungen, Stammdaten, Erfassung, Anti-Foodwaste, App)']},
   {v:'15.0',d:'07.2026',items:['Inventar-Erfassung: automatischer OFF-Lookup nach Scan (Name + Foto + Marke)','Buffer-Liste zeigt Produktbild, Name, Barcode und Status','Scan-Dialog zeigt Foto und Produktname statt nur Barcode']},
   {v:'14.9',d:'07.2026',items:['API-Verbrauchsstatistik in Einstellungen (lokal getrackt)','Token-Verbrauch, Kosten-Schätzung, Historie der letzten 10 Scans']},
@@ -642,7 +645,7 @@ let invBuffer=[];
 function loadInvBuffer(){try{const r=localStorage.getItem('hb_inv_buffer');if(r)invBuffer=JSON.parse(r);}catch(e){invBuffer=[];}}
 function saveInvBuffer(){try{localStorage.setItem('hb_inv_buffer',JSON.stringify(invBuffer));}catch(e){}}
 loadInvBuffer();
-let dirty=false;
+let dirty=localStorage.getItem('hb_dirty')==='1';
 
 function loadL(){
   try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ge=d.ge||[...GD];S.ek=d.ek||[];S.eko=d.eko||{};S.rz=d.rz||[];S.log=d.log||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);}}catch(e){}
@@ -667,7 +670,7 @@ function loadL(){
 function saveL(){
   try{localStorage.setItem('hb3',JSON.stringify(S));}catch(e){}
   try{if(Object.keys(aiMatchCache).length)localStorage.setItem('hb_ai_cache',JSON.stringify(aiMatchCache));}catch(e){}
-  dirty=true;sdot('dt');
+  dirty=true;localStorage.setItem('hb_dirty','1');sdot('dt');
 }
 function saveGH(){try{localStorage.setItem('hbgh',JSON.stringify(gh));}catch(e){};}
 function addLogEntry(type,artikelId,name,lager,kat,menge,einheit,preis,aktion){
@@ -857,7 +860,7 @@ async function doSync(){
         saveL();
       }catch(e){}
     }
-    dirty=false;sdot('ok');hideLdr();
+    dirty=false;localStorage.removeItem('hb_dirty');sdot('ok');hideLdr();
     toast('Synchronisiert: '+S.a.length+' Artikel auf GitHub geschrieben');
     renderLager();
   }catch(err){
@@ -865,6 +868,10 @@ async function doSync(){
     // Bei Token-/Berechtigungsfehlern die volle Erklärung zeigen (nicht abschneiden)
     if(err.status===401||err.status===403||err.status===404){
       alert('Synchronisierung fehlgeschlagen\n\n'+err.message);
+    }else if(!navigator.onLine||err.message.includes('fetch')||err.message.includes('network')){
+      // Netzwerkfehler → automatisch nochmals versuchen wenn wieder online
+      toast('📴 Sync fehlgeschlagen (kein Netz) — wird automatisch wiederholt');
+      dirty=true;localStorage.setItem('hb_dirty','1');
     }else{
       toast('Fehler: '+err.message.slice(0,70));
     }
@@ -4654,98 +4661,56 @@ function renderSt(){
   }else{
     installSection='<div class="ss"><div class="ssl">App installieren</div><button class="db-btn" id="install-app-btn" style="display:'+(deferredInstallPrompt?'flex':'none')+'" onclick="installApp()">'+I.dl+' Haushaltbuch installieren</button><p style="font-size:12px;color:var(--t3);margin-top:2px">Installiert die App mit eigenem Icon auf dem Startbildschirm. Falls der Button nicht erscheint: Browser-Menü → «App installieren» / «Zum Startbildschirm hinzufügen».</p><button class="bg2" style="width:100%;margin-top:8px;font-size:13px" onclick="runPwaDiagnose()">PWA-Diagnose ausführen</button><div id="pwa-diag-result"></div></div>';
   }
+  // Inhalte der Gruppen aufbauen
+  const ghContent=
+    (con?'<div class="ghs ok">'+I.chk+' Verbunden mit '+esc(gh.own)+'/'+esc(gh.repo)+'</div>':'<div class="ghs info">Noch nicht konfiguriert</div>')+
+    '<div class="ghf"><label>Personal Access Token (repo Scope)</label><input type="password" id="gh-t" placeholder="ghp_..." value="'+esc(gh.tok||'')+'"/></div>'+
+    '<div class="ghf"><label>GitHub Username</label><input type="text" id="gh-o" placeholder="Roger-Manser" value="'+esc(gh.own||'')+'"/></div>'+
+    '<div class="ghf"><label>Repository Name</label><input type="text" id="gh-r" placeholder="haushaltbuch" value="'+esc(gh.repo||'')+'"/></div>'+
+    '<div class="ghf"><label>Rezeptbuch Repository</label><input type="text" id="gh-rz" placeholder="rezeptbuch" value="'+esc(gh.rzrepo||'')+'"/></div>'+
+    '<div class="ghf"><label>Branch</label><input type="text" id="gh-b" placeholder="main" value="'+esc(gh.br||'main')+'"/></div>'+
+    '<button class="db-btn" onclick="saveGHcfg()">'+I.gh+' Verbindung speichern</button>'+
+    '<button class="db-btn" onclick="loadFromGH()">'+I.dl+' Daten von GitHub laden</button>'+
+    '<button class="db-btn" onclick="doSync()"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:18px;height:18px;stroke:var(--ac)"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.21-4.45"/></svg> Jetzt synchronisieren</button>'+
+    '<p style="font-size:12px;color:var(--t3);margin-top:6px;line-height:1.6">Token braucht <strong>repo</strong> Scope.</p>';
+
   document.getElementById('st-body').innerHTML=
   installSection+
-  '<div class="ss"><div class="ssl">GitHub-Verbindung</div>'+
-  (con?'<div class="ghs ok">'+I.chk+' Verbunden mit '+esc(gh.own)+'/'+esc(gh.repo)+'</div>':'<div class="ghs info">Noch nicht konfiguriert</div>')+
-  '<div class="ghf"><label>Personal Access Token (repo Scope)</label><input type="password" id="gh-t" placeholder="ghp_..." value="'+esc(gh.tok||'')+'"/></div>'+
-  '<div class="ghf"><label>GitHub Username</label><input type="text" id="gh-o" placeholder="Roger-Manser" value="'+esc(gh.own||'')+'"/></div>'+
-  '<div class="ghf"><label>Repository Name</label><input type="text" id="gh-r" placeholder="haushaltbuch" value="'+esc(gh.repo||'')+'"/></div>'+
-  '<div class="ghf"><label>Rezeptbuch Repository</label><input type="text" id="gh-rz" placeholder="rezeptbuch" value="'+esc(gh.rzrepo||'')+'"/></div>'+
-  '<div class="ghf"><label>Branch</label><input type="text" id="gh-b" placeholder="main" value="'+esc(gh.br||'main')+'"/></div>'+
-  '<button class="db-btn" onclick="saveGHcfg()">'+I.gh+' Verbindung speichern</button>'+
-  '<button class="db-btn" onclick="loadFromGH()">'+I.dl+' Daten von GitHub laden</button>'+
-  '<button class="db-btn" onclick="doSync()"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:18px;height:18px;stroke:var(--ac)"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.21-4.45"/></svg> Jetzt synchronisieren</button>'+
-  '<p style="font-size:12px;color:var(--t3);margin-top:6px;line-height:1.6">Token braucht <strong>repo</strong> Scope. Fotos &rarr; <code>bilder/</code>. Daten &rarr; <code>haushaltbuch.json</code>. Rezepte &larr; <code>rezepte.json</code> im selben Repo.</p></div>'+
-  renderAiUsageSektion()+
-  '<div class="ss"><div class="ssl">Lagerorte</div><div>'+S.lo.map((l,i)=>'<div class="lmi">'+licon(l).replace('20px;height:20px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(l)+'</span><button onclick="editLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=LD.length?'<button onclick="delLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addLo()">+ Neuer Lagerort</button></div>'+
-  '<div class="ss"><div class="ssl">Kategorien</div><div>'+S.ka.map((k,i)=>'<div class="lmi">'+KICON.replace('13px;height:13px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(k)+'</span><button onclick="editKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=KD.length?'<button onclick="delKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addKat()">+ Neue Kategorie</button></div>'+
-  '<div class="ss"><div class="ssl">Einheiten</div><div>'+S.ei.map((u,i)=>'<div class="lmi"><span style="flex:1">'+esc(u)+'</span>'+(i>=ED.length?'<button onclick="delEinheit(\''+esc(u)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addEinheitSettings()">+ Neue Einheit</button></div>'+
-  '<div class="ss"><div class="ssl">Erfassung</div>'+
+  settingsGroup('sg-verbindung','🔗','Verbindungen & API', ghContent+renderAiUsageSektion())+
+  settingsGroup('sg-stamm','📋','Stammdaten',
+    '<div class="ss"><div class="ssl">Lagerorte</div><div>'+S.lo.map((l,i)=>'<div class="lmi">'+licon(l).replace('20px;height:20px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(l)+'</span><button onclick="editLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=LD.length?'<button onclick="delLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addLo()">+ Neuer Lagerort</button></div>'+
+    '<div class="ss"><div class="ssl">Kategorien</div><div>'+S.ka.map((k,i)=>'<div class="lmi">'+KICON.replace('13px;height:13px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(k)+'</span><button onclick="editKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=KD.length?'<button onclick="delKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addKat()">+ Neue Kategorie</button></div>'+
+    '<div class="ss"><div class="ssl">Einheiten</div><div>'+S.ei.map((u,i)=>'<div class="lmi"><span style="flex:1">'+esc(u)+'</span>'+(i>=ED.length?'<button onclick="delEinheit(\''+esc(u)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addEinheitSettings()">+ Neue Einheit</button></div>'
+  )+
+  settingsGroup('sg-erfassung','📥','Erfassung & Inventur',
     '<div class="lmi" style="align-items:center"><span style="flex:1">Foto-Pflicht bei neuen Artikeln</span>'+
     '<label style="position:relative;display:inline-block;width:46px;height:26px;flex-shrink:0">'+
       '<input type="checkbox" id="opt-fotozwang" '+(opt.fotoZwang?'checked':'')+' onchange="opt.fotoZwang=this.checked;saveOpt();toast(this.checked?\'Foto-Pflicht aktiviert\':\'Foto-Pflicht deaktiviert\');renderSt()" style="opacity:0;width:0;height:0"/>'+
       '<span style="position:absolute;inset:0;background:'+(opt.fotoZwang?'var(--ac)':'var(--b2)')+';border-radius:13px;transition:.2s;cursor:pointer" onclick="event.preventDefault();document.getElementById(\'opt-fotozwang\').click()"><span style="position:absolute;top:3px;left:'+(opt.fotoZwang?'23px':'3px')+';width:20px;height:20px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)"></span></span>'+
     '</label></div>'+
-    '<p style="font-size:12px;color:var(--t3);margin-top:6px;line-height:1.5">Neue Artikel können nur mit Foto gespeichert werden. Duplikat-Warnung ist immer aktiv.</p>'+
+    '<p style="font-size:12px;color:var(--t3);margin-top:6px;line-height:1.5">Neue Artikel können nur mit Foto gespeichert werden.</p>'+
     '<button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="openInvCapture()">📥 Inventar erfassen (Barcodes sammeln)</button>'+
-    '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Barcodes mit Anzahl und MHD zwischenspeichern, dann einzeln ins Lager übernehmen. Ideal fürs Grundinventar.'+(invBuffer.length?' <strong style="color:var(--ac)">'+invBuffer.length+' im Zwischenspeicher.</strong>':'')+'</p>'+
+    '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Barcodes mit Anzahl und MHD zwischenspeichern, dann einzeln ins Lager übernehmen.'+(invBuffer.length?' <strong style="color:var(--ac)">'+invBuffer.length+' im Zwischenspeicher.</strong>':'')+'</p>'+
     '<button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="openInventur()">📋 Inventur starten</button>'+
-    '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Alle Artikel durchgehen und Bestände mit der Realität abgleichen.</p>'+
-  '</div>'+
-  '<div class="ss"><div class="ssl">Anti-Foodwaste</div>'+'<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Funktionen gegen Lebensmittelverschwendung — einzeln ein-/ausschaltbar.</p>'+optToggle('fwDashboard','⏰ Ablauf-Dashboard','Zeigt oben in der Lagerliste, was in den nächsten 3 Tagen verbraucht werden sollte.')+optToggle('fwAuswertung','🔍 Foodwaste-Muster','Auswertung in der Statistik: welche Artikel/Kategorien du am häufigsten wegwirfst.')+optToggle('fwMengenWarnung','💡 Mengen-Warnung beim Einkauf','Hinweis, wenn du einen oft verworfenen Artikel auf die Einkaufsliste setzt.')+optToggle('fwAnbruch','📂 Anbruch-Verwaltung','«Geöffnet»-Knopf im Artikel verkürzt die Haltbarkeit passend zur Kategorie.')+optToggle('fwGefrier','❄️ Gefrier-Empfehlung','Schlägt bei bald ablaufenden, einfrierbaren Artikeln das Einfrieren vor.')+optToggle('fwUeberkauf','📊 Überkauf-Erkennung','Erkennt aus der Kaufhistorie, wenn du mehr kaufst als verbrauchst.')+'</div>'+renderPufferSektion()+'<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong style="color:var(--ac);cursor:pointer;text-decoration:underline" onclick="showVersionHistory()">v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button></div>'+
-  '<div class="ss"><div class="ssl">Daten</div><button class="db-btn" onclick="expJ()">'+I.dl+' Lokaler Export (JSON)</button><button class="db-btn" onclick="document.getElementById(\'imp\').click()">'+I.ul+' Lokaler Import (JSON)<input type="file" id="imp" accept=".json" style="display:none" onchange="impJ(event)"/></button><button class="db-btn d" onclick="clearLog()">'+I.trash+' Bewegungsprotokoll löschen</button><button class="db-btn d" onclick="resetAll()">'+I.trash+' Alle Daten löschen</button></div>';
-  setTimeout(()=>{groupSettingsSections();suppressAutofill(document.getElementById('s-settings'));},0);
+    '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Alle Artikel durchgehen und Bestände abgleichen.</p>'
+  )+
+  settingsGroup('sg-foodwaste','♻️','Anti-Foodwaste & Haltbarkeit',
+    '<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Funktionen gegen Lebensmittelverschwendung — einzeln ein-/ausschaltbar.</p>'+
+    optToggle('fwDashboard','⏰ Ablauf-Dashboard','Zeigt oben in der Lagerliste, was in den nächsten 3 Tagen verbraucht werden sollte.')+
+    optToggle('fwAuswertung','🔍 Foodwaste-Muster','Auswertung in der Statistik: welche Artikel/Kategorien du am häufigsten wegwirfst.')+
+    optToggle('fwMengenWarnung','💡 Mengen-Warnung beim Einkauf','Hinweis, wenn du einen oft verworfenen Artikel auf die Einkaufsliste setzt.')+
+    optToggle('fwAnbruch','📂 Anbruch-Verwaltung','«Geöffnet»-Knopf im Artikel verkürzt die Haltbarkeit passend zur Kategorie.')+
+    optToggle('fwGefrier','❄️ Gefrier-Empfehlung','Schlägt bei bald ablaufenden, einfrierbaren Artikeln das Einfrieren vor.')+
+    optToggle('fwUeberkauf','📊 Überkauf-Erkennung','Erkennt aus der Kaufhistorie, wenn du mehr kaufst als verbrauchst.')+
+    renderPufferSektion()
+  )+
+  settingsGroup('sg-app','⚙️','App & Daten',
+    '<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong style="color:var(--ac);cursor:pointer;text-decoration:underline" onclick="showVersionHistory()">v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button></div>'+
+    '<div class="ss"><div class="ssl">Daten</div><button class="db-btn" onclick="expJ()">'+I.dl+' Lokaler Export (JSON)</button><button class="db-btn" onclick="document.getElementById(\'imp\').click()">'+I.ul+' Lokaler Import (JSON)<input type="file" id="imp" accept=".json" style="display:none" onchange="impJ(event)"/></button><button class="db-btn d" onclick="clearLog()">'+I.trash+' Bewegungsprotokoll löschen</button><button class="db-btn d" onclick="resetAll()">'+I.trash+' Alle Daten löschen</button></div>'
+  );
+  setTimeout(()=>{suppressAutofill(document.getElementById('s-settings'));},0);
 }
 
-function groupSettingsSections(){
-  const body=document.getElementById('st-body');
-  if(!body||body.dataset.grouped)return;
-  const sections=[...body.querySelectorAll(':scope > .ss')];
-  if(sections.length<4)return;
-  
-  // Gruppierung definieren: [Gruppen-ID, Icon, Titel, CSS-Klassen-Liste der Sections, default offen?]
-  const groups=[
-    {id:'sg-verbindung',icon:'🔗',title:'Verbindungen & API',keywords:['GitHub','Anthropic'],open:false},
-    {id:'sg-stamm',icon:'📋',title:'Stammdaten',keywords:['Lagerorte','Kategorien','Einheiten'],open:false},
-    {id:'sg-erfassung',icon:'📥',title:'Erfassung & Inventur',keywords:['Erfassung'],open:false},
-    {id:'sg-foodwaste',icon:'♻️',title:'Anti-Foodwaste & Haltbarkeit',keywords:['Anti-Foodwaste','Haltbarkeits-Puffer'],open:false},
-    {id:'sg-app',icon:'⚙️',title:'App & Daten',keywords:['App','Daten','installieren','installiert'],open:false},
-  ];
-  
-  const used=new Set();
-  const frags=[];
-  
-  groups.forEach(g=>{
-    const matching=sections.filter(s=>{
-      if(used.has(s))return false;
-      const label=s.querySelector('.ssl');
-      if(!label)return false;
-      return g.keywords.some(kw=>label.textContent.includes(kw));
-    });
-    if(!matching.length)return;
-    matching.forEach(s=>used.add(s));
-    
-    if(sgOpen[g.id]===undefined)sgOpen[g.id]=g.open;
-    const isOpen=sgOpen[g.id];
-    
-    const wrapper=document.createElement('div');
-    const hdr=document.createElement('div');
-    hdr.className='sg-hdr'+(isOpen?' open':'');
-    hdr.innerHTML='<span class="sg-title">'+g.icon+' '+g.title+'</span><span class="sg-arrow">▼</span>';
-    hdr.onclick=()=>{sgOpen[g.id]=!sgOpen[g.id];renderSt();};
-    
-    const bodyDiv=document.createElement('div');
-    bodyDiv.className='sg-body';
-    if(isOpen)bodyDiv.style.display='block';
-    matching.forEach(s=>bodyDiv.appendChild(s));
-    
-    wrapper.appendChild(hdr);
-    wrapper.appendChild(bodyDiv);
-    frags.push(wrapper);
-  });
-  
-  // Ungruppierte Sections (z.B. Install) oben lassen
-  const ungrouped=sections.filter(s=>!used.has(s));
-  
-  // DOM neu aufbauen
-  const container=document.createDocumentFragment();
-  ungrouped.forEach(s=>container.appendChild(s));
-  frags.forEach(f=>container.appendChild(f));
-  body.innerHTML='';
-  body.appendChild(container);
-  body.dataset.grouped='1';
-}
 
 function saveGHcfg(){gh={tok:document.getElementById('gh-t').value.trim(),own:document.getElementById('gh-o').value.trim(),repo:document.getElementById('gh-r').value.trim(),br:document.getElementById('gh-b').value.trim()||'main',rzrepo:document.getElementById('gh-rz').value.trim()||''};saveGH();toast('GitHub gespeichert');renderSt();}
 function addLo(){const n=prompt('Neuer Lagerort:');if(!n||!n.trim())return;const nm=n.trim();if(!S.lo.includes(nm)){S.lo.push(nm);saveL();}renderSt();}
@@ -5357,7 +5322,7 @@ if(!S.a.length){
   ];
   saveL();
 }
-nav();sdot(gh.tok?'dt':'ok');renderLager();
+nav();sdot(gh.tok?'dt':'ok');renderLager();updateOnlineStatus();
 // Autofill-Unterdrückung: initial + bei neu eingefügten Feldern (Dialoge)
 suppressAutofill();
 try{
@@ -5385,14 +5350,30 @@ if(vBadge){vBadge.textContent='v'+APP_VERSION;vBadge.style.cursor='pointer';vBad
 })();
 
 // Offline-Queue: automatisch syncen sobald wieder online (wenn ungesyncte Änderungen)
+// Offline-Statusanzeige im Sync-Button
+function updateOnlineStatus(){
+  const btn=document.getElementById('sync-btn');
+  const offlineBadge=document.getElementById('offline-badge');
+  const isOnline=navigator.onLine;
+  if(btn){
+    btn.title=isOnline?'GitHub Sync':'Offline — kein Sync möglich';
+    btn.style.opacity=isOnline?'1':'0.5';
+  }
+  if(offlineBadge){offlineBadge.style.display=isOnline?'none':'flex';}
+}
+
+let syncRetryTimer=null;
 window.addEventListener('online',()=>{
+  updateOnlineStatus();
   if(dirty&&gh.tok&&gh.own&&gh.repo){
-    toast('Wieder online — synchronisiere…');
-    setTimeout(()=>doSync(),800);
+    toast('🌐 Wieder online — synchronisiere…');
+    if(syncRetryTimer)clearTimeout(syncRetryTimer);
+    syncRetryTimer=setTimeout(()=>doSync(),1000);
   }
 });
 window.addEventListener('offline',()=>{
-  toast('Offline — Änderungen werden lokal gespeichert');
+  updateOnlineStatus();
+  toast('📴 Offline — Änderungen lokal gespeichert, sync sobald wieder online');
 });
 
 /* ── PWA: Service Worker + Install-Prompt + Update-Erkennung ─────── */
