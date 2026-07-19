@@ -530,10 +530,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='16.6';
+const APP_VERSION='16.7';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'16.7',d:'07.2026',items:['Sortierung Zuletzt erfasst: Artikel-ID als Fallback-Timestamp (auch Bestand 0 erscheinen)','Nach Speichern: Lagerliste scrollt zum neu angelegten/bearbeiteten Artikel']},
   {v:'16.6',d:'07.2026',items:['Mindestbestand-Manager: Scroll-Position bleibt nach Änderung erhalten']},
   {v:'16.5',d:'07.2026',items:['Mindestbestand-Manager in Einstellungen: alle auf einmal prüfen/anpassen oder Bulk-Reset auf 0']},
   {v:'16.4',d:'07.2026',items:['API-Guthaben: Eingabefeld und Warngrenze in Einstellungen','Warnung als Toast + Banner wenn Restguthaben unter Schwellwert']},
@@ -1327,8 +1328,8 @@ function renderLager(){
         if(!letzterEingang[l.aid]||l.zeit>letzterEingang[l.aid])letzterEingang[l.aid]=l.zeit;
       }
     });
-    // Fallback: kaufdatum in ms, sonst 0
-    const stamp=a=>letzterEingang[a.id]||(a.kaufdatum?new Date(a.kaufdatum).getTime():0);
+    // Fallback 1: kaufdatum, Fallback 2: Artikel-ID (enthält Erstellzeit-Timestamp)
+    const stamp=a=>letzterEingang[a.id]||(a.kaufdatum?new Date(a.kaufdatum).getTime():0)||a.id||0;
     fil=[...fil].sort((a,b)=>stamp(b)-stamp(a));
   }else if(sortMode==='bestand'){
     fil=[...fil].sort((a,b)=>(a.menge-a.mindest)-(b.menge-b.mindest));
@@ -1391,7 +1392,7 @@ function arRow(a){
   const eb=(a.ablaufdatum&&a.menge>0)?expBadgeA(a):'';
   const unitLabel=a.packMenge>0?esc(a.einheit||'Stk'):esc(a.einheit||'Stk');
   const aufListe=S.ek.some(e=>e.text.toLowerCase()===a.name.toLowerCase()&&!e.checked);
-  return '<div class="ar" onclick="showDet('+a.id+')">'+th+'<div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+meta+'</div>'+eb+'</div>'+
+  return '<div class="ar" id="ar-'+a.id+'" onclick="showDet('+a.id+')">'+th+'<div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+meta+'</div>'+eb+'</div>'+
     '<button onclick="event.stopPropagation();toEk('+a.id+')" title="Auf Einkaufsliste" style="background:none;border:none;cursor:pointer;padding:8px 6px;color:'+(aufListe?'var(--ok)':'var(--t3)')+';flex-shrink:0;display:flex;align-items:center">'+
       (aufListe
         ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:19px;height:19px"><polyline points="20 6 9 17 4 12"/></svg>'
@@ -2359,8 +2360,16 @@ async function saveForm(){
     if(newA){newA.packungen=[{id:newPackId(),menge:d.menge,kaufdatum,ablaufdatum:d.ablaufdatum||''}];}
   }
   fb64='';ffn='';saveL();hideLdr();
+  const savedId=editId||newId;
   invSaving=true;closeForm();invSaving=false;
   toast(editId?'Artikel aktualisiert':'Artikel hinzugefügt');
+  // Zum gespeicherten Artikel scrollen
+  if(savedId){
+    setTimeout(()=>{
+      const el=document.getElementById('ar-'+savedId);
+      if(el)el.scrollIntoView({behavior:'smooth',block:'center'});
+    },150);
+  }
   // Inventar-Übernahme: wenn dieser Artikel aus dem Zwischenspeicher kam, weiter mit dem nächsten
   if(invBufferCurrent){
     const e=invBufferCurrent;
