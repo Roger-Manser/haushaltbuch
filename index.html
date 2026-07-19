@@ -533,10 +533,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='16.9';
+const APP_VERSION='17.1';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'17.1',d:'07.2026',items:['saveForm: newId Scope-Bug behoben (Absturz beim Neuanlegen)','Alle return-Pfade rufen hideLdr() auf']},
+  {v:'17.0',d:'07.2026',items:['KI-Fotoanalyse: nur beim Neuanlegen, Button erscheint erst nach Foto-Upload','Verwendet hinterlegtes Foto statt nochmals Kamera zu öffnen']},
   {v:'16.9',d:'07.2026',items:['Barcode-Konflikt-Dialog: hideLdr() beim Abbrechen (Hänger behoben)']},
   {v:'16.8',d:'07.2026',items:['KI-Fotoanalyse im Artikel-Formular (grüner Button unter Foto-Upload)','KI-Scan-Button in der Lager-Toolbar (öffnet Formular + startet Kamera)']},
   {v:'16.7',d:'07.2026',items:['Sortierung Zuletzt erfasst: Artikel-ID als Fallback-Timestamp (auch Bestand 0 erscheinen)','Nach Speichern: Lagerliste scrollt zum neu angelegten/bearbeiteten Artikel']},
@@ -1937,7 +1939,7 @@ function openForm(id){
   '<div id="extra-bc-wrap" style="margin-top:10px"></div>'+
   '<button type="button" onclick="addExtraBarcode()" style="width:100%;margin-top:8px;padding:9px;background:var(--bg);border:1px dashed var(--bd);border-radius:var(--rs);font-size:13px;color:var(--ac);cursor:pointer">+ Weiteren Barcode hinzufügen</button>'+
   '</div>'+
-  '<div class="fd"><label>Foto</label><div id="pz" class="pz" onclick="document.getElementById(\'fph\').click()">'+I.cam+'<span>Von Kamera oder Galerie</span><small>Wird auf GitHub gespeichert</small><input type="file" id="fph" accept="image/*" capture="environment" style="display:none" onchange="onPh(event)"/></div>'+(localStorage.getItem('hb_ai_key')?'<button type="button" onclick="formFotoKiAnalyse()" style="width:100%;margin-top:8px;padding:10px;background:var(--ol);border:1px solid var(--ok);border-radius:var(--rs);color:var(--ok);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">🤖 Foto fotografieren &amp; KI-Felder ausfüllen</button>':'')+'<div id="ppw" class="ppw" style="'+(a&&a.foto?'display:block':'')+'"><img id="ppi" src="'+(a?esc(a.foto||''):'')+'" alt=""/><button class="rph" onclick="rmPh()">&#x2715;</button></div></div>'+
+  '<div class="fd"><label>Foto</label><div id="pz" class="pz" onclick="document.getElementById(\'fph\').click()">'+I.cam+'<span>Von Kamera oder Galerie</span><small>Wird auf GitHub gespeichert</small><input type="file" id="fph" accept="image/*" capture="environment" style="display:none" onchange="onPh(event)"/></div>'+(!a&&localStorage.getItem('hb_ai_key')?'<div id="ki-analyse-btn" style="display:none"><button type="button" onclick="formFotoKiAnalyse()" style="width:100%;margin-top:8px;padding:10px;background:var(--ol);border:1px solid var(--ok);border-radius:var(--rs);color:var(--ok);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">🤖 KI-Felder aus Foto ausfüllen</button></div>':'')+'<div id="ppw" class="ppw" style="'+(a&&a.foto?'display:block':'')+'"><img id="ppi" src="'+(a?esc(a.foto||''):'')+'" alt=""/><button class="rph" onclick="rmPh()">&#x2715;</button></div></div>'+
   '<div class="fd"><label>Bezeichnung *</label><input type="text" id="f-nm" placeholder="z.B. Vollmilch 3.5%" value="'+(a?esc(a.name):'')+'" oninput="checkDupHint(this.value);checkFrischeHint(this.value)"/><div id="dup-hint" style="display:none;font-size:12px;color:var(--wn);background:var(--wl);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div><div id="frische-hint" style="display:none;font-size:12px;color:var(--ok);background:var(--ol);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div></div>'+
   '<div class="fd"><label>Marke</label><input type="text" id="f-mk" placeholder="z.B. Emmi" value="'+(a?esc(a.marke||''):'')+'"/></div>'+
   '<div class="fd"><label>Kategorie</label><div class="lcw" id="f-ka">'+kc+'</div></div>'+
@@ -2067,10 +2069,27 @@ function onPh(ev){
   const file=ev.target.files[0];if(!file)return;
   ffn=Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
   const rd=new FileReader();
-  rd.onload=r=>{fb64=r.target.result;document.getElementById('ppi').src=fb64;document.getElementById('pz').style.display='none';document.getElementById('ppw').style.display='block';};
+  rd.onload=r=>{
+    fb64=r.target.result;
+    document.getElementById('ppi').src=fb64;
+    document.getElementById('pz').style.display='none';
+    document.getElementById('ppw').style.display='block';
+    // KI-Analyse-Button einblenden (nur beim Neuanlegen)
+    const kiBtn=document.getElementById('ki-analyse-btn');
+    if(kiBtn)kiBtn.style.display='block';
+  };
   rd.readAsDataURL(file);
 }
-function rmPh(){fb64='';ffn='';document.getElementById('ppw').style.display='none';document.getElementById('pz').style.display='flex';document.getElementById('ppi').src='';document.getElementById('fph').value='';}
+function rmPh(){
+  fb64='';ffn='';
+  document.getElementById('ppw').style.display='none';
+  document.getElementById('pz').style.display='flex';
+  document.getElementById('ppi').src='';
+  document.getElementById('fph').value='';
+  // KI-Button ausblenden
+  const kiBtn=document.getElementById('ki-analyse-btn');
+  if(kiBtn)kiBtn.style.display='none';
+}
 /* ── Detail: Sprung-Pfeile (bei langem Inhalt) ───────────────────── */
 function jumpDetail(dir){
   const body=document.getElementById('detail-body');
@@ -2335,46 +2354,33 @@ async function saveForm(){
       const altMenge=S.a[i].menge;
       const neuMenge=d.menge;
       const diff=neuMenge-altMenge;
-      // Erst alle anderen Felder (Name, Kategorie, etc.) speichern
-      S.a[i]={...S.a[i],...d,menge:altMenge}; // Menge noch nicht ändern
+      S.a[i]={...S.a[i],...d,menge:altMenge};
       fb64='';ffn='';saveL();hideLdr();closeForm();
       if(diff>0){
-        // Eingang-Dialog öffnen mit vorausgefüllten Daten
         toast('Mengenerhöhung erkannt — Eingang erfassen');
-        setTimeout(()=>{
-          openEingangFuerArtikel(editId,diff,preis,isAktion||false,kaufdatum,d.ablaufdatum||'');
-        },200);
+        setTimeout(()=>{openEingangFuerArtikel(editId,diff,preis,isAktion||false,kaufdatum,d.ablaufdatum||'');},200);
       }else if(diff<0){
-        // Ausgang-Dialog öffnen
         toast('Mengenverringerung erkannt — Ausgang erfassen');
-        setTimeout(()=>{
-          openAusgangFuerArtikel(editId,Math.abs(diff));
-        },200);
+        setTimeout(()=>{openAusgangFuerArtikel(editId,Math.abs(diff));},200);
       }else{
         toast('Artikel aktualisiert');
       }
+      const savedId=editId;
+      setTimeout(()=>{const el=document.getElementById('ar-'+savedId);if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},150);
       return;
     }
+    hideLdr();return; // editId gesetzt aber nicht gefunden
   }
-  else{
-    const newId=S.nid++;
-    S.a.push({id:newId,...d});
-    if(d.menge>0)addLogEntry('ein',newId,d.name,d.lager,d.kat,d.menge,d.einheit,preis,isAktion||false);
-    // Packung für neuen Artikel anlegen
-    const newA=S.a.find(x=>x.id===newId);
-    if(newA){newA.packungen=[{id:newPackId(),menge:d.menge,kaufdatum,ablaufdatum:d.ablaufdatum||''}];}
-  }
+  // Neuer Artikel
+  const newId=S.nid++;
+  S.a.push({id:newId,...d});
+  if(d.menge>0)addLogEntry('ein',newId,d.name,d.lager,d.kat,d.menge,d.einheit,preis,isAktion||false);
+  const newA=S.a.find(x=>x.id===newId);
+  if(newA){newA.packungen=[{id:newPackId(),menge:d.menge,kaufdatum,ablaufdatum:d.ablaufdatum||''}];}
   fb64='';ffn='';saveL();hideLdr();
-  const savedId=editId||newId;
   invSaving=true;closeForm();invSaving=false;
-  toast(editId?'Artikel aktualisiert':'Artikel hinzugefügt');
-  // Zum gespeicherten Artikel scrollen
-  if(savedId){
-    setTimeout(()=>{
-      const el=document.getElementById('ar-'+savedId);
-      if(el)el.scrollIntoView({behavior:'smooth',block:'center'});
-    },150);
-  }
+  toast('Artikel hinzugefügt');
+  setTimeout(()=>{const el=document.getElementById('ar-'+newId);if(el)el.scrollIntoView({behavior:'smooth',block:'center'});},150);
   // Inventar-Übernahme: wenn dieser Artikel aus dem Zwischenspeicher kam, weiter mit dem nächsten
   if(invBufferCurrent){
     const e=invBufferCurrent;
@@ -4572,59 +4578,66 @@ function showInvMissingDataDialog(idx){
   document.body.appendChild(dlg);
 }
 
-// KI-Fotoanalyse direkt im Artikel-Formular
+// KI-Fotoanalyse direkt im Artikel-Formular — verwendet das bereits hochgeladene Foto
 async function formFotoKiAnalyse(){
   const aiKey=localStorage.getItem('hb_ai_key')||'';
   if(!aiKey){toast('Kein API Key — bitte in Einstellungen hinterlegen');return;}
-  const input=document.createElement('input');
-  input.type='file';input.accept='image/*';input.capture='environment';
-  input.onchange=async()=>{
-    const file=input.files[0];if(!file)return;
-    const ladeDiv=document.createElement('div');
-    ladeDiv.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:16px;font-size:16px';
-    ladeDiv.innerHTML='<div style="font-size:36px">🤖</div><div>Claude analysiert das Produktfoto…</div>';
-    document.body.appendChild(ladeDiv);
-    try{
-      const b64=await new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(file);});
-      let mediaType=file.type||'image/jpeg';
-      if(b64.startsWith('/9j/'))mediaType='image/jpeg';
-      else if(b64.startsWith('iVBOR'))mediaType='image/png';
-      else if(b64.startsWith('UklGR'))mediaType='image/webp';
-      const res=await fetch('https://api.anthropic.com/v1/messages',{
-        method:'POST',
-        headers:{'Content-Type':'application/json','x-api-key':aiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-        body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:500,messages:[{role:'user',content:[
-          {type:'image',source:{type:'base64',media_type:mediaType,data:b64}},
-          {type:'text',text:'Analysiere dieses Produktfoto. Antworte NUR mit JSON:\n{"name":"Produktname auf Deutsch","marke":"Marke oder leer","menge_einheit":"z.B. 500 ml oder leer","kat":"eine von: Milchprodukte, Fleisch & Fisch, Gemüse & Früchte, Tiefkühl, Getränke, Konserven & Trockenware, Backwaren & Brot, Gewürze & Saucen, Süsswaren, Reinigung & Pflege, Diverses","mhd":"YYYY-MM-DD oder leer"}'}
-        ]}]})
-      });
-      ladeDiv.remove();
-      if(!res.ok){toast('API-Fehler '+res.status);return;}
-      const data=await res.json();
-      if(data.usage)trackAiUsage(data.usage.input_tokens||0,data.usage.output_tokens||0,((data.usage.input_tokens||0)*3+(data.usage.output_tokens||0)*15)/1000000*0.88);
-      const text=data.content?.[0]?.text||'';
-      let parsed;try{parsed=JSON.parse(text.replace(/```json|```/g,'').trim());}catch(e){toast('KI-Antwort nicht lesbar');return;}
-      // Felder im Formular füllen
-      if(parsed.name){const nm=document.getElementById('f-nm');if(nm&&!nm.value){nm.value=parsed.name;checkDupHint(parsed.name);checkFrischeHint(parsed.name);}}
-      if(parsed.marke){const mk=document.getElementById('f-mk');if(mk&&!mk.value)mk.value=parsed.marke;}
-      if(parsed.kat){const chips=document.querySelectorAll('#f-ka .chip[data-kat]');chips.forEach(c=>{if(c.dataset.kat===parsed.kat){chips.forEach(x=>x.classList.remove('on'));c.classList.add('on');}});}
-      if(parsed.mhd&&/^\d{4}-\d{2}-\d{2}$/.test(parsed.mhd))setDateField('f-ad',parsed.mhd);
-      // Foto ins Formular laden
-      fb64='data:'+mediaType+';base64,'+b64;
-      const ppw=document.getElementById('ppw');const ppi=document.getElementById('ppi');const pz=document.getElementById('pz');
-      if(ppw&&ppi&&pz){ppi.src=fb64;ppw.style.display='block';pz.style.display='none';}
-      toast('🤖 '+(parsed.name||'Produkt')+' erkannt'+(parsed.marke?' · '+parsed.marke:''));
-    }catch(e){ladeDiv.remove();toast('Fehler: '+e.message);}
-  };
-  input.click();
+  if(!fb64){toast('Zuerst ein Foto hochladen');return;}
+
+  const ladeDiv=document.createElement('div');
+  ladeDiv.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:16px;font-size:16px';
+  ladeDiv.innerHTML='<div style="font-size:36px">🤖</div><div>Claude analysiert das Produktfoto…</div>';
+  document.body.appendChild(ladeDiv);
+
+  try{
+    // Bereits geladenes fb64 verwenden (data:image/...;base64,...)
+    const b64=fb64.split(',')[1];
+    let mediaType='image/jpeg';
+    if(b64.startsWith('/9j/'))mediaType='image/jpeg';
+    else if(b64.startsWith('iVBOR'))mediaType='image/png';
+    else if(b64.startsWith('UklGR'))mediaType='image/webp';
+    else{const m=fb64.match(/^data:([^;]+);/);if(m)mediaType=m[1];}
+
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':aiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-6',max_tokens:500,messages:[{role:'user',content:[
+        {type:'image',source:{type:'base64',media_type:mediaType,data:b64}},
+        {type:'text',text:'Analysiere dieses Produktfoto. Antworte NUR mit JSON:\n{"name":"Produktname auf Deutsch","marke":"Marke oder leer","menge_einheit":"z.B. 500 ml oder leer","kat":"eine von: Milchprodukte, Fleisch & Fisch, Gemüse & Früchte, Tiefkühl, Getränke, Konserven & Trockenware, Backwaren & Brot, Gewürze & Saucen, Süsswaren, Reinigung & Pflege, Diverses","mhd":"YYYY-MM-DD oder leer"}'}
+      ]}]})
+    });
+
+    ladeDiv.remove();
+    if(!res.ok){toast('API-Fehler '+res.status);return;}
+    const data=await res.json();
+    if(data.usage)trackAiUsage(data.usage.input_tokens||0,data.usage.output_tokens||0,((data.usage.input_tokens||0)*3+(data.usage.output_tokens||0)*15)/1000000*0.88);
+    const text=data.content?.[0]?.text||'';
+    let parsed;try{parsed=JSON.parse(text.replace(/```json|```/g,'').trim());}catch(e){toast('KI-Antwort nicht lesbar');return;}
+
+    // Felder füllen — nur leere Felder überschreiben
+    if(parsed.name){const nm=document.getElementById('f-nm');if(nm&&!nm.value){nm.value=parsed.name;checkDupHint(parsed.name);checkFrischeHint(parsed.name);}}
+    if(parsed.marke){const mk=document.getElementById('f-mk');if(mk&&!mk.value)mk.value=parsed.marke;}
+    if(parsed.kat){document.querySelectorAll('#f-ka .chip[data-kat]').forEach(c=>{if(c.dataset.kat===parsed.kat){document.querySelectorAll('#f-ka .chip[data-kat]').forEach(x=>x.classList.remove('on'));c.classList.add('on');}});}
+    if(parsed.mhd&&/^\d{4}-\d{2}-\d{2}$/.test(parsed.mhd))setDateField('f-ad',parsed.mhd);
+
+    // KI-Button nach Analyse ausblenden
+    const kiBtn=document.getElementById('ki-analyse-btn');
+    if(kiBtn)kiBtn.style.display='none';
+
+    toast('🤖 '+(parsed.name||'Produkt')+' erkannt'+(parsed.marke?' · '+parsed.marke:''));
+  }catch(e){ladeDiv.remove();toast('Fehler: '+e.message);}
 }
 
-// KI-Produktscan aus der Lager-Toolbar → neuer Artikel mit vorausgefüllten Feldern
+// KI-Produktscan aus der Lager-Toolbar → neuer Artikel, Foto zuerst hochladen
 function lagerKiScan(){
   const aiKey=localStorage.getItem('hb_ai_key')||'';
   if(!aiKey){toast('Kein API Key — bitte in Einstellungen hinterlegen');return;}
   openForm();
-  setTimeout(()=>formFotoKiAnalyse(),300);
+  // Kurz warten bis Formular gerendert, dann Foto-Upload öffnen
+  setTimeout(()=>{
+    const fph=document.getElementById('fph');
+    if(fph)fph.click();
+  },300);
 }
 
 function invFotoAnalyse(idx){
