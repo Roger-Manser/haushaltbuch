@@ -4762,7 +4762,7 @@
       "kat": "Backwaren & Brot",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "5050492071861",
@@ -4788,8 +4788,8 @@
       ],
       "packungen": [
         {
-          "id": 4,
-          "menge": 1,
+          "id": 1,
+          "menge": 0,
           "kaufdatum": "2026-07-17",
           "ablaufdatum": "2026-07-20"
         }
@@ -9863,7 +9863,20 @@
       "aktion": false,
       "datum": "2026-07-18",
       "zeit": 1784382731464
+    },
+    {
+      "t": "aus",
+      "aid": 131,
+      "name": "Brioche Roll",
+      "lager": "Küche",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784441186683
     }
   ],
-  "aktualisiert": "2026-07-18T16:44:04.719Z"
+  "aktualisiert": "2026-07-19T06:24:37.709Z"
 }
