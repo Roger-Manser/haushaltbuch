@@ -7028,6 +7028,405 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 199,
+      "name": "Kürbiskerne",
+      "marke": "Migros Bio",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610200328069",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 400,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Bio\nNutri-Score A\nPro 100g/ml: 578 kcal, Fett 46g, KH 3.6g, Eiweiss 34g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466172986_off.jpg?t=1784466195466",
+      "fotoPath": "1784466172986_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 200,
+      "name": "Sonnenblumenkerne",
+      "marke": "Migros Bio",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610200328076",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 400,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Bio\nNutri-Score A\nPro 100g/ml: 657 kcal, Fett 60g, KH 4.4g, Eiweiss 21g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466211565_off.jpg?t=1784466232365",
+      "fotoPath": "1784466211565_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 201,
+      "name": "Vollkorn-Haferflocken",
+      "marke": "Migros Classic",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610200011435",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score A\nPro 100g/ml: 373 kcal, Fett 7g, KH 61g, Eiweiss 13g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466255521_off.jpg?t=1784466273410",
+      "fotoPath": "1784466255521_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 202,
+      "name": "Patisser Geriebene Orangenschalen",
+      "marke": "Migros",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610188127135",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 20,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score A\nPro 100g/ml: 100 kcal, Fett 0.7g, KH 18g, Eiweiss 1g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466310660_off.jpg?t=1784466332716",
+      "fotoPath": "1784466310660_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 203,
+      "name": "Hefe getrocknet",
+      "marke": "Migros",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7613312306031",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 6,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466347358_off.jpg?t=1784466396744",
+      "fotoPath": "1784466347358_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 204,
+      "name": "Bourbon Vaniliezucker",
+      "marke": "bella",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "Aldi",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4099200094724",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 8,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466414850_off.jpg?t=1784466437372",
+      "fotoPath": "1784466414850_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 6,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 205,
+      "name": "Curry powder Mild Madras",
+      "marke": "TRS Asia’s finest foods",
+      "kat": "Gewürze & Saucen",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 4,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "5017689002732",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 100,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Pro 100g/ml: 300 kcal, Fett 12g, KH 49g, Eiweiss 13g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466450305_off.jpg?t=1784466470652",
+      "fotoPath": "1784466450305_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 7,
+          "menge": 4,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 206,
+      "name": "Confi-Vite : Geliermittel für Konfitüre und Gele",
+      "marke": "Coop",
+      "kat": "Süsswaren",
+      "lager": "Vorratsschrank",
+      "kaufort": "Coop",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610809127001",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 40,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466489035_off.jpg?t=1784466517652",
+      "fotoPath": "1784466489035_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 8,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 207,
+      "name": "Orangenschalen Abrieb",
+      "marke": "Gut Bio",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4061461728595",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 5,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Bio, Vegan, Vegetarisch",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466549330_off.jpg?t=1784466572637",
+      "fotoPath": "1784466549330_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 9,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 208,
+      "name": "currypaste",
+      "marke": "BLUE ELEPHANT",
+      "kat": "Gewürze & Saucen",
+      "lager": "Vorratsschrank",
+      "kaufort": "Coop",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "8854404001055",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 70,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score E\nPro 100g/ml: 221 kcal, Fett 17g, KH 12.5g, Eiweiss 4.6g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466595515_off.jpg?t=1784466624662",
+      "fotoPath": "1784466595515_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 10,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 209,
+      "name": "Thai Gelbe Currypaste",
+      "marke": "Blue Elephant",
+      "kat": "Gewürze & Saucen",
+      "lager": "Vorratsschrank",
+      "kaufort": "Coop",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "8854404000225",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 70,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Vegetarisch\nNutri-Score D\nPro 100g/ml: 186 kcal, Fett 9.8g, KH 15g, Eiweiss 4.4g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466672948_off.jpg?t=1784466688374",
+      "fotoPath": "1784466672948_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-07-19",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "weg",
+          "aktion": false
+        }
+      ],
+      "packungen": [
+        {
+          "id": 15,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 210,
+      "name": "Zitronenschale",
+      "marke": "",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610089352131",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 3,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Pro 100g/ml: 265 kcal, Fett 0.1g, KH 63g, Eiweiss 0.6g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466714827_off.jpg?t=1784466764334",
+      "fotoPath": "1784466714827_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 14,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 211,
+      "name": "PopCorn",
+      "marke": "M Classic",
+      "kat": "Süsswaren",
+      "lager": "Schlof",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7613312358641",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score A\nPro 100g/ml: 337 kcal, Fett 4.2g, KH 59g, Eiweiss 9.3g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466781577_off.jpg?t=1784466802630",
+      "fotoPath": "1784466781577_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 13,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -11394,7 +11793,111 @@
       "aktion": false,
       "datum": "2026-07-19",
       "zeit": 1784466099282
+    },
+    {
+      "t": "ein",
+      "aid": 205,
+      "name": "Curry powder Mild Madras",
+      "lager": "Vorratsschrank",
+      "kat": "Gewürze & Saucen",
+      "menge": 8,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784466470653
+    },
+    {
+      "t": "ein",
+      "aid": 209,
+      "name": "Thai Gelbe Currypaste",
+      "lager": "Vorratsschrank",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784466688375
+    },
+    {
+      "t": "ein",
+      "aid": 210,
+      "name": "Zitronenschale",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784466764335
+    },
+    {
+      "t": "aus",
+      "aid": 210,
+      "name": "Zitronenschale",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784466811371
+    },
+    {
+      "t": "weg",
+      "aid": 209,
+      "name": "Thai Gelbe Currypaste",
+      "lager": "Vorratsschrank",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784466823808
+    },
+    {
+      "t": "aus",
+      "aid": 205,
+      "name": "Curry powder Mild Madras",
+      "lager": "Vorratsschrank",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784466844207
+    },
+    {
+      "t": "aus",
+      "aid": 205,
+      "name": "Curry powder Mild Madras",
+      "lager": "Vorratsschrank",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784466845776
+    },
+    {
+      "t": "aus",
+      "aid": 205,
+      "name": "Curry powder Mild Madras",
+      "lager": "Vorratsschrank",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784466847397
     }
   ],
-  "aktualisiert": "2026-07-19T13:02:11.554Z"
+  "aktualisiert": "2026-07-19T13:14:26.487Z"
 }
