@@ -6088,6 +6088,177 @@
           "ablaufdatum": "2026-04-30"
         }
       ]
+    },
+    {
+      "id": 169,
+      "name": "Pappardelle No 119",
+      "marke": "Rummo",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "8008343201193",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "2026-01-20",
+      "notiz": "Nutri-Score A\nPro 100g/ml: 356 kcal, Fett 1.6g, KH 69.5g, Eiweiss 14.5g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784458123110_off.jpg?t=1784458177130",
+      "fotoPath": "1784458123110_off.jpg",
+      "puffer": 360,
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": "2026-01-20"
+        }
+      ]
+    },
+    {
+      "id": 170,
+      "name": "Kürbiskerne",
+      "marke": "Migros",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7613312494141",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 400,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "2026-08-06",
+      "notiz": "Bio\nPro 100g/ml: 592 kcal, Fett 49g, KH 4.7g, Eiweiss 30g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784458210815_off.jpg?t=1784458251469",
+      "fotoPath": "1784458210815_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": "2026-08-06"
+        }
+      ]
+    },
+    {
+      "id": 171,
+      "name": "Müsli Waldbeeren",
+      "marke": "Familia",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610023002047",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 600,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "2027-04-20",
+      "notiz": "Nutri-Score D\nPro 100g/ml: 431 kcal, Fett 13g, KH 65g, Eiweiss 10g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784458266912_off.jpg?t=1784458309127",
+      "fotoPath": "1784458266912_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": "2027-04-20"
+        }
+      ]
+    },
+    {
+      "id": 172,
+      "name": "Haselnusskerne",
+      "marke": "Happy Harvest",
+      "kat": "Getränke",
+      "lager": "Vorratsschrank",
+      "kaufort": "Aldi",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4061462512797",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 200,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "2026-10-31",
+      "notiz": "Nutri-Score A\nPro 100g/ml: 695 kcal, Fett 67g, KH 5.4g, Eiweiss 15g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784458331710_off.jpg?t=1784458368624",
+      "fotoPath": "1784458331710_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": "2026-10-31"
+        }
+      ]
+    },
+    {
+      "id": 173,
+      "name": "Paellagewürz",
+      "marke": "",
+      "kat": "Gewürze & Saucen",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "",
+      "barcodes": [],
+      "preis": 1.5,
+      "packMenge": 50,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "2026-03-23",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784458645276_17844586387093368349921067944947.jpg?t=1784458651942",
+      "fotoPath": "1784458645276_17844586387093368349921067944947.jpg",
+      "puffer": 360,
+      "preisHistorie": [
+        {
+          "datum": "2026-07-19",
+          "preis": 1.5,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        },
+        {
+          "datum": "2026-07-19",
+          "preis": 1.5,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        }
+      ],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": "2026-03-23"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -10233,7 +10404,72 @@
       "aktion": false,
       "datum": "2026-07-19",
       "zeit": 1784447658848
+    },
+    {
+      "t": "ein",
+      "aid": 169,
+      "name": "Pappardelle No 119",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784458177131
+    },
+    {
+      "t": "ein",
+      "aid": 170,
+      "name": "Kürbiskerne",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784458251470
+    },
+    {
+      "t": "ein",
+      "aid": 171,
+      "name": "Müsli Waldbeeren",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784458309128
+    },
+    {
+      "t": "ein",
+      "aid": 172,
+      "name": "Haselnusskerne",
+      "lager": "Vorratsschrank",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784458368625
+    },
+    {
+      "t": "ein",
+      "aid": 173,
+      "name": "Paellagewürz",
+      "lager": "Vorratsschrank",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 1.5,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784458626143
     }
   ],
-  "aktualisiert": "2026-07-19T07:55:09.495Z"
+  "aktualisiert": "2026-07-19T10:57:38.894Z"
 }
