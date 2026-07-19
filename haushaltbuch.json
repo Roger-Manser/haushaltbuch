@@ -2136,8 +2136,8 @@
       "kaufdatum": "2026-06-30",
       "ablaufdatum": "2026-12-21",
       "notiz": "Nutri-Score E\nPro 100g/ml: 610 kcal, Fett 66.2g, KH 1.5g, Eiweiss 1.1g",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784444243120_tartare.webp?t=1784444247683",
-      "fotoPath": "1784444243120_tartare.webp",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784359960584_off.jpg",
+      "fotoPath": "1784359960584_off.jpg",
       "preisHistorie": [],
       "packungen": [
         {
@@ -4813,18 +4813,9 @@
       "kaufdatum": "2026-07-17",
       "ablaufdatum": "2026-09-18",
       "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784443584487_Zwiebel.jpg",
-      "fotoPath": "1784443584487_Zwiebel.jpg",
+      "foto": "",
+      "fotoPath": "",
       "preisHistorie": [
-        {
-          "datum": "2026-07-17",
-          "preis": 0.45,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
         {
           "datum": "2026-07-17",
           "preis": 0.45,
@@ -9887,5 +9878,5 @@
       "zeit": 1784441186683
     }
   ],
-  "aktualisiert": "2026-07-19T06:57:30.028Z"
+  "aktualisiert": "2026-07-19T06:57:42.435Z"
 }
