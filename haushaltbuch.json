@@ -2988,7 +2988,7 @@
       "kat": "Gemüse & Früchte",
       "lager": "Vorratsschrank",
       "kaufort": "Denner",
-      "menge": 1,
+      "menge": 4,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610029028652",
@@ -2996,8 +2996,8 @@
       "preis": 0,
       "packMenge": 285,
       "packEinheit": "g",
-      "kaufdatum": "2026-07-05",
-      "ablaufdatum": "2028-10-31",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "2027-12-31",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783261156063_off.jpg?t=1784445143693",
       "fotoPath": "1783261156063_off.jpg",
@@ -3008,6 +3008,12 @@
           "menge": 1,
           "kaufdatum": "2026-07-05",
           "ablaufdatum": "2028-10-31"
+        },
+        {
+          "id": 10,
+          "menge": 3,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": "2027-12-31"
         }
       ]
     },
@@ -6038,7 +6044,7 @@
       "packMenge": 80,
       "packEinheit": "Stk",
       "kaufdatum": "2026-07-19",
-      "ablaufdatum": "",
+      "ablaufdatum": "2026-07-22",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784447439065_1784447427188380739150272765594.jpg?t=1784447473110",
       "fotoPath": "1784447439065_1784447427188380739150272765594.jpg",
@@ -6048,7 +6054,38 @@
           "id": 9,
           "menge": 1,
           "kaufdatum": "2026-07-19",
-          "ablaufdatum": ""
+          "ablaufdatum": "2026-07-22"
+        }
+      ],
+      "geoeffnet": "2026-07-19"
+    },
+    {
+      "id": 168,
+      "name": "Kichererbsen",
+      "marke": "",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 2,
+      "einheit": "Dose",
+      "mindest": 0,
+      "barcode": "",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 138,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "2026-04-30",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784447602513_17844475939402364405652404606377.jpg?t=1784447658845",
+      "fotoPath": "1784447602513_17844475939402364405652404606377.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 2,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": "2026-04-30"
         }
       ]
     }
@@ -10183,7 +10220,20 @@
       "aktion": false,
       "datum": "2026-07-19",
       "zeit": 1784447473110
+    },
+    {
+      "t": "ein",
+      "aid": 168,
+      "name": "Kichererbsen",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 2,
+      "einheit": "Dose",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784447658848
     }
   ],
-  "aktualisiert": "2026-07-19T07:51:36.769Z"
+  "aktualisiert": "2026-07-19T07:55:09.495Z"
 }
