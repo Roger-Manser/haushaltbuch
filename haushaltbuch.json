@@ -4813,9 +4813,18 @@
       "kaufdatum": "2026-07-17",
       "ablaufdatum": "2026-09-18",
       "notiz": "",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784443584487_Zwiebel.jpg",
+      "fotoPath": "1784443584487_Zwiebel.jpg",
       "preisHistorie": [
+        {
+          "datum": "2026-07-17",
+          "preis": 0.45,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
         {
           "datum": "2026-07-17",
           "preis": 0.45,
@@ -9878,5 +9887,5 @@
       "zeit": 1784441186683
     }
   ],
-  "aktualisiert": "2026-07-19T06:48:22.320Z"
+  "aktualisiert": "2026-07-19T06:48:31.104Z"
 }
