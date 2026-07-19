@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='16.8';
+const APP_VERSION='16.9';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'16.9',d:'07.2026',items:['Barcode-Konflikt-Dialog: hideLdr() beim Abbrechen (Hänger behoben)']},
   {v:'16.8',d:'07.2026',items:['KI-Fotoanalyse im Artikel-Formular (grüner Button unter Foto-Upload)','KI-Scan-Button in der Lager-Toolbar (öffnet Formular + startet Kamera)']},
   {v:'16.7',d:'07.2026',items:['Sortierung Zuletzt erfasst: Artikel-ID als Fallback-Timestamp (auch Bestand 0 erscheinen)','Nach Speichern: Lagerliste scrollt zum neu angelegten/bearbeiteten Artikel']},
   {v:'16.6',d:'07.2026',items:['Mindestbestand-Manager: Scroll-Position bleibt nach Änderung erhalten']},
@@ -2306,7 +2307,7 @@ async function saveForm(){
     const bcOwner=artikelByCode(hauptBc);
     if(bcOwner&&bcOwner.id!==editId){
       const weiter=await confirmDialog('Barcode gehört bereits «'+bcOwner.name+'» ('+bcOwner.menge+' '+(bcOwner.einheit||'Stk')+' · '+bcOwner.lager+')\n\nBeim Scannen wird weiterhin «'+bcOwner.name+'» gefunden.\nBesser: «Zusammenführen» wenn gleiches Produkt.','Trotzdem speichern','Abbrechen');
-      if(!weiter)return;
+      if(!weiter){hideLdr();return;}
     }
   }
   const extraBcs=[...new Set(formExtraBarcodes.map(b=>b.trim()).filter(b=>b&&b!==hauptBc))];
