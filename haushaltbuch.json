@@ -6493,7 +6493,7 @@
       "kat": "Konserven & Trockenware",
       "lager": "Vorratsschrank",
       "kaufort": "",
-      "menge": 8,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "7611100036931",
@@ -6507,14 +6507,7 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784463273935_off.jpg?t=1784463303607",
       "fotoPath": "1784463273935_off.jpg",
       "preisHistorie": [],
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 8,
-          "kaufdatum": "2026-07-19",
-          "ablaufdatum": ""
-        }
-      ]
+      "packungen": []
     },
     {
       "id": 182,
@@ -6743,7 +6736,7 @@
       "kat": "Backwaren & Brot",
       "lager": "Vorratsschrank",
       "kaufort": "Migros",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "7613312423769",
@@ -6759,8 +6752,8 @@
       "preisHistorie": [],
       "packungen": [
         {
-          "id": 9,
-          "menge": 1,
+          "id": 3,
+          "menge": 0,
           "kaufdatum": "2026-07-19",
           "ablaufdatum": ""
         }
@@ -6816,6 +6809,66 @@
       "notiz": "Nutri-Score E\nPro 100g/ml: 448 kcal, Fett 19g, KH 58.4g, Eiweiss 9.3g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784464628066_off.jpg?t=1784464657238",
       "fotoPath": "1784464628066_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 192,
+      "name": "Nescafé Gold de Luxe",
+      "marke": "Nestlé",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7613035907850",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 100,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Pro 100g/ml: 0 kcal, Fett 0g, KH 0g, Eiweiss 0g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784465452757_off.jpg?t=1784465480645",
+      "fotoPath": "1784465452757_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 193,
+      "name": "Herbmix Italian",
+      "marke": "Knorr",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7611100100281",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 70,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Pro 100g/ml: 583 kcal, Fett 61g, KH 7.5g, Eiweiss 1.2g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784465495690_off.jpg?t=1784465524572",
+      "fotoPath": "1784465495690_off.jpg",
       "preisHistorie": [],
       "packungen": [
         {
@@ -11061,7 +11114,111 @@
       "aktion": false,
       "datum": "2026-07-19",
       "zeit": 1784463792783
+    },
+    {
+      "t": "aus",
+      "aid": 189,
+      "name": "Haselnüsse gemahlen",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784464731380
+    },
+    {
+      "t": "aus",
+      "aid": 181,
+      "name": "Stocki express Frühlingszwiebeln mit Speck",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784464739018
+    },
+    {
+      "t": "aus",
+      "aid": 181,
+      "name": "Stocki express Frühlingszwiebeln mit Speck",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784464748169
+    },
+    {
+      "t": "aus",
+      "aid": 181,
+      "name": "Stocki express Frühlingszwiebeln mit Speck",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784464749565
+    },
+    {
+      "t": "aus",
+      "aid": 181,
+      "name": "Stocki express Frühlingszwiebeln mit Speck",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784464750790
+    },
+    {
+      "t": "aus",
+      "aid": 181,
+      "name": "Stocki express Frühlingszwiebeln mit Speck",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784464751975
+    },
+    {
+      "t": "aus",
+      "aid": 181,
+      "name": "Stocki express Frühlingszwiebeln mit Speck",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784464753638
+    },
+    {
+      "t": "aus",
+      "aid": 181,
+      "name": "Stocki express Frühlingszwiebeln mit Speck",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784464755128
     }
   ],
-  "aktualisiert": "2026-07-19T12:37:51.916Z"
+  "aktualisiert": "2026-07-19T12:52:10.744Z"
 }
