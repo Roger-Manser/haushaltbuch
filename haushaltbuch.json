@@ -7629,6 +7629,96 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 217,
+      "name": "Max White Expert Zahnpasta",
+      "marke": "Colgate",
+      "kat": "Reinigung & Pflege",
+      "lager": "Bad oben",
+      "kaufort": "Coop",
+      "menge": 2,
+      "einheit": "Tube",
+      "mindest": 1,
+      "barcode": "7509546064864",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 75,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784478595447_17844785876291460095299260095084.jpg?t=1784478638375",
+      "fotoPath": "1784478595447_17844785876291460095299260095084.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 2,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 218,
+      "name": "Max White Sparkle Diamonds Zahnpasta",
+      "marke": "Colgate",
+      "kat": "Reinigung & Pflege",
+      "lager": "Bad oben",
+      "kaufort": "Coop",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "8718951621237",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 3,
+      "packEinheit": "Tube",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784478683145_17844786639387631391466297285099.jpg?t=1784478720428",
+      "fotoPath": "1784478683145_17844786639387631391466297285099.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 219,
+      "name": "Mundspülung Cool Mint Mild Anti-Bakteriell",
+      "marke": "Listerine",
+      "kat": "Reinigung & Pflege",
+      "lager": "Bad oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "3574661633299",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 2,
+      "packEinheit": "Flasche",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784478755653_178447874996776020664930161658.jpg?t=1784478786712",
+      "fotoPath": "1784478755653_178447874996776020664930161658.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -12190,7 +12280,46 @@
       "aktion": false,
       "datum": "2026-07-19",
       "zeit": 1784467547513
+    },
+    {
+      "t": "ein",
+      "aid": 217,
+      "name": "Max White Expert Zahnpasta",
+      "lager": "Bad oben",
+      "kat": "Reinigung & Pflege",
+      "menge": 2,
+      "einheit": "Tube",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784478638376
+    },
+    {
+      "t": "ein",
+      "aid": 218,
+      "name": "Max White Sparkle Diamonds Zahnpasta",
+      "lager": "Bad oben",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784478720436
+    },
+    {
+      "t": "ein",
+      "aid": 219,
+      "name": "Mundspülung Cool Mint Mild Anti-Bakteriell",
+      "lager": "Bad oben",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784478786715
     }
   ],
-  "aktualisiert": "2026-07-19T16:28:56.608Z"
+  "aktualisiert": "2026-07-19T16:38:33.368Z"
 }
