@@ -7444,7 +7444,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
       "kaufort": "",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "4260289449808",
@@ -7457,11 +7457,20 @@
       "notiz": "Bio, Vegan, Vegetarisch\nPro 100g/ml: 354 kcal, Fett 9.9g, KH 65g, Eiweiss 7.9g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784467001752_off.jpg?t=1784467022079",
       "fotoPath": "1784467001752_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-19",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "weg",
+          "aktion": false
+        }
+      ],
       "packungen": [
         {
-          "id": 2,
-          "menge": 1,
+          "id": 9,
+          "menge": 0,
           "kaufdatum": "2026-07-19",
           "ablaufdatum": ""
         }
@@ -7513,7 +7522,7 @@
       "kat": "Konserven & Trockenware",
       "lager": "Vorratsschrank",
       "kaufort": "",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "7610027017542",
@@ -7526,11 +7535,20 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784467366570_17844673542436177389524421977349.jpg?t=1784467400088",
       "fotoPath": "1784467366570_17844673542436177389524421977349.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-19",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "weg",
+          "aktion": false
+        }
+      ],
       "packungen": [
         {
-          "id": 5,
-          "menge": 1,
+          "id": 8,
+          "menge": 0,
           "kaufdatum": "2026-07-19",
           "ablaufdatum": ""
         }
@@ -12130,7 +12148,33 @@
       "aktion": false,
       "datum": "2026-07-19",
       "zeit": 1784467400090
+    },
+    {
+      "t": "weg",
+      "aid": 214,
+      "name": "Knöpflidunst (Farine pour knöpfli)",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784467540580
+    },
+    {
+      "t": "weg",
+      "aid": 212,
+      "name": "BIO kurkuma pulver",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784467547513
     }
   ],
-  "aktualisiert": "2026-07-19T13:25:26.524Z"
+  "aktualisiert": "2026-07-19T13:26:05.948Z"
 }
