@@ -530,10 +530,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='16.5';
+const APP_VERSION='16.6';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'16.6',d:'07.2026',items:['Mindestbestand-Manager: Scroll-Position bleibt nach Änderung erhalten']},
   {v:'16.5',d:'07.2026',items:['Mindestbestand-Manager in Einstellungen: alle auf einmal prüfen/anpassen oder Bulk-Reset auf 0']},
   {v:'16.4',d:'07.2026',items:['API-Guthaben: Eingabefeld und Warngrenze in Einstellungen','Warnung als Toast + Banner wenn Restguthaben unter Schwellwert']},
   {v:'16.3',d:'07.2026',items:['Inventar: KI-Analyse bei unbekannten Produkten (Foto → Claude extrahiert Name/Marke/Kat/MHD)','Ergebnis-Dialog mit Vorschau und Bestätigung/Korrektur']},
@@ -4905,7 +4906,13 @@ function mindestSetzen(id,val){
   const a=S.a.find(x=>x.id===id);
   if(!a)return;
   a.mindest=Math.max(0,Math.round(val)||0);
+  // Scroll-Position merken
+  const container=document.querySelector('#mindest-mgr-dlg div[style*="overflow-y"]');
+  const scrollTop=container?container.scrollTop:0;
   renderMindestManager();
+  // Scroll-Position wiederherstellen
+  const newContainer=document.querySelector('#mindest-mgr-dlg div[style*="overflow-y"]');
+  if(newContainer)newContainer.scrollTop=scrollTop;
 }
 async function mindestAlleNull(){
   if(!await confirmDialog('Alle '+S.a.filter(a=>a.mindest>0).length+' Mindestbestände auf 0 setzen?\n\nDanach erscheint kein Artikel mehr automatisch auf der Einkaufsliste.','Ja, alle auf 0','Nein, abbrechen'))return;
