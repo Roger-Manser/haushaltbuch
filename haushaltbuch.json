@@ -902,7 +902,7 @@
       "lager": "Schlof",
       "menge": 2,
       "einheit": "Stk",
-      "mindest": 1,
+      "mindest": 0,
       "barcode": "8005110060007",
       "preis": 0,
       "packMenge": 400,
@@ -919,7 +919,10 @@
           "kaufdatum": "2026-06-24",
           "ablaufdatum": "2028-08-31"
         }
-      ]
+      ],
+      "kaufort": "",
+      "barcodes": [],
+      "preisHistorie": []
     },
     {
       "id": 24,
@@ -1087,7 +1090,7 @@
       "lager": "Schlof",
       "menge": 1,
       "einheit": "Stk",
-      "mindest": 1,
+      "mindest": 0,
       "barcode": "4061461885762",
       "preis": 0,
       "packMenge": 190,
@@ -1097,7 +1100,17 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782311158358_17823111509323023841191726663671.jpg?t=1784445143693",
       "fotoPath": "1782311158358_17823111509323023841191726663671.jpg",
-      "preisHistorie": []
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-06-24",
+          "ablaufdatum": "2027-05-31"
+        }
+      ],
+      "kaufort": "",
+      "barcodes": []
     },
     {
       "id": 30,
@@ -1107,7 +1120,7 @@
       "lager": "Schlof",
       "menge": 1,
       "einheit": "Stk",
-      "mindest": 1,
+      "mindest": 0,
       "barcode": "4061463702265",
       "preis": 0,
       "packMenge": 190,
@@ -1125,7 +1138,9 @@
           "kaufdatum": "2026-06-24",
           "ablaufdatum": "2027-05-31"
         }
-      ]
+      ],
+      "kaufort": "",
+      "barcodes": []
     },
     {
       "id": 31,
@@ -2147,7 +2162,7 @@
       "kaufort": "Migros",
       "menge": 1,
       "einheit": "Stk",
-      "mindest": 1,
+      "mindest": 0,
       "barcode": "7614200092333",
       "preis": 0,
       "packMenge": 200,
@@ -2165,7 +2180,8 @@
           "kaufdatum": "2026-06-30",
           "ablaufdatum": "2027-03-31"
         }
-      ]
+      ],
+      "barcodes": []
     },
     {
       "id": 55,
@@ -2990,7 +3006,7 @@
       "kaufort": "Denner",
       "menge": 4,
       "einheit": "Stk",
-      "mindest": 1,
+      "mindest": 0,
       "barcode": "7610029028652",
       "barcodes": [],
       "preis": 0,
@@ -10471,5 +10487,5 @@
       "zeit": 1784458626143
     }
   ],
-  "aktualisiert": "2026-07-19T11:08:25.836Z"
+  "aktualisiert": "2026-07-19T11:16:34.836Z"
 }
