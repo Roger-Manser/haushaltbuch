@@ -6365,6 +6365,66 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 177,
+      "name": "Pistazien roh",
+      "marke": "Morga",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610491926869",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 90,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score B\nPro 100g/ml: 587 kcal, Fett 53g, KH 12g, Eiweiss 20g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784460889815_17844608824928300282362269841861.jpg?t=1784460930987",
+      "fotoPath": "1784460889815_17844608824928300282362269841861.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 178,
+      "name": "Sesam ungeschält",
+      "marke": "Alnatura",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4104420225015",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 250,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Bio, Vegan, Vegetarisch\nNutri-Score A\nPro 100g/ml: 607 kcal, Fett 53g, KH 2g, Eiweiss 24g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784461004701_off.jpg?t=1784461019412",
+      "fotoPath": "1784461004701_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -10577,5 +10637,5 @@
       "zeit": 1784458626143
     }
   ],
-  "aktualisiert": "2026-07-19T11:33:25.805Z"
+  "aktualisiert": "2026-07-19T11:41:44.783Z"
 }
