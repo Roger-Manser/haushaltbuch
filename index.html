@@ -530,10 +530,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='16.2';
+const APP_VERSION='16.4';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'16.4',d:'07.2026',items:['API-Guthaben: Eingabefeld und Warngrenze in Einstellungen','Warnung als Toast + Banner wenn Restguthaben unter Schwellwert']},
+  {v:'16.3',d:'07.2026',items:['Inventar: KI-Analyse bei unbekannten Produkten (Foto → Claude extrahiert Name/Marke/Kat/MHD)','Ergebnis-Dialog mit Vorschau und Bestätigung/Korrektur']},
   {v:'16.2',d:'07.2026',items:['Packungsgrösse: Icon-Fix (undefined statt Symbol)','Neuer Filter-Chip: Mindestbestand > 0']},
   {v:'16.1',d:'07.2026',items:['Foto-Upload: Base64 bleibt erhalten wenn Upload fehlschlägt','loadFromGH: lokales Base64-Foto wird nicht durch leeres Feld überschrieben','Fehlermeldung bei fehlgeschlagenem Foto-Upload']},
   {v:'16.0',d:'07.2026',items:['Foto-URLs: Cache-Buster beim Upload und beim Laden von GitHub','raw.githubusercontent.com-URLs werden bei jedem GitHub-Laden aktualisiert']},
@@ -4535,6 +4537,7 @@ function invCheckFotoUndWeiter(idx){
 
 function showInvMissingDataDialog(idx){
   const entry=invBuffer[idx];if(!entry)return;
+  const aiKey=localStorage.getItem('hb_ai_key')||'';
   const existing=document.getElementById('inv-missing-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='inv-missing-dlg';
@@ -4544,12 +4547,129 @@ function showInvMissingDataDialog(idx){
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">⚠️ Daten unvollständig</div>'+
       '<div style="font-size:13px;color:var(--t2);margin-bottom:16px">Barcode <code>'+esc(entry.barcode)+'</code> wurde nicht automatisch erkannt. Bitte ergänze die Angaben.</div>'+
       '<div style="display:flex;flex-direction:column;gap:8px">'+
-        '<button onclick="invMissingOpenForm('+idx+')" style="padding:14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✏️ Artikel-Formular öffnen</button>'+
+        (aiKey?'<button onclick="invFotoAnalyse('+idx+')" style="padding:14px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">📷 Produktfoto fotografieren &amp; KI-Analyse</button>':'<div style="font-size:12px;color:var(--t3);padding:8px;background:var(--bg);border-radius:var(--rs)">💡 Mit Anthropic API Key (Einstellungen) kann die KI Produktinfos aus einem Foto lesen.</div>')+
+        '<button onclick="invMissingOpenForm('+idx+')" style="padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer">✏️ Formular manuell ausfüllen</button>'+
         '<button onclick="document.getElementById(\'inv-missing-dlg\').remove();startInvScan()" style="padding:12px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">'+I.scan+' Überspringen &amp; weiter scannen</button>'+
-        '<button onclick="document.getElementById(\'inv-missing-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Im Zwischenspeicher belassen (später ergänzen)</button>'+
+        '<button onclick="document.getElementById(\'inv-missing-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Später ergänzen</button>'+
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
+}
+
+async function invFotoAnalyse(idx){
+  const entry=invBuffer[idx];if(!entry)return;
+  const aiKey=localStorage.getItem('hb_ai_key')||'';
+  if(!aiKey){toast('Kein API Key — bitte in Einstellungen hinterlegen');return;}
+  const dlg=document.getElementById('inv-missing-dlg');if(dlg)dlg.remove();
+
+  // Foto-Input öffnen
+  const input=document.createElement('input');
+  input.type='file';input.accept='image/*';input.capture='environment';
+  input.onchange=async()=>{
+    const file=input.files[0];if(!file)return;
+    // Ladeindikator
+    const ladeDiv=document.createElement('div');
+    ladeDiv.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:16px;font-size:16px';
+    ladeDiv.innerHTML='<div style="font-size:36px">🤖</div><div>Claude analysiert das Produktfoto…</div>';
+    document.body.appendChild(ladeDiv);
+
+    try{
+      // Bild als Base64
+      const b64=await new Promise((res,rej)=>{
+        const r=new FileReader();
+        r.onload=()=>res(r.result.split(',')[1]);
+        r.onerror=()=>rej(new Error('Datei lesen fehlgeschlagen'));
+        r.readAsDataURL(file);
+      });
+      // Bildtyp erkennen
+      let mediaType=file.type||'image/jpeg';
+      if(b64.startsWith('/9j/'))mediaType='image/jpeg';
+      else if(b64.startsWith('iVBOR'))mediaType='image/png';
+      else if(b64.startsWith('UklGR'))mediaType='image/webp';
+
+      // Foto im Buffer speichern (als Base64 für spätere Verwendung)
+      const fotoDataUrl='data:'+mediaType+';base64,'+b64;
+
+      const prompt=
+        'Analysiere dieses Produktfoto und extrahiere folgende Informationen.\n'+
+        'Antworte NUR mit einem JSON-Objekt, kein anderer Text:\n'+
+        '{\n'+
+        '  "name": "Produktname auf Deutsch",\n'+
+        '  "marke": "Markenname oder leer",\n'+
+        '  "menge_einheit": "z.B. 500 ml, 250 g, 1 kg oder leer",\n'+
+        '  "kat": "eine von: Milchprodukte, Fleisch & Fisch, Gemüse & Früchte, Tiefkühl, Getränke, Konserven & Trockenware, Backwaren & Brot, Gewürze & Saucen, Süsswaren, Reinigung & Pflege, Diverses",\n'+
+        '  "mhd": "MHD falls sichtbar im Format YYYY-MM-DD oder leer",\n'+
+        '  "beschreibung": "kurze Produktbeschreibung falls hilfreich"\n'+
+        '}';
+
+      const res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',
+        headers:{'Content-Type':'application/json','x-api-key':aiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-6',max_tokens:500,
+          messages:[{role:'user',content:[
+            {type:'image',source:{type:'base64',media_type:mediaType,data:b64}},
+            {type:'text',text:prompt}
+          ]}]
+        })
+      });
+
+      ladeDiv.remove();
+
+      if(!res.ok){
+        const err=await res.text().catch(()=>'');
+        toast('API-Fehler '+res.status+': '+err.slice(0,80));
+        showInvMissingDataDialog(idx);return;
+      }
+
+      const data=await res.json();
+      if(data.usage)trackAiUsage(data.usage.input_tokens||0,data.usage.output_tokens||0,((data.usage.input_tokens||0)*3+(data.usage.output_tokens||0)*15)/1000000*0.88);
+      const text=data.content&&data.content[0]&&data.content[0].text||'';
+      const clean=text.replace(/```json|```/g,'').trim();
+      let parsed;
+      try{parsed=JSON.parse(clean);}catch(e){
+        toast('KI-Antwort konnte nicht verarbeitet werden');
+        showInvMissingDataDialog(idx);return;
+      }
+
+      // Buffer-Eintrag anreichern
+      if(parsed.name)entry.name=parsed.name;
+      if(parsed.marke)entry.marke=parsed.marke;
+      if(parsed.kat&&S.ka.includes(parsed.kat))entry.kat=parsed.kat;
+      if(parsed.mhd&&/^\d{4}-\d{2}-\d{2}$/.test(parsed.mhd))entry.mhd=entry.mhd||parsed.mhd;
+      if(parsed.menge_einheit)entry.pkgBeschreibung=parsed.menge_einheit;
+      entry.foto=fotoDataUrl;
+      entry.aiAnalysiert=true;
+      saveInvBuffer();renderInvCapture();
+
+      // Ergebnis anzeigen mit Bestätigungs-Dialog
+      const bestDlg=document.createElement('div');
+      bestDlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+      bestDlg.innerHTML=
+        '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+          '<div style="font-weight:700;font-size:16px;margin-bottom:12px">🤖 KI-Ergebnis</div>'+
+          '<img src="'+fotoDataUrl+'" style="width:100%;max-height:160px;object-fit:cover;border-radius:var(--rs);margin-bottom:12px"/>'+
+          '<div style="display:flex;flex-direction:column;gap:6px;font-size:14px;margin-bottom:16px">'+
+            (parsed.name?'<div><span style="color:var(--t2)">Name: </span><strong>'+esc(parsed.name)+'</strong></div>':'')+
+            (parsed.marke?'<div><span style="color:var(--t2)">Marke: </span>'+esc(parsed.marke)+'</div>':'')+
+            (parsed.kat?'<div><span style="color:var(--t2)">Kategorie: </span>'+esc(parsed.kat)+'</div>':'')+
+            (parsed.menge_einheit?'<div><span style="color:var(--t2)">Menge: </span>'+esc(parsed.menge_einheit)+'</div>':'')+
+            (parsed.mhd?'<div><span style="color:var(--t2)">MHD: </span>'+esc(parsed.mhd)+'</div>':'')+
+          '</div>'+
+          '<div style="display:flex;gap:8px">'+
+            '<button onclick="this.closest(\'div[style*=fixed]\').remove();invMissingOpenForm('+idx+')" style="flex:1;padding:12px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;cursor:pointer;color:var(--t2)">✏️ Korrigieren</button>'+
+            '<button onclick="this.closest(\'div[style*=fixed]\').remove();invCheckFotoUndWeiter('+idx+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Übernehmen &amp; weiter</button>'+
+          '</div>'+
+        '</div>';
+      document.body.appendChild(bestDlg);
+
+    }catch(e){
+      ladeDiv.remove();
+      toast('Fehler: '+e.message);
+      showInvMissingDataDialog(idx);
+    }
+  };
+  input.click();
 }
 
 function invMissingOpenForm(idx){
@@ -4666,23 +4786,58 @@ function trackAiUsage(inTok,outTok,kostenChf){
   const hist=loadAiUsage();
   hist.push({datum:new Date().toISOString(),inTok,outTok,chf:kostenChf});
   saveAiUsage(hist);
+  // Warnung wenn Restguthaben unter Schwellwert
+  checkAiGuthabenWarnung();
 }
+
+function getAiGuthaben(){
+  return parseFloat(localStorage.getItem('hb_ai_guthaben')||'0')||0;
+}
+function getAiGuthabenUsd(){
+  // Gesamtverbrauch in USD umrechnen (CHF → USD, ~1/0.88)
+  const hist=loadAiUsage();
+  const totalChf=hist.reduce((s,e)=>s+(e.chf||0),0);
+  return totalChf/0.88;
+}
+function checkAiGuthabenWarnung(){
+  const guthaben=getAiGuthaben();
+  if(!guthaben)return; // kein Guthaben eingetragen → keine Warnung
+  const verbrauchtUsd=getAiGuthabenUsd();
+  const restUsd=guthaben-verbrauchtUsd;
+  const schwelle=parseFloat(localStorage.getItem('hb_ai_schwelle')||'2');
+  if(restUsd<schwelle&&restUsd>=0){
+    toast('⚠️ API-Guthaben niedrig: noch ca. $'+restUsd.toFixed(2)+' — bitte aufladen!');
+  }
+}
+
 function renderAiUsageSektion(){
   const key=localStorage.getItem('hb_ai_key')||'';
   const hist=loadAiUsage();
   const totalChf=hist.reduce((s,e)=>s+(e.chf||0),0);
   const totalIn=hist.reduce((s,e)=>s+(e.inTok||0),0);
   const totalOut=hist.reduce((s,e)=>s+(e.outTok||0),0);
+  const guthaben=getAiGuthaben();
+  const verbrauchtUsd=getAiGuthabenUsd();
+  const restUsd=guthaben?Math.max(0,guthaben-verbrauchtUsd):null;
+  const schwelle=parseFloat(localStorage.getItem('hb_ai_schwelle')||'2');
+  const warnungAktiv=restUsd!==null&&restUsd<schwelle;
   // Letzte 10 Einträge für Historie
   const letzte=hist.slice(-10).reverse();
-  return '<div class="ss"><div class="ssl">Anthropic API (Quittungsscan)</div>'+
+  return '<div class="ss"><div class="ssl">Anthropic API (Quittungsscan & KI-Analyse)</div>'+
     '<div class="ghf"><label>API Key</label><input type="text" id="ai-key" placeholder="sk-ant-..." autocomplete="new-password" autocorrect="off" spellcheck="false" data-1p-ignore="" data-lpignore="true" data-form-type="other" style="-webkit-text-security:disc" value="'+esc(key)+'"/></div>'+
     '<button class="db-btn" onclick="localStorage.setItem(\'hb_ai_key\',document.getElementById(\'ai-key\').value.trim());toast(\'API Key gespeichert\')">💾 API Key speichern</button>'+
-    '<p style="font-size:12px;color:var(--t3);margin-top:6px;line-height:1.6">Erstellen unter <code>console.anthropic.com</code> → API Keys. Der Key wird nur lokal gespeichert.</p>'+
+    '<div style="display:flex;gap:8px;margin-top:10px">'+
+      '<div class="ghf" style="flex:1;margin:0"><label>Guthaben ($)</label><input type="text" inputmode="decimal" id="ai-guthaben" placeholder="z.B. 19.85" value="'+(guthaben||'')+'" style="width:100%;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:14px"/></div>'+
+      '<div class="ghf" style="flex:1;margin:0"><label>Warngrenze ($)</label><input type="text" inputmode="decimal" id="ai-schwelle" placeholder="2.00" value="'+schwelle+'" style="width:100%;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:14px"/></div>'+
+    '</div>'+
+    '<button class="db-btn" onclick="localStorage.setItem(\'hb_ai_guthaben\',document.getElementById(\'ai-guthaben\').value);localStorage.setItem(\'hb_ai_schwelle\',document.getElementById(\'ai-schwelle\').value);toast(\'Guthaben gespeichert\');renderSt()">💾 Guthaben & Warngrenze speichern</button>'+
+    (warnungAktiv?'<div style="margin-top:10px;padding:10px 12px;background:var(--wl);color:var(--wn);border-radius:var(--rs);font-size:13px;font-weight:600">⚠️ Guthaben niedrig — noch ca. $'+restUsd.toFixed(2)+'! Bitte unter console.anthropic.com aufladen.</div>':'')+
+    (guthaben&&restUsd!==null?'<div style="margin-top:8px;padding:10px 12px;background:var(--bg);border-radius:var(--rs);border:1px solid var(--bd);font-size:13px;display:flex;justify-content:space-between"><span style="color:var(--t2)">Geschätztes Restguthaben</span><strong style="color:'+(warnungAktiv?'var(--wn)':'var(--ok)')+'">$'+restUsd.toFixed(2)+'</strong></div>':'')+
+    '<p style="font-size:12px;color:var(--t3);margin-top:6px;line-height:1.6">Erstellen unter <code>console.anthropic.com</code> → API Keys. Guthaben: console.anthropic.com → Billing.</p>'+
     (hist.length?
       '<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);border:1px solid var(--bd)">'+
         '<div style="font-weight:600;font-size:14px;margin-bottom:8px">📊 Lokale Verbrauchsstatistik</div>'+
-        '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--t2)">Gesamtkosten (geschätzt)</span><strong>CHF '+totalChf.toFixed(4)+'</strong></div>'+
+        '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--t2)">Verbrauch (geschätzt)</span><strong>CHF '+totalChf.toFixed(4)+' / $'+verbrauchtUsd.toFixed(4)+'</strong></div>'+
         '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--t2)">Anzahl Scans</span><strong>'+hist.length+'</strong></div>'+
         '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="color:var(--t2)">Tokens (Input / Output)</span><span>'+Math.round(totalIn/1000)+'k / '+Math.round(totalOut/1000)+'k</span></div>'+
         '<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:10px"><span style="color:var(--t2)">Ø pro Scan</span><span>CHF '+(totalChf/hist.length).toFixed(4)+'</span></div>'+
@@ -4694,10 +4849,10 @@ function renderAiUsageSektion(){
             return '<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--bd)"><span style="color:var(--t3)">'+zeit+'</span><span>'+Math.round((e.inTok||0)/1000)+'k/'+Math.round((e.outTok||0)/1000)+'k</span><span style="font-weight:500">CHF '+(e.chf||0).toFixed(4)+'</span></div>';
           }).join('')
         :'')+
-        '<button onclick="if(confirm(\'Verbrauchshistorie löschen?\')){localStorage.removeItem(\'hb_ai_usage\');renderSt();toast(\'Historie gelöscht\')}" style="width:100%;margin-top:10px;padding:8px;background:none;border:1px solid var(--bd);border-radius:var(--rs);font-size:12px;cursor:pointer;color:var(--t3)">Historie löschen</button>'+
+        '<button onclick="localStorage.removeItem(\'hb_ai_usage\');renderSt();toast(\'Historie gelöscht\')" style="width:100%;margin-top:10px;padding:8px;background:none;border:1px solid var(--bd);border-radius:var(--rs);font-size:12px;cursor:pointer;color:var(--t3)">Historie löschen</button>'+
       '</div>'
     :'<div style="margin-top:10px;font-size:12px;color:var(--t3)">Noch keine API-Nutzung aufgezeichnet.</div>')+
-    '<p style="font-size:11px;color:var(--t3);margin-top:8px;line-height:1.5">⚠ Dies ist eine lokale Schätzung basierend auf Token-Verbrauch (Sonnet-Preise). Den echten Kontostand siehst du unter <code>console.anthropic.com</code> → Usage.</p>'+
+    '<p style="font-size:11px;color:var(--t3);margin-top:8px;line-height:1.5">⚠ Lokale Schätzung (Sonnet-4.6-Preise: $3/MTok in, $15/MTok out, ~0.88 CHF/USD). Echter Kontostand: <code>console.anthropic.com</code> → Usage.</p>'+
   '</div>';
 }
 // Aufklappbares Einstellungs-Kapitel
@@ -5455,6 +5610,8 @@ if(!S.a.length){
   saveL();
 }
 nav();sdot(gh.tok?'dt':'ok');renderLager();updateOnlineStatus();
+// API-Guthaben-Warnung beim Start prüfen
+setTimeout(()=>checkAiGuthabenWarnung(),2000);
 // Autofill-Unterdrückung: initial + bei neu eingefügten Feldern (Dialoge)
 suppressAutofill();
 try{
