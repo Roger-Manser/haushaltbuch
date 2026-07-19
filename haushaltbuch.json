@@ -7216,7 +7216,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Vorratsschrank",
       "kaufort": "",
-      "menge": 4,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "5017689002732",
@@ -7229,11 +7229,20 @@
       "notiz": "Pro 100g/ml: 300 kcal, Fett 12g, KH 49g, Eiweiss 13g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466450305_off.jpg?t=1784466470652",
       "fotoPath": "1784466450305_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-19",
+          "preis": 0,
+          "menge": 4,
+          "einheit": "Pkg",
+          "typ": "weg",
+          "aktion": false
+        }
+      ],
       "packungen": [
         {
-          "id": 7,
-          "menge": 4,
+          "id": 1,
+          "menge": 0,
           "kaufdatum": "2026-07-19",
           "ablaufdatum": ""
         }
@@ -7423,6 +7432,36 @@
         {
           "id": 13,
           "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 212,
+      "name": "BIO kurkuma pulver",
+      "marke": "nu3",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4260289449808",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 90,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Bio, Vegan, Vegetarisch\nPro 100g/ml: 354 kcal, Fett 9.9g, KH 65g, Eiweiss 7.9g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784467001752_off.jpg?t=1784467022079",
+      "fotoPath": "1784467001752_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
           "kaufdatum": "2026-07-19",
           "ablaufdatum": ""
         }
@@ -11897,7 +11936,33 @@
       "aktion": false,
       "datum": "2026-07-19",
       "zeit": 1784466847397
+    },
+    {
+      "t": "weg",
+      "aid": 205,
+      "name": "Curry powder Mild Madras",
+      "lager": "Vorratsschrank",
+      "kat": "Gewürze & Saucen",
+      "menge": 4,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784466966166
+    },
+    {
+      "t": "ein",
+      "aid": 212,
+      "name": "BIO kurkuma pulver",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784467022080
     }
   ],
-  "aktualisiert": "2026-07-19T13:14:26.487Z"
+  "aktualisiert": "2026-07-19T13:20:12.413Z"
 }
