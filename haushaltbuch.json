@@ -341,7 +341,15 @@
           "menge": 1
         }
       ],
-      "kaufort": "Migros"
+      "kaufort": "Migros",
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 0,
+          "kaufdatum": "2026-06-20",
+          "ablaufdatum": ""
+        }
+      ]
     },
     {
       "id": 6,
@@ -1613,7 +1621,15 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782577901348_off.jpg?t=1784445143693",
       "fotoPath": "1782577901348_off.jpg",
-      "preisHistorie": []
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 0,
+          "kaufdatum": "2026-06-27",
+          "ablaufdatum": ""
+        }
+      ]
     },
     {
       "id": 41,
@@ -12176,5 +12192,5 @@
       "zeit": 1784467547513
     }
   ],
-  "aktualisiert": "2026-07-19T13:26:05.948Z"
+  "aktualisiert": "2026-07-19T16:28:56.608Z"
 }
