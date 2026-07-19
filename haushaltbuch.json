@@ -6455,6 +6455,36 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 180,
+      "name": "Junge Erbsen Sehr Fein (aldi)",
+      "marke": "Balinoff",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "24061735",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 280,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Pro 100g/ml: 87 kcal, Fett 1.1g, KH 5.3g, Eiweiss 9.2g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784462524813_off.jpg?t=1784462565508",
+      "fotoPath": "1784462524813_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -10667,5 +10697,5 @@
       "zeit": 1784458626143
     }
   ],
-  "aktualisiert": "2026-07-19T11:59:50.215Z"
+  "aktualisiert": "2026-07-19T12:06:16.934Z"
 }
