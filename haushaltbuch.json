@@ -6425,6 +6425,36 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 179,
+      "name": "Kürbiskerne geröstet und gesalzen",
+      "marke": "Zwicky",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610027029828",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 180,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784462134518_17844621279935820959176731197055.jpg?t=1784462188674",
+      "fotoPath": "1784462134518_17844621279935820959176731197055.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -10637,5 +10667,5 @@
       "zeit": 1784458626143
     }
   ],
-  "aktualisiert": "2026-07-19T11:46:40.147Z"
+  "aktualisiert": "2026-07-19T11:59:50.215Z"
 }
