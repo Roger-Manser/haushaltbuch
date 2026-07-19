@@ -6765,6 +6765,66 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 190,
+      "name": "Champignons",
+      "marke": "Nature´s Gold",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4099200011622",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 230,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Vegan, Vegetarisch\nNutri-Score B\nPro 100g/ml: 18 kcal, Fett 0.4g, KH 0.2g, Eiweiss 2.1g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784464521197_off.jpg?t=1784464569277",
+      "fotoPath": "1784464521197_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 191,
+      "name": "Croutons Kräuter",
+      "marke": "Kania",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Lidl",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "20171094",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 100,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score E\nPro 100g/ml: 448 kcal, Fett 19g, KH 58.4g, Eiweiss 9.3g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784464628066_off.jpg?t=1784464657238",
+      "fotoPath": "1784464628066_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -11003,5 +11063,5 @@
       "zeit": 1784463792783
     }
   ],
-  "aktualisiert": "2026-07-19T12:24:42.391Z"
+  "aktualisiert": "2026-07-19T12:37:51.916Z"
 }
