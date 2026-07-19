@@ -7466,6 +7466,135 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 213,
+      "name": "Chnöpflimehl",
+      "marke": "Migros Bio",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610200290335",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 1000,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Bio\nPro 100g/ml: 345 kcal, Fett 1g, KH 70g, Eiweiss 12g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784467267444_off.jpg?t=1784467295073",
+      "fotoPath": "1784467267444_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-07-19",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "weg",
+          "aktion": false
+        }
+      ],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 214,
+      "name": "Knöpflidunst (Farine pour knöpfli)",
+      "marke": "Zwicky",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610027017542",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 1,
+      "packEinheit": "kg",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784467366570_17844673542436177389524421977349.jpg?t=1784467400088",
+      "fotoPath": "1784467366570_17844673542436177389524421977349.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 215,
+      "name": "Kartoffelstock",
+      "marke": "",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7616800430324",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 4,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Vegetarisch\nPro 100g/ml: 92 kcal, Fett 2.5g, KH 14g, Eiweiss 2.5g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784467410143_off.jpg?t=1784467439716",
+      "fotoPath": "1784467410143_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 6,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 216,
+      "name": "Haferflocken",
+      "marke": "Migros Bio",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7613312403600",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 400,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Bio\nNutri-Score A\nPro 100g/ml: 373 kcal, Fett 7g, KH 61g, Eiweiss 13g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784467461989_off.jpg?t=1784467490070",
+      "fotoPath": "1784467461989_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 7,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -11962,7 +12091,46 @@
       "aktion": false,
       "datum": "2026-07-19",
       "zeit": 1784467022080
+    },
+    {
+      "t": "ein",
+      "aid": 213,
+      "name": "Chnöpflimehl",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784467295074
+    },
+    {
+      "t": "weg",
+      "aid": 213,
+      "name": "Chnöpflimehl",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784467312125
+    },
+    {
+      "t": "ein",
+      "aid": 214,
+      "name": "Knöpflidunst (Farine pour knöpfli)",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784467400090
     }
   ],
-  "aktualisiert": "2026-07-19T13:20:12.413Z"
+  "aktualisiert": "2026-07-19T13:25:26.524Z"
 }
