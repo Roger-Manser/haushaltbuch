@@ -530,10 +530,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='16.1';
+const APP_VERSION='16.2';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'16.2',d:'07.2026',items:['Packungsgrösse: Icon-Fix (undefined statt Symbol)','Neuer Filter-Chip: Mindestbestand > 0']},
   {v:'16.1',d:'07.2026',items:['Foto-Upload: Base64 bleibt erhalten wenn Upload fehlschlägt','loadFromGH: lokales Base64-Foto wird nicht durch leeres Feld überschrieben','Fehlermeldung bei fehlgeschlagenem Foto-Upload']},
   {v:'16.0',d:'07.2026',items:['Foto-URLs: Cache-Buster beim Upload und beim Laden von GitHub','raw.githubusercontent.com-URLs werden bei jedem GitHub-Laden aktualisiert']},
   {v:'15.9',d:'07.2026',items:['Alle Dialoge: OK/Abbrechen ersetzt durch Ja/Nein mit klarer Beschriftung','Eigene confirmDialog()-Funktion mit kontextabhängigen Button-Texten']},
@@ -1246,6 +1247,7 @@ function nav(){
 
 /* ── Lager ────────────────────────────────────────────────────────── */
 let lf='alle';
+let mindestFilter=false;
 let sortMode='ablauf'; // 'ablauf' | 'name' | 'bestand'
 
 // Barcode-Scanner für Artikelsuche in der Lagerliste
@@ -1288,13 +1290,16 @@ function renderLager(){
   const used=[...new Set(S.a.map(x=>x.lager))];
   const tabs=['alle',...S.lo.filter(l=>used.includes(l))];
   bar.innerHTML=tabs.map(l=>'<button class="chip'+(lf===l?' on':'')+'" onclick="setLF(\''+esc(l)+'\')">'+
-    (l==='alle'?'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:12px;height:12px;stroke:currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> Alle':lsm(l)+' '+esc(l))+'</button>').join('');
+    (l==='alle'?'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:12px;height:12px;stroke:currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> Alle':lsm(l)+' '+esc(l))+'</button>').join('')+
+    '<button class="chip'+(mindestFilter?' on':'')+'" onclick="mindestFilter=!mindestFilter;renderLager()" style="'+(mindestFilter?'':'')+'">'+
+    '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:12px;height:12px;stroke:currentColor"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg> Mindestbestand</button>';
   const list=document.getElementById('lager-list');
   const q=(document.getElementById('lager-search').value||'').toLowerCase();
   let fil=S.a.filter(a=>{
     const mq=!q||a.name.toLowerCase().includes(q)||(a.marke||'').toLowerCase().includes(q);
     const ml=lf==='alle'||a.lager===lf;
-    return mq&&ml;
+    const mm=!mindestFilter||a.mindest>0;
+    return mq&&ml&&mm;
   });
   if(!fil.length){list.innerHTML='<div class="empty">'+I.pkg.replace('20px;height:20px','48px;height:48px')+'<p>'+(S.a.length?'Keine Artikel gefunden':'Noch keine Artikel')+'</p><small>'+(S.a.length?'Suchbegriff anpassen':'Tippe auf Neuer Artikel')+'</small></div>';nav();return;}
 
@@ -1409,7 +1414,7 @@ function showDet(id){
   const preisRow=a.preis?'<div class="ir"><span class="ik">'+I.cart+' Preis/Einheit</span><span class="iv">CHF '+a.preis.toFixed(2)+'</span></div>':'';
   const pinfo=packInfo(a);
   const ptotal=packTotal(a);
-  const packRow=(pinfo&&!pinfo.includes('undefined'))?'<div class="ir"><span class="ik">'+I.stack+' Packungsgrösse</span><span class="iv">'+esc(pinfo.split('/')[0])+' pro '+esc(a.einheit||'Stk')+'</span></div>':'';
+  const packRow=(pinfo&&!pinfo.includes('undefined'))?'<div class="ir"><span class="ik">'+I.pkg.replace('20px;height:20px','15px;height:15px')+' Packungsgrösse</span><span class="iv">'+esc(pinfo.split('/')[0])+' pro '+esc(a.einheit||'Stk')+'</span></div>':'';
   const hist=(a.preisHistorie||[]).slice().reverse();
 
   // Günstigster Anbieter berechnen (aus Eingängen mit Preis + Kaufort)
