@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='17.1';
+const APP_VERSION='17.2';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'17.2',d:'07.2026',items:['Neuer Artikel: Einheit-Standard immer Stk unabhängig von der Einheiten-Reihenfolge']},
   {v:'17.1',d:'07.2026',items:['saveForm: newId Scope-Bug behoben (Absturz beim Neuanlegen)','Alle return-Pfade rufen hideLdr() auf']},
   {v:'17.0',d:'07.2026',items:['KI-Fotoanalyse: nur beim Neuanlegen, Button erscheint erst nach Foto-Upload','Verwendet hinterlegtes Foto statt nochmals Kamera zu öffnen']},
   {v:'16.9',d:'07.2026',items:['Barcode-Konflikt-Dialog: hideLdr() beim Abbrechen (Hänger behoben)']},
@@ -1930,7 +1931,7 @@ function openForm(id){
   document.getElementById('form-title').textContent=a?'Artikel bearbeiten':'Neuer Artikel';
   const lc=S.lo.map(l=>'<div class="chip'+(a&&a.lager===l?' on':'')+'" data-lager="'+esc(l)+'" onclick="plager(this)">'+lsm(l)+' '+esc(l)+'</div>').join('')+'<div class="chip" onclick="addLF()" style="border-style:dashed"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" style="width:12px;height:12px;stroke:currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Neu...</div>';
   const kc=S.ka.map(k=>'<div class="chip'+(a&&a.kat===k?' on':'')+'" data-kat="'+esc(k)+'" onclick="pkat(this)">'+KICON+' '+esc(k)+'</div>').join('')+'<div class="chip" onclick="addKF()" style="border-style:dashed"><svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" style="width:12px;height:12px;stroke:currentColor"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Neu...</div>';
-  const eo=S.ei.map(u=>'<option'+(a&&a.einheit===u?' selected':'')+'>'+esc(u)+'</option>').join('');
+  const eo=S.ei.map(u=>'<option'+(a?a.einheit===u?' selected':'':u==='Stk'?' selected':'')+'>'+esc(u)+'</option>').join('');
   const PACK_EINS=['dl','ml','g','kg','l'];
   const packEinheiten=[...new Set([...PACK_EINS,...S.ei])];
   const epo=packEinheiten.map(u=>'<option'+(a&&a.packEinheit===u?' selected':(!a&&u==='dl'?' selected':''))+'>'+esc(u)+'</option>').join('');
