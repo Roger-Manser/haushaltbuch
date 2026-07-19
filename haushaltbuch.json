@@ -6485,6 +6485,286 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 181,
+      "name": "Stocki express Frühlingszwiebeln mit Speck",
+      "marke": "Knorr",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 8,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7611100036931",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 42,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score C\nPro 100g/ml: 82 kcal, Fett 3.1g, KH 11g, Eiweiss 1.9g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784463273935_off.jpg?t=1784463303607",
+      "fotoPath": "1784463273935_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 8,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 182,
+      "name": "Haselnusskerne",
+      "marke": "Migros",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610200254252",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 200,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Bio\nNutri-Score A\nPro 100g/ml: 682 kcal, Fett 65g, KH 3.9g, Eiweiss 16g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784463322699_off.jpg?t=1784463354604",
+      "fotoPath": "1784463322699_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 183,
+      "name": "Spaghetti No.3",
+      "marke": "Agnesi",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "8001200111031",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 1,
+      "packEinheit": "kg",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score A\nPro 100g/ml: 359 kcal, Fett 1.5g, KH 72g, Eiweiss 13g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784463374202_off.jpg?t=1784463403036",
+      "fotoPath": "1784463374202_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 184,
+      "name": "Suppen-Perlen",
+      "marke": "M-Classic",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7613312208786",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 125,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Pro 100g/ml: 555 kcal, Fett 35g, KH 50g, Eiweiss 8g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784463448796_off.jpg?t=1784463468989",
+      "fotoPath": "1784463448796_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 185,
+      "name": "Getrocknete Coconut Chips",
+      "marke": "Happy Harvest",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Aldi",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "5098240198644",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 100,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784463501455_17844634956517670383454212893652.jpg?t=1784463531749",
+      "fotoPath": "1784463501455_17844634956517670383454212893652.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 186,
+      "name": "Backpulver",
+      "marke": "Migros",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "g",
+      "mindest": 0,
+      "barcode": "7613312256411",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 15,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784463593331_off.jpg?t=1784463614857",
+      "fotoPath": "1784463593331_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 6,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 187,
+      "name": "Zimtstangen",
+      "marke": "Migros Bio",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7613312016589",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 40,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784463625148_off.jpg?t=1784463652503",
+      "fotoPath": "1784463625148_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 7,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 188,
+      "name": "Natron",
+      "marke": "",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7617600007624",
+      "barcodes": [],
+      "preis": 0.5,
+      "packMenge": 50,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784463697953_off.jpg?t=1784463727848",
+      "fotoPath": "1784463697953_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-07-19",
+          "preis": 0.5,
+          "menge": 0,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "packungen": [
+        {
+          "id": 8,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 189,
+      "name": "Haselnüsse gemahlen",
+      "marke": "",
+      "kat": "Backwaren & Brot",
+      "lager": "Vorratsschrank",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7613312423769",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 200,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784463764662_17844637539976207684822065008023.jpg?t=1784463792777",
+      "fotoPath": "1784463764662_17844637539976207684822065008023.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 9,
+          "menge": 1,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -10695,7 +10975,33 @@
       "aktion": false,
       "datum": "2026-07-19",
       "zeit": 1784458626143
+    },
+    {
+      "t": "ein",
+      "aid": 181,
+      "name": "Stocki express Frühlingszwiebeln mit Speck",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 8,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784463303608
+    },
+    {
+      "t": "ein",
+      "aid": 189,
+      "name": "Haselnüsse gemahlen",
+      "lager": "Vorratsschrank",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784463792783
     }
   ],
-  "aktualisiert": "2026-07-19T12:06:16.934Z"
+  "aktualisiert": "2026-07-19T12:23:28.042Z"
 }
