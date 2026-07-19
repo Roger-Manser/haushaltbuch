@@ -530,10 +530,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='16.0';
+const APP_VERSION='16.1';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'16.1',d:'07.2026',items:['Foto-Upload: Base64 bleibt erhalten wenn Upload fehlschlägt','loadFromGH: lokales Base64-Foto wird nicht durch leeres Feld überschrieben','Fehlermeldung bei fehlgeschlagenem Foto-Upload']},
   {v:'16.0',d:'07.2026',items:['Foto-URLs: Cache-Buster beim Upload und beim Laden von GitHub','raw.githubusercontent.com-URLs werden bei jedem GitHub-Laden aktualisiert']},
   {v:'15.9',d:'07.2026',items:['Alle Dialoge: OK/Abbrechen ersetzt durch Ja/Nein mit klarer Beschriftung','Eigene confirmDialog()-Funktion mit kontextabhängigen Button-Texten']},
   {v:'15.8',d:'07.2026',items:['Inventar: nach Scan Foto prüfen → mit Foto sofort weiter, ohne Foto Formular öffnen','Lookup-Status "🔍 suche…" in Buffer-Liste','Fehlende-Daten-Dialog mit 3 Optionen (Formular/Überspringen/Später)']},
@@ -768,17 +769,27 @@ async function doSync(){
     const pending=S.a.filter(a=>a.foto&&a.foto.startsWith('data:'));
     if(pending.length){
       ldr('Lade '+pending.length+' Foto(s) hoch…');
+      let fotoFehler=0;
       for(const a of pending){
         try{
           const fn=a.fotoPath||(Date.now()+'_'+a.id+'.jpg');
           const url=await uploadFoto(a.foto,fn);
-          a.foto=url;
-          a.fotoPath=fn;
+          if(url){
+            // Nur ersetzen wenn Upload wirklich geklappt hat
+            a.foto=url;
+            a.fotoPath=fn;
+          }else{
+            fotoFehler++;
+            console.warn('Foto-Upload kein URL zurückgegeben für',a.name);
+          }
         }catch(e){
-          console.error('Foto-Upload fehlgeschlagen für',a.name,e);
+          fotoFehler++;
+          console.error('Foto-Upload fehlgeschlagen für',a.name,e.message);
+          // WICHTIG: a.foto bleibt als Base64 erhalten — wird beim nächsten Sync erneut versucht
         }
       }
       saveL();
+      if(fotoFehler>0)toast('⚠ '+fotoFehler+' Foto(s) konnten nicht hochgeladen werden — wird beim nächsten Sync erneut versucht');
       ldr('Synchronisiere mit GitHub...');
     }
 
@@ -903,6 +914,13 @@ async function loadFromGH(){
         }
         ldr('Lade von GitHub...');
       }
+      // Lokale Base64-Fotos bewahren: wenn GitHub kein Foto hat, lokales behalten
+      ghArtikel.forEach(ga=>{
+        const lokal=S.a.find(la=>la.id===ga.id);
+        if(lokal&&lokal.foto&&lokal.foto.startsWith('data:')&&(!ga.foto||ga.foto==='data:')){
+          ga.foto=lokal.foto; // lokales Base64 übernehmen
+        }
+      });
       S.a=ghArtikel;S.ge=d.geschaefte||[...GD];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.eko=d.einkaufOverrides||{};S.log=d.log||[];
       // Foto-URLs mit Cache-Buster aktualisieren (raw.githubusercontent.com cached)
       const ts=Date.now();
