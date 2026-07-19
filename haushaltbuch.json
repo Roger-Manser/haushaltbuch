@@ -6878,6 +6878,156 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 194,
+      "name": "Aprikosen Konfitüre",
+      "marke": "Bonne Maman",
+      "kat": "Süsswaren",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Glas",
+      "mindest": 0,
+      "barcode": "3608580925484",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 335,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score D\nPro 100g/ml: 164 kcal, Fett 0.2g, KH 39g, Eiweiss 0.8g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784465802700_off.jpg?t=1784465826452",
+      "fotoPath": "1784465802700_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 195,
+      "name": "Cornichons",
+      "marke": "Condy",
+      "kat": "Gemüse & Früchte",
+      "lager": "Schlof",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Glas",
+      "mindest": 0,
+      "barcode": "7613312203231",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score D\nPro 100g/ml: 40 kcal, Fett 0.5g, KH 8g, Eiweiss 0.6g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784465827311_off.jpg?t=1784465854299",
+      "fotoPath": "1784465827311_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 196,
+      "name": "Raclette",
+      "marke": "McCormick",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610071277503",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 43,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Pro 100g/ml: 349 kcal, Fett 13g, KH 33g, Eiweiss 13g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784465887288_off.jpg?t=1784465913352",
+      "fotoPath": "1784465887288_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 197,
+      "name": "Oignons en poudre",
+      "marke": "Coop",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7624841337069",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 40,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784465914088_off.jpg?t=1784465934480",
+      "fotoPath": "1784465914088_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 6,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 198,
+      "name": "Mccormick Rosmarin",
+      "marke": "Mccormick",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "g",
+      "mindest": 0,
+      "barcode": "7610071234445",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 10,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-19",
+      "ablaufdatum": "",
+      "notiz": "Pro 100g/ml: 1 kcal, Fett 0g, KH 0g, Eiweiss 0g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784465935329_off.jpg?t=1784465950972",
+      "fotoPath": "1784465935329_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 8,
+          "menge": 0,
+          "kaufdatum": "2026-07-19",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -11218,7 +11368,33 @@
       "aktion": false,
       "datum": "2026-07-19",
       "zeit": 1784464755128
+    },
+    {
+      "t": "ein",
+      "aid": 198,
+      "name": "Mccormick Rosmarin",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "g",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784465950973
+    },
+    {
+      "t": "aus",
+      "aid": 198,
+      "name": "Mccormick Rosmarin",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "g",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-19",
+      "zeit": 1784466099282
     }
   ],
-  "aktualisiert": "2026-07-19T12:52:10.744Z"
+  "aktualisiert": "2026-07-19T13:02:11.554Z"
 }
