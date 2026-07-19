@@ -238,7 +238,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .ik svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.75}
 .iv{font-weight:500;text-align:right}
 .spr{display:flex;align-items:center;gap:12px}
-.spb{width:32px;height:32px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);font-size:20px;font-weight:300;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1}
+.spb{width:32px;height:32px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:20px;font-weight:300;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1}
 .spv{font-size:20px;font-weight:700;min-width:32px;text-align:center}
 .acr{display:flex;gap:8px}
 .acb{flex:1;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--sf);color:var(--tx);font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer;text-align:center;line-height:1.3}
@@ -530,10 +530,14 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='15.5';
+const APP_VERSION='15.9';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'15.9',d:'07.2026',items:['Alle Dialoge: OK/Abbrechen ersetzt durch Ja/Nein mit klarer Beschriftung','Eigene confirmDialog()-Funktion mit kontextabhängigen Button-Texten']},
+  {v:'15.8',d:'07.2026',items:['Inventar: nach Scan Foto prüfen → mit Foto sofort weiter, ohne Foto Formular öffnen','Lookup-Status "🔍 suche…" in Buffer-Liste','Fehlende-Daten-Dialog mit 3 Optionen (Formular/Überspringen/Später)']},
+  {v:'15.7',d:'07.2026',items:['Passwort-Meldung endgültig unterdrückt: Token-Felder als type=text mit -webkit-text-security:disc','Dummy-Felder verhindern Login-Formular-Erkennung durch Chrome']},
+  {v:'15.6',d:'07.2026',items:['+/− Buttons Detailansicht: Farbe explizit gesetzt (Beschriftung sichtbar)','doEingangSchnell: letzter bekannter Preis im Log-Eintrag']},
   {v:'15.5',d:'07.2026',items:['Inventar-Dialog: kein auto-focus (Tastatur klappt nur bei Antippen hoch)','Inventar-Dialog: suppressAutofill vor Anzeige (kein Passwort-Bestätigen)','Inventar-Dialog: "Neu"-Button zum Wiederholen des Scans']},
   {v:'15.4',d:'07.2026',items:['Foodwaste-Dashboard: gleiche Regeln wie Ablauf-Sortierung (Puffer, ablaufIgnoriert, Bestand>0)']},
   {v:'15.3',d:'07.2026',items:['Einstellungen: aufklappbare Gruppen korrekt (öffnen/schliessen einzeln)','Gruppierung direkt im Render statt DOM-Nachbearbeitung']},
@@ -789,14 +793,14 @@ async function doSync(){
           hideLdr();
           const diff=ghCount-lokalCount;
           const ghZeit=ghData.aktualisiert?new Date(ghData.aktualisiert).toLocaleString('de-CH',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'unbekannt';
-          const wahl=confirm(
-            '⚠️ ACHTUNG — möglicher Datenverlust!\n\n'+
-            'Auf GitHub liegen MEHR Artikel als auf diesem Gerät:\n\n'+
-            '   GitHub: '+ghCount+' Artikel (Stand '+ghZeit+')\n'+
-            '   Dieses Gerät: '+lokalCount+' Artikel\n\n'+
-            'Wenn du jetzt hochlädst, werden die '+diff+' zusätzlichen Artikel auf GitHub ÜBERSCHRIEBEN.\n\n'+
-            '• ABBRECHEN (empfohlen): Erst «Von GitHub laden», um den grösseren Stand zu holen.\n'+
-            '• OK: Trotzdem hochladen und GitHub mit diesem Gerät überschreiben.'
+          const wahl=await confirmDialog(
+            '⚠️ GitHub hat mehr Artikel!\n\n'+
+            'GitHub: '+ghCount+' Artikel (Stand '+ghZeit+')\n'+
+            'Dieses Gerät: '+lokalCount+' Artikel\n\n'+
+            'Hochladen würde '+diff+' Artikel auf GitHub löschen.\n'+
+            'Empfehlung: Zuerst «Von GitHub laden».',
+            'Trotzdem hochladen',
+            'Abbrechen (empfohlen)'
           );
           if(!wahl){
             sdot('dt');renderLager();return;
@@ -893,7 +897,7 @@ async function loadFromGH(){
         hideLdr();
         const diff=S.a.length-ghArtikel.length;
         const ghZeit=d.aktualisiert?new Date(d.aktualisiert).toLocaleString('de-CH',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'unbekannt';
-        if(!confirm('⚠️ Achtung: Dieses Gerät hat MEHR Artikel als GitHub!\n\n   Dieses Gerät: '+S.a.length+' Artikel\n   GitHub: '+ghArtikel.length+' Artikel (Stand '+ghZeit+')\n\nWenn du lädst, werden die '+diff+' zusätzlichen lokalen Artikel ÜBERSCHRIEBEN.\n\n• ABBRECHEN (empfohlen): Erst synchronisieren (Sync-Button), um dieses Gerät auf GitHub zu sichern.\n• OK: Trotzdem laden und lokale Daten überschreiben.')){
+        if(!await confirmDialog('⚠️ Dieses Gerät hat mehr Artikel als GitHub!\n\nDieses Gerät: '+S.a.length+' Artikel\nGitHub: '+ghArtikel.length+' Artikel (Stand '+ghZeit+')\n\nLaden würde '+diff+' lokale Artikel löschen.\nEmpfehlung: Zuerst synchronisieren (Sync-Button).','Trotzdem laden','Abbrechen (empfohlen)')){
           return;
         }
         ldr('Lade von GitHub...');
@@ -1511,7 +1515,7 @@ function showDet(id){
   if(db)db.scrollTop=0;
   setTimeout(updateJumpBtns,150);
 }
-function editPreisHistorie(artikelId,idx){
+async function editPreisHistorie(artikelId,idx){
   const a=S.a.find(x=>x.id===artikelId);
   if(!a||!a.preisHistorie||!a.preisHistorie[idx])return;
   const h=a.preisHistorie[idx];
@@ -1529,17 +1533,17 @@ function editPreisHistorie(artikelId,idx){
   if(neueMenge===null)return;
   const m=parseInt(neueMenge)||1;
   // Aktion-Flag
-  const aktion=confirm('Aktionspreis?\n(OK = Ja, Abbrechen = Nein)');
+  const aktion=await confirmDialog('War das ein Aktionspreis?','Ja, Aktionspreis','Nein, Normalpreis');
   a.preisHistorie[idx]={...h,preis:p,datum:neuesDatum||h.datum,menge:m,aktion};
   // Wenn dieser Eintrag der aktuellste ist und kein Aktionspreis: Standardpreis aktualisieren
   if(idx===a.preisHistorie.length-1&&!aktion)a.preis=p;
   saveL();showDet(artikelId);toast('Preisverlauf aktualisiert');
 }
-function delPreisHistorie(artikelId,idx){
+async function delPreisHistorie(artikelId,idx){
   const a=S.a.find(x=>x.id===artikelId);
   if(!a||!a.preisHistorie||!a.preisHistorie[idx])return;
   const h=a.preisHistorie[idx];
-  if(!confirm('Eintrag «CHF '+h.preis.toFixed(2)+' vom '+fmtDateCH(h.datum)+'» löschen?'))return;
+  if(!await confirmDialog('Preis-Eintrag CHF '+h.preis.toFixed(2)+' vom '+fmtDateCH(h.datum)+' löschen?','Ja, löschen','Nein, behalten'))return;
   a.preisHistorie.splice(idx,1);
   // Standardpreis auf letzten Nicht-Aktionspreis setzen
   const letzte=a.preisHistorie.filter(e=>!e.aktion);
@@ -1659,7 +1663,7 @@ function doEingangSchnell(artikelId){
   ensurePackungen(a);
   a.packungen.push({id:newPackId(),menge,kaufdatum:todayISO(),ablaufdatum:mhd});
   syncMenge(a);saveL();
-  addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,a.einheit,0);
+  addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,a.einheit,a.preis||0,false);
   const dlg=document.getElementById('pack-dlg');if(dlg)dlg.remove();
   toast('+'+fmtMenge(menge)+' eingelagert'+(mhd?' (MHD '+fmtDateCH(mhd)+')':''));
   showDet(artikelId);
@@ -1723,8 +1727,8 @@ function toggleAblaufIgnoriert(id){
   toast(a.ablaufIgnoriert?'↓ Wird bei Ablauf-Sortierung ans Ende gesetzt':'↑ Wieder normal eingereiht');
   showDet(id);
 }
-function delA(id){
-  if(!confirm('Artikel wirklich löschen?'))return;
+async function delA(id){
+  if(!await confirmDialog('Artikel «'+a.name+'» wirklich löschen?\n\nDieser Schritt kann nicht rückgängig gemacht werden.','Ja, löschen','Nein, abbrechen'))return;
   const a=S.a.find(x=>x.id===id);
   if(a){
     // Foto auf GitHub löschen
@@ -1772,11 +1776,11 @@ function filterMergeList(id){
   }).join('');
 }
 
-function mergeArtikel(zielId,quelleId){
+async function mergeArtikel(zielId,quelleId){
   const ziel=S.a.find(x=>x.id===zielId);
   const quelle=S.a.find(x=>x.id===quelleId);
   if(!ziel||!quelle)return;
-  if(!confirm('«'+quelle.name+'» in «'+ziel.name+'» eingliedern?\n\nBestand: '+ziel.menge+' + '+quelle.menge+' = '+(ziel.menge+quelle.menge)+' '+(ziel.einheit||'Stk')+'\n\nDies kann nicht rückgängig gemacht werden.'))return;
+  if(!await confirmDialog('«'+quelle.name+'» in «'+ziel.name+'» eingliedern?\n\nNeuer Bestand: '+ziel.menge+' + '+quelle.menge+' = '+(ziel.menge+quelle.menge)+' '+(ziel.einheit||'Stk'),'Ja, zusammenführen','Nein, abbrechen'))return;
 
   ensurePackungen(ziel);
   ensurePackungen(quelle);
@@ -2072,13 +2076,13 @@ function istEinfrierbar(a){
   if(a.lager&&/gefrier|tiefk/i.test(a.lager))return false; // schon tiefgekühlt
   return EINFRIERBAR_KAT.includes(a.kat);
 }
-function markEingefroren(id){
+async function markEingefroren(id){
   const a=S.a.find(x=>x.id===id);if(!a)return;
   // Gefriertruhe als Lagerort suchen
   const gefrierLager=S.lo.find(l=>/gefrier|tiefk/i.test(l));
   const neu=new Date();neu.setMonth(neu.getMonth()+3); // konservativ 3 Monate
   const iso=neu.getFullYear()+'-'+String(neu.getMonth()+1).padStart(2,'0')+'-'+String(neu.getDate()).padStart(2,'0');
-  if(!confirm('«'+a.name+'» einfrieren?\n\n• Neues Haltbarkeitsdatum: '+fmtDateCH(iso)+' (ca. 3 Monate)'+(gefrierLager?'\n• Lagerort wird auf «'+gefrierLager+'» gesetzt':'')+'\n\nGefrorene Lebensmittel bleiben mehrere Monate haltbar.'))return;
+  if(!await confirmDialog('«'+a.name+'» jetzt einfrieren?\n\nNeues Haltbarkeitsdatum: '+fmtDateCH(iso)+(gefrierLager?'\nLagerort → «'+gefrierLager+'»':''),'Ja, einfrieren','Nein, abbrechen'))return;
   a.ablaufdatum=iso;
   if(gefrierLager)a.lager=gefrierLager;
   ensurePackungen(a);
@@ -2089,7 +2093,7 @@ function markEingefroren(id){
 }
 
 /* ── Foodwaste: Anbruch/Geöffnet-Markierung ──────────────────────── */
-function markGeoeffnet(id){
+async function markGeoeffnet(id){
   const a=S.a.find(x=>x.id===id);if(!a)return;
   const tage=anbruchHaltbarkeit(a.kat);
   const neu=new Date();neu.setDate(neu.getDate()+tage);
@@ -2097,11 +2101,11 @@ function markGeoeffnet(id){
   let msg='«'+a.name+'» als geöffnet markieren?\n\nNach dem Öffnen ist '+a.kat+' typisch noch ca. '+tage+' Tag'+(tage===1?'':'e')+' haltbar.\n\n';
   if(a.ablaufdatum&&a.ablaufdatum<iso){
     msg+='Das aktuelle MHD ('+fmtDateCH(a.ablaufdatum)+') liegt früher — es bleibt bestehen.';
-    if(!confirm(msg+'\n\nTrotzdem als geöffnet markieren?'))return;
+    if(!await confirmDialog(msg+'\n\nTrotzdem als geöffnet markieren?','Ja, markieren','Nein, abbrechen'))return;
     a.geoeffnet=todayISO();
   }else{
     msg+='Neues «Frisch bis»: '+fmtDateCH(iso)+' (statt '+(a.ablaufdatum?fmtDateCH(a.ablaufdatum):'ohne MHD')+')';
-    if(!confirm(msg))return;
+    if(!await confirmDialog(msg,'Ja, markieren','Nein, abbrechen'))return;
     a.geoeffnet=todayISO();
     a.ablaufdatum=iso;
     // Packungen-MHD anpassen (die aktuell offene = früheste)
@@ -2114,14 +2118,14 @@ function markGeoeffnet(id){
 }
 
 /* ── Foodwaste: Verworfen-Buchung ────────────────────────────────── */
-function openVerworfen(id){
+async function openVerworfen(id){
   const a=S.a.find(x=>x.id===id);if(!a)return;
   if(a.menge<=0){toast('Kein Bestand zum Verwerfen vorhanden');return;}
   const eingabe=prompt('Wieviel wurde verworfen/entsorgt?\n(Bestand: '+a.menge+' '+(a.einheit||'Stk')+')','1');
   if(eingabe===null)return;
   const menge=Math.min(a.menge,Math.max(1,parseInt(eingabe)||1));
   const wert=(a.preis||0)*menge/(a.packMenge&&a.menge?1:1); // Wert = Stückpreis × Menge
-  if(!confirm(menge+' '+(a.einheit||'Stk')+' «'+a.name+'» als verworfen buchen?'+(a.preis?'\n\nGeschätzter Wert: CHF '+((a.preis||0)*menge).toFixed(2):''))){return;}
+  if(!await confirmDialog(fmtMenge(menge)+' '+(a.einheit||'Stk')+' «'+a.name+'» als Foodwaste verbuchen?'+(a.preis?'\n\nGeschätzter Verlust: CHF '+((a.preis||0)*menge).toFixed(2):''),'Ja, verbuchen','Nein, abbrechen'))return;
   // Von Packungen abbuchen (älteste zuerst — FIFO)
   ensurePackungen(a);
   let rest=menge;
@@ -2234,7 +2238,7 @@ async function saveForm(){
     });
     if(dup){
       const syn=dup.name.toLowerCase()!==nameLc&&!dup.name.toLowerCase().includes(nameLc)&&!nameLc.includes(dup.name.toLowerCase());
-      const weiter=confirm('⚠ '+(syn?'Gleiches Produkt unter anderem Namen':'Ähnlicher Artikel')+' existiert bereits:\n\n«'+dup.name+'» ('+dup.menge+' '+(dup.einheit||'Stk')+' · '+dup.lager+')\n\nTrotzdem als neuen Artikel anlegen?\n\nTipp: Für Bestandserhöhung besser den Eingang-Scan nutzen.');
+      const weiter=await confirmDialog((syn?'Gleiches Produkt unter anderem Namen':'Ähnlicher Artikel')+' vorhanden:\n\n«'+dup.name+'» ('+dup.menge+' '+(dup.einheit||'Stk')+' · '+dup.lager+')\n\nTipp: Für Bestandserhöhung lieber Eingang-Scan nutzen.','Trotzdem neu anlegen','Abbrechen');
       if(!weiter)return;
     }
   }
@@ -2259,7 +2263,7 @@ async function saveForm(){
   if(hauptBc){
     const bcOwner=artikelByCode(hauptBc);
     if(bcOwner&&bcOwner.id!==editId){
-      const weiter=confirm('⚠ Der Barcode '+hauptBc+' gehört bereits zu:\n\n«'+bcOwner.name+'» ('+bcOwner.menge+' '+(bcOwner.einheit||'Stk')+' · '+bcOwner.lager+')\n\nTrotzdem speichern? (Beim Scannen wird dann weiterhin «'+bcOwner.name+'» gefunden.)\n\nTipp: Nutze stattdessen «Zusammenführen», wenn es dasselbe Produkt ist.');
+      const weiter=await confirmDialog('Barcode gehört bereits «'+bcOwner.name+'» ('+bcOwner.menge+' '+(bcOwner.einheit||'Stk')+' · '+bcOwner.lager+')\n\nBeim Scannen wird weiterhin «'+bcOwner.name+'» gefunden.\nBesser: «Zusammenführen» wenn gleiches Produkt.','Trotzdem speichern','Abbrechen');
       if(!weiter)return;
     }
   }
@@ -2343,13 +2347,10 @@ function closeForm(){
     const e=invBufferCurrent;
     invBufferCurrent=null;
     setTimeout(()=>{
-      if(invUebernahmeQueue.length&&confirm('Diesen Artikel überspringen und mit dem nächsten fortfahren?\n\n(Abbrechen beendet die Inventar-Übernahme, der Rest bleibt im Zwischenspeicher.)')){
-        invUebernahmeQueue.shift();
-        naechsteInvUebernahme();
-      }else{
-        invUebernahmeQueue=[];
-        toast('Inventar-Übernahme beendet — Rest bleibt im Zwischenspeicher');
-      }
+      confirmDialog('Diesen Artikel überspringen?\n\nNein = Inventar-Übernahme beenden (Rest bleibt im Zwischenspeicher).','Ja, überspringen','Nein, beenden').then(skip=>{
+        if(skip){invUebernahmeQueue.shift();naechsteInvUebernahme();}
+        else{invUebernahmeQueue=[];toast('Inventar-Übernahme beendet');}
+      });
     },200);
   }
 }
@@ -4351,7 +4352,7 @@ function renderInvCapture(){
           const imLager=artikelByCode(e.barcode);
           const displayName=e.name||imLager?.name||'';
           const displayFoto=e.foto||imLager?.foto||'';
-          const statusLabel=imLager?'<span style="color:var(--ok)">✓ im Lager</span>':(e.offGefunden?'<span style="color:var(--ac)">OFF gefunden</span>':'<span style="color:var(--t3)">unbekannt</span>');
+          const statusLabel=imLager?'<span style="color:var(--ok)">✓ im Lager</span>':(e.offGefunden?'<span style="color:var(--ac)">OFF gefunden</span>':e.lookingUp?'<span style="color:var(--t3)">🔍 suche…</span>':'<span style="color:var(--wn)">⚠ unbekannt</span>');
           return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)">'+
             (displayFoto?'<div style="width:44px;height:44px;border-radius:var(--rs);overflow:hidden;flex-shrink:0;background:var(--bg)"><img src="'+esc(displayFoto)+'" style="width:100%;height:100%;object-fit:cover" loading="lazy"/></div>':'<div style="width:44px;height:44px;border-radius:var(--rs);background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:18px">📦</div>')+
             '<div style="flex:1;min-width:0">'+
@@ -4429,35 +4430,45 @@ function saveInvBufferEntry(barcode,editIndex){
   if(editIndex>=0&&invBuffer[editIndex]){
     entry.name=invBuffer[editIndex].name||'';
     entry.foto=invBuffer[editIndex].foto||'';
+    entry.marke=invBuffer[editIndex].marke||'';
+    entry.bekannt=invBuffer[editIndex].bekannt||false;
+    entry.offGefunden=invBuffer[editIndex].offGefunden||false;
   }
   if(editIndex>=0){
     invBuffer[editIndex]={...invBuffer[editIndex],...entry};
+    saveInvBuffer();
+    const dlg=document.getElementById('invcap-mhd-dlg');if(dlg)dlg.remove();
+    if(navigator.vibrate)navigator.vibrate(40);
+    renderInvCapture();
   }else{
     invBuffer.push(entry);
-    // Asynchron anreichern: bekannten Artikel oder OFF-Lookup
-    enrichInvEntry(invBuffer.length-1,barcode);
+    saveInvBuffer();
+    const dlg=document.getElementById('invcap-mhd-dlg');if(dlg)dlg.remove();
+    if(navigator.vibrate)navigator.vibrate(40);
+    renderInvCapture();
+    // Anreichern + danach Foto prüfen → weiter oder Formular
+    enrichInvEntry(invBuffer.length-1,barcode,true);
   }
-  saveInvBuffer();
-  const dlg=document.getElementById('invcap-mhd-dlg');
-  if(dlg)dlg.remove();
-  if(navigator.vibrate)navigator.vibrate(40);
-  renderInvCapture();
-  if(editIndex<0)setTimeout(()=>startInvScan(),300);
 }
 
-async function enrichInvEntry(idx,barcode){
+async function enrichInvEntry(idx,barcode,autoCheck){
   if(idx<0||idx>=invBuffer.length)return;
   const entry=invBuffer[idx];
+
   // 1. Bereits im Lager?
   const bekannt=artikelByCode(barcode);
   if(bekannt){
     entry.name=bekannt.name;
     entry.foto=bekannt.foto||'';
     entry.bekannt=true;
+    entry.marke=bekannt.marke||'';
     saveInvBuffer();renderInvCapture();
+    if(autoCheck)invCheckFotoUndWeiter(idx);
     return;
   }
-  // 2. OFF-Lookup
+
+  // 2. OFF-Lookup — kurze Lade-Anzeige in der Liste
+  entry.lookingUp=true;renderInvCapture();
   try{
     const r=await fetch('https://world.openfoodfacts.org/api/v2/product/'+encodeURIComponent(barcode)+'.json');
     if(r.ok){
@@ -4470,8 +4481,61 @@ async function enrichInvEntry(idx,barcode){
         entry.offGefunden=true;
       }
     }
-  }catch(e){/* Netzwerkfehler — ignorieren */}
+  }catch(e){/* Netzwerkfehler */}
+  delete entry.lookingUp;
   saveInvBuffer();renderInvCapture();
+  if(autoCheck)invCheckFotoUndWeiter(idx);
+}
+
+function invCheckFotoUndWeiter(idx){
+  const entry=invBuffer[idx];
+  if(!entry)return;
+  if(entry.foto&&entry.name){
+    // Foto + Name vorhanden → weiter scannen
+    toast('✓ '+esc(entry.name)+' erkannt — weiter!');
+    setTimeout(()=>startInvScan(),600);
+  }else{
+    // Kein Foto oder kein Name → Formular öffnen zum Ergänzen
+    showInvMissingDataDialog(idx);
+  }
+}
+
+function showInvMissingDataDialog(idx){
+  const entry=invBuffer[idx];if(!entry)return;
+  const existing=document.getElementById('inv-missing-dlg');if(existing)existing.remove();
+  const dlg=document.createElement('div');
+  dlg.id='inv-missing-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">⚠️ Daten unvollständig</div>'+
+      '<div style="font-size:13px;color:var(--t2);margin-bottom:16px">Barcode <code>'+esc(entry.barcode)+'</code> wurde nicht automatisch erkannt. Bitte ergänze die Angaben.</div>'+
+      '<div style="display:flex;flex-direction:column;gap:8px">'+
+        '<button onclick="invMissingOpenForm('+idx+')" style="padding:14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✏️ Artikel-Formular öffnen</button>'+
+        '<button onclick="document.getElementById(\'inv-missing-dlg\').remove();startInvScan()" style="padding:12px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">'+I.scan+' Überspringen &amp; weiter scannen</button>'+
+        '<button onclick="document.getElementById(\'inv-missing-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Im Zwischenspeicher belassen (später ergänzen)</button>'+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(dlg);
+}
+
+function invMissingOpenForm(idx){
+  const entry=invBuffer[idx];if(!entry)return;
+  const dlg=document.getElementById('inv-missing-dlg');if(dlg)dlg.remove();
+  // Formular öffnen wie bei der Übernahme, aber mit Callback zurück zum Scan
+  invBufferCurrent={...entry,_idx:idx};
+  openForm();
+  setTimeout(async()=>{
+    const bc=document.getElementById('f-bc');if(bc){bc.value=entry.barcode;checkBarcodeDup(entry.barcode);}
+    const nm=document.getElementById('f-nm');if(nm&&entry.name)nm.value=entry.name;
+    const mg=document.getElementById('f-mg');if(mg)mg.value=entry.menge;
+    const mn=document.getElementById('f-mn');if(mn)mn.value='0';
+    setDateField('f-ad',entry.mhd||'');
+    if(entry.pkgMenge){const pg=document.getElementById('f-pg');if(pg)pg.value=entry.pkgMenge;}
+    const ft=document.getElementById('form-title');if(ft)ft.textContent='Inventar: Daten ergänzen';
+    if(entry.barcode&&!entry.offGefunden)await doLookupForm();
+    if(nm){checkDupHint(nm.value);checkFrischeHint(nm.value);}
+  },150);
 }
 function editInvBufferEntry(i){
   const e=invBuffer[i];if(!e)return;
@@ -4480,8 +4544,8 @@ function editInvBufferEntry(i){
 function delInvBufferEntry(i){
   invBuffer.splice(i,1);saveInvBuffer();renderInvCapture();
 }
-function clearInvBuffer(){
-  if(!confirm('Zwischenspeicher wirklich leeren? Alle '+invBuffer.length+' erfassten Barcodes gehen verloren.'))return;
+async function clearInvBuffer(){
+  if(!await confirmDialog('Zwischenspeicher leeren?\n\nAlle '+invBuffer.length+' erfassten Barcodes gehen verloren.','Ja, leeren','Nein, behalten'))return;
   invBuffer=[];saveInvBuffer();renderInvCapture();
 }
 let invUebernahmeQueue=[];
@@ -4492,7 +4556,7 @@ function startInvUebernahme(){
   closeInvCapture();
   naechsteInvUebernahme();
 }
-function naechsteInvUebernahme(){
+async function naechsteInvUebernahme(){
   if(!invUebernahmeQueue.length){
     toast('Alle Eintr\u00e4ge \u00fcbernommen');
     invBufferCurrent=null;
@@ -4501,7 +4565,7 @@ function naechsteInvUebernahme(){
   const e=invUebernahmeQueue[0];
   const imLager=artikelByCode(e.barcode);
   if(imLager){
-    if(confirm('\u00ab'+imLager.name+'\u00bb ist bereits im Lager.\n\n'+fmtMenge(e.menge)+' Stk als Eingang buchen'+(e.mhd?' (MHD '+fmtDateCH(e.mhd)+')':'')+'?')){
+    if(await confirmDialog('«'+imLager.name+'» ist bereits im Lager.\n\n'+fmtMenge(e.menge)+' Stk als Eingang hinzufügen'+(e.mhd?' (MHD '+fmtDateCH(e.mhd)+')':'')+'?','Ja, einbuchen','Nein, überspringen')){
       ensurePackungen(imLager);
       imLager.packungen.push({id:newPackId(),menge:e.menge,kaufdatum:todayISO(),ablaufdatum:e.mhd||''});
       syncMenge(imLager);
@@ -4579,7 +4643,7 @@ function renderAiUsageSektion(){
   // Letzte 10 Einträge für Historie
   const letzte=hist.slice(-10).reverse();
   return '<div class="ss"><div class="ssl">Anthropic API (Quittungsscan)</div>'+
-    '<div class="ghf"><label>API Key</label><input type="password" id="ai-key" placeholder="sk-ant-..." value="'+esc(key)+'"/></div>'+
+    '<div class="ghf"><label>API Key</label><input type="text" id="ai-key" placeholder="sk-ant-..." autocomplete="new-password" autocorrect="off" spellcheck="false" data-1p-ignore="" data-lpignore="true" data-form-type="other" style="-webkit-text-security:disc" value="'+esc(key)+'"/></div>'+
     '<button class="db-btn" onclick="localStorage.setItem(\'hb_ai_key\',document.getElementById(\'ai-key\').value.trim());toast(\'API Key gespeichert\')">💾 API Key speichern</button>'+
     '<p style="font-size:12px;color:var(--t3);margin-top:6px;line-height:1.6">Erstellen unter <code>console.anthropic.com</code> → API Keys. Der Key wird nur lokal gespeichert.</p>'+
     (hist.length?
@@ -4647,8 +4711,8 @@ function setKatPuffer(kat,val){
   }
   saveOpt();renderSt();
 }
-function resetKatPuffer(){
-  if(!confirm('Alle Haltbarkeits-Puffer auf die Standard-Richtwerte zurücksetzen?'))return;
+async function resetKatPuffer(){
+  if(!await confirmDialog('Alle Haltbarkeits-Puffer auf Standard-Richtwerte zurücksetzen?\n\nDeine eigenen Anpassungen gehen verloren.','Ja, zurücksetzen','Nein, behalten'))return;
   opt.katPuffer={};saveOpt();renderSt();
   toast('Puffer auf Standardwerte zurückgesetzt');
 }
@@ -4678,7 +4742,7 @@ function renderSt(){
   // Inhalte der Gruppen aufbauen
   const ghContent=
     (con?'<div class="ghs ok">'+I.chk+' Verbunden mit '+esc(gh.own)+'/'+esc(gh.repo)+'</div>':'<div class="ghs info">Noch nicht konfiguriert</div>')+
-    '<div class="ghf"><label>Personal Access Token (repo Scope)</label><input type="password" id="gh-t" placeholder="ghp_..." value="'+esc(gh.tok||'')+'"/></div>'+
+    '<div class="ghf"><label>Personal Access Token (repo Scope)</label><input type="text" id="gh-t" placeholder="ghp_..." autocomplete="new-password" autocorrect="off" spellcheck="false" data-1p-ignore="" data-lpignore="true" data-form-type="other" style="-webkit-text-security:disc" value="'+esc(gh.tok||'')+'"/></div>'+
     '<div class="ghf"><label>GitHub Username</label><input type="text" id="gh-o" placeholder="Roger-Manser" value="'+esc(gh.own||'')+'"/></div>'+
     '<div class="ghf"><label>Repository Name</label><input type="text" id="gh-r" placeholder="haushaltbuch" value="'+esc(gh.repo||'')+'"/></div>'+
     '<div class="ghf"><label>Rezeptbuch Repository</label><input type="text" id="gh-rz" placeholder="rezeptbuch" value="'+esc(gh.rzrepo||'')+'"/></div>'+
@@ -4690,7 +4754,7 @@ function renderSt(){
 
   document.getElementById('st-body').innerHTML=
   installSection+
-  settingsGroup('sg-verbindung','🔗','Verbindungen & API', ghContent+renderAiUsageSektion())+
+  settingsGroup('sg-verbindung','🔗','Verbindungen & API','<input type="text" name="fake-user" style="display:none" autocomplete="username"/><input type="text" name="fake-pass" style="display:none" autocomplete="new-password"/>'+ghContent+renderAiUsageSektion())+
   settingsGroup('sg-stamm','📋','Stammdaten',
     '<div class="ss"><div class="ssl">Lagerorte</div><div>'+S.lo.map((l,i)=>'<div class="lmi">'+licon(l).replace('20px;height:20px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(l)+'</span><button onclick="editLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=LD.length?'<button onclick="delLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addLo()">+ Neuer Lagerort</button></div>'+
     '<div class="ss"><div class="ssl">Kategorien</div><div>'+S.ka.map((k,i)=>'<div class="lmi">'+KICON.replace('13px;height:13px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(k)+'</span><button onclick="editKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=KD.length?'<button onclick="delKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addKat()">+ Neue Kategorie</button></div>'+
@@ -4752,8 +4816,8 @@ function editKat(k){
 }
 function expJ(){const b=new Blob([JSON.stringify({artikel:S.a,lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,geschaefte:S.ge||[],einkauf:S.ek,log:S.log||[],exportiert:new Date().toISOString()},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='haushaltbuch_'+new Date().toISOString().slice(0,10)+'.json';a.click();toast('Export abgeschlossen');}
 function impJ(ev){const f=ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=r=>{try{const d=JSON.parse(r.target.result);if(!d.artikel)throw new Error('Kein gültiges Format');if(confirm(d.artikel.length+' Artikel importieren? Bestehende Daten überschreiben.')){S.a=d.artikel;S.ge=d.geschaefte||[...GD];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.log=d.log||[];S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;saveL();goScreen('s-lager');toast(d.artikel.length+' Artikel importiert');}}catch(e){alert('Import-Fehler: '+e.message);}};rd.readAsText(f);ev.target.value='';}
-function clearLog(){
-  if(!confirm('Gesamtes Bewegungsprotokoll löschen?\n\nEine Sicherungsdatei wird automatisch heruntergeladen bevor die Daten gelöscht werden.\n\nAlle Eingang/Ausgang-Einträge und Preisverläufe werden unwiderruflich gelöscht. Lagerbestand und Artikel bleiben erhalten.'))return;
+async function clearLog(){
+  if(!await confirmDialog('Bewegungsprotokoll löschen?\n\nSicherung wird vorher heruntergeladen.\nAlle Eingang/Ausgang-Einträge werden unwiderruflich gelöscht.\nLagerbestand und Artikel bleiben erhalten.','Ja, löschen','Nein, abbrechen'))return;
   // Automatische Sicherung vor dem Löschen
   const backup={
     sicherung_datum: new Date().toISOString(),
@@ -4781,7 +4845,7 @@ function clearLog(){
     toast('✓ Sicherung heruntergeladen — Protokoll gelöscht');
   },500);
 }
-function resetAll(){if(!confirm('Alle Daten wirklich löschen?'))return;S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ge:[...GD],ek:[],nid:1,rz:[],log:[]};saveL();goScreen('s-lager');toast('Daten gelöscht');}
+async function resetAll(){if(!await confirmDialog('Alle Daten wirklich löschen?\\n\\nArtikel, Lager, Einstellungen — alles wird unwiderruflich gelöscht.','Ja, alles löschen','Nein, abbrechen'))return;S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ge:[...GD],ek:[],nid:1,rz:[],log:[]};saveL();goScreen('s-lager');toast('Daten gelöscht');}
 
 /* ── Toast & Loader ───────────────────────────────────────────────── */
 let tT;
@@ -5144,6 +5208,27 @@ const DEC_UNITS=['kg','g','l','dl','ml'];
 function isDecUnit(e){return DEC_UNITS.includes(String(e||'').toLowerCase());}
 function fmtMenge(m){const n=parseFloat(m)||0;return Math.abs(n-Math.round(n))<0.001?String(Math.round(n)):String(Math.round(n*1000)/1000).replace('.',',');}
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+// Eigener Bestätigungs-Dialog: ersetzt browser confirm() mit Ja/Nein
+function confirmDialog(msg,jaTxt,neinTxt){
+  return new Promise(res=>{
+    const existing=document.getElementById('confirm-dlg');if(existing)existing.remove();
+    const dlg=document.createElement('div');
+    dlg.id='confirm-dlg';
+    dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9900;display:flex;align-items:center;justify-content:center;padding:20px';
+    const lines=msg.split('\n').map(l=>l?'<div style="margin-bottom:4px">'+esc(l)+'</div>':'<div style="height:6px"></div>').join('');
+    dlg.innerHTML=
+      '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:360px;overflow:hidden">'+
+        '<div style="padding:20px 20px 16px;font-size:14px;line-height:1.6;color:var(--tx)">'+lines+'</div>'+
+        '<div style="display:flex;border-top:1px solid var(--bd)">'+
+          '<button onclick="document.getElementById(\'confirm-dlg\').remove();window._confirmRes(false)" style="flex:1;padding:15px;background:none;border:none;border-right:1px solid var(--bd);font-size:15px;cursor:pointer;color:var(--t2)">'+esc(neinTxt||'Nein')+'</button>'+
+          '<button onclick="document.getElementById(\'confirm-dlg\').remove();window._confirmRes(true)" style="flex:1;padding:15px;background:none;border:none;font-size:15px;font-weight:700;cursor:pointer;color:var(--ac)">'+esc(jaTxt||'Ja')+'</button>'+
+        '</div>'+
+      '</div>';
+    window._confirmRes=res;
+    document.body.appendChild(dlg);
+  });
+}
+
 function daysUntil(iso){
   if(!iso)return null;
   const today=new Date();today.setHours(0,0,0,0);
