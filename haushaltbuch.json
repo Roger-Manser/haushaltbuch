@@ -906,7 +906,14 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782306015140_off.jpg?t=1784445143693",
       "fotoPath": "1782306015140_off.jpg",
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 0,
+          "kaufdatum": "2026-06-24",
+          "ablaufdatum": "2029-01-31"
+        }
+      ],
       "kaufort": "",
       "preisHistorie": [
         {
@@ -1582,7 +1589,7 @@
           "id": 9,
           "menge": 1,
           "kaufdatum": "2026-07-17",
-          "ablaufdatum": "2026-10-21"
+          "ablaufdatum": "2026-08-01"
         },
         {
           "id": 1,
@@ -1590,7 +1597,8 @@
           "kaufdatum": "2026-07-27",
           "ablaufdatum": "2026-10-21"
         }
-      ]
+      ],
+      "geoeffnet": "2026-07-29"
     },
     {
       "id": 39,
@@ -1737,9 +1745,9 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
-      "mindest": 1,
+      "mindest": 0,
       "barcode": "20303402",
       "preis": 2.39,
       "packMenge": 200,
@@ -1826,12 +1834,21 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-17",
+          "preis": 2.39,
+          "menge": 0,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
         {
-          "id": 4,
-          "menge": 1,
+          "id": 1,
+          "menge": 0,
           "kaufdatum": "2026-07-17",
           "ablaufdatum": "2026-08-06"
         }
@@ -6108,7 +6125,8 @@
           "ablaufdatum": "2026-07-22"
         }
       ],
-      "geoeffnet": "2026-07-19"
+      "geoeffnet": "2026-07-19",
+      "ablaufIgnoriert": true
     },
     {
       "id": 168,
@@ -12710,7 +12728,20 @@
       "aktion": false,
       "datum": "2026-07-28",
       "zeit": 1785221869037
+    },
+    {
+      "t": "aus",
+      "aid": 44,
+      "name": "speckwürfel",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-29",
+      "zeit": 1785333490841
     }
   ],
-  "aktualisiert": "2026-07-29T09:58:02.007Z"
+  "aktualisiert": "2026-07-29T16:12:46.311Z"
 }
