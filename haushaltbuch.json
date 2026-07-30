@@ -147,129 +147,6 @@
       ]
     },
     {
-      "id": 3,
-      "name": "Zigaretten Goldfield Gold",
-      "marke": "Lidl",
-      "kat": "Genussmittel",
-      "lager": "Küche",
-      "menge": 1,
-      "einheit": "Stange",
-      "mindest": 2,
-      "barcode": "4006396071576",
-      "preis": 57.5,
-      "packMenge": 10,
-      "packEinheit": "Pkg",
-      "kaufdatum": "2026-07-17",
-      "ablaufdatum": "",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781961409294_17819613986793355689367163798127.jpg?t=1784445143693",
-      "fotoPath": "1781961409294_17819613986793355689367163798127.jpg",
-      "preisHistorie": [
-        {
-          "datum": "2026-06-20",
-          "preis": 57.5,
-          "menge": 3
-        },
-        {
-          "datum": "2026-06-27",
-          "preis": 57.5,
-          "menge": 2,
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-01",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stange",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-01",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stange",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-01",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stange",
-          "typ": "ein",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 57.5,
-          "menge": 2,
-          "einheit": "Stange",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": ""
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stange",
-          "typ": "ein",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-06",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stange",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-16",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stange",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-17",
-          "preis": 57.5,
-          "menge": 4,
-          "einheit": "Stange",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-20",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stange",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-24",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stange",
-          "typ": "aus",
-          "aktion": false
-        }
-      ],
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-07-17",
-          "ablaufdatum": ""
-        }
-      ],
-      "kaufort": "Lidl"
-    },
-    {
       "id": 4,
       "name": "Ei",
       "marke": "Eisenring",
@@ -894,27 +771,27 @@
       "marke": "Mutti",
       "kat": "Gemüse & Früchte",
       "lager": "Schlof",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "80042563",
-      "preis": 0,
+      "preis": 4.35,
       "packMenge": 700,
       "packEinheit": "g",
-      "kaufdatum": "2026-06-24",
-      "ablaufdatum": "2029-01-31",
+      "kaufdatum": "2026-07-30",
+      "ablaufdatum": "2026-08-06",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782306015140_off.jpg?t=1784445143693",
       "fotoPath": "1782306015140_off.jpg",
       "packungen": [
         {
-          "id": 2,
-          "menge": 0,
-          "kaufdatum": "2026-06-24",
-          "ablaufdatum": "2029-01-31"
+          "id": 11,
+          "menge": 1,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": "2026-08-06"
         }
       ],
-      "kaufort": "",
+      "kaufort": "Lidl",
       "preisHistorie": [
         {
           "datum": "2026-07-15",
@@ -923,6 +800,15 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 4.35,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "barcodes": []
@@ -1265,90 +1151,20 @@
       "packungen": []
     },
     {
-      "id": 34,
-      "name": "Morzarella",
-      "marke": "Lovilio",
-      "kat": "Milchprodukte",
-      "lager": "Kühlschrank oben",
-      "menge": 0,
-      "einheit": "Stk",
-      "mindest": 0,
-      "barcode": "20631321",
-      "preis": 2.85,
-      "packMenge": 300,
-      "packEinheit": "g",
-      "kaufdatum": "2026-07-17",
-      "ablaufdatum": "2026-08-05",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542043787_off.jpg?t=1784445143693",
-      "fotoPath": "1782542043787_off.jpg",
-      "preisHistorie": [
-        {
-          "datum": "2026-06-27",
-          "preis": 0,
-          "menge": 1,
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-03",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-07",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-17",
-          "preis": 2.85,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-17",
-          "preis": 2.85,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        }
-      ],
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 0,
-          "kaufdatum": "2026-07-17",
-          "ablaufdatum": "2026-08-05"
-        }
-      ],
-      "kaufort": "Lidl"
-    },
-    {
       "id": 35,
       "name": "Salami",
       "marke": "Italiamo",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "menge": 0,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20016012",
-      "preis": 5.39,
+      "preis": 4.95,
       "packMenge": 180,
       "packEinheit": "g",
-      "kaufdatum": "2026-06-27",
-      "ablaufdatum": "",
+      "kaufdatum": "2026-07-30",
+      "ablaufdatum": "2026-08-08",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542121912_off.jpg?t=1784445143693",
       "fotoPath": "1782542121912_off.jpg",
@@ -1360,6 +1176,15 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 4.95,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -1368,86 +1193,14 @@
           "menge": 1,
           "kaufdatum": "2026-06-27",
           "ablaufdatum": "2026-08-08"
-        }
-      ]
-    },
-    {
-      "id": 36,
-      "name": "Pouletschnitzel a la minute",
-      "marke": "Bonvalle",
-      "kat": "Fleisch & Fisch",
-      "lager": "Kühlschrank oben",
-      "menge": 0,
-      "einheit": "Stk",
-      "mindest": 0,
-      "barcode": "20813055",
-      "preis": 6.89,
-      "packMenge": 330,
-      "packEinheit": "g",
-      "kaufdatum": "2026-07-17",
-      "ablaufdatum": "2026-07-24",
-      "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542205864_off.jpg?t=1784445143693",
-      "fotoPath": "1782542205864_off.jpg",
-      "preisHistorie": [
-        {
-          "datum": "2026-06-27",
-          "preis": 0,
-          "menge": 1,
-          "aktion": false
         },
         {
-          "datum": "2026-07-01",
-          "preis": 0,
+          "id": 5,
           "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 5.86,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": true,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-05",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-11",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-17",
-          "preis": 6.89,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-25",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": ""
         }
       ],
-      "packungen": [],
       "kaufort": "Lidl"
     },
     {
@@ -1456,14 +1209,14 @@
       "marke": "Milbona",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "menge": 1,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "4056489975250",
       "preis": 2.65,
       "packMenge": 500,
       "packEinheit": "ml",
-      "kaufdatum": "2026-07-17",
+      "kaufdatum": "2026-07-30",
       "ablaufdatum": "2026-09-29",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542289759_off.jpg?t=1784445143693",
@@ -1513,6 +1266,15 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 2.65,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -1521,6 +1283,12 @@
           "menge": 1,
           "kaufdatum": "2026-07-17",
           "ablaufdatum": "2026-09-29"
+        },
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": "2026-10-27"
         }
       ],
       "kaufort": "Lidl"
@@ -1531,15 +1299,15 @@
       "marke": "Milbona",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "menge": 2,
+      "menge": 3,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "4056489975267",
       "preis": 3.29,
       "packMenge": 500,
       "packEinheit": "ml",
-      "kaufdatum": "2026-07-27",
-      "ablaufdatum": "2026-10-21",
+      "kaufdatum": "2026-07-30",
+      "ablaufdatum": "2026-08-01",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542344505_off.jpg?t=1784445143693",
       "fotoPath": "1782542344505_off.jpg",
@@ -1582,6 +1350,15 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 3.29,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -1596,9 +1373,16 @@
           "menge": 1,
           "kaufdatum": "2026-07-27",
           "ablaufdatum": "2026-10-21"
+        },
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": "2026-10-06"
         }
       ],
-      "geoeffnet": "2026-07-29"
+      "geoeffnet": "2026-07-29",
+      "kaufort": "Lidl"
     },
     {
       "id": 39,
@@ -1723,20 +1507,59 @@
       "marke": "BO Butter",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "kaufort": "Migros",
-      "menge": 1,
+      "kaufort": "Lidl",
+      "menge": 3,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610128737165",
-      "preis": 0,
+      "preis": 2.45,
       "packMenge": 250,
       "packEinheit": "g",
-      "kaufdatum": "2026-06-28",
+      "kaufdatum": "2026-07-30",
       "ablaufdatum": "2026-07-13",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648210056_off.jpg?t=1784445143693",
       "fotoPath": "1782648210056_off.jpg",
-      "preisHistorie": []
+      "preisHistorie": [
+        {
+          "datum": "2026-07-30",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 2.45,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-06-28",
+          "ablaufdatum": "2026-07-13"
+        },
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": "2026-08-21"
+        },
+        {
+          "id": 9,
+          "menge": 1,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": "2026-08-21"
+        }
+      ]
     },
     {
       "id": 44,
@@ -2192,26 +2015,57 @@
       "marke": "Thomy",
       "kat": "Gewürze & Saucen",
       "lager": "Kühlschrank oben",
-      "kaufort": "Migros",
-      "menge": 2,
+      "kaufort": "Lidl",
+      "menge": 6,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610100034084",
-      "preis": 0,
+      "preis": 2.35,
       "packMenge": 265,
       "packEinheit": "g",
-      "kaufdatum": "2026-06-30",
+      "kaufdatum": "2026-07-30",
       "ablaufdatum": "2026-12-07",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782806602601_off.jpg?t=1784445143693",
       "fotoPath": "1782806602601_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-30",
+          "preis": 0,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 2.35,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
       "packungen": [
         {
           "id": 4,
           "menge": 2,
           "kaufdatum": "2026-06-30",
           "ablaufdatum": "2026-12-07"
+        },
+        {
+          "id": 5,
+          "menge": 2,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": "2028-02-14"
+        },
+        {
+          "id": 4,
+          "menge": 2,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": "2027-02-14"
         }
       ]
     },
@@ -2756,14 +2610,14 @@
       "kat": "Reinigung & Pflege",
       "lager": "Schlof",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "4056489110750",
-      "preis": 1.79,
+      "preis": 0.39,
       "packMenge": 100,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-07-04",
+      "kaufdatum": "2026-07-30",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783148455269_off.jpg?t=1784445143693",
@@ -2785,6 +2639,15 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 0.39,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -2792,6 +2655,12 @@
           "id": 4,
           "menge": 1,
           "kaufdatum": "2026-07-04",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 10,
+          "menge": 1,
+          "kaufdatum": "2026-07-30",
           "ablaufdatum": ""
         }
       ]
@@ -4801,16 +4670,16 @@
       "kat": "Gemüse & Früchte",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 0,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
       "barcodes": [],
-      "preis": 0,
+      "preis": 0.45,
       "packMenge": 1,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-07-17",
-      "ablaufdatum": "2026-07-31",
+      "kaufdatum": "2026-07-30",
+      "ablaufdatum": "2026-08-31",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784294987875_17842949492175984984950804583990.jpg?t=1784445143693",
       "fotoPath": "1784294987875_17842949492175984984950804583990.jpg",
@@ -4823,14 +4692,38 @@
           "typ": "ein",
           "aktion": true,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 0.45,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
         {
           "id": 1,
-          "menge": 0,
-          "kaufdatum": "2026-07-17",
-          "ablaufdatum": "2026-07-31"
+          "menge": 1,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 6,
+          "menge": 1,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": "2026-08-31"
         }
       ]
     },
@@ -4923,16 +4816,16 @@
       "kat": "Gemüse & Früchte",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
       "barcodes": [],
-      "preis": 0.45,
+      "preis": 1.79,
       "packMenge": 2,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-07-17",
-      "ablaufdatum": "2026-09-18",
+      "kaufdatum": "2026-07-30",
+      "ablaufdatum": "2026-08-31",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784443584487_Zwiebel.jpg?t=1784445143693",
       "fotoPath": "1784443584487_Zwiebel.jpg",
@@ -4963,6 +4856,15 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 1.79,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -4971,6 +4873,12 @@
           "menge": 1,
           "kaufdatum": "2026-07-17",
           "ablaufdatum": "2026-09-18"
+        },
+        {
+          "id": 7,
+          "menge": 1,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": "2026-08-31"
         }
       ]
     },
@@ -7789,6 +7697,445 @@
           "ablaufdatum": "2028-01-10"
         }
       ]
+    },
+    {
+      "id": 221,
+      "name": "Goldfield Gold Box Zigaretten",
+      "marke": "Goldfield",
+      "kat": "Diverses",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 40,
+      "einheit": "Pkg",
+      "mindest": 2,
+      "barcode": "",
+      "barcodes": [
+        "4006396071576"
+      ],
+      "preis": 53,
+      "packMenge": 10,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-07-30",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785415989652_17854159802542357643205194276596.jpg?t=1785416108647",
+      "fotoPath": "1785415989652_17854159802542357643205194276596.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-06-20",
+          "preis": 57.5,
+          "menge": 3
+        },
+        {
+          "datum": "2026-06-27",
+          "preis": 57.5,
+          "menge": 2,
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-01",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-01",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-01",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "ein",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 57.5,
+          "menge": 2,
+          "einheit": "Stange",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "ein",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-06",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-16",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-17",
+          "preis": 57.5,
+          "menge": 4,
+          "einheit": "Stange",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-20",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-24",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 0,
+          "menge": 4,
+          "einheit": "Pkg",
+          "typ": "weg",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 5.75,
+          "menge": 40,
+          "einheit": "Stange",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 53,
+          "menge": 4,
+          "einheit": "Stange",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 53,
+          "menge": 4,
+          "einheit": "Stange",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 40,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 222,
+      "name": "Mozzarella Stange",
+      "marke": "",
+      "kat": "Milchprodukte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "",
+      "preis": 2.85,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-07-30",
+      "ablaufdatum": "2026-08-15",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542043787_off.jpg?t=1784445143693",
+      "fotoPath": "1782542043787_off.jpg",
+      "packungen": [
+        {
+          "id": 8,
+          "menge": 1,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-06-27",
+          "preis": 0,
+          "menge": 1,
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-03",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-07",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-17",
+          "preis": 2.85,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-17",
+          "preis": 2.85,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 2.85,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "barcodes": [
+        "20631321"
+      ]
+    },
+    {
+      "id": 223,
+      "name": "Hähnchenbr. Schnitzel dü",
+      "marke": "",
+      "kat": "Fleisch & Fisch",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "",
+      "preis": 6.89,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-07-30",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542205864_off.jpg?t=1784445143693",
+      "fotoPath": "1782542205864_off.jpg",
+      "packungen": [
+        {
+          "id": 12,
+          "menge": 1,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-06-27",
+          "preis": 0,
+          "menge": 1,
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-01",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-04",
+          "preis": 5.86,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-05",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-11",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-17",
+          "preis": 6.89,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-25",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 6.89,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "barcodes": [
+        "20813055"
+      ]
+    },
+    {
+      "id": 224,
+      "name": "ASC Lachsfilet mit Haut",
+      "marke": "Lidl",
+      "kat": "Fleisch & Fisch",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4335619357853",
+      "preis": 6.59,
+      "packMenge": 300,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-30",
+      "ablaufdatum": "2026-08-06",
+      "notiz": "Nutri-Score A\nPro 100g/ml: 211 kcal, Fett 14.9g, KH 0g, Eiweiss 19.2g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785416613658_off.jpg?t=1785416639997",
+      "fotoPath": "1785416613658_off.jpg",
+      "packungen": [
+        {
+          "id": 13,
+          "menge": 1,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-30",
+          "preis": 6.59,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 6.59,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "barcodes": []
+    },
+    {
+      "id": 225,
+      "name": "Der scharfe Maxx",
+      "marke": "Studer",
+      "kat": "Milchprodukte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7610900298938",
+      "preis": 4.79,
+      "packMenge": 200,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-30",
+      "ablaufdatum": "2026-08-23",
+      "notiz": "Pro 100g/ml: 440 kcal, Fett 39g, KH 0.1g, Eiweiss 23g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785416576774_off.jpg?t=1785416599853",
+      "fotoPath": "1785416576774_off.jpg",
+      "packungen": [
+        {
+          "id": 14,
+          "menge": 1,
+          "kaufdatum": "2026-07-30",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-07-30",
+          "preis": 4.79,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 4.79,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "barcodes": []
     }
   ],
   "lagerorte": [
@@ -7852,27 +8199,6 @@
   ],
   "einkauf": [
     {
-      "id": 1784359795406,
-      "text": "Butter",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1785159351936,
-      "text": "Mayonaise",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1785168457120,
-      "text": "Morzarella",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
       "id": 1785221892145,
       "text": "Ristretto - Espresso",
       "menge": "1",
@@ -7925,8 +8251,8 @@
     },
     {
       "t": "ein",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 3,
@@ -7949,8 +8275,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -7961,8 +8287,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -7973,8 +8299,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -7985,8 +8311,8 @@
     },
     {
       "t": "ein",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -7997,8 +8323,8 @@
     },
     {
       "t": "ein",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -8009,8 +8335,8 @@
     },
     {
       "t": "ein",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -8021,8 +8347,8 @@
     },
     {
       "t": "ein",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -8081,8 +8407,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -8093,8 +8419,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -8105,8 +8431,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -8117,8 +8443,8 @@
     },
     {
       "t": "ein",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -8129,8 +8455,8 @@
     },
     {
       "t": "ein",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -8622,8 +8948,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -8661,8 +8987,8 @@
     },
     {
       "t": "ein",
-      "aid": 34,
-      "name": "Morzarella",
+      "aid": 222,
+      "name": "Mozzarella Stange",
       "lager": "Kühlschrank oben",
       "kat": "Milchprodukte",
       "menge": 1,
@@ -8674,8 +9000,8 @@
     },
     {
       "t": "ein",
-      "aid": 34,
-      "name": "Morzarella",
+      "aid": 222,
+      "name": "Mozzarella Stange",
       "lager": "Kühlschrank oben",
       "kat": "Milchprodukte",
       "menge": 1,
@@ -8700,8 +9026,8 @@
     },
     {
       "t": "ein",
-      "aid": 36,
-      "name": "Escalope de poitrine de poulet a la minute",
+      "aid": 223,
+      "name": "Hähnchenbr. Schnitzel dü",
       "lager": "Kühlschrank oben",
       "kat": "Fleisch & Fisch",
       "menge": 1,
@@ -8713,8 +9039,8 @@
     },
     {
       "t": "ein",
-      "aid": 36,
-      "name": "Escalope de poitrine de poulet a la minute",
+      "aid": 223,
+      "name": "Hähnchenbr. Schnitzel dü",
       "lager": "Kühlschrank oben",
       "kat": "Fleisch & Fisch",
       "menge": 1,
@@ -8791,8 +9117,8 @@
     },
     {
       "t": "aus",
-      "aid": 36,
-      "name": "Pouletschnitzel a la minute",
+      "aid": 223,
+      "name": "Hähnchenbr. Schnitzel dü",
       "lager": "Kühlschrank oben",
       "kat": "Fleisch & Fisch",
       "menge": 1,
@@ -8804,8 +9130,8 @@
     },
     {
       "t": "ein",
-      "aid": 36,
-      "name": "Pouletschnitzel a la minute",
+      "aid": 223,
+      "name": "Hähnchenbr. Schnitzel dü",
       "lager": "Kühlschrank oben",
       "kat": "Fleisch & Fisch",
       "menge": 1,
@@ -8856,8 +9182,8 @@
     },
     {
       "t": "ein",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 2,
@@ -8921,8 +9247,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -8934,8 +9260,8 @@
     },
     {
       "t": "ein",
-      "aid": 36,
-      "name": "Pouletschnitzel a la minute",
+      "aid": 223,
+      "name": "Hähnchenbr. Schnitzel dü",
       "lager": "Kühlschrank oben",
       "kat": "Fleisch & Fisch",
       "menge": 1,
@@ -8947,8 +9273,8 @@
     },
     {
       "t": "aus",
-      "aid": 36,
-      "name": "Pouletschnitzel a la minute",
+      "aid": 223,
+      "name": "Hähnchenbr. Schnitzel dü",
       "lager": "Kühlschrank oben",
       "kat": "Fleisch & Fisch",
       "menge": 1,
@@ -9402,8 +9728,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -9415,8 +9741,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -9428,8 +9754,8 @@
     },
     {
       "t": "ein",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -9454,8 +9780,8 @@
     },
     {
       "t": "aus",
-      "aid": 36,
-      "name": "Pouletschnitzel a la minute",
+      "aid": 223,
+      "name": "Hähnchenbr. Schnitzel dü",
       "lager": "Kühlschrank oben",
       "kat": "Fleisch & Fisch",
       "menge": 1,
@@ -9506,8 +9832,8 @@
     },
     {
       "t": "aus",
-      "aid": 34,
-      "name": "Morzarella",
+      "aid": 222,
+      "name": "Mozzarella Stange",
       "lager": "Kühlschrank oben",
       "kat": "Milchprodukte",
       "menge": 1,
@@ -9610,8 +9936,8 @@
     },
     {
       "t": "ein",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 2,
@@ -9649,8 +9975,8 @@
     },
     {
       "t": "ein",
-      "aid": 36,
-      "name": "Pouletschnitzel a la minute",
+      "aid": 223,
+      "name": "Hähnchenbr. Schnitzel dü",
       "lager": "Kühlschrank oben",
       "kat": "Fleisch & Fisch",
       "menge": 1,
@@ -9779,8 +10105,8 @@
     },
     {
       "t": "ein",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -9935,8 +10261,8 @@
     },
     {
       "t": "aus",
-      "aid": 36,
-      "name": "Pouletschnitzel a la minute",
+      "aid": 223,
+      "name": "Hähnchenbr. Schnitzel dü",
       "lager": "Kühlschrank oben",
       "kat": "Fleisch & Fisch",
       "menge": 1,
@@ -10222,8 +10548,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -10521,8 +10847,8 @@
     },
     {
       "t": "aus",
-      "aid": 34,
-      "name": "Morzarella",
+      "aid": 222,
+      "name": "Mozzarella Stange",
       "lager": "Kühlschrank oben",
       "kat": "Milchprodukte",
       "menge": 1,
@@ -10586,8 +10912,8 @@
     },
     {
       "t": "aus",
-      "aid": 36,
-      "name": "Pouletschnitzel a la minute",
+      "aid": 223,
+      "name": "Hähnchenbr. Schnitzel dü",
       "lager": "Kühlschrank oben",
       "kat": "Fleisch & Fisch",
       "menge": 1,
@@ -11093,8 +11419,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -11145,8 +11471,8 @@
     },
     {
       "t": "ein",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 4,
@@ -11158,8 +11484,8 @@
     },
     {
       "t": "ein",
-      "aid": 34,
-      "name": "Morzarella",
+      "aid": 222,
+      "name": "Mozzarella Stange",
       "lager": "Kühlschrank oben",
       "kat": "Milchprodukte",
       "menge": 1,
@@ -11171,8 +11497,8 @@
     },
     {
       "t": "ein",
-      "aid": 34,
-      "name": "Morzarella",
+      "aid": 222,
+      "name": "Mozzarella Stange",
       "lager": "Kühlschrank oben",
       "kat": "Milchprodukte",
       "menge": 1,
@@ -11210,8 +11536,8 @@
     },
     {
       "t": "ein",
-      "aid": 36,
-      "name": "Pouletschnitzel a la minute",
+      "aid": 223,
+      "name": "Hähnchenbr. Schnitzel dü",
       "lager": "Kühlschrank oben",
       "kat": "Fleisch & Fisch",
       "menge": 1,
@@ -12406,8 +12732,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -12471,8 +12797,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -12510,8 +12836,8 @@
     },
     {
       "t": "aus",
-      "aid": 36,
-      "name": "Pouletschnitzel a la minute",
+      "aid": 223,
+      "name": "Hähnchenbr. Schnitzel dü",
       "lager": "Kühlschrank oben",
       "kat": "Fleisch & Fisch",
       "menge": 1,
@@ -12536,8 +12862,8 @@
     },
     {
       "t": "aus",
-      "aid": 3,
-      "name": "Zigaretten Goldfield Gold",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
       "lager": "Küche",
       "kat": "Genussmittel",
       "menge": 1,
@@ -12588,8 +12914,8 @@
     },
     {
       "t": "aus",
-      "aid": 34,
-      "name": "Morzarella",
+      "aid": 222,
+      "name": "Mozzarella Stange",
       "lager": "Kühlschrank oben",
       "kat": "Milchprodukte",
       "menge": 1,
@@ -12601,8 +12927,8 @@
     },
     {
       "t": "aus",
-      "aid": 34,
-      "name": "Morzarella",
+      "aid": 222,
+      "name": "Mozzarella Stange",
       "lager": "Kühlschrank oben",
       "kat": "Milchprodukte",
       "menge": 1,
@@ -12741,7 +13067,280 @@
       "aktion": false,
       "datum": "2026-07-29",
       "zeit": 1785333490841
+    },
+    {
+      "t": "ein",
+      "aid": 129,
+      "name": "Zitrone",
+      "lager": "Küche",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785413848767
+    },
+    {
+      "t": "ein",
+      "aid": 222,
+      "name": "Mozzarella Stange",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.85,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785414147178
+    },
+    {
+      "t": "ein",
+      "aid": 43,
+      "name": "Butter",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785414179413
+    },
+    {
+      "t": "ein",
+      "aid": 53,
+      "name": "Mayonaise",
+      "lager": "Kühlschrank oben",
+      "kat": "Gewürze & Saucen",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785414249443
+    },
+    {
+      "t": "ein",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 4,
+      "einheit": "Pkg",
+      "preis": 53,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416108650
+    },
+    {
+      "t": "ein",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 40,
+      "einheit": "Stk",
+      "preis": 5.75,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416221740
+    },
+    {
+      "t": "ein",
+      "aid": 38,
+      "name": "Vollrahm",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 3.29,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416288943
+    },
+    {
+      "t": "ein",
+      "aid": 37,
+      "name": "Halbrahm",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.65,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416303092
+    },
+    {
+      "t": "ein",
+      "aid": 53,
+      "name": "Mayonaise",
+      "lager": "Kühlschrank oben",
+      "kat": "Gewürze & Saucen",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 2.35,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416378164
+    },
+    {
+      "t": "ein",
+      "aid": 35,
+      "name": "Salami",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 4.95,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416393428
+    },
+    {
+      "t": "ein",
+      "aid": 129,
+      "name": "Zitrone",
+      "lager": "Küche",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0.45,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416427048
+    },
+    {
+      "t": "ein",
+      "aid": 132,
+      "name": "Zwiebel",
+      "lager": "Küche",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 1.79,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416439482
+    },
+    {
+      "t": "ein",
+      "aid": 222,
+      "name": "Mozzarella Stange",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.85,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416456995
+    },
+    {
+      "t": "ein",
+      "aid": 43,
+      "name": "Butter",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.45,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416485629
+    },
+    {
+      "t": "ein",
+      "aid": 68,
+      "name": "Taschentücher-Box, 4-lagig",
+      "lager": "Schlof",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0.39,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416502557
+    },
+    {
+      "t": "ein",
+      "aid": 22,
+      "name": "Mutti Solo Pomodoro Parma Passierte italienische Tomaten",
+      "lager": "Schlof",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 4.35,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416531298
+    },
+    {
+      "t": "ein",
+      "aid": 223,
+      "name": "Hähnchenbr. Schnitzel dü",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 6.89,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416544521
+    },
+    {
+      "t": "ein",
+      "aid": 224,
+      "name": "ASC Lachsfilet mit Haut",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 6.59,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416547483
+    },
+    {
+      "t": "ein",
+      "aid": 225,
+      "name": "Der scharfe Maxx",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 4.79,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416549906
+    },
+    {
+      "t": "weg",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 4,
+      "einheit": "Pkg",
+      "preis": 53,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785416966056
+    },
+    {
+      "t": "aus",
+      "aid": 222,
+      "name": "Mozzarella Stange",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-30",
+      "zeit": 1785417073252
     }
   ],
-  "aktualisiert": "2026-07-29T16:12:46.311Z"
+  "aktualisiert": "2026-07-30T13:14:27.001Z"
 }
