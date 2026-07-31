@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='17.9';
+const APP_VERSION='18.0';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'18.0',d:'07.2026',items:['+1: Grund-Dialog vor MHD-Abfrage (Eingang/Korrektur)','-1: Dialog farbig und gut lesbar (grün/rot/grau)']},
   {v:'17.9',d:'07.2026',items:['Verlauf: addLogEntry schreibt auch in preisHistorie — Bewegungen im Detail sichtbar']},
   {v:'17.8',d:'07.2026',items:['−1 Button: Grund-Dialog (Entnahme/Korrektur) vor dem Buchen']},
   {v:'17.7',d:'07.2026',items:['Bestand-Zahl antippbar: Dialog mit Korrektur/Eingang/Ausgang-Auswahl','Korrektur: stille Anpassung ohne Log-Eintrag','Eingang/Ausgang: MHD-Dialog resp. Packungsauswahl']},
@@ -1740,14 +1741,42 @@ function chgB(id,d){
   const aktive=a.packungen.filter(p=>p.menge>0);
   
   if(d>0){
-    // EINGANG: +1 — immer nach neuem MHD fragen (optional)
-    showEingangMhdDialog(a);
+    // EINGANG: +1 — erst Grund abfragen
+    chgBEingangGrund(a);
     return;
   }
   
   // AUSGANG: −1 — erst Grund abfragen
   if(a.menge<=0){toast('Bestand bereits 0');return;}
   chgBAusgangGrund(a,aktive);
+}
+
+function chgBEingangGrund(a){
+  const existing=document.getElementById('pack-dlg');if(existing)existing.remove();
+  const dlg=document.createElement('div');
+  dlg.id='pack-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">«'+esc(a.name)+'» +1</div>'+
+      '<div style="font-size:13px;color:var(--t2);margin-bottom:14px">Was ist der Grund der Bestandsänderung?</div>'+
+      '<div style="display:flex;flex-direction:column;gap:8px">'+
+        '<button onclick="document.getElementById(\'pack-dlg\').remove();showEingangMhdDialogById('+a.id+')" style="padding:14px 16px;background:var(--ol);border:1.5px solid var(--ok);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;text-align:left;color:var(--ok)">📦 Eingang — Artikel wurde eingekauft/eingelagert</button>'+
+        '<button onclick="chgBEingangKorrektur('+a.id+')" style="padding:14px 16px;background:var(--bg);border:1.5px solid var(--bd);border-radius:var(--rs);font-size:15px;cursor:pointer;text-align:left;color:var(--tx)">📝 Korrektur — Fehleingabe (kein Log-Eintrag)</button>'+
+        '<button onclick="document.getElementById(\'pack-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Abbrechen</button>'+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(dlg);
+}
+
+function chgBEingangKorrektur(id){
+  const dlg=document.getElementById('pack-dlg');if(dlg)dlg.remove();
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  ensurePackungen(a);
+  a.packungen.push({id:newPackId(),menge:1,kaufdatum:todayISO(),ablaufdatum:''});
+  syncMenge(a);saveL();
+  toast('📝 Bestand korrigiert (+1)');
+  showDet(id);
 }
 
 function chgBAusgangGrund(a,aktive){
@@ -1760,8 +1789,8 @@ function chgBAusgangGrund(a,aktive){
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">«'+esc(a.name)+'» −1</div>'+
       '<div style="font-size:13px;color:var(--t2);margin-bottom:14px">Was ist der Grund der Bestandsänderung?</div>'+
       '<div style="display:flex;flex-direction:column;gap:8px">'+
-        '<button onclick="chgBAusgangAusfuehren('+a.id+',\'ausgang\')" style="padding:13px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer;text-align:left">📤 Entnahme — Artikel wurde verwendet/verbraucht</button>'+
-        '<button onclick="chgBAusgangAusfuehren('+a.id+',\'korrektur\')" style="padding:13px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer;text-align:left">📝 Korrektur — Fehleingabe (kein Log-Eintrag)</button>'+
+        '<button onclick="chgBAusgangAusfuehren('+a.id+',\'ausgang\')" style="padding:14px 16px;background:var(--dl);border:1.5px solid var(--dg);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;text-align:left;color:var(--dg)">📤 Entnahme — Artikel wurde verwendet/verbraucht</button>'+
+        '<button onclick="chgBAusgangAusfuehren('+a.id+',\'korrektur\')" style="padding:14px 16px;background:var(--bg);border:1.5px solid var(--bd);border-radius:var(--rs);font-size:15px;cursor:pointer;text-align:left;color:var(--tx)">📝 Korrektur — Fehleingabe (kein Log-Eintrag)</button>'+
         '<button onclick="document.getElementById(\'pack-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Abbrechen</button>'+
       '</div>'+
     '</div>';
@@ -1790,6 +1819,11 @@ function chgBAusgangAusfuehren(id,typ){
   saveL();
   toast(typ==='korrektur'?'📝 Bestand korrigiert':'📤 −1 entnommen');
   showDet(id);
+}
+
+function showEingangMhdDialogById(id){
+  const a=S.a.find(x=>x.id===id);
+  if(a)showEingangMhdDialog(a);
 }
 
 function showEingangMhdDialog(a){
