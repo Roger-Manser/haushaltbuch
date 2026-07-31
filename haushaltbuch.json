@@ -8125,7 +8125,7 @@
       "packMenge": 200,
       "packEinheit": "g",
       "kaufdatum": "2026-07-30",
-      "ablaufdatum": "2026-08-23",
+      "ablaufdatum": "2026-08-03",
       "notiz": "Pro 100g/ml: 440 kcal, Fett 39g, KH 0.1g, Eiweiss 23g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785416576774_off.jpg?t=1785416599853",
       "fotoPath": "1785416576774_off.jpg",
@@ -8134,7 +8134,7 @@
           "id": 14,
           "menge": 1,
           "kaufdatum": "2026-07-30",
-          "ablaufdatum": ""
+          "ablaufdatum": "2026-08-03"
         }
       ],
       "preisHistorie": [
@@ -8157,7 +8157,8 @@
           "kaufort": "Lidl"
         }
       ],
-      "barcodes": []
+      "barcodes": [],
+      "geoeffnet": "2026-07-31"
     }
   ],
   "lagerorte": [
@@ -13548,5 +13549,5 @@
       "zeit": 1785474268999
     }
   ],
-  "aktualisiert": "2026-07-31T12:14:12.292Z"
+  "aktualisiert": "2026-07-31T12:47:37.548Z"
 }
