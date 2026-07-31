@@ -1,10 +1,11 @@
-const CACHE = 'haushaltbuch-v174';
+const CACHE = 'haushaltbuch-v176';
 const ASSETS = [
   './index.html',
   './manifest.json?v=10',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
-  './icons/icon-512-maskable.png',
+  './icons/icon-192x192.png',
+  './icons/icon-192x192-maskable.png',
+  './icons/icon-512x512.png',
+  './icons/icon-512x512-maskable.png',
 ];
 
 // Install: alle Assets in Cache laden, SW wartet bis alle da sind
