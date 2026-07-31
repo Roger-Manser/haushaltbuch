@@ -533,10 +533,13 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='17.6';
+const APP_VERSION='17.9';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'17.9',d:'07.2026',items:['Verlauf: addLogEntry schreibt auch in preisHistorie — Bewegungen im Detail sichtbar']},
+  {v:'17.8',d:'07.2026',items:['−1 Button: Grund-Dialog (Entnahme/Korrektur) vor dem Buchen']},
+  {v:'17.7',d:'07.2026',items:['Bestand-Zahl antippbar: Dialog mit Korrektur/Eingang/Ausgang-Auswahl','Korrektur: stille Anpassung ohne Log-Eintrag','Eingang/Ausgang: MHD-Dialog resp. Packungsauswahl']},
   {v:'17.6',d:'07.2026',items:['Löschen-Bug behoben: Artikel-Variable vor confirmDialog deklariert']},
   {v:'17.5',d:'07.2026',items:['Artikel trennen: immer sichtbar, manuelles Trennformular (Name, Menge, Lagerort)','Trennen-Button zeigt auch gespeicherte Snapshots wenn vorhanden']},
   {v:'17.4',d:'07.2026',items:['Artikel trennen: nach Zusammenführen wieder abtrennen möglich','Artikel löschen: auch im Bearbeiten-Formular','Einkaufsliste Scan: Barcode bekannt → automatisch auf Artikel buchen']},
@@ -702,7 +705,13 @@ function saveGH(){try{localStorage.setItem('hbgh',JSON.stringify(gh));}catch(e){
 function addLogEntry(type,artikelId,name,lager,kat,menge,einheit,preis,aktion){
   if(!S.log)S.log=[];
   S.log.push({t:type,aid:artikelId,name,lager,kat,menge,einheit,preis:preis||0,aktion:aktion||false,datum:todayISO(),zeit:Date.now()});
-  if(S.log.length>2000)S.log=S.log.slice(-2000); // cap log size
+  if(S.log.length>2000)S.log=S.log.slice(-2000);
+  // Auch in preisHistorie des Artikels eintragen (für Verlauf-Anzeige im Detail)
+  const a=S.a.find(x=>x.id===artikelId);
+  if(a){
+    if(!a.preisHistorie)a.preisHistorie=[];
+    a.preisHistorie.push({datum:todayISO(),preis:preis||0,menge,einheit:einheit||'Stk',typ:type,aktion:aktion||false,kaufort:a.kaufort||''});
+  }
 }
 function sdot(s){const d=document.getElementById('sdot');if(d)d.className='sdot'+(s==='ok'?' ok':s==='dt'?' dt':s==='sy'?' sy':'');}
 
@@ -1554,7 +1563,7 @@ function showDet(id){
       return '<div class="ir" style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showRezeptDetail(this,'+id+')" data-r=\''+rJson+'\'>'+thumb+'<div><div style="font-size:13px;font-weight:500">'+esc(r.name)+'</div><div style="font-size:11px;color:var(--t2)">'+r.port+' Port. · '+r.min+' min</div></div></div>';
     }).join('')+'</div>':
     '';
-  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span>'+(a.ablaufdatum?'<span style="flex:1;text-align:center">'+expBadgeKurz(a)+'</span><span class="iv" style="flex:none">'+fmtDateCH(a.ablaufdatum)+'</span>':'<span class="iv">—</span>')+'</div>'+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button><button class="acb" style="color:var(--ac)" onclick="openSplitDialog('+id+')">✂ Trennen'+(a.mergeSources&&a.mergeSources.length?' ('+a.mergeSources.length+')':'')+'</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+
+  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span>'+(a.ablaufdatum?'<span style="flex:1;text-align:center">'+expBadgeKurz(a)+'</span><span class="iv" style="flex:none">'+fmtDateCH(a.ablaufdatum)+'</span>':'<span class="iv">—</span>')+'</div>'+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'" onclick="bestandManuellDialog('+id+')" style="cursor:pointer;text-decoration:underline dotted" title="Antippen zum direkten Eingeben">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button><button class="acb" style="color:var(--ac)" onclick="openSplitDialog('+id+')">✂ Trennen'+(a.mergeSources&&a.mergeSources.length?' ('+a.mergeSources.length+')':'')+'</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+
     (a.ablaufdatum?'<div class="acr" style="margin-top:8px"><button class="acb" onclick="toggleAblaufIgnoriert('+id+')" style="'+(a.ablaufIgnoriert?'color:var(--ac)':'')+'">'+(a.ablaufIgnoriert?'↑ Wieder einreihen (Ablauf aktiv)':'↓ Bei Ablauf ans Ende setzen')+'</button></div>':'')+
     (opt.fwAnbruch?'<div class="acr" style="margin-top:8px"><button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen (abgelaufen)</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>':'<div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>')+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
   const heroEl=document.getElementById('dh-hero-img');
@@ -1646,6 +1655,85 @@ function syncMenge(a){
   }
 }
 
+function bestandManuellDialog(id){
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  const existing=document.getElementById('bestand-dlg');if(existing)existing.remove();
+  const dlg=document.createElement('div');
+  dlg.id='bestand-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:2px">Bestand anpassen</div>'+
+      '<div style="font-size:13px;color:var(--t2);margin-bottom:14px">«'+esc(a.name)+'» — aktuell: <strong>'+fmtMenge(a.menge)+' '+esc(a.einheit||'Stk')+'</strong></div>'+
+      '<div class="ghf"><label>Neuer Bestand</label>'+
+        '<input type="text" inputmode="decimal" id="bestand-neu" value="'+fmtMenge(a.menge)+'" style="width:100%;padding:12px;border:2px solid var(--ac);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:22px;font-weight:700;text-align:right"/>'+
+      '</div>'+
+      '<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">'+
+        '<button onclick="bestandManuellSpeichern('+id+',\'korrektur\')" style="padding:12px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2);text-align:left">📝 Korrektur — Fehleingabe / Inventur (kein Log-Eintrag)</button>'+
+        '<button onclick="bestandManuellSpeichern('+id+',\'eingang\')" style="padding:12px;background:var(--ol);border:1px solid var(--ok);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--ok);font-weight:600;text-align:left">📦 Eingang buchen — Artikel wurde eingelagert</button>'+
+        '<button onclick="bestandManuellSpeichern('+id+',\'ausgang\')" style="padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--dg);font-weight:600;text-align:left">📤 Ausgang buchen — Artikel wurde entnommen</button>'+
+        '<button onclick="document.getElementById(\'bestand-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Abbrechen</button>'+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(dlg);
+  setTimeout(()=>{const inp=document.getElementById('bestand-neu');if(inp){inp.focus();inp.select();}},100);
+}
+
+function bestandManuellSpeichern(id,typ){
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  const decOk=isDecUnit(a.einheit);
+  const neu=decOk?parseDecimal(document.getElementById('bestand-neu').value)||0:Math.max(0,Math.round(parseDecimal(document.getElementById('bestand-neu').value)||0));
+  const diff=neu-a.menge;
+  document.getElementById('bestand-dlg').remove();
+
+  if(diff===0){toast('Bestand unverändert');return;}
+
+  if(typ==='korrektur'){
+    // Stille Korrektur — kein Log, einfach Bestand setzen
+    ensurePackungen(a);
+    if(diff>0){
+      a.packungen.push({id:newPackId(),menge:diff,kaufdatum:todayISO(),ablaufdatum:''});
+    }else{
+      let abzug=Math.abs(diff);
+      for(let i=a.packungen.length-1;i>=0&&abzug>0;i--){
+        if(a.packungen[i].menge<=abzug){abzug-=a.packungen[i].menge;a.packungen.splice(i,1);}
+        else{a.packungen[i].menge-=abzug;abzug=0;}
+      }
+    }
+    syncMenge(a);saveL();
+    toast('✏️ Bestand korrigiert auf '+fmtMenge(neu)+' '+esc(a.einheit||'Stk'));
+    showDet(id);
+  }else if(typ==='eingang'){
+    if(diff<=0){toast('Für Eingang muss der neue Wert grösser sein');bestandManuellDialog(id);return;}
+    // Eingang mit MHD-Abfrage
+    const tempEk={id:-1,text:a.name,menge:fmtMenge(diff),einheit:a.einheit};
+    showEkEinbuchungBekannt(tempEk,a);
+  }else if(typ==='ausgang'){
+    if(diff>=0){toast('Für Ausgang muss der neue Wert kleiner sein');bestandManuellDialog(id);return;}
+    const menge=Math.abs(diff);
+    // Bei mehreren Packungen: Packungsauswahl
+    ensurePackungen(a);
+    const aktive=a.packungen.filter(p=>p.menge>0);
+    const uniqueMhd=[...new Set(aktive.map(p=>p.ablaufdatum||''))];
+    if(aktive.length>1&&uniqueMhd.length>1){
+      showPackDialog(a,'aus');
+    }else{
+      // Direkt buchen
+      let abzug=menge;
+      aktive.sort((x,y)=>(x.ablaufdatum||'9999').localeCompare(y.ablaufdatum||'9999'));
+      for(const p of aktive){
+        if(abzug<=0)break;
+        if(p.menge<=abzug){abzug-=p.menge;p.menge=0;}else{p.menge-=abzug;abzug=0;}
+      }
+      syncMenge(a);
+      addLogEntry('aus',a.id,a.name,a.lager,a.kat,menge,a.einheit,0);
+      saveL();
+      toast('📤 Ausgang gebucht: −'+fmtMenge(menge)+' '+esc(a.einheit||'Stk'));
+      showDet(id);
+    }
+  }
+}
+
 function chgB(id,d){
   const a=S.a.find(x=>x.id===id);if(!a)return;
   ensurePackungen(a);
@@ -1657,30 +1745,51 @@ function chgB(id,d){
     return;
   }
   
-  // AUSGANG: −1
+  // AUSGANG: −1 — erst Grund abfragen
   if(a.menge<=0){toast('Bestand bereits 0');return;}
-  if(aktive.length<=1){
-    // Nur eine Packung → direkt verringern
-    if(aktive.length===1){
-      aktive[0].menge=Math.max(0,aktive[0].menge-1);
-    }
-    syncMenge(a);saveL();
-    addLogEntry('aus',a.id,a.name,a.lager,a.kat,1,a.einheit,0);
-    toast('−1 entnommen');showDet(id);
-  }else{
-    // Mehrere Packungen mit verschiedenen MHDs → Auswahl
-    const uniqueMhd=[...new Set(aktive.map(p=>p.ablaufdatum||''))];
-    if(uniqueMhd.length<=1){
-      // Alle gleich → älteste direkt reduzieren
-      aktive.sort((x,y)=>(x.kaufdatum||'').localeCompare(y.kaufdatum||''));
-      aktive[0].menge=Math.max(0,aktive[0].menge-1);
-      syncMenge(a);saveL();
-      addLogEntry('aus',a.id,a.name,a.lager,a.kat,1,a.einheit,0);
-      toast('−1 entnommen');showDet(id);
-    }else{
-      showPackDialog(a,'aus');
-    }
+  chgBAusgangGrund(a,aktive);
+}
+
+function chgBAusgangGrund(a,aktive){
+  const existing=document.getElementById('pack-dlg');if(existing)existing.remove();
+  const dlg=document.createElement('div');
+  dlg.id='pack-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">«'+esc(a.name)+'» −1</div>'+
+      '<div style="font-size:13px;color:var(--t2);margin-bottom:14px">Was ist der Grund der Bestandsänderung?</div>'+
+      '<div style="display:flex;flex-direction:column;gap:8px">'+
+        '<button onclick="chgBAusgangAusfuehren('+a.id+',\'ausgang\')" style="padding:13px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer;text-align:left">📤 Entnahme — Artikel wurde verwendet/verbraucht</button>'+
+        '<button onclick="chgBAusgangAusfuehren('+a.id+',\'korrektur\')" style="padding:13px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer;text-align:left">📝 Korrektur — Fehleingabe (kein Log-Eintrag)</button>'+
+        '<button onclick="document.getElementById(\'pack-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Abbrechen</button>'+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(dlg);
+}
+
+function chgBAusgangAusfuehren(id,typ){
+  const dlg=document.getElementById('pack-dlg');if(dlg)dlg.remove();
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  ensurePackungen(a);
+  const aktive=a.packungen.filter(p=>p.menge>0);
+  const uniqueMhd=[...new Set(aktive.map(p=>p.ablaufdatum||''))];
+
+  if(aktive.length>1&&uniqueMhd.length>1){
+    // Mehrere verschiedene MHDs → Packungsauswahl
+    showPackDialog(a,'aus');
+    return;
   }
+  // Direkt −1 buchen
+  if(aktive.length>=1){
+    aktive.sort((x,y)=>(x.ablaufdatum||'9999').localeCompare(y.ablaufdatum||'9999'));
+    aktive[0].menge=Math.max(0,aktive[0].menge-1);
+  }
+  syncMenge(a);
+  if(typ==='ausgang')addLogEntry('aus',a.id,a.name,a.lager,a.kat,1,a.einheit,0);
+  saveL();
+  toast(typ==='korrektur'?'📝 Bestand korrigiert':'📤 −1 entnommen');
+  showDet(id);
 }
 
 function showEingangMhdDialog(a){
