@@ -1508,7 +1508,7 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 3,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610128737165",
@@ -1516,7 +1516,7 @@
       "packMenge": 250,
       "packEinheit": "g",
       "kaufdatum": "2026-07-30",
-      "ablaufdatum": "2026-07-13",
+      "ablaufdatum": "2026-08-03",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648210056_off.jpg?t=1784445143693",
       "fotoPath": "1782648210056_off.jpg",
@@ -1538,28 +1538,26 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-31",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
         {
-          "id": 3,
-          "menge": 1,
-          "kaufdatum": "2026-06-28",
-          "ablaufdatum": "2026-07-13"
-        },
-        {
-          "id": 4,
-          "menge": 1,
-          "kaufdatum": "2026-07-30",
-          "ablaufdatum": "2026-08-21"
-        },
-        {
           "id": 9,
           "menge": 1,
           "kaufdatum": "2026-07-30",
-          "ablaufdatum": "2026-08-21"
+          "ablaufdatum": "2026-08-03"
         }
-      ]
+      ],
+      "geoeffnet": "2026-07-31"
     },
     {
       "id": 44,
@@ -4596,7 +4594,7 @@
       "kat": "Süsswaren",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "9005300011382",
@@ -4618,12 +4616,21 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-31",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
         {
-          "id": 8,
-          "menge": 1,
+          "id": 1,
+          "menge": 0,
           "kaufdatum": "2026-07-17",
           "ablaufdatum": "2026-07-31"
         }
@@ -5605,7 +5612,8 @@
           "ablaufdatum": "2026-07-21"
         }
       ],
-      "geoeffnet": "2026-07-18"
+      "geoeffnet": "2026-07-18",
+      "ablaufIgnoriert": true
     },
     {
       "id": 154,
@@ -5911,7 +5919,8 @@
           "kaufdatum": "2026-07-19",
           "ablaufdatum": "2025-07-31"
         }
-      ]
+      ],
+      "ablaufIgnoriert": true
     },
     {
       "id": 164,
@@ -7938,7 +7947,7 @@
     },
     {
       "id": 223,
-      "name": "Hähnchenbr. Schnitzel dü",
+      "name": "Pouletbrust Minutenschnitzel",
       "marke": "",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
@@ -7948,10 +7957,10 @@
       "mindest": 0,
       "barcode": "",
       "preis": 6.89,
-      "packMenge": 0,
-      "packEinheit": "",
+      "packMenge": 330,
+      "packEinheit": "g",
       "kaufdatum": "2026-07-30",
-      "ablaufdatum": "",
+      "ablaufdatum": "2026-08-04",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542205864_off.jpg?t=1784445143693",
       "fotoPath": "1782542205864_off.jpg",
@@ -8019,6 +8028,24 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 6.89,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 6.89,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         },
         {
           "datum": "2026-07-30",
@@ -13493,7 +13520,33 @@
       "datum": "2026-07-31",
       "zeit": 1785473924446,
       "geloescht": true
+    },
+    {
+      "t": "aus",
+      "aid": 43,
+      "name": "Butter",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785474165316
+    },
+    {
+      "t": "aus",
+      "aid": 127,
+      "name": "Mini Nuss Stangen",
+      "lager": "Küche",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785474268999
     }
   ],
-  "aktualisiert": "2026-07-31T04:58:55.799Z"
+  "aktualisiert": "2026-07-31T05:05:09.932Z"
 }
