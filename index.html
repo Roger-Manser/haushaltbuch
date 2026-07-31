@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='18.0';
+const APP_VERSION='18.1';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'18.1',d:'07.2026',items:['Android Zurück-Button: schliesst Dialoge, navigiert Screens, fragt bei App-Beenden']},
   {v:'18.0',d:'07.2026',items:['+1: Grund-Dialog vor MHD-Abfrage (Eingang/Korrektur)','-1: Dialog farbig und gut lesbar (grün/rot/grau)']},
   {v:'17.9',d:'07.2026',items:['Verlauf: addLogEntry schreibt auch in preisHistorie — Bewegungen im Detail sichtbar']},
   {v:'17.8',d:'07.2026',items:['−1 Button: Grund-Dialog (Entnahme/Korrektur) vor dem Buchen']},
@@ -1242,10 +1243,14 @@ function suppressAutofill(root){
   });
 }
 
+// Oberste Screens — kein Zurück möglich (Tab-Navigation)
+const ROOT_SCREENS=new Set(['s-lager','s-einkauf','s-rezepte','s-statistik','s-uebersicht','s-settings']);
+
 function goScreen(id){
   if(cur!==id&&(cur==='s-eingang'||cur==='s-ausgang')&&qRunning){closeScanner();}
   document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
   document.getElementById(id).classList.add('on');
+  const prev=cur;
   cur=id;nav();
   if(id==='s-lager')renderLager();
   if(id==='s-rezepte')renderRezepte();
@@ -1254,6 +1259,12 @@ function goScreen(id){
   if(id==='s-einkauf')renderEk();
   if(id==='s-settings')renderSt();
   setTimeout(()=>suppressAutofill(document.getElementById(id)),0);
+  // History-Eintrag pushen damit Android-Zurück-Button abgefangen wird
+  if(ROOT_SCREENS.has(id)){
+    history.replaceState({screen:id},'',location.pathname);
+  }else{
+    history.pushState({screen:id},'',location.pathname);
+  }
 }
 function nav(){
   const wc=S.a.filter(x=>x.menge<x.mindest).length+(S.ek||[]).filter(e=>!e.checked).length;
@@ -6035,7 +6046,42 @@ try{
 const vBadge=document.getElementById('app-version-badge');
 if(vBadge){vBadge.textContent='v'+APP_VERSION;vBadge.style.cursor='pointer';vBadge.style.color='var(--ac)';vBadge.style.textDecoration='underline';vBadge.onclick=showVersionHistory;}
 
-// PWA-Shortcut Aktionen (?action=ausgang/eingang/einkauf)
+// Android Zurück-Button: popstate abfangen
+window.addEventListener('popstate',e=>{
+  // Offene Dialoge zuerst schliessen
+  const dialoge=['confirm-dlg','pack-dlg','merge-dlg','split-dlg','bestand-dlg','ek-einbuch-dlg','ek-info-dlg','inv-missing-dlg','vh-modal','mindest-mgr-dlg'];
+  for(const id of dialoge){
+    const dlg=document.getElementById(id);
+    if(dlg){dlg.remove();history.pushState({screen:cur},'',location.pathname);return;}
+  }
+  // Kamera-Overlays schliessen
+  if(document.getElementById('lager-scan-overlay')?.style.display!=='none'){
+    closeLagerScan();history.pushState({screen:cur},'',location.pathname);return;
+  }
+  // Screens navigieren
+  if(ROOT_SCREENS.has(cur)){
+    // Bereits auf oberster Ebene → App beenden fragen
+    confirmDialog('App beenden?','Ja, beenden','Nein').then(ok=>{
+      if(ok)window.close(); // PWA: schliesst das Fenster
+    });
+    history.pushState({screen:cur},'',location.pathname);
+    return;
+  }
+  // Zurück zur Lagerliste
+  if(cur==='s-detail'||cur==='s-form'||cur==='s-etikett'){
+    goScreen('s-lager');
+  }else if(cur==='s-eingang'||cur==='s-ausgang'){
+    if(qRunning)closeScanner();
+    goScreen('s-lager');
+  }else if(cur==='s-rezept-detail'){
+    goScreen('s-rezepte');
+  }else{
+    goScreen('s-lager');
+  }
+});
+
+// Initial History-Eintrag setzen
+history.replaceState({screen:'s-lager'},'',location.pathname);
 (function(){
   const action=new URLSearchParams(location.search).get('action');
   if(action==='ausgang')setTimeout(()=>openAusgang(),400);
