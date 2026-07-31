@@ -1523,35 +1523,7 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648210056_off.jpg?t=1785504832494",
       "fotoPath": "1782648210056_off.jpg",
-      "preisHistorie": [
-        {
-          "datum": "2026-07-30",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Migros"
-        },
-        {
-          "datum": "2026-07-30",
-          "preis": 2.45,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-31",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Lidl"
-        }
-      ],
+      "preisHistorie": [],
       "packungen": [
         {
           "id": 9,
@@ -8179,6 +8151,46 @@
       ],
       "barcodes": [],
       "geoeffnet": "2026-07-31"
+    },
+    {
+      "id": 226,
+      "name": "Vorzugsbutter",
+      "marke": "Floralp",
+      "kat": "Milchprodukte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7612300011223",
+      "barcodes": [],
+      "preis": 2.45,
+      "packMenge": 100,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-31",
+      "ablaufdatum": "2026-08-21",
+      "notiz": "Pro 100g/ml: 742 kcal, Fett 82g, KH 0.5g, Eiweiss 0.5g",
+      "foto": "https://raw.githubusercontent.com/Roger-Manser/haushaltbuch/main/bilder/1785505770817_off.jpg?t=1785505845613",
+      "fotoPath": "1785505770817_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-07-30",
+          "preis": 2.45,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-07-31",
+          "ablaufdatum": "2026-08-21"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -13593,7 +13605,20 @@
       "aktion": false,
       "datum": "2026-07-31",
       "zeit": 1785505595073
+    },
+    {
+      "t": "ein",
+      "aid": 226,
+      "name": "Vorzugsbutter",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 2.45,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785505845614
     }
   ],
-  "aktualisiert": "2026-07-31T13:47:22.003Z"
+  "aktualisiert": "2026-07-31T13:54:51.827Z"
 }
