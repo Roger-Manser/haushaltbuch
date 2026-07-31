@@ -8204,6 +8204,13 @@
       "menge": "1",
       "einheit": "Stk",
       "checked": false
+    },
+    {
+      "id": 1785423563847,
+      "text": "Forellenfilets",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
     }
   ],
   "einkaufOverrides": {
@@ -13342,5 +13349,5 @@
       "zeit": 1785417073252
     }
   ],
-  "aktualisiert": "2026-07-30T13:14:27.001Z"
+  "aktualisiert": "2026-07-31T04:00:55.638Z"
 }
