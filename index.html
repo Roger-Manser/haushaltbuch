@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='17.5';
+const APP_VERSION='17.6';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'17.6',d:'07.2026',items:['Löschen-Bug behoben: Artikel-Variable vor confirmDialog deklariert']},
   {v:'17.5',d:'07.2026',items:['Artikel trennen: immer sichtbar, manuelles Trennformular (Name, Menge, Lagerort)','Trennen-Button zeigt auch gespeicherte Snapshots wenn vorhanden']},
   {v:'17.4',d:'07.2026',items:['Artikel trennen: nach Zusammenführen wieder abtrennen möglich','Artikel löschen: auch im Bearbeiten-Formular','Einkaufsliste Scan: Barcode bekannt → automatisch auf Artikel buchen']},
   {v:'17.3',d:'07.2026',items:['Neuer Artikel: Standard-Einheit Pkg statt Stk']},
@@ -1878,8 +1879,8 @@ async function splitArtikel(zielId,srcIdx){
 }
 
 async function delA(id){
-  if(!await confirmDialog('Artikel «'+a.name+'» wirklich löschen?\n\nDieser Schritt kann nicht rückgängig gemacht werden.','Ja, löschen','Nein, abbrechen'))return;
-  const a=S.a.find(x=>x.id===id);
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  if(!await confirmDialog('Artikel «'+a.name+'» wirklich löschen?\n\nDieser Schritt kann nicht rükgängig gemacht werden.','Ja, löschen','Nein, abbrechen'))return;
   if(a){
     // Foto auf GitHub löschen
     if(a.fotoPath&&gh.tok){ghGet('bilder/'+a.fotoPath).then(f=>{if(f)ghDel('bilder/'+a.fotoPath,'Foto gelöscht',f.sha).catch(()=>{});}).catch(()=>{});}
