@@ -1156,7 +1156,7 @@
       "marke": "Italiamo",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "menge": 2,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20016012",
@@ -1185,20 +1185,23 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-31",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
         {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-06-27",
-          "ablaufdatum": "2026-08-08"
-        },
-        {
-          "id": 5,
-          "menge": 1,
+          "id": 2,
+          "menge": 0,
           "kaufdatum": "2026-07-30",
-          "ablaufdatum": ""
+          "ablaufdatum": "2026-08-08"
         }
       ],
       "kaufort": "Lidl"
@@ -4741,7 +4744,7 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20524326",
@@ -4749,8 +4752,8 @@
       "preis": 4.95,
       "packMenge": 1,
       "packEinheit": "Pkg",
-      "kaufdatum": "2026-07-17",
-      "ablaufdatum": "2026-08-03",
+      "kaufdatum": "2026-07-31",
+      "ablaufdatum": "2026-08-01",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784295080401_17842950736273616472209894154228.jpg?t=1785504832494",
       "fotoPath": "1784295080401_17842950736273616472209894154228.jpg",
@@ -4772,9 +4775,26 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-30",
+          "preis": 4.95,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
-      "packungen": []
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-07-31",
+          "ablaufdatum": "2026-08-01"
+        }
+      ],
+      "geoeffnet": "2026-07-31"
     },
     {
       "id": 131,
@@ -13547,7 +13567,33 @@
       "aktion": false,
       "datum": "2026-07-31",
       "zeit": 1785474268999
+    },
+    {
+      "t": "aus",
+      "aid": 35,
+      "name": "Salami",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785505560465
+    },
+    {
+      "t": "ein",
+      "aid": 130,
+      "name": "Salametti Nostrani",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 4.95,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785505595073
     }
   ],
-  "aktualisiert": "2026-07-31T13:44:53.807Z"
+  "aktualisiert": "2026-07-31T13:47:22.003Z"
 }
