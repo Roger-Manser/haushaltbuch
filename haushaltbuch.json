@@ -7702,24 +7702,22 @@
       "id": 221,
       "name": "Goldfield Gold Box Zigaretten",
       "marke": "Goldfield",
-      "kat": "Diverses",
+      "kat": "Genussmittel",
       "lager": "Küche",
-      "kaufort": "",
-      "menge": 40,
-      "einheit": "Pkg",
+      "kaufort": "Lidl",
+      "menge": 4,
+      "einheit": "Stange",
       "mindest": 2,
-      "barcode": "",
-      "barcodes": [
-        "4006396071576"
-      ],
+      "barcode": "4006396071576",
+      "barcodes": [],
       "preis": 53,
       "packMenge": 10,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-07-30",
+      "kaufdatum": "2026-07-31",
       "ablaufdatum": "",
       "notiz": "",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785415989652_17854159802542357643205194276596.jpg?t=1785416108647",
-      "fotoPath": "1785415989652_17854159802542357643205194276596.jpg",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785472429123_17854724199238898588606765505778.jpg?t=1785472452872",
+      "fotoPath": "1785472429123_17854724199238898588606765505778.jpg",
       "preisHistorie": [
         {
           "datum": "2026-06-20",
@@ -7824,26 +7822,17 @@
         },
         {
           "datum": "2026-07-30",
-          "preis": 5.75,
-          "menge": 40,
-          "einheit": "Stange",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-30",
           "preis": 53,
           "menge": 4,
           "einheit": "Stange",
           "typ": "ein",
           "aktion": false,
-          "kaufort": "Lidl"
+          "kaufort": ""
         },
         {
           "datum": "2026-07-30",
           "preis": 53,
-          "menge": 4,
+          "menge": 5,
           "einheit": "Stange",
           "typ": "ein",
           "aktion": false,
@@ -7853,8 +7842,14 @@
       "packungen": [
         {
           "id": 3,
-          "menge": 40,
+          "menge": 3,
           "kaufdatum": "2026-07-30",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-07-31",
           "ablaufdatum": ""
         }
       ]
@@ -13347,7 +13342,158 @@
       "aktion": false,
       "datum": "2026-07-30",
       "zeit": 1785417073252
+    },
+    {
+      "t": "aus",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 35,
+      "einheit": "Stange",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785472291224
+    },
+    {
+      "t": "ein",
+      "aid": 226,
+      "name": "rest",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 35,
+      "einheit": "Stange",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785472291224,
+      "geloescht": true
+    },
+    {
+      "t": "aus",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785472927835
+    },
+    {
+      "t": "ein",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 53,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785472937592
+    },
+    {
+      "t": "ein",
+      "aid": 227,
+      "name": "Test",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 2,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785473479663,
+      "geloescht": true
+    },
+    {
+      "t": "ein",
+      "aid": 227,
+      "name": "Test",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 2,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785473506272,
+      "geloescht": true
+    },
+    {
+      "t": "ein",
+      "aid": 227,
+      "name": "Test",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 2,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785473858088,
+      "geloescht": true
+    },
+    {
+      "t": "aus",
+      "aid": 227,
+      "name": "Test",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785473872812,
+      "geloescht": true
+    },
+    {
+      "t": "weg",
+      "aid": 227,
+      "name": "Test",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 2,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785473883999,
+      "geloescht": true
+    },
+    {
+      "t": "aus",
+      "aid": 227,
+      "name": "Test",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785473915552,
+      "geloescht": true
+    },
+    {
+      "t": "ein",
+      "aid": 227,
+      "name": "Test",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 2,
+      "aktion": false,
+      "datum": "2026-07-31",
+      "zeit": 1785473924446,
+      "geloescht": true
     }
   ],
-  "aktualisiert": "2026-07-31T04:28:37.971Z"
+  "aktualisiert": "2026-07-31T04:58:55.799Z"
 }
