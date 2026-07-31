@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='18.5';
+const APP_VERSION='18.6';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'18.6',d:'07.2026',items:['Zurück auf Root: Hinweis Home-Button nutzen (window.close() auf Android nicht zuverlässig)']},
   {v:'18.5',d:'07.2026',items:['Zurück auf Root-Screen: eigener App-beenden-Dialog (kein async-Problem)']},
   {v:'18.4',d:'07.2026',items:['Zurück-Button: neuer Ansatz mit einmaligem pushState + sofort re-push']},
   {v:'18.3',d:'07.2026',items:['Zurück-Button: history.go(1) statt pushState, pushDialogHistory bei jedem Dialog']},
@@ -6066,19 +6067,18 @@ function setupBackButton(){
         return;
       }
     }
-    // Root-Screen → App beenden Dialog anzeigen
+    // Root-Screen → Info-Dialog (window.close() funktioniert in PWAs nicht zuverlässig)
     if(ROOT_SCREENS.has(cur)){
-      // Sofort einen sichtbaren Dialog anzeigen (nicht async warten)
       const ex=document.getElementById('app-exit-dlg');if(ex)ex.remove();
       const exitDlg=document.createElement('div');
       exitDlg.id='app-exit-dlg';
       exitDlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9900;display:flex;align-items:center;justify-content:center;padding:20px';
       exitDlg.innerHTML=
         '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:320px;overflow:hidden">'+
-          '<div style="padding:20px 20px 16px;font-size:15px;font-weight:600;text-align:center">App beenden?</div>'+
+          '<div style="padding:20px 20px 8px;font-size:15px;font-weight:600;text-align:center">App verlassen?</div>'+
+          '<div style="padding:0 20px 16px;font-size:13px;color:var(--t2);text-align:center;line-height:1.5">Verwende den Home-Button oder wische nach oben, um die App zu minimieren.</div>'+
           '<div style="display:flex;border-top:1px solid var(--bd)">'+
-            '<button onclick="document.getElementById(\'app-exit-dlg\').remove();history.pushState(null,\'\',location.pathname)" style="flex:1;padding:16px;background:none;border:none;border-right:1px solid var(--bd);font-size:15px;cursor:pointer;color:var(--t2)">Nein</button>'+
-            '<button onclick="window.close()" style="flex:1;padding:16px;background:none;border:none;font-size:15px;font-weight:700;cursor:pointer;color:var(--dg)">Ja, beenden</button>'+
+            '<button onclick="document.getElementById(\'app-exit-dlg\').remove()" style="flex:1;padding:16px;background:none;border:none;font-size:15px;font-weight:700;cursor:pointer;color:var(--ac)">OK</button>'+
           '</div>'+
         '</div>';
       document.body.appendChild(exitDlg);
