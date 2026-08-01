@@ -1212,7 +1212,7 @@
       "marke": "Milbona",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "4056489975250",
@@ -1220,7 +1220,7 @@
       "packMenge": 500,
       "packEinheit": "ml",
       "kaufdatum": "2026-07-30",
-      "ablaufdatum": "2026-09-29",
+      "ablaufdatum": "2026-10-27",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542289759_off.jpg?t=1785504832494",
       "fotoPath": "1782542289759_off.jpg",
@@ -1278,15 +1278,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-01",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
-        {
-          "id": 10,
-          "menge": 1,
-          "kaufdatum": "2026-07-17",
-          "ablaufdatum": "2026-09-29"
-        },
         {
           "id": 3,
           "menge": 1,
@@ -2722,7 +2725,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
       "kaufort": "Coop",
-      "menge": 4,
+      "menge": 3,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610071221063",
@@ -2769,12 +2772,21 @@
           "typ": "ein",
           "aktion": true,
           "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-08-01",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Coop"
         }
       ],
       "packungen": [
         {
           "id": 2,
-          "menge": 4,
+          "menge": 3,
           "kaufdatum": "2026-07-18",
           "ablaufdatum": "2029-04-08"
         }
@@ -4725,7 +4737,7 @@
       "packMenge": 1,
       "packEinheit": "Pkg",
       "kaufdatum": "2026-07-31",
-      "ablaufdatum": "2026-08-01",
+      "ablaufdatum": "2026-08-05",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784295080401_17842950736273616472209894154228.jpg?t=1785504832494",
       "fotoPath": "1784295080401_17842950736273616472209894154228.jpg",
@@ -4750,6 +4762,15 @@
         },
         {
           "datum": "2026-07-30",
+          "preis": 4.95,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-07-31",
           "preis": 4.95,
           "menge": 1,
           "einheit": "Stk",
@@ -7944,7 +7965,7 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
@@ -7958,10 +7979,10 @@
       "fotoPath": "1782542205864_off.jpg",
       "packungen": [
         {
-          "id": 12,
-          "menge": 1,
+          "id": 1,
+          "menge": 0,
           "kaufdatum": "2026-07-30",
-          "ablaufdatum": ""
+          "ablaufdatum": "2026-08-04"
         }
       ],
       "preisHistorie": [
@@ -8045,6 +8066,15 @@
           "menge": 1,
           "einheit": "Stk",
           "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-01",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
         }
@@ -13618,7 +13648,46 @@
       "aktion": false,
       "datum": "2026-07-31",
       "zeit": 1785505845614
+    },
+    {
+      "t": "aus",
+      "aid": 223,
+      "name": "Pouletbrust Minutenschnitzel",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-01",
+      "zeit": 1785565371573
+    },
+    {
+      "t": "aus",
+      "aid": 37,
+      "name": "Halbrahm",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-01",
+      "zeit": 1785565389961
+    },
+    {
+      "t": "aus",
+      "aid": 71,
+      "name": "Curry Madras Fort Mc Cormick 38 Gr, 1 Bocal",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-01",
+      "zeit": 1785565407782
     }
   ],
-  "aktualisiert": "2026-07-31T13:54:51.827Z"
+  "aktualisiert": "2026-08-01T06:23:47.551Z"
 }
