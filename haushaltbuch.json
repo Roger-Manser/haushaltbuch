@@ -4631,12 +4631,12 @@
       "kat": "Gemüse & Früchte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 0.29,
+      "menge": 0,
       "einheit": "kg",
       "mindest": 0,
       "barcode": "",
       "barcodes": [],
-      "preis": 1.26,
+      "preis": 4.35,
       "packMenge": 0,
       "packEinheit": "g",
       "kaufdatum": "2026-08-02",
@@ -4646,28 +4646,28 @@
       "fotoPath": "1784294784518_17842947801542754882233135963092.jpg",
       "preisHistorie": [
         {
-          "datum": "2026-07-17",
-          "preis": 2.65,
-          "menge": 1,
-          "einheit": "Stk",
+          "datum": "2026-07-30",
+          "preis": 1.26,
+          "menge": 0.29,
+          "einheit": "kg",
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
         },
         {
           "datum": "2026-08-02",
-          "preis": 1.26,
+          "preis": 0,
           "menge": 1,
           "einheit": "kg",
-          "typ": "ein",
+          "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
         }
       ],
       "packungen": [
         {
-          "id": 2,
-          "menge": 0.29,
+          "id": 3,
+          "menge": 0,
           "kaufdatum": "2026-08-02",
           "ablaufdatum": "2026-07-30"
         }
@@ -4681,12 +4681,12 @@
       "kat": "Gemüse & Früchte",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
       "barcodes": [],
-      "preis": 0.45,
+      "preis": 0,
       "packMenge": 1,
       "packEinheit": "Stk",
       "kaufdatum": "2026-07-30",
@@ -4706,7 +4706,7 @@
         },
         {
           "datum": "2026-07-30",
-          "preis": 0,
+          "preis": 0.45,
           "menge": 1,
           "einheit": "Stk",
           "typ": "ein",
@@ -4715,21 +4715,15 @@
         },
         {
           "datum": "2026-07-30",
-          "preis": 0.45,
+          "preis": 0,
           "menge": 1,
           "einheit": "Stk",
-          "typ": "ein",
+          "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
         }
       ],
       "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-07-30",
-          "ablaufdatum": ""
-        },
         {
           "id": 6,
           "menge": 1,
@@ -4853,51 +4847,24 @@
       "kat": "Gemüse & Früchte",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 2,
-      "einheit": "Stk",
+      "menge": 1,
+      "einheit": "kg",
       "mindest": 0,
       "barcode": "",
       "barcodes": [],
-      "preis": 1.79,
-      "packMenge": 2,
-      "packEinheit": "Stk",
-      "kaufdatum": "2026-07-30",
-      "ablaufdatum": "2026-08-31",
+      "preis": 0.25,
+      "packMenge": 0,
+      "packEinheit": "g",
+      "kaufdatum": "2026-07-17",
+      "ablaufdatum": "2026-09-18",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784443584487_Zwiebel.jpg?t=1785504832494",
       "fotoPath": "1784443584487_Zwiebel.jpg",
       "preisHistorie": [
         {
-          "datum": "2026-07-17",
-          "preis": 0.45,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-17",
-          "preis": 0.45,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-17",
-          "preis": 0.45,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
           "datum": "2026-07-30",
-          "preis": 1.79,
-          "menge": 1,
+          "preis": 0.25,
+          "menge": 0.14,
           "einheit": "Stk",
           "typ": "ein",
           "aktion": false,
@@ -4910,14 +4877,9 @@
           "menge": 1,
           "kaufdatum": "2026-07-17",
           "ablaufdatum": "2026-09-18"
-        },
-        {
-          "id": 7,
-          "menge": 1,
-          "kaufdatum": "2026-07-30",
-          "ablaufdatum": "2026-08-31"
         }
-      ]
+      ],
+      "preisProKg": 1.79
     },
     {
       "id": 133,
@@ -13737,7 +13699,72 @@
       "aktion": false,
       "datum": "2026-08-02",
       "zeit": 1785660067825
+    },
+    {
+      "t": "aus",
+      "aid": 128,
+      "name": "Tomaten San Marzano",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-02",
+      "zeit": 1785661268300
+    },
+    {
+      "t": "ein",
+      "aid": 128,
+      "name": "Tomaten San Marzano",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 0.29,
+      "einheit": "kg",
+      "preis": 1.26,
+      "aktion": false,
+      "datum": "2026-08-02",
+      "zeit": 1785661352306
+    },
+    {
+      "t": "aus",
+      "aid": 128,
+      "name": "Tomaten San Marzano",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-02",
+      "zeit": 1785661380848
+    },
+    {
+      "t": "aus",
+      "aid": 132,
+      "name": "Zwiebel",
+      "lager": "Küche",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-02",
+      "zeit": 1785661606690
+    },
+    {
+      "t": "aus",
+      "aid": 129,
+      "name": "Zitrone",
+      "lager": "Küche",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-02",
+      "zeit": 1785661688947
     }
   ],
-  "aktualisiert": "2026-08-02T08:59:33.804Z"
+  "aktualisiert": "2026-08-02T09:09:37.622Z"
 }
