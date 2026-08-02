@@ -4631,16 +4631,16 @@
       "kat": "Gemüse & Früchte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 0,
-      "einheit": "Stk",
+      "menge": 0.29,
+      "einheit": "kg",
       "mindest": 0,
       "barcode": "",
       "barcodes": [],
-      "preis": 2.65,
-      "packMenge": 600,
+      "preis": 1.26,
+      "packMenge": 0,
       "packEinheit": "g",
-      "kaufdatum": "2026-07-17",
-      "ablaufdatum": "2026-07-24",
+      "kaufdatum": "2026-08-02",
+      "ablaufdatum": "2026-07-30",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784294784518_17842947801542754882233135963092.jpg?t=1785504832494",
       "fotoPath": "1784294784518_17842947801542754882233135963092.jpg",
@@ -4653,9 +4653,26 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-02",
+          "preis": 1.26,
+          "menge": 1,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
-      "packungen": []
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 0.29,
+          "kaufdatum": "2026-08-02",
+          "ablaufdatum": "2026-07-30"
+        }
+      ],
+      "preisProKg": 4.35
     },
     {
       "id": 129,
@@ -8293,6 +8310,13 @@
     {
       "id": 1785423563847,
       "text": "Forellenfilets",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1785659146803,
+      "text": "Dattelcherrytomaten",
       "menge": "1",
       "einheit": "Stk",
       "checked": false
@@ -13687,7 +13711,33 @@
       "aktion": false,
       "datum": "2026-08-01",
       "zeit": 1785565407782
+    },
+    {
+      "t": "ein",
+      "aid": 128,
+      "name": "Tomaten San Marzano",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.65,
+      "aktion": false,
+      "datum": "2026-08-02",
+      "zeit": 1785659194950
+    },
+    {
+      "t": "ein",
+      "aid": 128,
+      "name": "Tomaten San Marzano",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 0.29,
+      "einheit": "kg",
+      "preis": 1.26,
+      "aktion": false,
+      "datum": "2026-08-02",
+      "zeit": 1785660067825
     }
   ],
-  "aktualisiert": "2026-08-01T06:23:47.551Z"
+  "aktualisiert": "2026-08-02T08:58:42.438Z"
 }
