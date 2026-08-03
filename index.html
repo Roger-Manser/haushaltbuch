@@ -6385,9 +6385,7 @@ function setupBackButton(){
         '<div style="padding:20px 20px 8px;font-size:15px;font-weight:600;text-align:center">App verlassen?</div>'+
         '<div style="padding:0 20px 16px;font-size:13px;color:var(--t2);text-align:center;line-height:1.5">Home-Button drücken oder nach oben wischen zum Minimieren.</div>'+
         '<div style="display:flex;border-top:1px solid var(--bd)">'+
-          '<button onclick="document.getElementById(\'app-exit-dlg\').remove()" style="flex:1;padding:16px;background:none;border:none;font-size:15px;font-weight:700;cursor:pointer;color:var(--ac)">OK</button>
-<button id="settingsTabBtn" onclick="document.getElementById('settingsTab').style.display='block'; document.querySelectorAll('.tab-content').forEach(t => {if(t.id!=='settingsTab') t.style.display='none';})">⚙️ Einstellungen</button>
-'+
+          '<button onclick="document.getElementById(\'app-exit-dlg\').remove()" style="flex:1;padding:16px;background:none;border:none;font-size:15px;font-weight:700;cursor:pointer;color:var(--ac)">OK</button>'+
         '</div>'+
       '</div>';
     document.body.appendChild(exitDlg);
@@ -6587,48 +6585,210 @@ async function installApp(){
 }
 </script>
 
-<button id="settingsTabBtn" onclick="document.getElementById('settingsTab').style.display='block'; document.querySelectorAll('.tab-content').forEach(t => {if(t.id!=='settingsTab') t.style.display='none';})">⚙️ Einstellungen</button>
-
-<div id="settingsTab" class="tab-content" style="display:none;max-width:600px;margin:20px auto;padding:20px;">
+<div class="settings-simple">
   <h2>⚙️ Einstellungen</h2>
-  <div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:15px;margin-bottom:20px;">
-    <h3>GitHub Token</h3>
-    <input type="password" id="setting_github_token" placeholder="ghp_..." style="width:100%;padding:8px;margin-bottom:10px;box-sizing:border-box;" />
-    <h3>GitHub Owner</h3>
-    <input type="text" id="setting_github_owner" value="roger-manser" style="width:100%;padding:8px;margin-bottom:10px;box-sizing:border-box;" />
-    <h3>Repository</h3>
-    <input type="text" id="setting_github_repo" placeholder="rezeptbuch" style="width:100%;padding:8px;margin-bottom:10px;box-sizing:border-box;" />
-    <button onclick="settings.testGitHub()" style="background:#4CAF50;color:white;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;">🧪 Test GitHub</button>
-    <div id="test_github" style="margin-top:10px;"></div>
-  </div>
-  <div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:15px;margin-bottom:20px;">
-    <h3>Anthropic API Key</h3>
-    <input type="password" id="setting_anthropic_api_key" placeholder="sk-ant-..." style="width:100%;padding:8px;margin-bottom:10px;box-sizing:border-box;" />
-    <button onclick="settings.testAnthropicKey()" style="background:#4CAF50;color:white;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;">🧪 Test Anthropic</button>
-    <div id="test_anthropic" style="margin-top:10px;"></div>
-  </div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-    <button onclick="settings.saveSettings()" style="background:#2196F3;color:white;padding:12px;border:none;border-radius:4px;cursor:pointer;font-weight:bold;">💾 Speichern</button>
-    <button onclick="settings.exportSettings()" style="background:#6c757d;color:white;padding:12px;border:none;border-radius:4px;cursor:pointer;font-weight:bold;">📥 Export</button>
-    <button onclick="settings.importSettings()" style="background:#6c757d;color:white;padding:12px;border:none;border-radius:4px;cursor:pointer;font-weight:bold;">📤 Import</button>
-    <button onclick="settings.clearAll()" style="background:#dc3545;color:white;padding:12px;border:none;border-radius:4px;cursor:pointer;font-weight:bold;">🗑️ Löschen</button>
-  </div>
+  <h3>GitHub Token</h3>
+  <input type="password" id="setting_github_token" placeholder="ghp_..." />
+  <h3>GitHub Owner</h3>
+  <input type="text" id="setting_github_owner" value="roger-manser" />
+  <h3>Repository</h3>
+  <input type="text" id="setting_github_repo" placeholder="rezeptbuch" />
+  <button class="settings-btn-test" onclick="appSettingsGlobal.testGitHub()">🧪 Test GitHub</button>
+  <h3>Anthropic API Key</h3>
+  <input type="password" id="setting_anthropic_api_key" placeholder="sk-ant-..." />
+  <button class="settings-btn-test" onclick="appSettingsGlobal.testAnthropicKey()">🧪 Test API</button>
+  <br />
+  <button class="settings-btn-save" onclick="appSettingsGlobal.saveSettings()">💾 Speichern</button>
+  <button class="settings-btn-export" onclick="appSettingsGlobal.exportSettings()">📥 Export</button>
+  <button class="settings-btn-import" onclick="appSettingsGlobal.importSettings()">📤 Import</button>
+  <button class="settings-btn-delete" onclick="appSettingsGlobal.clearAll()">🗑️ Löschen</button>
 </div>
 
-
-<script src="app-settings-simple.js"></script>
 <script>
-var settings = null;
-window.addEventListener('load', function() {
-  try {
-    settings = new AppSettings('Haushaltbuch');
-    settings.loadSettings();
-    console.log("✅ Settings geladen");
-  } catch(e) {
-    console.error("Settings error:", e);
+console.log("✅ Settings Script geladen");
+
+var appSettingsGlobal = {
+  appName: 'Haushaltbuch',
+  
+  getSetting: function(key) {
+    try {
+      const data = localStorage.getItem(this.appName + "_" + key);
+      return data || "";
+    } catch (e) {
+      return "";
+    }
+  },
+  
+  setSetting: function(key, value) {
+    try {
+      localStorage.setItem(this.appName + "_" + key, value);
+      console.log("✅ Gespeichert:", key);
+    } catch (e) {
+      console.error("Fehler:", e);
+    }
+  },
+  
+  loadSettings: function() {
+    var token = document.getElementById("setting_github_token");
+    var owner = document.getElementById("setting_github_owner");
+    var repo = document.getElementById("setting_github_repo");
+    var anthro = document.getElementById("setting_anthropic_api_key");
+    
+    if (token) token.value = this.getSetting("github_token");
+    if (owner) owner.value = this.getSetting("github_owner");
+    if (repo) repo.value = this.getSetting("github_repo");
+    if (anthro) anthro.value = this.getSetting("anthropic_api_key");
+  },
+  
+  saveSettings: function() {
+    var token = document.getElementById("setting_github_token");
+    var owner = document.getElementById("setting_github_owner");
+    var repo = document.getElementById("setting_github_repo");
+    var anthro = document.getElementById("setting_anthropic_api_key");
+    
+    if (token) this.setSetting("github_token", token.value);
+    if (owner) this.setSetting("github_owner", owner.value);
+    if (repo) this.setSetting("github_repo", repo.value);
+    if (anthro) this.setSetting("anthropic_api_key", anthro.value);
+    
+    alert("✅ Gespeichert!");
+  },
+  
+  testGitHub: function() {
+    var token = document.getElementById("setting_github_token").value;
+    var owner = document.getElementById("setting_github_owner").value;
+    var repo = document.getElementById("setting_github_repo").value;
+    
+    if (!token || !owner || !repo) {
+      alert("❌ Nicht alle Felder gefüllt!");
+      return;
+    }
+    
+    alert("🧪 Teste...");
+    
+    fetch("https://api.github.com/repos/" + owner + "/" + repo, {
+      headers: { "Authorization": "token " + token }
+    })
+    .then(function(r) {
+      if (r.ok) alert("✅ GitHub OK!");
+      else if (r.status === 401) alert("❌ Token ungültig!");
+      else if (r.status === 404) alert("❌ Repo nicht gefunden!");
+      else alert("❌ Fehler: " + r.status);
+    })
+    .catch(function(e) { alert("❌ " + e.message); });
+  },
+  
+  testAnthropicKey: function() {
+    var key = document.getElementById("setting_anthropic_api_key").value;
+    
+    if (!key) {
+      alert("❌ API Key fehlt!");
+      return;
+    }
+    
+    alert("🧪 Teste...");
+    
+    fetch("https://api.anthropic.com/v1/models", {
+      headers: { "x-api-key": key }
+    })
+    .then(function(r) {
+      if (r.ok) alert("✅ Anthropic OK!");
+      else if (r.status === 401) alert("❌ Key ungültig!");
+      else alert("❌ Fehler: " + r.status);
+    })
+    .catch(function(e) { alert("❌ " + e.message); });
+  },
+  
+  exportSettings: function() {
+    var data = {
+      app: this.appName,
+      exported: new Date().toISOString(),
+      settings: {
+        github_token: this.getSetting("github_token"),
+        github_owner: this.getSetting("github_owner"),
+        github_repo: this.getSetting("github_repo"),
+        anthropic_api_key: this.getSetting("anthropic_api_key")
+      }
+    };
+    
+    var json = JSON.stringify(data, null, 2);
+    var blob = new Blob([json], { type: "application/json" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = this.appName.toLowerCase() + "_settings.json";
+    a.click();
+    URL.revokeObjectURL(url);
+    alert("✅ Exportiert!");
+  },
+  
+  importSettings: function() {
+    var json = prompt("Paste Settings JSON:");
+    if (!json) return;
+    
+    try {
+      var data = JSON.parse(json);
+      this.setSetting("github_token", data.settings.github_token);
+      this.setSetting("github_owner", data.settings.github_owner);
+      this.setSetting("github_repo", data.settings.github_repo);
+      this.setSetting("anthropic_api_key", data.settings.anthropic_api_key);
+      this.loadSettings();
+      alert("✅ Importiert!");
+    } catch (e) {
+      alert("❌ " + e.message);
+    }
+  },
+  
+  clearAll: function() {
+    if (confirm("Wirklich löschen?")) {
+      localStorage.clear();
+      this.loadSettings();
+      alert("✅ Gelöscht!");
+    }
   }
+};
+
+window.addEventListener('load', function() {
+  appSettingsGlobal.loadSettings();
+  console.log("✅ Settings geladen");
 });
 </script>
 
+<style>
+.settings-simple {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+}
+.settings-simple h3 {
+  margin-top: 0;
+  color: #333;
+}
+.settings-simple input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.settings-simple button {
+  padding: 10px 15px;
+  margin-right: 5px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: white;
+  font-weight: bold;
+}
+.settings-btn-save { background: #2196F3; }
+.settings-btn-test { background: #4CAF50; }
+.settings-btn-export { background: #6c757d; }
+.settings-btn-import { background: #6c757d; }
+.settings-btn-delete { background: #dc3545; }
+.settings-btn-save:hover { background: #0b7dda; }
+.settings-btn-test:hover { background: #45a049; }
+</style>
 </body>
 </html>
