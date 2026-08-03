@@ -289,7 +289,6 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 .spn{width:32px;height:32px;border:3px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .ldm{font-size:14px;color:var(--t2)}
-.settings-container{max-width:600px;margin:20px auto;padding:20px}.settings-section{background:#f9f9f9;border:1px solid #e0e0e0;border-radius:8px;padding:15px;margin-bottom:20px}.settings-section h3{margin-top:0;color:#1F2A22;border-bottom:2px solid #1F2A22;padding-bottom:10px}.setting-field{margin-bottom:15px;display:flex;flex-direction:column;gap:8px}.setting-field label{font-weight:bold;font-size:14px;color:#333}.setting-field input{padding:10px;border:1px solid #ccc;border-radius:4px;font-family:monospace;font-size:13px}.btn-test{padding:8px 12px;background:#4CAF50;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px}.btn-test:hover{background:#45a049}.test-result{font-size:12px;padding:8px;border-radius:4px}.test-result.success{background:#d4edda;color:#155724}.test-result.error{background:#f8d7da;color:#721c24}.settings-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}.btn-primary,.btn-secondary,.btn-danger{padding:12px;border:none;border-radius:4px;cursor:pointer;font-weight:bold}.btn-primary{background:#2196F3;color:white}.btn-primary:hover{background:#0b7dda}.btn-secondary{background:#6c757d;color:white}.btn-secondary:hover{background:#5a6268}.btn-danger{background:#dc3545;color:white}.btn-danger:hover{background:#c82333}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2@1.8.4/dist/quagga.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.12.1/JsBarcode.all.min.js"></script>
@@ -6387,7 +6386,7 @@ function setupBackButton(){
         '<div style="padding:0 20px 16px;font-size:13px;color:var(--t2);text-align:center;line-height:1.5">Home-Button drücken oder nach oben wischen zum Minimieren.</div>'+
         '<div style="display:flex;border-top:1px solid var(--bd)">'+
           '<button onclick="document.getElementById(\'app-exit-dlg\').remove()" style="flex:1;padding:16px;background:none;border:none;font-size:15px;font-weight:700;cursor:pointer;color:var(--ac)">OK</button>
-<button onclick="window.switchTab && switchTab('settings')" id="settingsTabBtn">⚙️ Einstellungen</button>
+<button id="settingsTabBtn" onclick="document.getElementById('settingsTab').style.display='block'; document.querySelectorAll('.tab-content').forEach(t => {if(t.id!=='settingsTab') t.style.display='none';})">⚙️ Einstellungen</button>
 '+
         '</div>'+
       '</div>';
@@ -6588,72 +6587,48 @@ async function installApp(){
 }
 </script>
 
-<div id="settingsTab" class="tab-content" style="display:none;">
-  <div class="settings-container">
-    <h2>⚙️ Einstellungen</h2>
-    <div class="settings-section">
-      <h3>GitHub</h3>
-      <div class="setting-field">
-        <label>GitHub Token</label>
-        <input type="password" id="setting_github_token" placeholder="ghp_..." />
-        <button onclick="if(appSettings) appSettings.testGitHub()" class="btn-test">🧪 Test</button>
-        <div id="test_github_token" class="test-result"></div>
-      </div>
-      <div class="setting-field">
-        <label>Owner</label>
-        <input type="text" id="setting_github_owner" placeholder="roger-manser" />
-      </div>
-      <div class="setting-field">
-        <label>Repo</label>
-        <input type="text" id="setting_github_repo" placeholder="rezeptbuch" />
-      </div>
-    </div>
-    <div class="settings-section" id="anthropicSection" style="display:none;">
-      <h3>Anthropic</h3>
-      <div class="setting-field">
-        <label>API Key</label>
-        <input type="password" id="setting_anthropic_api_key" placeholder="sk-ant-..." />
-        <button onclick="if(appSettings) appSettings.testAnthropicKey()" class="btn-test">🧪 Test</button>
-        <div id="test_anthropic_api_key" class="test-result"></div>
-      </div>
-    </div>
-    <div class="settings-actions">
-      <button onclick="if(appSettings) appSettings.saveAll()" class="btn-primary">💾 Speichern</button>
-      <button onclick="if(appSettings) appSettings.exportSettings()" class="btn-secondary">📥 Export</button>
-      <button onclick="if(appSettings) appSettings.importSettings()" class="btn-secondary">📤 Import</button>
-      <button onclick="if(appSettings) appSettings.clearAll()" class="btn-danger">🗑️ Löschen</button>
-    </div>
+<button id="settingsTabBtn" onclick="document.getElementById('settingsTab').style.display='block'; document.querySelectorAll('.tab-content').forEach(t => {if(t.id!=='settingsTab') t.style.display='none';})">⚙️ Einstellungen</button>
+
+<div id="settingsTab" class="tab-content" style="display:none;max-width:600px;margin:20px auto;padding:20px;">
+  <h2>⚙️ Einstellungen</h2>
+  <div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:15px;margin-bottom:20px;">
+    <h3>GitHub Token</h3>
+    <input type="password" id="setting_github_token" placeholder="ghp_..." style="width:100%;padding:8px;margin-bottom:10px;box-sizing:border-box;" />
+    <h3>GitHub Owner</h3>
+    <input type="text" id="setting_github_owner" value="roger-manser" style="width:100%;padding:8px;margin-bottom:10px;box-sizing:border-box;" />
+    <h3>Repository</h3>
+    <input type="text" id="setting_github_repo" placeholder="rezeptbuch" style="width:100%;padding:8px;margin-bottom:10px;box-sizing:border-box;" />
+    <button onclick="settings.testGitHub()" style="background:#4CAF50;color:white;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;">🧪 Test GitHub</button>
+    <div id="test_github" style="margin-top:10px;"></div>
+  </div>
+  <div style="background:#f9f9f9;border:1px solid #ddd;border-radius:8px;padding:15px;margin-bottom:20px;">
+    <h3>Anthropic API Key</h3>
+    <input type="password" id="setting_anthropic_api_key" placeholder="sk-ant-..." style="width:100%;padding:8px;margin-bottom:10px;box-sizing:border-box;" />
+    <button onclick="settings.testAnthropicKey()" style="background:#4CAF50;color:white;padding:8px 12px;border:none;border-radius:4px;cursor:pointer;">🧪 Test Anthropic</button>
+    <div id="test_anthropic" style="margin-top:10px;"></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+    <button onclick="settings.saveSettings()" style="background:#2196F3;color:white;padding:12px;border:none;border-radius:4px;cursor:pointer;font-weight:bold;">💾 Speichern</button>
+    <button onclick="settings.exportSettings()" style="background:#6c757d;color:white;padding:12px;border:none;border-radius:4px;cursor:pointer;font-weight:bold;">📥 Export</button>
+    <button onclick="settings.importSettings()" style="background:#6c757d;color:white;padding:12px;border:none;border-radius:4px;cursor:pointer;font-weight:bold;">📤 Import</button>
+    <button onclick="settings.clearAll()" style="background:#dc3545;color:white;padding:12px;border:none;border-radius:4px;cursor:pointer;font-weight:bold;">🗑️ Löschen</button>
   </div>
 </div>
 
-<script src="app-settings-config-FIX.js"><\/script>
+
+<script src="app-settings-simple.js"></script>
 <script>
-var appSettings = null;
-window.addEventListener('DOMContentLoaded', function() {
+var settings = null;
+window.addEventListener('load', function() {
   try {
-    appSettings = new AppSettings('Haushaltbuch');
-    appSettings.loadAllIntoUI();
-    var hasAnthropicField = APP_SETTINGS['Haushaltbuch'].fields.some(function(f) { return f.id === 'anthropic_api_key'; });
-    if (hasAnthropicField) {
-      var section = document.getElementById('anthropicSection');
-      if (section) section.style.display = 'block';
-    }
+    settings = new AppSettings('Haushaltbuch');
+    settings.loadSettings();
+    console.log("✅ Settings geladen");
   } catch(e) {
-    console.error('Settings init error:', e);
+    console.error("Settings error:", e);
   }
 });
-function switchTab(tabName) {
-  try {
-    var tabs = document.querySelectorAll('.tab-content');
-    for (var i = 0; i < tabs.length; i++) {
-      tabs[i].style.display = 'none';
-    }
-    var tab = document.getElementById(tabName + 'Tab');
-    if (tab) tab.style.display = 'block';
-  } catch(e) {
-    console.error('switchTab error:', e);
-  }
-}
-<\/script>
+</script>
+
 </body>
 </html>
