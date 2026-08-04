@@ -6436,7 +6436,7 @@ window.addEventListener('offline',()=>{
 /* ── PWA: Service Worker + Install-Prompt + Update-Erkennung ─────── */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw.js',{scope:'./'}).then(reg=>{
+    navigator.serviceWorker.register('./sw.js',{scope:'./',updateViaCache:'none'}).then(reg=>{
       console.log('Service Worker registriert:',reg.scope);
       // Beim Laden direkt nach Updates fragen
       reg.update().catch(()=>{});
