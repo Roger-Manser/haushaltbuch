@@ -534,10 +534,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.6';
+const APP_VERSION='19.7';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.7',d:'08.2026',items:['Neue Sortierreihenfolge: Nach Einkaufsdatum (neueste zuerst)']},
   {v:'19.6',d:'08.2026',items:['KI-Fotoscan: mehrere Fotos (Vorder-/Rückseite) möglich','Quittungsscan Info-Dialog: direkt Foto/Galerie wählen']},
   {v:'19.5',d:'08.2026',items:['KI-Fotoscan: Info-Dialog mit Erklärung vor dem Start']},
   {v:'19.4',d:'08.2026',items:['Quittungsscan: Info-Dialog mit Erklärung vor dem Start']},
@@ -1304,7 +1305,7 @@ function nav(){
 /* ── Lager ────────────────────────────────────────────────────────── */
 let lf='alle';
 let mindestFilter=false;
-let sortMode='ablauf'; // 'ablauf' | 'name' | 'bestand'
+let sortMode='ablauf'; // 'ablauf' | 'neu' | 'name' | 'einkaufsdatum' | 'bestand'
 
 // Barcode-Scanner für Artikelsuche in der Lagerliste
 function scanLagerSearch(){
@@ -1331,6 +1332,7 @@ function renderSortBar(){
     {id:'ablauf',l:'Nach Ablaufdatum',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'},
     {id:'neu',l:'Zuletzt erfasst',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 8v4l3 3"/><path d="M3.05 11a9 9 0 1 1 .5 4"/><polyline points="3 16 3 11 8 11"/></svg>'},
     {id:'name',l:'Nach Name (A-Z)',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="9" y2="18"/></svg>'},
+    {id:'einkaufsdatum',l:'Nach Einkauf',s:'📅'},
     {id:'bestand',l:'Nach Bestand',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>'},
   ];
   document.getElementById('sort-bar').innerHTML=modes.map(m=>'<button class="sort-btn'+(sortMode===m.id?' on':'')+'" onclick="setSortMode(\''+m.id+'\')">'+m.s+' '+m.l+'</button>').join('');
@@ -1382,6 +1384,14 @@ function renderLager(){
     // Fallback 1: kaufdatum, Fallback 2: Artikel-ID (enthält Erstellzeit-Timestamp)
     const stamp=a=>letzterEingang[a.id]||(a.kaufdatum?new Date(a.kaufdatum).getTime():0)||a.id||0;
     fil=[...fil].sort((a,b)=>stamp(b)-stamp(a));
+  }else if(sortMode==='einkaufsdatum'){
+    // Nach letztem Einkaufsdatum aus preisHistorie sortieren (neuestes zuerst)
+    fil=[...fil].sort((a,b)=>{
+      const dA=(a.preisHistorie&&a.preisHistorie.length>0)?a.preisHistorie[a.preisHistorie.length-1].datum||'0000-00-00':'0000-00-00';
+      const dB=(b.preisHistorie&&b.preisHistorie.length>0)?b.preisHistorie[b.preisHistorie.length-1].datum||'0000-00-00':'0000-00-00';
+      const cmp=dB.localeCompare(dA);
+      return cmp!==0?cmp:a.name.localeCompare(b.name,'de');
+    });
   }else if(sortMode==='bestand'){
     fil=[...fil].sort((a,b)=>(a.menge-a.mindest)-(b.menge-b.mindest));
   }
