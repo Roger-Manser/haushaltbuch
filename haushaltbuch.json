@@ -7875,7 +7875,7 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
@@ -7889,10 +7889,10 @@
       "fotoPath": "1782542043787_off.jpg",
       "packungen": [
         {
-          "id": 8,
-          "menge": 1,
+          "id": 1,
+          "menge": 0,
           "kaufdatum": "2026-07-30",
-          "ablaufdatum": ""
+          "ablaufdatum": "2026-08-15"
         }
       ],
       "preisHistorie": [
@@ -7942,6 +7942,15 @@
           "menge": 1,
           "einheit": "Stk",
           "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-04",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
         }
@@ -8299,8 +8308,22 @@
       "checked": false
     },
     {
-      "id": 1785659146803,
-      "text": "Dattelcherrytomaten",
+      "id": 1785825486764,
+      "text": "Tomaten San Marzano",
+      "menge": "1",
+      "einheit": "kg",
+      "checked": false
+    },
+    {
+      "id": 1785825504974,
+      "text": "Mozzarella Stange",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1785825515879,
+      "text": "Pouletbrust Minutenschnitzel",
       "menge": "1",
       "einheit": "Stk",
       "checked": false
@@ -13825,7 +13848,20 @@
       "aktion": false,
       "datum": "2026-08-03",
       "zeit": 1785767396717
+    },
+    {
+      "t": "aus",
+      "aid": 222,
+      "name": "Mozzarella Stange",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-04",
+      "zeit": 1785825501098
     }
   ],
-  "aktualisiert": "2026-08-04T03:30:14.704Z"
+  "aktualisiert": "2026-08-04T06:38:59.953Z"
 }
