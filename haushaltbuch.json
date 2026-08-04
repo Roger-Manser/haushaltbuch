@@ -8231,6 +8231,95 @@
           "ablaufdatum": "2026-08-21"
         }
       ]
+    },
+    {
+      "id": 227,
+      "name": "American Style Chicken strips with Curry Dip",
+      "marke": "McEnnedy",
+      "kat": "Fleisch & Fisch",
+      "lager": "Gefrierschrank unten",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "20143077",
+      "barcodes": [],
+      "preis": 8.99,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-08-04",
+      "ablaufdatum": "2027-09-12",
+      "notiz": "Nutri-Score D\nPro 100g/ml: 180 kcal, Fett 5.53333333333333g, KH 18g, Eiweiss 14g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785839310580_off.jpg?t=1785839401281",
+      "fotoPath": "1785839310580_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-04",
+          "preis": 8.99,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-04",
+          "preis": 8.99,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-08-04",
+          "ablaufdatum": "2027-09-12"
+        }
+      ]
+    },
+    {
+      "id": 228,
+      "name": "Peterli gekraust (Krause Petersilie)",
+      "marke": "Qualité Suisse",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "20242824",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-08-04",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785839596868_1785839591018978227199009117855.jpg?t=1785839647824",
+      "fotoPath": "1785839596868_1785839591018978227199009117855.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-04",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-08-04",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -13875,7 +13964,33 @@
       "aktion": false,
       "datum": "2026-08-04",
       "zeit": 1785825501098
+    },
+    {
+      "t": "ein",
+      "aid": 227,
+      "name": "American Style Chicken strips with Curry Dip",
+      "lager": "Gefrierschrank unten",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 8.99,
+      "aktion": false,
+      "datum": "2026-08-04",
+      "zeit": 1785839401287
+    },
+    {
+      "t": "ein",
+      "aid": 228,
+      "name": "Peterli gekraust (Krause Petersilie)",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-04",
+      "zeit": 1785839647831
     }
   ],
-  "aktualisiert": "2026-08-04T09:47:08.578Z"
+  "aktualisiert": "2026-08-04T10:34:20.515Z"
 }
