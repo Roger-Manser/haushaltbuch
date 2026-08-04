@@ -8327,6 +8327,20 @@
       "menge": "1",
       "einheit": "Stk",
       "checked": false
+    },
+    {
+      "id": 1785825811441,
+      "text": "Melone",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1785825825294,
+      "text": "Rohschinken",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
     }
   ],
   "einkaufOverrides": {
@@ -13863,5 +13877,5 @@
       "zeit": 1785825501098
     }
   ],
-  "aktualisiert": "2026-08-04T06:38:59.953Z"
+  "aktualisiert": "2026-08-04T07:39:02.076Z"
 }
