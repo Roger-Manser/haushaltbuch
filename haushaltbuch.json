@@ -1087,7 +1087,7 @@
       "marke": "Lidl",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "4056489147268",
@@ -1126,13 +1126,22 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-07",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "kaufort": "Lidl",
       "packungen": [
         {
-          "id": 15,
-          "menge": 1,
+          "id": 1,
+          "menge": 0,
           "kaufdatum": "2026-08-04",
           "ablaufdatum": "2026-08-08"
         }
@@ -4802,7 +4811,7 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20524326",
@@ -4811,7 +4820,7 @@
       "packMenge": 1,
       "packEinheit": "Pkg",
       "kaufdatum": "2026-07-31",
-      "ablaufdatum": "2026-08-05",
+      "ablaufdatum": "2026-08-01",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784295080401_17842950736273616472209894154228.jpg?t=1786123090173",
       "fotoPath": "1784295080401_17842950736273616472209894154228.jpg",
@@ -4835,7 +4844,7 @@
           "kaufort": "Lidl"
         },
         {
-          "datum": "2026-07-30",
+          "datum": "2026-07-31",
           "preis": 4.95,
           "menge": 1,
           "einheit": "Stk",
@@ -4844,23 +4853,16 @@
           "kaufort": "Lidl"
         },
         {
-          "datum": "2026-07-31",
-          "preis": 4.95,
+          "datum": "2026-08-07",
+          "preis": 0,
           "menge": 1,
           "einheit": "Stk",
-          "typ": "ein",
+          "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
         }
       ],
-      "packungen": [
-        {
-          "id": 3,
-          "menge": 1,
-          "kaufdatum": "2026-07-31",
-          "ablaufdatum": "2026-08-01"
-        }
-      ],
+      "packungen": [],
       "geoeffnet": "2026-07-31"
     },
     {
@@ -8520,24 +8522,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-04",
-          "preis": 1.59,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-04",
-          "preis": 1.59,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -8605,12 +8589,12 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "20332419",
       "barcodes": [],
-      "preis": 4.49,
+      "preis": 0,
       "packMenge": 100,
       "packEinheit": "g",
       "kaufdatum": "2026-08-04",
@@ -8629,19 +8613,19 @@
           "kaufort": "Lidl"
         },
         {
-          "datum": "2026-08-04",
-          "preis": 4.49,
+          "datum": "2026-08-07",
+          "preis": 0,
           "menge": 1,
           "einheit": "Pkg",
-          "typ": "ein",
+          "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
         }
       ],
       "packungen": [
         {
-          "id": 13,
-          "menge": 1,
+          "id": 2,
+          "menge": 0,
           "kaufdatum": "2026-08-04",
           "ablaufdatum": "2026-08-11"
         }
@@ -8654,12 +8638,12 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "4056489114727",
       "barcodes": [],
-      "preis": 5.49,
+      "preis": 0,
       "packMenge": 200,
       "packEinheit": "g",
       "kaufdatum": "2026-08-04",
@@ -8678,11 +8662,11 @@
           "kaufort": "Lidl"
         },
         {
-          "datum": "2026-08-04",
-          "preis": 5.49,
-          "menge": 2,
+          "datum": "2026-08-07",
+          "preis": 0,
+          "menge": 1,
           "einheit": "Pkg",
-          "typ": "ein",
+          "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
         }
@@ -8690,7 +8674,7 @@
       "packungen": [
         {
           "id": 14,
-          "menge": 2,
+          "menge": 1,
           "kaufdatum": "2026-08-04",
           "ablaufdatum": "2026-09-18"
         }
@@ -8859,7 +8843,7 @@
       "packMenge": 375,
       "packEinheit": "g",
       "kaufdatum": "2026-08-04",
-      "ablaufdatum": "2026-08-25",
+      "ablaufdatum": "2026-08-10",
       "notiz": "Pro 100g/ml: 267 kcal, Fett 4g, KH 48g, Eiweiss 8.26666666666667g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785841496328_off.jpg?t=1786123090173",
       "fotoPath": "1785841496328_off.jpg",
@@ -8888,9 +8872,10 @@
           "id": 22,
           "menge": 1,
           "kaufdatum": "2026-08-04",
-          "ablaufdatum": "2026-08-25"
+          "ablaufdatum": "2026-08-10"
         }
-      ]
+      ],
+      "geoeffnet": "2026-08-07"
     },
     {
       "id": 238,
@@ -14857,7 +14842,59 @@
       "aktion": false,
       "datum": "2026-08-04",
       "zeit": 1785841674349
+    },
+    {
+      "t": "aus",
+      "aid": 32,
+      "name": "Forellenfilets",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-07",
+      "zeit": 1786124454841
+    },
+    {
+      "t": "aus",
+      "aid": 233,
+      "name": "Schwarzwälder Schinken",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-07",
+      "zeit": 1786124486426
+    },
+    {
+      "t": "aus",
+      "aid": 232,
+      "name": "Alaska Wild Sockeye Lachs",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-07",
+      "zeit": 1786124509973
+    },
+    {
+      "t": "aus",
+      "aid": 130,
+      "name": "Salametti Nostrani",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-07",
+      "zeit": 1786124638748
     }
   ],
-  "aktualisiert": "2026-08-07T17:39:59.060Z"
+  "aktualisiert": "2026-08-07T17:56:53.861Z"
 }
