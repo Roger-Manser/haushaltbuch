@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.9';
+const APP_VERSION='19.10';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.10',d:'08.2026',items:['Verlauf: Doppeleinträge behoben (preisHistorie wurde doppelt geschrieben)']},
   {v:'19.9',d:'08.2026',items:['Artikel-Formular: Foto-Dialog mit Kamera/Galerie-Auswahl']},
   {v:'19.8',d:'08.2026',items:['Artikel-Formular: Foto-Button öffnet Kamera/Galerie-Auswahl statt direkt Kamera']},
   {v:'19.7',d:'08.2026',items:['Sync-Konflikt: klarer Dialog nach 3 Versuchen mit Option «Von GitHub laden»']},
@@ -722,15 +723,17 @@ function saveL(){
   dirty=true;localStorage.setItem('hb_dirty','1');sdot('dt');
 }
 function saveGH(){try{localStorage.setItem('hbgh',JSON.stringify(gh));}catch(e){};}
-function addLogEntry(type,artikelId,name,lager,kat,menge,einheit,preis,aktion){
+function addLogEntry(type,artikelId,name,lager,kat,menge,einheit,preis,aktion,skipHistorie){
   if(!S.log)S.log=[];
   S.log.push({t:type,aid:artikelId,name,lager,kat,menge,einheit,preis:preis||0,aktion:aktion||false,datum:todayISO(),zeit:Date.now()});
   if(S.log.length>2000)S.log=S.log.slice(-2000);
-  // Auch in preisHistorie des Artikels eintragen (für Verlauf-Anzeige im Detail)
-  const a=S.a.find(x=>x.id===artikelId);
-  if(a){
-    if(!a.preisHistorie)a.preisHistorie=[];
-    a.preisHistorie.push({datum:todayISO(),preis:preis||0,menge,einheit:einheit||'Stk',typ:type,aktion:aktion||false,kaufort:a.kaufort||''});
+  // preisHistorie nur schreiben wenn nicht schon manuell gemacht (skipHistorie=true)
+  if(!skipHistorie){
+    const a=S.a.find(x=>x.id===artikelId);
+    if(a){
+      if(!a.preisHistorie)a.preisHistorie=[];
+      a.preisHistorie.push({datum:todayISO(),preis:preis||0,menge,einheit:einheit||'Stk',typ:type,aktion:aktion||false,kaufort:a.kaufort||''});
+    }
   }
 }
 function sdot(s){const d=document.getElementById('sdot');if(d)d.className='sdot'+(s==='ok'?' ok':s==='dt'?' dt':s==='sy'?' sy':'');}
@@ -3037,7 +3040,7 @@ function confirmEingang(id,ablaufPflicht){
   if(!a.preisHistorie)a.preisHistorie=[];
   a.preisHistorie.push({datum:kaufdatum,preis,menge:addMenge,einheit:a.einheit||'Stk',typ:'ein',aktion:isAktion||false,kaufort:kaufort||''});
   if(preis>0&&!isAktion){a.preis=preis;}
-  addLogEntry('ein',a.id,a.name,a.lager,a.kat,addMenge,a.einheit,preis,isAktion||false);
+  addLogEntry('ein',a.id,a.name,a.lager,a.kat,addMenge,a.einheit,preis,isAktion||false,true);
   saveL();
   const aktionHinweis=isAktion?' (Aktionspreis, Standardpreis unverändert)':'';
   toast('+'+fmtMenge(addMenge)+' '+esc(a.einheit||'Stk')+' · CHF '+(preis>0?preis.toFixed(2):'—')+aktionHinweis);
@@ -4605,7 +4608,7 @@ function doEkEinbuchungBekannt(ekId,artikelId){
   syncMenge(a);
   if(!a.preisHistorie)a.preisHistorie=[];
   a.preisHistorie.push({datum:todayISO(),preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:a.kaufort||''});
-  addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,a.einheit,preis,false);
+  addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,a.einheit,preis,false,true);
   // Einkaufslisteneintrag abhaken
   const e=S.ek.find(x=>x.id===ekId);
   if(e)e.checked=true;
@@ -5367,7 +5370,7 @@ async function naechsteInvUebernahme(){
       syncMenge(imLager);
       if(!imLager.preisHistorie)imLager.preisHistorie=[];
       imLager.preisHistorie.push({datum:todayISO(),preis:imLager.preis||0,menge:e.menge,einheit:imLager.einheit||'Stk',typ:'ein',aktion:false,kaufort:''});
-      addLogEntry('ein',imLager.id,imLager.name,imLager.lager,imLager.kat,e.menge,imLager.einheit,imLager.preis||0,false);
+      addLogEntry('ein',imLager.id,imLager.name,imLager.lager,imLager.kat,e.menge,imLager.einheit,imLager.preis||0,false,true);
       saveL();
       toast('\u2713 '+imLager.name+': Bestand erh\u00f6ht');
     }
@@ -6037,7 +6040,7 @@ function confirmQuittungArtikel(idx,hasExisting,existingId){
       if(!a.preisHistorie)a.preisHistorie=[];
       a.preisHistorie.push({datum,preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort||''});
       if(preis>0)a.preis=preis;
-      addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,einheit,preis,false);
+      addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,einheit,preis,false,true);
     }
   }else{
     // Neuen Artikel anlegen
