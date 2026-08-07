@@ -1,116 +1,97 @@
-/* Haushaltbuch Service Worker – GitHub Pages optimiert
-   Läuft unter: /haushaltbuch/
-*/
-
-const CACHE_NAME = 'haushaltbuch-v197';
-
-// Alle statischen Dateien, die für Offline-Betrieb nötig sind
-const SHELL = [
-  '/haushaltbuch/',
-  '/haushaltbuch/index.html',
-  '/haushaltbuch/manifest.json',
-
-  // Icons
-  '/haushaltbuch/icons/icon-192x192.png',
-  '/haushaltbuch/icons/icon-192x192-maskable.png',
-  '/haushaltbuch/icons/icon-512x512.png',
-  '/haushaltbuch/icons/icon-512x512-maskable.png'
+const CACHE = 'haushaltbuch-v183';
+const ASSETS = [
+  './index.html',
+  './manifest.json?v=10',
+  './icons/icon-192x192.png',
+  './icons/icon-192x192-maskable.png',
+  './icons/icon-512x512.png',
+  './icons/icon-512x512-maskable.png',
 ];
 
-console.log('[SW] Loading Service Worker', CACHE_NAME);
-
-self.addEventListener('install', event => {
-  console.log('[SW] Install');
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => {
-        console.log('[SW] Caching shell', SHELL);
-        return cache.addAll(SHELL);
-      })
-      .then(() => {
-        console.log('[SW] Shell cached, skipWaiting');
-        return self.skipWaiting();
-      })
-      .catch(err => {
-        console.error('[SW] Install error', err);
-        return self.skipWaiting();
-      })
+// Install: alle Assets in Cache laden, SW wartet bis alle da sind
+self.addEventListener('install', e => {
+  e.waitUntil(
+    caches.open(CACHE).then(cache =>
+      Promise.allSettled(ASSETS.map(url =>
+        fetch(url, { cache: 'no-store' })
+          .then(res => { if (res && res.ok) return cache.put(url, res); })
+          .catch(() => {/* Icon fehlt ggf. – nicht kritisch */})
+      ))
+    ).then(() => self.skipWaiting()) // sofort aktivieren
   );
 });
 
-self.addEventListener('activate', event => {
-  console.log('[SW] Activate');
-  event.waitUntil(
+self.addEventListener('message', e => {
+  if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
+});
+
+// Activate: alte Caches löschen, sofort übernehmen
+self.addEventListener('activate', e => {
+  e.waitUntil(
     caches.keys()
-      .then(keys => {
-        const old = keys.filter(k => k !== CACHE_NAME);
-        if (old.length) {
-          console.log('[SW] Deleting old caches', old);
-        }
-        return Promise.all(old.map(k => caches.delete(k)));
-      })
-      .then(() => {
-        console.log('[SW] Clients claim');
-        return self.clients.claim();
-      })
+      .then(keys => Promise.all(
+        keys.filter(k => k !== CACHE).map(k => caches.delete(k))
+      ))
+      .then(() => self.clients.claim())
   );
 });
 
-self.addEventListener('fetch', event => {
-  const req = event.request;
-  if (req.method !== 'GET') return;
+// Fetch-Strategie:
+//   - Cross-origin (API, CDN): immer Netz, kein Cache
+//   - index.html (Navigation): Cache-first mit Hintergrund-Refresh (Stale-While-Revalidate)
+//   - Andere same-origin Dateien: Cache-first, Netz als Fallback
+self.addEventListener('fetch', e => {
+  const url = new URL(e.request.url);
 
-  const url = new URL(req.url);
-  const pathname = url.pathname;
+  // Cross-origin: nicht cachen (GitHub API, Anthropic, OFF, CDNs)
+  if (url.origin !== self.location.origin) return;
 
-  // Start-URL / App-Shell erkennen
-  const isShell =
-    pathname === '/haushaltbuch' ||
-    pathname === '/haushaltbuch/' ||
-    pathname === '/haushaltbuch/index.html';
-
-  if (isShell) {
-    // NETWORK-FIRST mit Fallback auf Cache + index.html
-    event.respondWith(
-      fetch(req)
-        .then(res => {
-          if (res && res.status === 200) {
-            const copy = res.clone();
-            caches.open(CACHE_NAME).then(c => c.put(req, copy)).catch(() => {});
+  // index.html / Navigation: Cache sofort ausliefern, im Hintergrund aktualisieren
+  if (e.request.mode === 'navigate' || url.pathname.endsWith('index.html') || url.pathname === '/haushaltbuch/' || url.pathname === '/haushaltbuch') {
+    e.respondWith(
+      caches.open(CACHE).then(async cache => {
+        const cached = await cache.match('./index.html');
+        const fetchPromise = fetch(e.request, { cache: 'no-store' })
+          .then(res => {
+            if (res && res.ok) cache.put('./index.html', res.clone());
             return res;
-          }
-          return caches.match(req)
-            .then(cached => cached || caches.match('/haushaltbuch/index.html'));
-        })
-        .catch(() => {
-          console.log('[SW] Network failed, using cache for', pathname);
-          return caches.match(req)
-            .then(cached => cached || caches.match('/haushaltbuch/index.html'));
-        })
-    );
-  } else {
-    // CACHE-FIRST für alle anderen Assets
-    event.respondWith(
-      caches.match(req)
-        .then(cached => {
-          if (cached) {
-            return cached;
-          }
-          return fetch(req)
-            .then(res => {
-              if (res && res.status === 200) {
-                const copy = res.clone();
-                caches.open(CACHE_NAME).then(c => c.put(req, copy)).catch(() => {});
-              }
-              return res;
-            })
-            .catch(err => {
-              console.error('[SW] Fetch failed', pathname, err);
-              return new Response('', { status: 503, statusText: 'Offline' });
-            });
-        })
-    );
-  }
-});
+          })
+          .catch(() => null);
 
-console.log('[SW] Ready', CACHE_NAME);
+        // Online: Netz bevorzugen mit kurzer Wartezeit, Fallback auf Cache
+        if (navigator.onLine) {
+          try {
+            const fresh = await Promise.race([
+              fetchPromise,
+              new Promise((_, rej) => setTimeout(() => rej(new Error('timeout')), 3000))
+            ]);
+            if (fresh && fresh.ok) return fresh;
+          } catch (_) {}
+        }
+
+        // Offline oder Timeout: aus Cache
+        return cached || fetch(e.request).catch(() => cached);
+      })
+    );
+    return;
+  }
+
+  // Statische Dateien (Icons, Manifest): Cache-first
+  e.respondWith(
+    caches.match(e.request).then(cached => {
+      if (cached) {
+        // Im Hintergrund aktualisieren
+        fetch(e.request, { cache: 'no-store' })
+          .then(res => { if (res && res.ok) caches.open(CACHE).then(c => c.put(e.request, res.clone())); })
+          .catch(() => {});
+        return cached;
+      }
+      return fetch(e.request)
+        .then(res => {
+          if (res && res.ok) caches.open(CACHE).then(c => c.put(e.request, res.clone())).catch(() => {});
+          return res;
+        })
+        .catch(() => cached);
+    })
+  );
+});
