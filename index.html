@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.7';
+const APP_VERSION='19.8';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.8',d:'08.2026',items:['Artikel-Formular: Foto-Button öffnet Kamera/Galerie-Auswahl statt direkt Kamera']},
   {v:'19.7',d:'08.2026',items:['Sync-Konflikt: klarer Dialog nach 3 Versuchen mit Option «Von GitHub laden»']},
   {v:'19.6',d:'08.2026',items:['KI-Fotoscan: mehrere Fotos (Vorder-/Rückseite) möglich','Quittungsscan Info-Dialog: direkt Foto/Galerie wählen']},
   {v:'19.5',d:'08.2026',items:['KI-Fotoscan: Info-Dialog mit Erklärung vor dem Start']},
@@ -2339,7 +2340,7 @@ function openForm(id){
   '<div id="extra-bc-wrap" style="margin-top:10px"></div>'+
   '<button type="button" onclick="addExtraBarcode()" style="width:100%;margin-top:8px;padding:9px;background:var(--bg);border:1px dashed var(--bd);border-radius:var(--rs);font-size:13px;color:var(--ac);cursor:pointer">+ Weiteren Barcode hinzufügen</button>'+
   '</div>'+
-  '<div class="fd"><label>Foto</label><div id="pz" class="pz" onclick="document.getElementById(\'fph\').click()">'+I.cam+'<span>Von Kamera oder Galerie</span><small>Wird auf GitHub gespeichert</small><input type="file" id="fph" accept="image/*" capture="environment" style="display:none" onchange="onPh(event)"/></div>'+(!a&&localStorage.getItem('hb_ai_key')?'<div id="ki-analyse-btn" style="display:none"><button type="button" onclick="formFotoKiAnalyse()" style="width:100%;margin-top:8px;padding:10px;background:var(--ol);border:1px solid var(--ok);border-radius:var(--rs);color:var(--ok);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">🤖 KI-Felder aus Foto ausfüllen</button></div>':'')+'<div id="ppw" class="ppw" style="'+(a&&a.foto?'display:block':'')+'"><img id="ppi" src="'+(a?esc(a.foto||''):'')+'" alt=""/><button class="rph" onclick="rmPh()">&#x2715;</button></div></div>'+
+  '<div class="fd"><label>Foto</label><div id="pz" class="pz" onclick="document.getElementById(\'fph\').click()">'+I.cam+'<span>Von Kamera oder Galerie</span><small>Wird auf GitHub gespeichert</small><input type="file" id="fph" accept="image/*" style="display:none" onchange="onPh(event)"/></div>'+(!a&&localStorage.getItem('hb_ai_key')?'<div id="ki-analyse-btn" style="display:none"><button type="button" onclick="formFotoKiAnalyse()" style="width:100%;margin-top:8px;padding:10px;background:var(--ol);border:1px solid var(--ok);border-radius:var(--rs);color:var(--ok);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">🤖 KI-Felder aus Foto ausfüllen</button></div>':'')+'<div id="ppw" class="ppw" style="'+(a&&a.foto?'display:block':'')+'"><img id="ppi" src="'+(a?esc(a.foto||''):'')+'" alt=""/><button class="rph" onclick="rmPh()">&#x2715;</button></div></div>'+
   '<div class="fd"><label>Bezeichnung *</label><input type="text" id="f-nm" placeholder="z.B. Vollmilch 3.5%" value="'+(a?esc(a.name):'')+'" oninput="checkDupHint(this.value);checkFrischeHint(this.value)"/><div id="dup-hint" style="display:none;font-size:12px;color:var(--wn);background:var(--wl);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div><div id="frische-hint" style="display:none;font-size:12px;color:var(--ok);background:var(--ol);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div></div>'+
   '<div class="fd"><label>Marke</label><input type="text" id="f-mk" placeholder="z.B. Emmi" value="'+(a?esc(a.marke||''):'')+'"/></div>'+
   '<div class="fd"><label>Kategorie</label><div class="lcw" id="f-ka">'+kc+'</div></div>'+
