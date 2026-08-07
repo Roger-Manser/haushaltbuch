@@ -8460,9 +8460,18 @@
       "kaufdatum": "2026-08-04",
       "ablaufdatum": "",
       "notiz": "Galiamelone",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786124347361_1000062827.jpg?t=1786124359226",
+      "fotoPath": "1786124347361_1000062827.jpg",
       "preisHistorie": [
+        {
+          "datum": "2026-08-04",
+          "preis": 1.19,
+          "menge": 1.334,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
         {
           "datum": "2026-08-04",
           "preis": 1.19,
@@ -8500,9 +8509,18 @@
       "kaufdatum": "2026-08-04",
       "ablaufdatum": "",
       "notiz": "",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786124377379_1000062830.jpg?t=1786124385442",
+      "fotoPath": "1786124377379_1000062830.jpg",
       "preisHistorie": [
+        {
+          "datum": "2026-08-04",
+          "preis": 1.59,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
         {
           "datum": "2026-08-04",
           "preis": 1.59,
@@ -14841,5 +14859,5 @@
       "zeit": 1785841674349
     }
   ],
-  "aktualisiert": "2026-08-07T17:38:50.115Z"
+  "aktualisiert": "2026-08-07T17:39:48.427Z"
 }
