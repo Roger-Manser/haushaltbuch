@@ -8834,7 +8834,7 @@
       "kat": "Backwaren & Brot",
       "lager": "Küche",
       "kaufort": "",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "4056489322948",
@@ -8865,16 +8865,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": ""
-        }
-      ],
-      "packungen": [
+        },
         {
-          "id": 22,
+          "datum": "2026-08-09",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-08-04",
-          "ablaufdatum": "2026-08-10"
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": ""
         }
       ],
+      "packungen": [],
       "geoeffnet": "2026-08-07"
     },
     {
@@ -14894,7 +14896,20 @@
       "aktion": false,
       "datum": "2026-08-07",
       "zeit": 1786124638748
+    },
+    {
+      "t": "aus",
+      "aid": 237,
+      "name": "weizenbrot Toast Brot American Style",
+      "lager": "Küche",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-09",
+      "zeit": 1786270632644
     }
   ],
-  "aktualisiert": "2026-08-07T17:59:28.054Z"
+  "aktualisiert": "2026-08-09T14:35:30.563Z"
 }
