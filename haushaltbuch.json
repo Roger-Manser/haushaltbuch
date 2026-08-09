@@ -8995,48 +8995,6 @@
       "menge": "1",
       "einheit": "Stk",
       "checked": false
-    },
-    {
-      "id": 1785423563847,
-      "text": "Forellenfilets",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1785825486764,
-      "text": "Tomaten San Marzano",
-      "menge": "1",
-      "einheit": "kg",
-      "checked": true
-    },
-    {
-      "id": 1785825504974,
-      "text": "Mozzarella Stange",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1785825515879,
-      "text": "Pouletbrust Minutenschnitzel",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1785825811441,
-      "text": "Melone",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1785825825294,
-      "text": "Rohschinken",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
     }
   ],
   "einkaufOverrides": {
@@ -14911,5 +14869,5 @@
       "zeit": 1786270632644
     }
   ],
-  "aktualisiert": "2026-08-09T14:35:30.563Z"
+  "aktualisiert": "2026-08-09T16:56:35.976Z"
 }
