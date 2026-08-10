@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.21';
+const APP_VERSION='19.22';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.22',d:'08.2026',items:['Levenshtein-Distance für Schreibvarianten (Mayonnaise/Mayonaise)','Rezept-Zutat-Alias-System (global für alle Rezepte)','Öffnungsdatum-Tracking für offene Artikel','Dialog: neue Tube anreissen nach teilweisem Verbrauch','Detailansicht: «Geöffnet seit»-Info anzeigen']},
   {v:'19.21',d:'08.2026',items:['FIFO-Verbrauch: ältestes Ablaufdatum zuerst','Rezept gekocht: mehrere Artikel gleichen Namens unterstützt']},
   {v:'19.20',d:'08.2026',items:['Rezept gekocht: flexible Mengen-Eingabe pro Zutat','Checkboxes mit deaktivierbarem Input-Feld','Verbrauch-Logging mit benutzerdefinierten Mengen']},
   {v:'19.19',d:'08.2026',items:['🍽️ Rezept gekocht Feature','Zutat-Matching mit Lager','Verbrauch-Logging mit "gekocht"-Aktion']},
@@ -1628,7 +1629,7 @@ function showDet(id){
       return '<div class="ir" style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showRezeptDetail(this,'+id+')" data-r=\''+rJson+'\'>'+thumb+'<div><div style="font-size:13px;font-weight:500">'+esc(r.name)+'</div><div style="font-size:11px;color:var(--t2)">'+r.port+' Port. · '+r.min+' min</div></div></div>';
     }).join('')+'</div>':
     '';
-  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span>'+(a.ablaufdatum?'<span style="flex:1;text-align:center">'+expBadgeKurz(a)+'</span><span class="iv" style="flex:none">'+fmtDateCH(a.ablaufdatum)+'</span>':'<span class="iv">—</span>')+'</div>'+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'" onclick="bestandManuellDialog('+id+')" style="cursor:pointer;text-decoration:underline dotted" title="Antippen zum direkten Eingeben">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+(a.quittungAliase&&a.quittungAliase.length?'<div style="margin-top:14px;padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs)"><div style="font-size:12px;font-weight:600;color:var(--t3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">📎 Quittungs-Aliase</div><div style="display:flex;flex-wrap:wrap;gap:6px">'+a.quittungAliase.map((al,i)=>'<span style="display:inline-flex;align-items:center;gap:4px;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:3px 8px;font-size:12px;color:var(--tx)">'+esc(al)+'<button onclick="delAlias('+id+','+i+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;padding:0 0 0 2px">×</button></span>').join('')+'</div></div>':'')+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button><button class="acb" style="color:var(--ac)" onclick="openSplitDialog('+id+')">✂ Trennen'+(a.mergeSources&&a.mergeSources.length?' ('+a.mergeSources.length+')':'')+'</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+
+  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span>'+(a.ablaufdatum?'<span style="flex:1;text-align:center">'+expBadgeKurz(a)+'</span><span class="iv" style="flex:none">'+fmtDateCH(a.ablaufdatum)+'</span>':'<span class="iv">—</span>')+'</div>'+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'" onclick="bestandManuellDialog('+id+')" style="cursor:pointer;text-decoration:underline dotted" title="Antippen zum direkten Eingeben">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+(a.oeffnungsdatum?'<div style="margin-top:14px;padding:10px 12px;background:var(--dl);border-radius:var(--rs);font-size:12px;color:var(--dg)">📂 Geöffnet seit '+fmtDateCH(a.oeffnungsdatum)+'</div>':'')+(a.quittungAliase&&a.quittungAliase.length?'<div style="margin-top:14px;padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs)"><div style="font-size:12px;font-weight:600;color:var(--t3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">📎 Quittungs-Aliase</div><div style="display:flex;flex-wrap:wrap;gap:6px">'+a.quittungAliase.map((al,i)=>'<span style="display:inline-flex;align-items:center;gap:4px;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:3px 8px;font-size:12px;color:var(--tx)">'+esc(al)+'<button onclick="delAlias('+id+','+i+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;padding:0 0 0 2px">×</button></span>').join('')+'</div></div>':'')+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button><button class="acb" style="color:var(--ac)" onclick="openSplitDialog('+id+')">✂ Trennen'+(a.mergeSources&&a.mergeSources.length?' ('+a.mergeSources.length+')':'')+'</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+
     (a.ablaufdatum?'<div class="acr" style="margin-top:8px"><button class="acb" onclick="toggleAblaufIgnoriert('+id+')" style="'+(a.ablaufIgnoriert?'color:var(--ac)':'')+'">'+(a.ablaufIgnoriert?'↑ Wieder einreihen (Ablauf aktiv)':'↓ Bei Ablauf ans Ende setzen')+'</button></div>':'')+
     (opt.fwAnbruch?'<div class="acr" style="margin-top:8px"><button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen (abgelaufen)</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>':'<div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>')+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
   const heroEl=document.getElementById('dh-hero-img');
@@ -4045,11 +4046,30 @@ function showRezeptGekocht(rezeptId){
   
   // Pro Zutat: prüfe ob im Lager
   zutaten.forEach((zutat,zi)=>{
-    const lagerArtikel=S.a.filter(a=>a.menge>0).find(a=>{
-      const an=a.name.toLowerCase();
-      const zn=zutat.toLowerCase();
-      return an===zn||an.includes(zn)||zn.includes(an)&&zn.length>3;
-    });
+    // Matching mit Levenshtein + Alias
+    let lagerArtikel=null;
+    // 1. Exaktes Match
+    lagerArtikel=S.a.filter(a=>a.menge>0).find(a=>a.name.toLowerCase()===zutat.toLowerCase());
+    // 2. Alias-Match
+    if(!lagerArtikel){
+      lagerArtikel=S.a.filter(a=>a.menge>0).find(a=>(a.quittungAliase||[]).some(al=>al.toLowerCase()===zutat.toLowerCase()));
+    }
+    // 3. Levenshtein (max 2 Fehler für Schreibvarianten)
+    if(!lagerArtikel){
+      lagerArtikel=S.a.filter(a=>a.menge>0).sort((x,y)=>{
+        const distX=levenshteinDistance(x.name,zutat);
+        const distY=levenshteinDistance(y.name,zutat);
+        return distX-distY;
+      }).find(a=>levenshteinDistance(a.name,zutat)<=2);
+    }
+    // 4. Fuzzy Fallback
+    if(!lagerArtikel){
+      lagerArtikel=S.a.filter(a=>a.menge>0).find(a=>{
+        const an=a.name.toLowerCase();
+        const zn=zutat.toLowerCase();
+        return an.includes(zn)||zn.includes(an)&&zn.length>3;
+      });
+    }
     const status=lagerArtikel?'<span style="font-size:11px;color:var(--ok);margin-left:6px">✓ '+lagerArtikel.menge+' '+esc(lagerArtikel.einheit||'Stk')+'</span>':'<span style="font-size:11px;color:var(--wn);margin-left:6px">⚠️ nicht verfügbar</span>';
     h+='<div style="display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--bd)">'+
       '<input type="checkbox" id="cook-cb-'+zi+'" data-art-id="'+(lagerArtikel?.id||'')+'" style="width:18px;height:18px;cursor:pointer" onchange="document.getElementById(\'cook-in-'+zi+'\').disabled=!this.checked"/>'+ 
@@ -4108,6 +4128,10 @@ function verbrauchZutaten(rezeptName){
       if(restMenge<=0)break;
       const verbraucheVon=Math.min(restMenge,art.menge);
       art.menge=Math.max(0,art.menge-verbraucheVon);
+      // Öffnungsdatum setzen wenn noch Bestand > 0 (teilweiser Verbrauch)
+      if(art.menge>0&&!art.oeffnungsdatum){
+        art.oeffnungsdatum=todayISO();
+      }
       addLogEntry('weg',art.id,art.name,art.lager,art.kat,verbraucheVon,art.einheit||'Stk',art.preis||0,'gekocht',false);
       restMenge-=verbraucheVon;
     }
@@ -4118,8 +4142,52 @@ function verbrauchZutaten(rezeptName){
   if(verbucht.length){
     saveL();doSync();
     dlg.remove();
+    
+    // Prüfe ob irgendein Artikel noch Bestand > 0 hat (teilweiser Verbrauch)
+    let teilweiseVerbrauchte=[];
+    cbs.forEach((cb,idx)=>{
+      const artId=parseInt(cb.dataset.artId);
+      const a=S.a.find(x=>x.id===artId);
+      if(a&&a.menge>0){
+        teilweiseVerbrauchte.push(a);
+      }
+    });
+    
     toast('🍽️ '+verbucht.length+' Zutat'+(verbucht.length===1?'':'en')+' verbraucht (FIFO)');
-    setTimeout(()=>goScreen('s-rezepte'),400);
+    
+    // Wenn teilweise verbraucht: Frag ob neue anreissen
+    if(teilweiseVerbrauchte.length>0){
+      setTimeout(()=>{
+        const msg=teilweiseVerbrauchte.map(a=>'«'+a.name+'» (noch '+a.menge+' '+esc(a.einheit||'Stk')+')').join(', ');
+        if(confirm('🍽️ Teilweise verbraucht:\n\n'+msg+'\n\nMöchtest du neue Tube anreissen?')){
+          // Dialog um neue Tube hinzuzufügen
+          teilweiseVerbrauchte.forEach(a=>{
+            const newId=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;
+            S.a.push({
+              id:newId,
+              name:a.name,
+              marke:a.marke||'',
+              kat:a.kat||'Diverses',
+              lager:a.lager||'',
+              einheit:a.einheit||'Stk',
+              menge:1,
+              preis:a.preis||0,
+              mindest:a.mindest||0,
+              ablaufdatum:'',
+              kaufdatum:todayISO(),
+              oeffnungsdatum:'',
+              quittungAliase:a.quittungAliase||[],
+              letzteEingangHeute:''
+            });
+          });
+          saveL();doSync();
+          toast('✓ Neue Tube(n) hinzugefügt');
+        }
+        setTimeout(()=>goScreen('s-rezepte'),400);
+      },300);
+    }else{
+      setTimeout(()=>goScreen('s-rezepte'),400);
+    }
   }else{
     toast('Keine Zutaten ausgewählt');
   }
@@ -6095,6 +6163,21 @@ function renderQuittungUebersicht(datum){
   body.innerHTML=h;
   // Kaufdatum speichern für spätere Verwendung
   body.dataset.datum=datum;
+}
+
+function levenshteinDistance(s1,s2){
+  const a=s1.toLowerCase(),b=s2.toLowerCase();
+  const m=a.length,n=b.length;
+  const dp=Array(m+1).fill(0).map(()=>Array(n+1).fill(0));
+  for(let i=0;i<=m;i++)dp[i][0]=i;
+  for(let j=0;j<=n;j++)dp[0][j]=j;
+  for(let i=1;i<=m;i++){
+    for(let j=1;j<=n;j++){
+      if(a[i-1]===b[j-1])dp[i][j]=dp[i-1][j-1];
+      else dp[i][j]=1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+    }
+  }
+  return dp[m][n];
 }
 
 function findQuittungMatch(name){
