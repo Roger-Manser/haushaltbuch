@@ -4682,6 +4682,9 @@
           "kaufdatum": "2026-07-17",
           "ablaufdatum": "2026-07-21"
         }
+      ],
+      "quittungAliase": [
+        "ASC White Tiger Crevette"
       ]
     },
     {
@@ -9142,6 +9145,55 @@
       "packungen": [
         {
           "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-08-10",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 241,
+      "name": "Papiertragetasche 20L",
+      "marke": "",
+      "kat": "Diverses",
+      "lager": "Küche",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "",
+      "barcodes": [],
+      "preis": 0.39,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-08-10",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-10",
+          "preis": 0.39,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-10",
+          "preis": 0.39,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "packungen": [
+        {
+          "id": 1,
           "menge": 1,
           "kaufdatum": "2026-08-10",
           "ablaufdatum": ""
@@ -15290,7 +15342,20 @@
       "aktion": false,
       "datum": "2026-08-10",
       "zeit": 1786362259741
+    },
+    {
+      "t": "ein",
+      "aid": 241,
+      "name": "Papiertragetasche 20L",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0.39,
+      "aktion": false,
+      "datum": "2026-08-10",
+      "zeit": 1786371368058
     }
   ],
-  "aktualisiert": "2026-08-10T14:12:11.642Z"
+  "aktualisiert": "2026-08-10T14:17:06.693Z"
 }
