@@ -8438,7 +8438,10 @@
         }
       ],
       "barcodes": [],
-      "geoeffnet": "2026-07-31"
+      "geoeffnet": "2026-07-31",
+      "quittungAliase": [
+        "Der scharfe Käse"
+      ]
     },
     {
       "id": 226,
@@ -15286,5 +15289,5 @@
       "zeit": 1786362259741
     }
   ],
-  "aktualisiert": "2026-08-10T14:11:19.311Z"
+  "aktualisiert": "2026-08-10T14:11:47.657Z"
 }
