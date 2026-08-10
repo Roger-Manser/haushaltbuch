@@ -1916,6 +1916,9 @@
           "kaufdatum": "2026-07-04",
           "ablaufdatum": ""
         }
+      ],
+      "quittungAliase": [
+        "Reosal Reg.salz"
       ]
     },
     {
@@ -15363,5 +15366,5 @@
       "zeit": 1786371368058
     }
   ],
-  "aktualisiert": "2026-08-10T14:19:04.855Z"
+  "aktualisiert": "2026-08-10T14:20:11.620Z"
 }
