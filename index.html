@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.16';
+const APP_VERSION='19.17';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.17',d:'08.2026',items:['Alias: showDet parseInt-Fix (Detailansicht)','Quittung-Übersicht: findQuittungMatch für korrekte Badge-Anzeige']},
   {v:'19.16',d:'08.2026',items:['Alias Root-Cause Fix: parseInt für artikelId (String≠Number Vergleich)','Einstellungen: Alias-Übersicht mit Lösch-Option']},
   {v:'19.15',d:'08.2026',items:['Alias-Bugs behoben: existingId-Parsing, Sync nach Alias-Speichern, verbessertes Matching']},
   {v:'19.14',d:'08.2026',items:['Artikel-Detail: Quittungs-Aliase anzeigen und löschen']},
@@ -1482,7 +1483,7 @@ function togSec(h){const it=h.nextElementSibling;const op=h.classList.toggle('op
 /* ── Detail ───────────────────────────────────────────────────────── */
 let detId=null;
 function showDet(id){
-  detId=id;const a=S.a.find(x=>x.id===id);if(!a)return;
+  id=parseInt(id);detId=id;const a=S.a.find(x=>x.id===id);if(!a)return;
   document.getElementById('d-lager').textContent=a.lager;
   document.getElementById('d-edit').onclick=()=>openForm(id);
   document.getElementById('d-back').onclick=()=>goScreen('s-lager');
@@ -5960,7 +5961,7 @@ function renderQuittungUebersicht(datum){
   '</div>';
   h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">Jeden Artikel einzeln bestätigen:</div>';
   h+=quittungItems.map((it,i)=>{
-    const existing=S.a.find(a=>a.name.toLowerCase().includes(it.name.toLowerCase().slice(0,5))||it.name.toLowerCase().includes(a.name.toLowerCase().slice(0,5)));
+    const existing=findQuittungMatch(it.name);
     const badge=existing?'<span style="font-size:10px;background:var(--al);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px">im Lager</span>':'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:6px">neu</span>';
     if(it._done){
       return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd);opacity:.5">'+
@@ -6101,7 +6102,7 @@ function zuordnungBestaetigen(idx,artikelId){
       doSync();
       toast('📎 «'+it.name+'» als Alias gespeichert');
     }
-    quittungItems[idx]._matchId=artikelId;
+    quittungItems[idx]._matchId=parseInt(artikelId);
   }
   startQuittungArtikel(idx);
 }
@@ -6113,7 +6114,7 @@ function startQuittungArtikel(idx){
 
   // Lager-Match suchen (Alias + Fuzzy)
   const existing=it._matchId
-    ? S.a.find(a=>a.id===it._matchId)
+    ? S.a.find(a=>a.id===parseInt(it._matchId))
     : findQuittungMatch(it.name);
   if(existing&&!it._matchId)it._matchId=existing.id;
   const ablaufPflicht=existing&&!!existing.ablaufdatum;
