@@ -731,7 +731,10 @@
       "ablaufdatum": "2027-01-01",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782212180104_off.jpg?t=1786377075058",
-      "fotoPath": "1782212180104_off.jpg"
+      "fotoPath": "1782212180104_off.jpg",
+      "quittungAliase": [
+        "Gemüsebouillon"
+      ]
     },
     {
       "id": 19,
@@ -15387,5 +15390,5 @@
       "zeit": 1786371746528
     }
   ],
-  "aktualisiert": "2026-08-10T17:18:19.148Z"
+  "aktualisiert": "2026-08-10T17:18:50.535Z"
 }
