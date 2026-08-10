@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.32';
+const APP_VERSION='19.33';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.33',d:'08.2026',items:['Fix: Nach Zuordnung zurück zu Rezepte-Übersicht','Rezepte bleiben sichtbar (kein neuer Sync nötig)']},
   {v:'19.32',d:'08.2026',items:['Rezept-Übersicht: Levenshtein + Alias-Matching wie Koch-Dialog','Konsistentes Zutat-Matching überall']},
   {v:'19.31',d:'08.2026',items:['Fix: Zutat-Zuordnung funktioniert jetzt']},
   {v:'19.30',d:'08.2026',items:['🔍 Such-Filter in Zuordnungs-Dialog','Live-Filterung beim Tippen']},
@@ -4112,18 +4113,13 @@ function bestaetigenZutatZuordnung(zutat,artikelId,context){
   document.getElementById('zuordnung-dlg').remove();
   toast('✓ Alias gespeichert: «'+esc(zutat)+'» → «'+esc(a.name)+'»');
   
-  // Wenn im Koch-Dialog: neu rendern
-  if(context==='cook'){
-    setTimeout(()=>{
-      const dlgCook=document.getElementById('cook-dlg');
-      if(dlgCook){
-        dlgCook.remove();
-        // Rezept-Dialog nochmal öffnen
-        const title=document.querySelector('[id^="rezept-detail-body"] button').textContent;
-        console.log('Rezept neu laden nach Alias-Speicherung');
-      }
-    },300);
-  }
+  // Zurück zur Rezept-Übersicht
+  setTimeout(()=>{
+    const dlgCook=document.getElementById('cook-dlg');
+    if(dlgCook)dlgCook.remove();
+    goScreen('s-rezepte');
+    renderRezepte();
+  },300);
 }
 
 function showRezeptGekocht(rezeptId){
