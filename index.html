@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.34';
+const APP_VERSION='19.35';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.35',d:'08.2026',items:['Fix: Rezepte mit Sonderzeichen (à, é) öffnen jetzt','Nutzt Rezept-Index statt JSON-Escaping in HTML']},
   {v:'19.34',d:'08.2026',items:['Fuzzy-Matching verschärft: nur exakte Wort-Matches','Verhindert falsche Matches wie Schweinsfilet→Fischfilet']},
   {v:'19.33',d:'08.2026',items:['Fix: Nach Zuordnung zurück zu Rezepte-Übersicht','Rezepte bleiben sichtbar (kein neuer Sync nötig)']},
   {v:'19.32',d:'08.2026',items:['Rezept-Übersicht: Levenshtein + Alias-Matching wie Koch-Dialog','Konsistentes Zutat-Matching überall']},
@@ -3890,7 +3891,8 @@ function renderRezepte(){
   const ablaufArtikel=S.a.filter(a=>a.menge>0&&a.ablaufdatum&&effektiveTage(a)!==null&&effektiveTage(a)<=7);
   const ablaufNamen=ablaufArtikel.map(a=>({name:a.name.toLowerCase(),tage:effektiveTage(a)}));
 
-  const sc=filtered.map(r=>{
+  const sc=filtered.map((r,idx)=>{
+    r._rezeptIdx=idx;
     // Besseres Matching: Levenshtein + Alias (wie im Koch-Dialog)
     const have=r.zt.filter(zutat=>{
       // 1. Exaktes Match
@@ -3970,7 +3972,7 @@ function rcCard(r){
     const tageStr=r.minAblaufTage<0?'überfällig':r.minAblaufTage===0?'heute':r.minAblaufTage===1?'morgen':'in '+r.minAblaufTage+' Tagen';
     ablaufHint='<div style="margin-top:8px;background:var(--wl);color:var(--wn);border-radius:var(--rs);padding:6px 10px;font-size:12px;font-weight:500">⏰ Verbraucht bald ablaufende Zutaten: '+r.ablaufZutaten.map(esc).join(', ')+' ('+tageStr+')</div>';
   }
-  return '<div class="rc" onclick="showRezeptDetail(this)" data-r=\''+rJson+'\' style="cursor:pointer"><div class="rct">'+thumb+'<div><div class="rct-n">'+esc(r.name)+'</div><div class="rct-s">'+r.port+' Port. · '+r.min+' min</div></div></div><div class="mr"><span>Zutaten vorhanden</span><span class="mp '+(f?'f':'p')+'">'+r.have.length+'/'+r.zt.length+'</span></div><div class="mt"><div class="mf '+(f?'f':'')+'" style="width:'+r.pct+'%"></div></div><div class="ztgs">'+tags+'</div>'+ablaufHint+buyBtn+'</div>';
+  return '<div class="rc" onclick="showRezeptDetail(this)" data-idx="'+r._rezeptIdx+'" data-r=\''+rJson+'\' style="cursor:pointer"><div class="rct">'+thumb+'<div><div class="rct-n">'+esc(r.name)+'</div><div class="rct-s">'+r.port+' Port. · '+r.min+' min</div></div></div><div class="mr"><span>Zutaten vorhanden</span><span class="mp '+(f?'f':'p')+'">'+r.have.length+'/'+r.zt.length+'</span></div><div class="mt"><div class="mf '+(f?'f':'')+'" style="width:'+r.pct+'%"></div></div><div class="ztgs">'+tags+'</div>'+ablaufHint+buyBtn+'</div>';
 }
 
 let rezeptDetailOrigin={screen:'s-rezepte',artikelId:null};
@@ -3985,7 +3987,13 @@ function goBackFromRezeptDetail(){
 
 function showRezeptDetail(el,fromArtikelId){
   let r;
-  try{r=JSON.parse(el.dataset.r);}catch(e){return;}
+  const idx=parseInt(el.dataset.idx);
+  if(idx!==undefined&&S.rz[idx]){
+    r=S.rz[idx];
+  }else{
+    try{r=JSON.parse(el.dataset.r);}catch(e){return;}
+  }
+  if(!r)return;
   // Herkunft merken, damit der Zurück-Pfeil zur richtigen Stelle zurückführt
   rezeptDetailOrigin={screen:fromArtikelId?'s-detail':'s-rezepte',artikelId:fromArtikelId||null};
   document.getElementById('rezept-detail-title').textContent=r.name;
