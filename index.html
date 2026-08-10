@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.15';
+const APP_VERSION='19.16';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.16',d:'08.2026',items:['Alias Root-Cause Fix: parseInt für artikelId (String≠Number Vergleich)','Einstellungen: Alias-Übersicht mit Lösch-Option']},
   {v:'19.15',d:'08.2026',items:['Alias-Bugs behoben: existingId-Parsing, Sync nach Alias-Speichern, verbessertes Matching']},
   {v:'19.14',d:'08.2026',items:['Artikel-Detail: Quittungs-Aliase anzeigen und löschen']},
   {v:'19.13',d:'08.2026',items:['Einstellungen: Quittungsscan Trainingsmodus (nur Aliase lernen, kein Bestand)']},
@@ -5683,8 +5684,9 @@ function renderSt(){
     '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Alle Mindestbestände auf einmal prüfen und anpassen — oder alle auf 0 zurücksetzen.</p>'
   )+
   settingsGroup('sg-training','🎓','Quittungsscan Trainingsmodus',
-    '<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Im Trainingsmodus werden beim Quittungsscan nur Aliase erfasst — <strong>kein Warenbestand</strong> wird verändert. Ideal zum Einlernen von Quittungsbezeichnungen.</p>'+
-    optToggle('quittungTraining','🎓 Trainingsmodus aktiv','Quittungsscan bucht nichts ein, speichert aber Aliase für unbekannte Artikel.')
+    '<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Im Trainingsmodus werden beim Quittungsscan nur Aliase erfasst — <strong>kein Warenbestand</strong> wird verändert.</p>'+
+    optToggle('quittungTraining','🎓 Trainingsmodus aktiv','Quittungsscan bucht nichts ein, speichert aber Aliase für unbekannte Artikel.')+
+    renderAliasUebersicht()
   )+
   settingsGroup('sg-foodwaste','♻️','Anti-Foodwaste & Haltbarkeit',
     '<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Funktionen gegen Lebensmittelverschwendung — einzeln ein-/ausschaltbar.</p>'+
@@ -6041,7 +6043,42 @@ function filterQuittungSuche(idx){
   ).join('');
 }
 
+function renderAliasUebersicht(){
+  const mitAlias=S.a.filter(a=>a.quittungAliase&&a.quittungAliase.length>0);
+  if(!mitAlias.length){
+    return '<div class="ss"><div class="ssl">📎 Gespeicherte Aliase</div><p style="font-size:13px;color:var(--t3);margin:0">Noch keine Aliase gespeichert.</p></div>';
+  }
+  let h='<div class="ss"><div class="ssl">📎 Gespeicherte Aliase ('+mitAlias.reduce((s,a)=>s+a.quittungAliase.length,0)+')</div>';
+  h+=mitAlias.map(a=>
+    '<div style="margin-bottom:12px">'+
+      '<div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:6px">'+esc(a.name)+'</div>'+
+      '<div style="display:flex;flex-wrap:wrap;gap:6px">'+
+        a.quittungAliase.map((al,i)=>
+          '<span style="display:inline-flex;align-items:center;gap:4px;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:3px 10px;font-size:12px;color:var(--tx)">'+
+            esc(al)+
+            '<button onclick="delAliasFromSettings('+a.id+','+i+',this)" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:15px;line-height:1;padding:0 0 0 4px">×</button>'+
+          '</span>'
+        ).join('')+
+      '</div>'+
+    '</div>'
+  ).join('');
+  h+='</div>';
+  return h;
+}
+
+function delAliasFromSettings(artikelId,idx,btn){
+  artikelId=parseInt(artikelId);idx=parseInt(idx);
+  const a=S.a.find(x=>x.id===artikelId);
+  if(!a||!a.quittungAliase)return;
+  const alias=a.quittungAliase[idx];
+  a.quittungAliase.splice(idx,1);
+  saveL();doSync();
+  toast('📎 Alias «'+esc(alias)+'» gelöscht');
+  renderSt(); // Settings neu rendern
+}
+
 function delAlias(artikelId,idx){
+  artikelId=parseInt(artikelId);idx=parseInt(idx);
   const a=S.a.find(x=>x.id===artikelId);
   if(!a||!a.quittungAliase)return;
   const alias=a.quittungAliase[idx];
@@ -6052,6 +6089,7 @@ function delAlias(artikelId,idx){
 }
 
 function zuordnungBestaetigen(idx,artikelId){
+  artikelId=parseInt(artikelId);
   // Alias speichern
   const it=quittungItems[idx];
   const a=S.a.find(x=>x.id===artikelId);
