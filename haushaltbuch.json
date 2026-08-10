@@ -4735,7 +4735,10 @@
           "ablaufdatum": "2026-07-31"
         }
       ],
-      "geoeffnet": "2026-07-17"
+      "geoeffnet": "2026-07-17",
+      "quittungAliase": [
+        "Ölz Mini Nussstangen 3er"
+      ]
     },
     {
       "id": 128,
@@ -15357,5 +15360,5 @@
       "zeit": 1786371368058
     }
   ],
-  "aktualisiert": "2026-08-10T14:17:06.693Z"
+  "aktualisiert": "2026-08-10T14:17:30.272Z"
 }
