@@ -8895,6 +8895,9 @@
           "kaufdatum": "2026-08-04",
           "ablaufdatum": "2026-09-05"
         }
+      ],
+      "quittungAliase": [
+        "Salametto Milano"
       ]
     },
     {
@@ -15289,5 +15292,5 @@
       "zeit": 1786362259741
     }
   ],
-  "aktualisiert": "2026-08-10T14:11:47.657Z"
+  "aktualisiert": "2026-08-10T14:12:11.642Z"
 }
