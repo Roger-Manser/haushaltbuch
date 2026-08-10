@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.30';
+const APP_VERSION='19.31';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.31',d:'08.2026',items:['Fix: Zutat-Zuordnung funktioniert jetzt']},
   {v:'19.30',d:'08.2026',items:['🔍 Such-Filter in Zuordnungs-Dialog','Live-Filterung beim Tippen']},
   {v:'19.29',d:'08.2026',items:['🔗 Zuordnen-Button im Koch-Dialog','Rezept-Zutat-Zuordnung speichert Alias','Zutat-Matching verbessert mit Alias']},
   {v:'19.28',d:'08.2026',items:['Fix: Kochen-Button nutzt Rezept-Titel statt ID','Auto-Sync entfernt (zu fehlerhaft)']},
@@ -4058,6 +4059,10 @@ function showZutatZuordnung(zutat,context){
 }
 
 function filterZuordnungArtikel(){
+  const dlg=document.getElementById('zuordnung-dlg');
+  if(!dlg)return;
+  
+  const zutat=dlg.dataset.zutat||'';
   const q=(document.getElementById('zuordnung-search')?.value||'').toLowerCase().trim();
   const liste=document.getElementById('zuordnung-liste');
   if(!liste)return;
@@ -4067,7 +4072,6 @@ function filterZuordnungArtikel(){
   
   let h='';
   gefiltert.forEach(a=>{
-    const zutat=document.getElementById('zuordnung-dlg')?.dataset.zutat||'';
     h+='<button onclick="bestaetigenZutatZuordnung(\''+esc(zutat)+'\','+a.id+')" style="padding:12px;text-align:left;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);cursor:pointer;color:var(--tx);transition:0.2s">'+
       esc(a.name)+' <span style="font-size:11px;color:var(--t3);margin-left:6px">'+a.menge+' '+esc(a.einheit||'Stk')+'</span>'+
     '</button>';
