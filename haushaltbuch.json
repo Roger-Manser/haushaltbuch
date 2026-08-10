@@ -8198,24 +8198,24 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
-      "preis": 6.89,
+      "preis": 0,
       "packMenge": 330,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-04",
+      "kaufdatum": "2026-08-10",
       "ablaufdatum": "2026-08-10",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542205864_off.jpg?t=1786123090173",
       "fotoPath": "1782542205864_off.jpg",
       "packungen": [
         {
-          "id": 1,
-          "menge": 0,
-          "kaufdatum": "2026-08-04",
-          "ablaufdatum": "2026-08-10"
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-08-10",
+          "ablaufdatum": ""
         }
       ],
       "preisHistorie": [
@@ -9295,10 +9295,10 @@
       "checked": false
     },
     {
-      "id": 1786355812883,
-      "text": "Grüner Veltliner",
-      "menge": "4",
-      "einheit": "Kiste",
+      "id": 1786371724122,
+      "text": "Pouletbrust Minutenschnitzel",
+      "menge": "1",
+      "einheit": "Stk",
       "checked": true
     }
   ],
@@ -15367,7 +15367,20 @@
       "aktion": false,
       "datum": "2026-08-10",
       "zeit": 1786371368058
+    },
+    {
+      "t": "ein",
+      "aid": 223,
+      "name": "Pouletbrust Minutenschnitzel",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 6.89,
+      "aktion": false,
+      "datum": "2026-08-10",
+      "zeit": 1786371746528
     }
   ],
-  "aktualisiert": "2026-08-10T14:21:33.273Z"
+  "aktualisiert": "2026-08-10T14:32:49.977Z"
 }
