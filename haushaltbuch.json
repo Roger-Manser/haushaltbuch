@@ -9293,13 +9293,6 @@
       "menge": "1",
       "einheit": "Stk",
       "checked": false
-    },
-    {
-      "id": 1786371724122,
-      "text": "Pouletbrust Minutenschnitzel",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": true
     }
   ],
   "einkaufOverrides": {
@@ -15382,5 +15375,5 @@
       "zeit": 1786371746528
     }
   ],
-  "aktualisiert": "2026-08-10T15:21:15.390Z"
+  "aktualisiert": "2026-08-10T15:24:18.550Z"
 }
