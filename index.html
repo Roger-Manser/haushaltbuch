@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.25';
+const APP_VERSION='19.26';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.26',d:'08.2026',items:['Fix: Auto-Sync wartet bis Rezepte geladen sind']},
   {v:'19.25',d:'08.2026',items:['Auto-Sync: Rezepte täglich automatisch laden']},
   {v:'19.24',d:'08.2026',items:['Fix: Kochen-Button neu gebaut (clickability issue)']},
   {v:'19.23',d:'08.2026',items:['Fix: showRezeptGekocht parseInt für rezeptId']},
@@ -3866,6 +3867,9 @@ function renderRezepte(){
   if(lastSyncRz!==todayISO()){
     syncRezepte();
     localStorage.setItem('lastSyncRz',todayISO());
+    // Warte kurz bis Sync abgeschlossen ist
+    setTimeout(()=>renderRezepte(),1000);
+    return;
   }
   
   const names=S.a.filter(a=>a.menge>0).map(a=>a.name.toLowerCase());
