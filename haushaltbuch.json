@@ -2142,6 +2142,9 @@
           "kaufdatum": "2026-07-30",
           "ablaufdatum": "2027-02-14"
         }
+      ],
+      "quittungAliase": [
+        "Thomy Mayon.Franç.Duo"
       ]
     },
     {
@@ -15283,5 +15286,5 @@
       "zeit": 1786362259741
     }
   ],
-  "aktualisiert": "2026-08-10T14:10:24.469Z"
+  "aktualisiert": "2026-08-10T14:11:19.311Z"
 }
