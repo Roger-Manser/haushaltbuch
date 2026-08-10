@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.27';
+const APP_VERSION='19.28';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.28',d:'08.2026',items:['Fix: Kochen-Button nutzt Rezept-Titel statt ID','Auto-Sync entfernt (zu fehlerhaft)']},
   {v:'19.27',d:'08.2026',items:['Auto-Sync läuft jetzt im Hintergrund (blockiert nicht)','showRezeptGekocht: besseres Rezept-Matching und Error-Handling']},
   {v:'19.26',d:'08.2026',items:['Fix: Auto-Sync wartet bis Rezepte geladen sind']},
   {v:'19.25',d:'08.2026',items:['Auto-Sync: Rezepte täglich automatisch laden']},
@@ -3864,12 +3865,6 @@ function aiMatch(zutat,lagerNamen){
 
 function renderRezepte(){
   const names=S.a.filter(a=>a.menge>0).map(a=>a.name.toLowerCase());
-  
-  // Stille Auto-Sync im Hintergrund (nur 1× pro Tag)
-  const lastSyncRz=localStorage.getItem('lastSyncRz')||'';
-  if(lastSyncRz!==todayISO()){
-    setTimeout(()=>{syncRezepte();localStorage.setItem('lastSyncRz',todayISO());},500);
-  }
   const q=(document.getElementById('rezept-search')?.value||'').toLowerCase().trim();
   const src=S.rz.length?S.rz.map(r=>{
     const zt=(r.zutaten||[]).map(z=>typeof z==='string'?z:(z.n||z.zutat||z.name||''));
@@ -4018,7 +4013,7 @@ function showRezeptDetail(el,fromArtikelId){
     '<div style="display:flex;gap:8px;margin-top:16px">'+
       buyBtn+
     '</div>'+
-    '<button onclick="showRezeptGekocht('+r.id+')" style="display:block;width:100%;margin-top:12px;padding:14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">🍽️ Jetzt kochen</button>';
+    '<button onclick="showRezeptGekocht(\''+esc(r.titel||r.name)+'\')" style="display:block;width:100%;margin-top:12px;padding:14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">🍽️ Jetzt kochen</button>';
 
   goScreen('s-rezept-detail');
 }
