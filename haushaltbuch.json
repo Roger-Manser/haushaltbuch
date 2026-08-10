@@ -733,7 +733,16 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782212180104_off.jpg?t=1786377075058",
       "fotoPath": "1782212180104_off.jpg",
       "quittungAliase": [
-        "Gemüsebouillon"
+        "Gemüsebouillon",
+        "Hünnerbouillon"
+      ],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 2,
+          "kaufdatum": "2026-06-23",
+          "ablaufdatum": "2027-01-01"
+        }
       ]
     },
     {
@@ -15390,5 +15399,5 @@
       "zeit": 1786371746528
     }
   ],
-  "aktualisiert": "2026-08-10T17:18:50.535Z"
+  "aktualisiert": "2026-08-10T17:21:11.748Z"
 }
