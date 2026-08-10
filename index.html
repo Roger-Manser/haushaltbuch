@@ -533,10 +533,14 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.17';
+const APP_VERSION='19.21';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.21',d:'08.2026',items:['FIFO-Verbrauch: ältestes Ablaufdatum zuerst','Rezept gekocht: mehrere Artikel gleichen Namens unterstützt']},
+  {v:'19.20',d:'08.2026',items:['Rezept gekocht: flexible Mengen-Eingabe pro Zutat','Checkboxes mit deaktivierbarem Input-Feld','Verbrauch-Logging mit benutzerdefinierten Mengen']},
+  {v:'19.19',d:'08.2026',items:['🍽️ Rezept gekocht Feature','Zutat-Matching mit Lager','Verbrauch-Logging mit "gekocht"-Aktion']},
+  {v:'19.18',d:'08.2026',items:['Option 1: letzteEingangHeute Tracking','Quittungs-Scan: Duplikat-Warnung wenn heute bereits gebucht','Button: Duplikat ignorieren/Eingang buchen']},
   {v:'19.17',d:'08.2026',items:['Alias: showDet parseInt-Fix (Detailansicht)','Quittung-Übersicht: findQuittungMatch für korrekte Badge-Anzeige']},
   {v:'19.16',d:'08.2026',items:['Alias Root-Cause Fix: parseInt für artikelId (String≠Number Vergleich)','Einstellungen: Alias-Übersicht mit Lösch-Option']},
   {v:'19.15',d:'08.2026',items:['Alias-Bugs behoben: existingId-Parsing, Sync nach Alias-Speichern, verbessertes Matching']},
@@ -741,6 +745,10 @@ function addLogEntry(type,artikelId,name,lager,kat,menge,einheit,preis,aktion,sk
     if(a){
       if(!a.preisHistorie)a.preisHistorie=[];
       a.preisHistorie.push({datum:todayISO(),preis:preis||0,menge,einheit:einheit||'Stk',typ:type,aktion:aktion||false,kaufort:a.kaufort||''});
+      if(type==='ein'&&menge>0){
+        const now=new Date();
+        a.letzteEingangHeute=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      }
     }
   }
 }
@@ -3995,7 +4003,10 @@ function showRezeptDetail(el,fromArtikelId){
     '</div>'+
     '<div style="font-weight:600;font-size:15px;margin-bottom:8px">Zutaten</div>'+
     ingsHtml+
-    buyBtn;
+    '<div style="display:flex;gap:8px;margin-top:16px">'+
+      '<button onclick="showRezeptGekocht(\''+r.id+'\')" style="flex:1;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer">🍽️ Jetzt kochen</button>'+
+      buyBtn+
+    '</div>';
 
   goScreen('s-rezept-detail');
 }
@@ -4010,6 +4021,110 @@ function ekAddZutat(z,existing){
   existing.add(name.toLowerCase());
   return name;
 }
+function showRezeptGekocht(rezeptId){
+  // Rezept finden
+  const r=S.rz.find(x=>x.id===rezeptId||x.titel===rezeptId);
+  if(!r)return;
+  
+  // Dialog-Overlay
+  const dlg=document.createElement('div');
+  dlg.id='cook-dlg';
+  dlg.style.cssText='position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;z-index:9999';
+  
+  // Zutaten-Liste mit Checkboxes
+  let h='<div style="background:var(--bg);border-radius:var(--rs) var(--rs) 0 0;padding:16px;width:100%;max-height:80vh;overflow-y:auto">'+
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">'+
+      '<span style="font-size:16px;font-weight:600">🍽️ '+esc(r.titel||r.name)+'</span>'+
+      '<button onclick="document.getElementById(\'cook-dlg\').remove()" style="background:none;border:none;cursor:pointer;font-size:20px">✕</button>'+
+    '</div>';
+  
+  const zutaten=(r.zutaten||[]).map(z=>typeof z==='string'?z:(z.n||z.zutat||z.name||''));
+  
+  h+='<div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:10px">Welche Zutaten hast du verbraucht?</div>';
+  h+='<div>';
+  
+  // Pro Zutat: prüfe ob im Lager
+  zutaten.forEach((zutat,zi)=>{
+    const lagerArtikel=S.a.filter(a=>a.menge>0).find(a=>{
+      const an=a.name.toLowerCase();
+      const zn=zutat.toLowerCase();
+      return an===zn||an.includes(zn)||zn.includes(an)&&zn.length>3;
+    });
+    const status=lagerArtikel?'<span style="font-size:11px;color:var(--ok);margin-left:6px">✓ '+lagerArtikel.menge+' '+esc(lagerArtikel.einheit||'Stk')+'</span>':'<span style="font-size:11px;color:var(--wn);margin-left:6px">⚠️ nicht verfügbar</span>';
+    h+='<div style="display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--bd)">'+
+      '<input type="checkbox" id="cook-cb-'+zi+'" data-art-id="'+(lagerArtikel?.id||'')+'" style="width:18px;height:18px;cursor:pointer" onchange="document.getElementById(\'cook-in-'+zi+'\').disabled=!this.checked"/>'+ 
+      '<span style="flex:1;font-size:13px">'+esc(zutat)+status+'</span>'+
+      (lagerArtikel?'<input type="number" id="cook-in-'+zi+'" min="0" step="0.5" value="1" disabled style="width:50px;padding:6px;border:1px solid var(--bd);border-radius:6px;font-size:12px;text-align:center"/>':'<span style="font-size:11px;color:var(--t3)">—</span>')+
+    '</div>';
+  });
+  h+='</div>'+
+    '<div style="display:flex;gap:8px;margin-top:16px">'+
+      '<button onclick="document.getElementById(\'cook-dlg\').remove()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+      '<button onclick="verbrauchZutaten(\''+esc(r.titel||r.name)+'\')" style="flex:1;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-weight:600;cursor:pointer">✓ Verbuchen</button>'+
+    '</div>'+
+  '</div>';
+  
+  dlg.innerHTML=h;
+  document.body.appendChild(dlg);
+}
+
+function verbrauchZutaten(rezeptName){
+  const dlg=document.getElementById('cook-dlg');
+  if(!dlg)return;
+  
+  const cbs=dlg.querySelectorAll('input[type="checkbox"]:checked');
+  const verbucht=[];
+  
+  cbs.forEach((cb,idx)=>{
+    const artId=parseInt(cb.dataset.artId);
+    if(!artId)return;
+    
+    // Menge aus Input lesen
+    const allInputs=dlg.querySelectorAll('input[type="number"]');
+    let idx2=0;
+    dlg.querySelectorAll('input[type="checkbox"]').forEach((c,i)=>{
+      if(c===cb)idx2=i;
+    });
+    let mengeZuVerbrauchen=parseFloat(allInputs[idx2]?.value)||1;
+    
+    // Finde alle Artikel mit gleichem Namen (verschiedene Ablaufdaten)
+    const a=S.a.find(x=>x.id===artId);
+    if(!a)return;
+    
+    const gleicherName=S.a.filter(x=>x.name.toLowerCase()===a.name.toLowerCase()&&x.menge>0);
+    
+    if(gleicherName.length===0)return;
+    
+    // Sortiere nach Ablaufdatum: älteste zuerst
+    gleicherName.sort((x,y)=>{
+      const xAblauf=x.ablaufdatum?new Date(x.ablaufdatum):new Date('2099-12-31');
+      const yAblauf=y.ablaufdatum?new Date(y.ablaufdatum):new Date('2099-12-31');
+      return xAblauf-yAblauf;
+    });
+    
+    // Verbrauch von älteren Artikeln weg
+    let restMenge=mengeZuVerbrauchen;
+    for(let art of gleicherName){
+      if(restMenge<=0)break;
+      const verbraucheVon=Math.min(restMenge,art.menge);
+      art.menge=Math.max(0,art.menge-verbraucheVon);
+      addLogEntry('weg',art.id,art.name,art.lager,art.kat,verbraucheVon,art.einheit||'Stk',art.preis||0,'gekocht',false);
+      restMenge-=verbraucheVon;
+    }
+    
+    verbucht.push(a.name+' (-'+mengeZuVerbrauchen+')');
+  });
+  
+  if(verbucht.length){
+    saveL();doSync();
+    dlg.remove();
+    toast('🍽️ '+verbucht.length+' Zutat'+(verbucht.length===1?'':'en')+' verbraucht (FIFO)');
+    setTimeout(()=>goScreen('s-rezepte'),400);
+  }else{
+    toast('Keine Zutaten ausgewählt');
+  }
+}
+
 function addMissingFromDetail(){
   const btn=event.currentTarget;
   let miss=[];
@@ -6119,10 +6234,23 @@ function startQuittungArtikel(idx){
   if(existing&&!it._matchId)it._matchId=existing.id;
   const ablaufPflicht=existing&&!!existing.ablaufdatum;
 
+  // Duplikat-Warnung: heute bereits gebucht?
+  let duplikatWarnung='';
+  if(existing&&existing.letzteEingangHeute){
+    duplikatWarnung='<div style="background:var(--wl);border:1px solid #f59e0b;border-radius:var(--rs);padding:10px 12px;margin-bottom:14px;color:var(--wn)">'+
+      '<div style="font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px">⚠️ Duplikat erkannt</div>'+
+      '<div style="font-size:12px;margin-top:4px;line-height:1.4">'+
+        'Du hast «<strong>'+esc(existing.name)+'</strong>» heute um <strong>'+existing.letzteEingangHeute+'</strong> Uhr bereits gebucht.'+
+        '<br><br>'+
+        'Möchtest du diesen Artikel <strong>wirklich nochmal</strong> einbuchen?'+
+      '</div>'+
+    '</div>';
+  }
+
   let h='<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">'+
     '<button onclick="renderQuittungUebersicht(\''+esc(datum)+'\')" style="background:none;border:none;cursor:pointer;color:var(--ac);font-size:20px;line-height:1">‹</button>'+
     '<span style="font-weight:600;font-size:15px">'+esc(it.name)+'</span>'+
-  '</div>';
+  '</div>'+duplikatWarnung;
 
   // Artikel-Match Info
   if(existing){
@@ -6152,8 +6280,9 @@ function startQuittungArtikel(idx){
       '<span style="font-size:11px;color:var(--dg);background:var(--dl);padding:1px 7px;border-radius:8px">Pflicht</span></label>'+
       dateField('qq-ad','')+'</div>';
   }
+  const buttonLabel=duplikatWarnung?'Duplikat ignorieren':'Überspringen';
   h+='<div style="display:flex;gap:8px;margin-top:14px">'+
-    '<button onclick="renderQuittungUebersicht(\''+esc(datum)+'\')" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Überspringen</button>'+
+    '<button onclick="renderQuittungUebersicht(\''+esc(datum)+'\')" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">'+buttonLabel+'</button>'+
     '<button onclick="confirmQuittungArtikel('+idx+','+!!existing+(existing?','+existing.id:',null')+')" style="flex:2;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">Eingang buchen</button>'+
   '</div>';
 
