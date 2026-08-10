@@ -8323,6 +8323,10 @@
       ],
       "barcodes": [
         "20813055"
+      ],
+      "quittungAliase": [
+        "Hähnchenbr. Schnitzel dü",
+        "Hähnchenbrustschnitzel"
       ]
     },
     {
@@ -15279,5 +15283,5 @@
       "zeit": 1786362259741
     }
   ],
-  "aktualisiert": "2026-08-10T13:35:37.726Z"
+  "aktualisiert": "2026-08-10T13:43:10.012Z"
 }
