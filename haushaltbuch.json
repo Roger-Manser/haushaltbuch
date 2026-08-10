@@ -4937,7 +4937,10 @@
         }
       ],
       "packungen": [],
-      "geoeffnet": "2026-07-31"
+      "geoeffnet": "2026-07-31",
+      "quittungAliase": [
+        "Salamoto Nostrano"
+      ]
     },
     {
       "id": 131,
@@ -15360,5 +15363,5 @@
       "zeit": 1786371368058
     }
   ],
-  "aktualisiert": "2026-08-10T14:17:56.486Z"
+  "aktualisiert": "2026-08-10T14:18:50.120Z"
 }
