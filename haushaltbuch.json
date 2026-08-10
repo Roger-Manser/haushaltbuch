@@ -1275,14 +1275,14 @@
       "marke": "Milbona",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "menge": 1,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "4056489975250",
       "preis": 2.65,
       "packMenge": 500,
       "packEinheit": "ml",
-      "kaufdatum": "2026-07-30",
+      "kaufdatum": "2026-08-10",
       "ablaufdatum": "2026-10-27",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542289759_off.jpg?t=1786123090173",
@@ -1336,7 +1336,7 @@
         {
           "datum": "2026-07-30",
           "preis": 2.65,
-          "menge": 1,
+          "menge": 2,
           "einheit": "Stk",
           "typ": "ein",
           "aktion": false,
@@ -1358,6 +1358,12 @@
           "menge": 1,
           "kaufdatum": "2026-07-30",
           "ablaufdatum": "2026-10-27"
+        },
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-08-10",
+          "ablaufdatum": ""
         }
       ],
       "kaufort": "Lidl"
@@ -15282,5 +15288,5 @@
       "zeit": 1786362259741
     }
   ],
-  "aktualisiert": "2026-08-10T11:46:08.042Z"
+  "aktualisiert": "2026-08-10T11:47:25.735Z"
 }
