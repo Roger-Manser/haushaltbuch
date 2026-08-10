@@ -533,10 +533,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.10';
+const APP_VERSION='19.12';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.12',d:'08.2026',items:['Quittungsscan: Artikel-Suche mit Alias-System (Quittungsbezeichnungen werden gespeichert)']},
+  {v:'19.11',d:'08.2026',items:['Verlauf Doppeleinträge: alle verbleibenden Stellen behoben (Eingang/Ausgang-Buttons)']},
   {v:'19.10',d:'08.2026',items:['Verlauf: Doppeleinträge behoben (preisHistorie wurde doppelt geschrieben)']},
   {v:'19.9',d:'08.2026',items:['Artikel-Formular: Foto-Dialog mit Kamera/Galerie-Auswahl']},
   {v:'19.8',d:'08.2026',items:['Artikel-Formular: Foto-Button öffnet Kamera/Galerie-Auswahl statt direkt Kamera']},
@@ -3247,7 +3249,7 @@ function ausgangPackAbbuchen(a,packId,menge,list){
   // Ausgang in Preis-Historie loggen
   if(!a.preisHistorie)a.preisHistorie=[];
   a.preisHistorie.push({datum:todayISO(),preis:0,menge,einheit:a.einheit||'Stk',typ:'aus',aktion:false});
-  addLogEntry('aus',a.id,a.name,a.lager,a.kat,menge,a.einheit,0);
+  addLogEntry('aus',a.id,a.name,a.lager,a.kat,menge,a.einheit,0,false,true);
   saveL();
   ausgangLog.unshift({id:a.id,name:a.name,foto:a.foto,lager:a.lager,einheit:a.einheit,zeit:Date.now()});
   if(list){
@@ -4496,7 +4498,7 @@ function finishLadenModus(){
     if(!a.preisHistorie)a.preisHistorie=[];
     a.preisHistorie.push({datum:k.datum,preis:k.preis,menge:k.menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:k.kaufort||''});
     if(k.preis>0)a.preis=k.preis;
-    addLogEntry('ein',a.id,a.name,a.lager,a.kat,k.menge,a.einheit,k.preis,false);
+    addLogEntry('ein',a.id,a.name,a.lager,a.kat,k.menge,a.einheit,k.preis,false,true);
   });
   saveL();
   if(autoChecked.length)toast('✓ '+autoChecked.length+' Artikel als Eingang gebucht');
@@ -5957,16 +5959,88 @@ function renderQuittungUebersicht(datum){
   body.dataset.datum=datum;
 }
 
+function findQuittungMatch(name){
+  const nl=name.toLowerCase();
+  // 1. Exakter Alias-Match
+  let m=S.a.find(a=>(a.quittungAliase||[]).some(al=>al.toLowerCase()===nl));
+  if(m)return m;
+  // 2. Exakter Name-Match
+  m=S.a.find(a=>a.name.toLowerCase()===nl);
+  if(m)return m;
+  // 3. Fuzzy: Name enthält Quittungsname oder umgekehrt (min 5 Zeichen)
+  if(nl.length>=5){
+    m=S.a.find(a=>
+      a.name.toLowerCase().includes(nl)||nl.includes(a.name.toLowerCase())
+    );
+  }
+  return m||null;
+}
+
+function renderQuittungSuche(idx){
+  const it=quittungItems[idx];
+  const body=document.getElementById('quittung-body');
+  const datum=body.dataset.datum||todayISO();
+  body.innerHTML=
+    '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">'+
+      '<button onclick="startQuittungArtikel('+idx+')" style="background:none;border:none;cursor:pointer;color:var(--ac);font-size:20px;line-height:1">‹</button>'+
+      '<span style="font-weight:600;font-size:14px">Artikel zuordnen</span>'+
+    '</div>'+
+    '<div style="font-size:13px;color:var(--t2);margin-bottom:10px">Quittung: <b>'+esc(it.name)+'</b></div>'+
+    '<input type="text" id="qq-such" placeholder="Artikel suchen..." oninput="filterQuittungSuche('+idx+')" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:15px;box-sizing:border-box;margin-bottom:10px"/>'+
+    '<div id="qq-such-liste" style="max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:4px"></div>'+
+    '<button onclick="startQuittungArtikel('+idx+')" style="width:100%;margin-top:12px;padding:11px;background:none;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">← Zurück ohne Zuordnung</button>';
+  filterQuittungSuche(idx);
+  setTimeout(()=>{const s=document.getElementById('qq-such');if(s)s.focus();},100);
+}
+
+function filterQuittungSuche(idx){
+  const q=(document.getElementById('qq-such').value||'').toLowerCase();
+  const liste=document.getElementById('qq-such-liste');
+  if(!liste)return;
+  const treffer=S.a.filter(a=>{
+    if(!q)return true;
+    if(a.name.toLowerCase().includes(q))return true;
+    if((a.quittungAliase||[]).some(al=>al.toLowerCase().includes(q)))return true;
+    return false;
+  }).slice(0,30);
+  if(!treffer.length){
+    liste.innerHTML='<div style="color:var(--t3);font-size:13px;padding:8px">Kein Artikel gefunden</div>';
+    return;
+  }
+  liste.innerHTML=treffer.map(a=>
+    '<button onclick="zuordnungBestaetigen('+idx+','+a.id+')" style="width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px">'+
+      '<span style="font-size:14px;font-weight:600;color:var(--tx)">'+esc(a.name)+'</span>'+
+      '<span style="font-size:11px;color:var(--t3)">'+esc(a.kat||'')+(a.lager?' · '+esc(a.lager):'')+(a.quittungAliase&&a.quittungAliase.length?' · Aliases: '+a.quittungAliase.join(', '):'')+' · Bestand: '+fmtMenge(a.menge)+' '+esc(a.einheit||'Stk')+'</span>'+
+    '</button>'
+  ).join('');
+}
+
+function zuordnungBestaetigen(idx,artikelId){
+  // Alias speichern
+  const it=quittungItems[idx];
+  const a=S.a.find(x=>x.id===artikelId);
+  if(a){
+    if(!a.quittungAliase)a.quittungAliase=[];
+    if(!a.quittungAliase.includes(it.name)){
+      a.quittungAliase.push(it.name);
+      saveL();
+      toast('📎 «'+it.name+'» als Alias gespeichert');
+    }
+    quittungItems[idx]._matchId=artikelId;
+  }
+  startQuittungArtikel(idx);
+}
+
 function startQuittungArtikel(idx){
   const it=quittungItems[idx];
   const body=document.getElementById('quittung-body');
   const datum=body.dataset.datum||todayISO();
 
-  // Lager-Match suchen
-  const existing=S.a.find(a=>
-    a.name.toLowerCase().includes(it.name.toLowerCase().slice(0,5))||
-    it.name.toLowerCase().includes(a.name.toLowerCase().slice(0,5))
-  );
+  // Lager-Match suchen (Alias + Fuzzy)
+  const existing=it._matchId
+    ? S.a.find(a=>a.id===it._matchId)
+    : findQuittungMatch(it.name);
+  if(existing&&!it._matchId)it._matchId=existing.id;
   const ablaufPflicht=existing&&!!existing.ablaufdatum;
 
   let h='<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">'+
@@ -5976,25 +6050,26 @@ function startQuittungArtikel(idx){
 
   // Artikel-Match Info
   if(existing){
-    h+='<div style="background:var(--al);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--ac);margin-bottom:12px">'+
-      '→ Wird zum Lagerartikel <strong>'+esc(existing.name)+'</strong> gebucht'+
+    h+='<div style="background:var(--al);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--ac);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">'+
+      '<span>→ <strong>'+esc(existing.name)+'</strong></span>'+
+      '<button onclick="renderQuittungSuche('+idx+')" style="background:none;border:1px solid var(--ac);border-radius:var(--rs);color:var(--ac);font-size:11px;padding:3px 8px;cursor:pointer">ändern</button>'+
     '</div>';
   }else{
-    h+='<div style="background:var(--wl);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--wn);margin-bottom:12px">'+
-      '⚠ Kein passender Artikel im Lager — wird als neuer Artikel angelegt'+
+    h+='<div style="background:var(--wl);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--wn);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">'+
+      '<span>⚠ Kein Artikel gefunden</span>'+
+      '<button onclick="renderQuittungSuche('+idx+')" style="background:none;border:1px solid var(--wn);border-radius:var(--rs);color:var(--wn);font-size:11px;padding:3px 8px;cursor:pointer">suchen</button>'+
     '</div>';
   }
 
   // Felder
-  h+='<div class="fd"><label>Bezeichnung</label><input type="text" id="qq-name" value="'+esc(it.name)+'"/></div>'+
+  h+='<div class="fd"><label>Bezeichnung</label><input type="text" id="qq-name" value="'+esc(existing?existing.name:it.name)+'"/></div>'+
     '<div class="tc"><div class="fd"><label>Menge</label><input type="number" id="qq-mg" min="1" value="'+it.menge+'"/></div>'+
-    '<div class="fd"><label>Einheit</label><input type="text" id="qq-ei" value="'+esc(it.einheit||'Stk')+'"/></div></div>'+
+    '<div class="fd"><label>Einheit</label><input type="text" id="qq-ei" value="'+esc(existing?existing.einheit||'Stk':it.einheit||'Stk')+'"/></div></div>'+
     '<div class="fd"><label>Preis pro Einheit (CHF)</label><input type="text" inputmode="decimal" id="qq-pr" value="'+it.preis.toFixed(2)+'"/></div>'+
-    '<div class="fd"><label>Kategorie</label><input type="text" id="qq-kat" value="'+esc(it.kat||'Diverses')+'"/></div>'+
+    '<div class="fd"><label>Kategorie</label><input type="text" id="qq-kat" value="'+esc(existing?existing.kat||'Diverses':it.kat||'Diverses')+'"/></div>'+
     '<div class="fd"><label>Wo gekauft</label><div class="lcw">'+
       S.ge.map(g=>'<button class="chip'+(quittungGeschaeft===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#qq-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+
     '</div></div>';
-  // Ablaufdatum nur wenn Artikel bisher eines hatte
   if(ablaufPflicht){
     h+='<div class="fd"><label style="display:flex;align-items:center;gap:6px">'+
       'Ablaufdatum (MHD) <span style="color:var(--dg);font-weight:700">*</span>'+
@@ -6006,7 +6081,6 @@ function startQuittungArtikel(idx){
     '<button onclick="confirmQuittungArtikel('+idx+','+!!existing+(existing?','+existing.id:',null')+')" style="flex:2;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">Eingang buchen</button>'+
   '</div>';
 
-  // Kaufort-Div ID setzen
   h=h.replace('class="lcw">','class="lcw" id="qq-ge">');
   body.innerHTML=h;
 }
