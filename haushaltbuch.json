@@ -1551,7 +1551,10 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648018150_off.jpg?t=1786377075058",
       "fotoPath": "1782648018150_off.jpg",
-      "preisHistorie": []
+      "preisHistorie": [],
+      "quittungAliase": [
+        "Salz, Pfeffer"
+      ]
     },
     {
       "id": 42,
@@ -15378,5 +15381,5 @@
       "zeit": 1786371746528
     }
   ],
-  "aktualisiert": "2026-08-10T16:51:00.626Z"
+  "aktualisiert": "2026-08-10T16:51:56.978Z"
 }
