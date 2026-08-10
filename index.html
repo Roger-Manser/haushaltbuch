@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.26';
+const APP_VERSION='19.27';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.27',d:'08.2026',items:['Auto-Sync läuft jetzt im Hintergrund (blockiert nicht)','showRezeptGekocht: besseres Rezept-Matching und Error-Handling']},
   {v:'19.26',d:'08.2026',items:['Fix: Auto-Sync wartet bis Rezepte geladen sind']},
   {v:'19.25',d:'08.2026',items:['Auto-Sync: Rezepte täglich automatisch laden']},
   {v:'19.24',d:'08.2026',items:['Fix: Kochen-Button neu gebaut (clickability issue)']},
@@ -3862,17 +3863,13 @@ function aiMatch(zutat,lagerNamen){
 }
 
 function renderRezepte(){
-  // Auto-Sync: Rezepte laden wenn noch nicht heute synchronisiert
+  const names=S.a.filter(a=>a.menge>0).map(a=>a.name.toLowerCase());
+  
+  // Stille Auto-Sync im Hintergrund (nur 1× pro Tag)
   const lastSyncRz=localStorage.getItem('lastSyncRz')||'';
   if(lastSyncRz!==todayISO()){
-    syncRezepte();
-    localStorage.setItem('lastSyncRz',todayISO());
-    // Warte kurz bis Sync abgeschlossen ist
-    setTimeout(()=>renderRezepte(),1000);
-    return;
+    setTimeout(()=>{syncRezepte();localStorage.setItem('lastSyncRz',todayISO());},500);
   }
-  
-  const names=S.a.filter(a=>a.menge>0).map(a=>a.name.toLowerCase());
   const q=(document.getElementById('rezept-search')?.value||'').toLowerCase().trim();
   const src=S.rz.length?S.rz.map(r=>{
     const zt=(r.zutaten||[]).map(z=>typeof z==='string'?z:(z.n||z.zutat||z.name||''));
@@ -4038,9 +4035,16 @@ function ekAddZutat(z,existing){
 }
 function showRezeptGekocht(rezeptId){
   rezeptId=parseInt(rezeptId)||rezeptId;
-  // Rezept finden
-  const r=S.rz.find(x=>x.id===rezeptId||x.titel===rezeptId);
-  if(!r)return;
+  // Rezept finden — zuerst ID, dann Titel
+  let r=S.rz.find(x=>x.id===rezeptId);
+  if(!r){
+    r=S.rz.find(x=>x.titel===rezeptId||x.name===rezeptId);
+  }
+  if(!r){
+    console.warn('Rezept nicht gefunden:',rezeptId,'in',S.rz.length,'Rezepten');
+    toast('⚠️ Rezept nicht gefunden');
+    return;
+  }
   
   // Dialog-Overlay
   const dlg=document.createElement('div');
