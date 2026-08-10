@@ -1554,7 +1554,8 @@
       "preisHistorie": [],
       "quittungAliase": [
         "Salz, Pfeffer",
-        "Salzwasser, siedend"
+        "Salzwasser, siedend",
+        "Salz"
       ]
     },
     {
@@ -15385,5 +15386,5 @@
       "zeit": 1786371746528
     }
   ],
-  "aktualisiert": "2026-08-10T17:15:36.482Z"
+  "aktualisiert": "2026-08-10T17:16:08.290Z"
 }
