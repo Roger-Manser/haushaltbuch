@@ -533,10 +533,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.36';
+const APP_VERSION='19.38';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.38',d:'08.2026',items:['Lager: Toggle-Filter «Nur Bestand >0» / «Alle anzeigen»','Filter-Button in Sortier-Bar mit Status-Anzeige']},
+  {v:'19.37',d:'08.2026',items:['Lager: neue Sortierung nach Einkaufsdatum','Toggle-Button: Klick wiederholt um Richtung umzukehren']},
   {v:'19.36',d:'08.2026',items:['Fix: Regex-Escape-Fehler in Koch-Dialog']},
   {v:'19.35',d:'08.2026',items:['Fix: Rezepte mit Sonderzeichen (à, é) öffnen jetzt','Nutzt Rezept-Index statt JSON-Escaping in HTML']},
   {v:'19.34',d:'08.2026',items:['Fuzzy-Matching verschärft: nur exakte Wort-Matches','Verhindert falsche Matches wie Schweinsfilet→Fischfilet']},
@@ -1375,16 +1377,43 @@ function closeLagerScan(){
   if(qRunning){try{Quagga.stop();}catch(e){}qRunning=false;}
   document.getElementById('lager-scan-overlay').style.display='none';
 }
+// Toggle für Sortier-Richtung bei Einkaufsdatum
+let sortDirEinkauf=true; // true = neueste zuerst
+let showOnlyInStock=false; // true = nur Bestand > 0
+
+function toggleSortDirEinkauf(){
+  sortDirEinkauf=!sortDirEinkauf;
+  renderLager();
+}
+
 function renderSortBar(){
   const modes=[
     {id:'ablauf',l:'Nach Ablaufdatum',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'},
     {id:'neu',l:'Zuletzt erfasst',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 8v4l3 3"/><path d="M3.05 11a9 9 0 1 1 .5 4"/><polyline points="3 16 3 11 8 11"/></svg>'},
     {id:'name',l:'Nach Name (A-Z)',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="9" y2="18"/></svg>'},
     {id:'bestand',l:'Nach Bestand',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>'},
+    {id:'einkauf',l:'Nach Einkaufsdatum '+(sortDirEinkauf?'↓':'↑'),s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>'},
   ];
-  document.getElementById('sort-bar').innerHTML=modes.map(m=>'<button class="sort-btn'+(sortMode===m.id?' on':'')+'" onclick="setSortMode(\''+m.id+'\')">'+m.s+' '+m.l+'</button>').join('');
+  let html=modes.map(m=>'<button class="sort-btn'+(sortMode===m.id?' on':'')+'" onclick="setSortMode(\''+m.id+'\')">'+m.s+' '+m.l+'</button>').join('');
+  // Filter-Button
+  html+='<button class="sort-btn'+(showOnlyInStock?' on':'')+'" onclick="toggleStockFilter()" style="margin-left:auto">'+
+    '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:16px;height:16px;stroke:currentColor"><path d="M3 6h18M8 6v12M16 6v12M5 18h14"/></svg> '+
+    (showOnlyInStock?'Nur Bestand >0':'Alle anzeigen')+'</button>';
+  document.getElementById('sort-bar').innerHTML=html;
 }
-function setSortMode(m){sortMode=m;renderLager();}
+function setSortMode(m){
+  if(sortMode===m&&m==='einkauf'){
+    toggleSortDirEinkauf();
+  }else{
+    sortMode=m;
+    renderLager();
+  }
+}
+
+function toggleStockFilter(){
+  showOnlyInStock=!showOnlyInStock;
+  renderLager();
+}
 
 function renderLager(){
   // Artikel-Anzahl Badge aktualisieren
@@ -1406,6 +1435,11 @@ function renderLager(){
     const mm=!mindestFilter||a.mindest>0;
     return mq&&ml&&mm;
   });
+  // Filter: nur Bestand > 0
+  if(showOnlyInStock){
+    fil=fil.filter(a=>a.menge>0);
+  }
+  
   if(!fil.length){list.innerHTML='<div class="empty">'+I.pkg.replace('20px;height:20px','48px;height:48px')+'<p>'+(S.a.length?'Keine Artikel gefunden':'Noch keine Artikel')+'</p><small>'+(S.a.length?'Suchbegriff anpassen':'Tippe auf Neuer Artikel')+'</small></div>';nav();return;}
 
   if(sortMode==='ablauf'){
@@ -1431,6 +1465,10 @@ function renderLager(){
     // Fallback 1: kaufdatum, Fallback 2: Artikel-ID (enthält Erstellzeit-Timestamp)
     const stamp=a=>letzterEingang[a.id]||(a.kaufdatum?new Date(a.kaufdatum).getTime():0)||a.id||0;
     fil=[...fil].sort((a,b)=>stamp(b)-stamp(a));
+  }else if(sortMode==='einkauf'){
+    // Nach Einkaufsdatum sortieren
+    const stamp=a=>(a.kaufdatum?new Date(a.kaufdatum).getTime():0)||a.id||0;
+    fil=[...fil].sort((a,b)=>sortDirEinkauf?(stamp(b)-stamp(a)):(stamp(a)-stamp(b)));
   }else if(sortMode==='bestand'){
     fil=[...fil].sort((a,b)=>(a.menge-a.mindest)-(b.menge-b.mindest));
   }
