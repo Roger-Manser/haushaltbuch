@@ -8223,7 +8223,7 @@
       "preis": 0,
       "packMenge": 330,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-10",
+      "kaufdatum": "2026-08-04",
       "ablaufdatum": "2026-08-10",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542205864_off.jpg?t=1786377075058",
@@ -9175,7 +9175,7 @@
       "preis": 0.39,
       "packMenge": 0,
       "packEinheit": "dl",
-      "kaufdatum": "2026-08-10",
+      "kaufdatum": "2026-08-04",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "",
@@ -15363,5 +15363,5 @@
       "zeit": 1786371746528
     }
   ],
-  "aktualisiert": "2026-08-11T10:58:05.990Z"
+  "aktualisiert": "2026-08-11T10:59:21.632Z"
 }
