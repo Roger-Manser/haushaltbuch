@@ -10,7 +10,7 @@
       "einheit": "Kiste",
       "mindest": 2,
       "barcode": "7611703611962",
-      "preis": 25.2,
+      "preis": 0,
       "packMenge": 6,
       "packEinheit": "Flasche",
       "kaufdatum": "2026-08-10",
@@ -138,24 +138,6 @@
           "menge": 4,
           "einheit": "Kiste",
           "typ": "ein",
-          "aktion": false,
-          "kaufort": "Landi"
-        },
-        {
-          "datum": "2026-08-10",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Kiste",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Landi"
-        },
-        {
-          "datum": "2026-08-10",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Kiste",
-          "typ": "aus",
           "aktion": false,
           "kaufort": "Landi"
         },
@@ -17446,5 +17428,5 @@
       "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-11T11:09:44.207Z"
+  "aktualisiert": "2026-08-11T11:11:36.472Z"
 }
