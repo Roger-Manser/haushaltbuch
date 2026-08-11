@@ -9216,15 +9216,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-10",
-          "preis": 0.39,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -15399,5 +15390,5 @@
       "zeit": 1786371746528
     }
   ],
-  "aktualisiert": "2026-08-11T10:35:26.307Z"
+  "aktualisiert": "2026-08-11T10:47:16.523Z"
 }
