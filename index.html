@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.38';
+const APP_VERSION='19.39';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.39',d:'08.2026',items:['Lager-Übersicht: Einkaufsdatum anzeigen','z.B. «Butter · 10.08.2026»']},
   {v:'19.38',d:'08.2026',items:['Lager: Toggle-Filter «Nur Bestand >0» / «Alle anzeigen»','Filter-Button in Sortier-Bar mit Status-Anzeige']},
   {v:'19.37',d:'08.2026',items:['Lager: neue Sortierung nach Einkaufsdatum','Toggle-Button: Klick wiederholt um Richtung umzukehren']},
   {v:'19.36',d:'08.2026',items:['Fix: Regex-Escape-Fehler in Koch-Dialog']},
@@ -1526,7 +1527,7 @@ function arRow(a){
   const bc=a.menge===0?'lo':a.menge<a.mindest?'wn':'ok';
   const th=a.foto?'<div class="at has-photo" data-thumb-id="'+a.id+'"><img src="'+esc(a.foto)+'" loading="lazy"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div>';
   const pinfo=packInfo(a);
-  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'')+(sortMode==='neu'?' · '+relTime(a):'');
+  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'')+(a.kaufdatum?' · '+fmtDateCH(a.kaufdatum):'');
   const eb=(a.ablaufdatum&&a.menge>0)?expBadgeA(a):'';
   const unitLabel=a.packMenge>0?esc(a.einheit||'Stk'):esc(a.einheit||'Stk');
   const aufListe=S.ek.some(e=>e.text.toLowerCase()===a.name.toLowerCase()&&!e.checked);
