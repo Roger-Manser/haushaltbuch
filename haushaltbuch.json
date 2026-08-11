@@ -8946,7 +8946,7 @@
       "marke": "Lidl",
       "kat": "Backwaren & Brot",
       "lager": "Küche",
-      "kaufort": "",
+      "kaufort": "Lidl",
       "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
@@ -8987,9 +8987,25 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": ""
+        },
+        {
+          "datum": "2026-08-04",
+          "preis": 1.69,
+          "menge": 0,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 0,
+          "kaufdatum": "2026-08-04",
+          "ablaufdatum": "2026-08-10"
+        }
+      ],
       "geoeffnet": "2026-08-07"
     },
     {
@@ -17428,5 +17444,5 @@
       "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-11T11:15:26.678Z"
+  "aktualisiert": "2026-08-11T11:18:45.757Z"
 }
