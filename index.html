@@ -533,10 +533,14 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.41';
+const APP_VERSION='19.45';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.45',d:'08.2026',items:['Deduplizierung mit Bestätigungs-Dialog','Zeige Duplikat-Details vor dem Löschen','findDuplicates() Hilfsfunktion']},
+  {v:'19.44',d:'08.2026',items:['Auto-Deduplizierung: Doppelte Verlauf-Einträge entfernen','Pro Artikel+Datum+Typ nur 1 Eintrag erlaubt','Log-Duplikate ebenfalls gelöscht']},
+  {v:'19.43',d:'08.2026',items:['Auto-Repair: Fehlende Log-Einträge beim Start reparieren','Statistiken aus alten preisHistorie-Edits werden wiederhergestellt']},
+  {v:'19.42',d:'08.2026',items:['Fix: Verlauf-Edits werden jetzt auch in Statistiken berücksichtigt','Log-Einträge werden mitaktualisiert']},
   {v:'19.41',d:'08.2026',items:['Fix: Verlauf-Edit Input-Felder sichtbar und editierbar','Weiße Felder mit Farben-Border statt dunkelgrau']},
   {v:'19.40',d:'08.2026',items:['Fix: Einkaufsverlauf-Edit Kaufpreis editierbar gemacht']},
   {v:'19.39',d:'08.2026',items:['Lager-Übersicht: Einkaufsdatum anzeigen','z.B. «Butter · 10.08.2026»']},
@@ -844,6 +848,97 @@ async function uploadFoto(b64,fn){
   const ex=await ghGet(path);
   await ghPutBin(path,b64,'Foto: '+fn,ex?ex.sha:undefined);
   return 'https://raw.githubusercontent.com/'+gh.own+'/'+gh.repo+'/'+gh.br+'/'+path+'?t='+Date.now();
+}
+
+async function findDuplicates(){
+  // Findet alle Duplikate vor dem Löschen
+  const duplicates=[];
+  S.a.forEach(a=>{
+    if(!a.preisHistorie||a.preisHistorie.length<2)return;
+    const seen=new Map();
+    a.preisHistorie.forEach((h,idx)=>{
+      const key=(h.datum||'')+'|'+(h.typ||'ein');
+      if(!seen.has(key)){
+        seen.set(key,true);
+      }else{
+        duplicates.push({artikel:a.name,datum:h.datum,typ:h.typ||'ein',menge:h.menge,preis:h.preis});
+      }
+    });
+  });
+  return duplicates;
+}
+
+async function deduplicatePreisHistorie(){
+  // Findet doppelte Einträge, zeigt Dialog, dann löscht
+  const dups=findDuplicates();
+  if(!dups.length){
+    console.log('✓ Keine Duplikate gefunden');
+    return;
+  }
+  
+  // Zeige Dialog mit Duplikaten
+  const msg='Es wurden '+dups.length+' doppelte Einträge gefunden:\n\n'+
+    dups.slice(0,10).map(d=>'• '+esc(d.artikel)+' ('+d.datum+', '+d.menge+' '+d.typ+')').join('\n')+
+    (dups.length>10?'\n... und '+(dups.length-10)+' weitere':'');
+  
+  if(!await confirmDialog(msg,'Ja, löschen','Nein, behalten')){
+    console.log('Deduplizierung abgebrochen');
+    return;
+  }
+  
+  // Jetzt wirklich löschen
+  let removed=0;
+  S.a.forEach(a=>{
+    if(!a.preisHistorie||a.preisHistorie.length<2)return;
+    const seen=new Map();
+    const keep=[];
+    a.preisHistorie.forEach((h,idx)=>{
+      const key=(h.datum||'')+'|'+(h.typ||'ein');
+      if(!seen.has(key)){
+        seen.set(key,true);
+        keep.push(h);
+      }else{
+        const logIdx=S.log.findIndex(l=>
+          l.aid===a.id&&l.d===h.datum&&Math.abs((l.m||0)-(h.menge||0))<0.01&&l.t===(h.typ||'ein')
+        );
+        if(logIdx>=0){
+          S.log.splice(logIdx,1);
+          removed++;
+        }
+      }
+    });
+    a.preisHistorie=keep;
+  });
+  
+  if(removed>0){
+    saveL();
+    console.log('✓ Dedupliziert: '+removed+' Duplikate entfernt');
+    toast('✓ '+removed+' doppelte Einträge gelöscht');
+  }
+}
+
+function repairLogFromPreisHistorie(){
+  // Repariert fehlende Log-Einträge aus preisHistorie
+  if(!S.log)S.log=[];
+  if(!S.a)return;
+  
+  let repaired=0;
+  S.a.forEach(a=>{
+    if(!a.preisHistorie)return;
+    a.preisHistorie.forEach(h=>{
+      const exists=S.log.some(l=>
+        l.aid===a.id&&l.d===h.datum&&Math.abs((l.m||0)-(h.menge||0))<0.01&&l.t===(h.typ||'ein')
+      );
+      if(!exists&&h.datum&&h.menge){
+        S.log.push({
+          aid:a.id,d:h.datum,m:h.menge,p:h.preis||0,t:h.typ||'ein',
+          e:a.einheit||'Stk',k:a.kat||'',aktion:h.aktion||false,kaufort:h.kaufort||''
+        });
+        repaired++;
+      }
+    });
+  });
+  if(repaired>0){saveL();console.log('✓ Log: '+repaired+' Einträge repariert');}
 }
 
 async function doSync(){
@@ -1775,10 +1870,27 @@ function doEditPreisHistorie(artikelId,idx){
   }
   a.preisHistorie[idx]={...h,preis:p,datum,menge,aktion};
   if(idx===a.preisHistorie.length-1&&!aktion&&!istGewicht)a.preis=p;
+  
+  // Log-Eintrag auch aktualisieren (für Statistiken)
+  if(S.log){
+    // Suche das entsprechende Log-Entry: gleiche Artikel-ID, ähnliches Datum und Menge
+    const logEntry=S.log.find(l=>
+      l.aid===artikelId&&
+      l.d===h.datum&&
+      Math.abs(l.m-h.menge)<0.01&&
+      l.t===h.typ
+    );
+    if(logEntry){
+      logEntry.p=p;
+      logEntry.m=menge;
+      logEntry.d=datum;
+    }
+  }
+  
   saveL();
   document.getElementById('vh-edit-dlg').remove();
   showDet(artikelId);
-  toast('Verlauf-Eintrag aktualisiert');
+  toast('✓ Verlauf-Eintrag aktualisiert (inkl. Statistik)');
 }
 async function delPreisHistorie(artikelId,idx){
   const a=S.a.find(x=>x.id===artikelId);
@@ -6906,6 +7018,12 @@ if(!S.a.length){
   ];
   saveL();
 }
+// Dedupliziere zuerst (entfernt doppelte Einträge)
+deduplicatePreisHistorie();
+
+// Repariere dann fehlende Log-Einträge (einmalig)
+repairLogFromPreisHistorie();
+
 nav();sdot(gh.tok?'dt':'ok');renderLager();updateOnlineStatus();
 // API-Guthaben-Warnung beim Start prüfen
 setTimeout(()=>checkAiGuthabenWarnung(),2000);
