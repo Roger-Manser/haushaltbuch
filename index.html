@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.40';
+const APP_VERSION='19.41';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.41',d:'08.2026',items:['Fix: Verlauf-Edit Input-Felder sichtbar und editierbar','Weiße Felder mit Farben-Border statt dunkelgrau']},
   {v:'19.40',d:'08.2026',items:['Fix: Einkaufsverlauf-Edit Kaufpreis editierbar gemacht']},
   {v:'19.39',d:'08.2026',items:['Lager-Übersicht: Einkaufsdatum anzeigen','z.B. «Butter · 10.08.2026»']},
   {v:'19.38',d:'08.2026',items:['Lager: Toggle-Filter «Nur Bestand >0» / «Alle anzeigen»','Filter-Button in Sortier-Bar mit Status-Anzeige']},
@@ -1708,14 +1709,14 @@ function editPreisHistorie(artikelId,idx){
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px">Verlauf-Eintrag bearbeiten</div>'+
       '<div class="tc" style="margin-bottom:14px">'+
         '<div class="fd"><label>Menge ('+esc(a.einheit||'Stk')+')</label>'+
-          '<input type="text" inputmode="decimal" id="vhe-mg" value="'+fmtMenge(h.menge||1)+'" oninput="vheKalkulieren('+artikelId+')" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:17px;text-align:right;font-weight:600"/>'+
+          '<input type="text" inputmode="decimal" id="vhe-mg" value="'+fmtMenge(h.menge||1)+'" oninput="vheKalkulieren('+artikelId+')" style="width:100%;padding:11px;border:2px solid var(--ac);border-radius:var(--rs);background:#fff;color:#000;font-size:17px;text-align:right;font-weight:600"/>'+
         '</div>'+
         (istGewicht?
           '<div class="fd"><label>Preis pro kg (CHF)</label>'+
-            '<input type="text" inputmode="decimal" id="vhe-kgpreis" placeholder="z.B. 3.90" value="'+(a.preisProKg||'')+'" oninput="vheKalkulieren('+artikelId+')" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/>'+
+            '<input type="text" inputmode="decimal" id="vhe-kgpreis" placeholder="z.B. 3.90" value="'+(a.preisProKg||'')+'" oninput="vheKalkulieren('+artikelId+')" style="width:100%;padding:11px;border:2px solid var(--ac);border-radius:var(--rs);background:#fff;color:#000;font-size:16px;text-align:right"/>'+
           '</div>'+
           '<div class="fd"><label>Kaufpreis (CHF)</label>'+
-            '<input type="text" inputmode="decimal" id="vhe-pr" placeholder="z.B. 4.50" value="'+(h.preis||'')+'" oninput="" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:17px;text-align:right;font-weight:600"/>'+
+            '<input type="text" inputmode="decimal" id="vhe-pr" placeholder="z.B. 4.50" value="'+(h.preis||'')+'" oninput="" style="width:100%;padding:11px;border:2px solid var(--ac);border-radius:var(--rs);background:#fff;color:#000;font-size:17px;text-align:right;font-weight:600"/>'+
           '</div>'
         :
           '<div class="fd"><label>Kaufpreis (CHF)</label>'+
@@ -6614,7 +6615,7 @@ function dateField(id,value,extraStyle){
   if(!isMobile()){
     // Desktop/PC: natives date-Input direkt sichtbar anzeigen
     return '<input type="date" id="'+id+'" value="'+esc(v)+'" '+
-      'style="width:100%;padding:11px 14px;border:1px solid '+borderCol+';border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:15px;cursor:pointer" '+
+      'style="width:100%;padding:11px 14px;border:2px solid var(--ac);border-radius:var(--rs);background:#fff;color:#000;font-size:15px;cursor:pointer" '+
       'onchange="nativeDateChanged(\''+id+'\')" />';
   }
 
@@ -6622,7 +6623,7 @@ function dateField(id,value,extraStyle){
   const disp=v?fmtDateCH(v):'Datum wählen';
   const hasVal=!!v;
   return '<div style="position:relative;height:46px">'+
-    '<div id="'+id+'-display" style="position:absolute;inset:0;display:flex;align-items:center;gap:8px;padding:0 14px;border:1px solid '+borderCol+';border-radius:var(--rs);background:var(--bg);color:'+(hasVal?'var(--tx)':'var(--t3)')+';font-size:15px;pointer-events:none;z-index:0">'+
+    '<div id="'+id+'-display" style="position:absolute;inset:0;display:flex;align-items:center;gap:8px;padding:0 14px;border:2px solid var(--ac);border-radius:var(--rs);background:#fff;color:'+(hasVal?'#000':'var(--t3)')+';font-size:15px;pointer-events:none;z-index:0">'+
       I.cal.replace('20px;height:20px','16px;height:16px')+'<span id="'+id+'-lbl">'+esc(disp)+'</span>'+
     '</div>'+
     '<input type="date" id="'+id+'" value="'+esc(v)+'" '+
