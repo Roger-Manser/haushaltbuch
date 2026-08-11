@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.35';
+const APP_VERSION='19.36';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.36',d:'08.2026',items:['Fix: Regex-Escape-Fehler in Koch-Dialog']},
   {v:'19.35',d:'08.2026',items:['Fix: Rezepte mit Sonderzeichen (à, é) öffnen jetzt','Nutzt Rezept-Index statt JSON-Escaping in HTML']},
   {v:'19.34',d:'08.2026',items:['Fuzzy-Matching verschärft: nur exakte Wort-Matches','Verhindert falsche Matches wie Schweinsfilet→Fischfilet']},
   {v:'19.33',d:'08.2026',items:['Fix: Nach Zuordnung zurück zu Rezepte-Übersicht','Rezepte bleiben sichtbar (kein neuer Sync nötig)']},
@@ -3904,7 +3905,7 @@ function renderRezepte(){
       const levenMatches=S.a.filter(a=>a.menge>0&&levenshteinDistance(a.name,zutat)<=2);
       if(levenMatches.length>0)return true;
       // 4. Fuzzy Fallback (nur exakte Wort-Matches am Anfang)
-      const words=zutat.toLowerCase().split(/[\s,-]+/).filter(w=>w.length>3);
+      const words=zutat.toLowerCase().split(/[\s,\-]+/).filter(w=>w.length>3);
       return words.some(w=>names.some(n=>n===w||n.startsWith(w)));
     });
     // Welche vorhandenen Zutaten laufen bald ab?
@@ -4182,7 +4183,7 @@ function showRezeptGekocht(rezeptId){
     }
     // 4. Fuzzy Fallback (nur wenn Wort am Anfang gleich)
     if(!lagerArtikel){
-      const words=zutat.toLowerCase().split(/[\s,-]+/).filter(w=>w.length>3);
+      const words=zutat.toLowerCase().split(/[\s,\-]+/).filter(w=>w.length>3);
       if(words.length>0){
         lagerArtikel=S.a.filter(a=>a.menge>0).find(a=>{
           const awords=a.name.toLowerCase().split(/[\s,-]+/);
