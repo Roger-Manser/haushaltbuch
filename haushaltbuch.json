@@ -4758,7 +4758,7 @@
       "mindest": 0,
       "barcode": "",
       "barcodes": [],
-      "preis": 4.35,
+      "preis": 0,
       "packMenge": 0,
       "packEinheit": "g",
       "kaufdatum": "2026-08-04",
@@ -4795,33 +4795,22 @@
           "kaufort": "Lidl"
         },
         {
-          "datum": "2026-08-04",
-          "preis": 1.44,
-          "menge": 0.332,
-          "einheit": "kg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
           "datum": "2026-08-10",
           "preis": 0,
           "menge": 1,
           "einheit": "kg",
           "typ": "aus",
           "aktion": false
-        },
-        {
-          "datum": "2026-08-10",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "kg",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 0,
+          "kaufdatum": "2026-08-04",
+          "ablaufdatum": "2026-08-11"
+        }
+      ],
       "preisProKg": 4.35
     },
     {
@@ -17444,5 +17433,5 @@
       "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-11T11:18:45.757Z"
+  "aktualisiert": "2026-08-11T11:21:43.279Z"
 }
