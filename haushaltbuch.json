@@ -8303,38 +8303,11 @@
           "kaufort": "Lidl"
         },
         {
-          "datum": "2026-07-30",
-          "preis": 6.89,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-30",
-          "preis": 6.89,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
           "datum": "2026-08-01",
           "preis": 0,
           "menge": 1,
           "einheit": "Stk",
           "typ": "aus",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-04",
-          "preis": 6.89,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
         },
@@ -9209,7 +9182,7 @@
       "fotoPath": "",
       "preisHistorie": [
         {
-          "datum": "2026-08-10",
+          "datum": "2026-08-04",
           "preis": 0.39,
           "menge": 1,
           "einheit": "Stk",
@@ -15390,5 +15363,5 @@
       "zeit": 1786371746528
     }
   ],
-  "aktualisiert": "2026-08-11T10:47:16.523Z"
+  "aktualisiert": "2026-08-11T10:57:28.278Z"
 }
