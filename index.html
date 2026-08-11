@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.45';
+const APP_VERSION='19.46';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.46',d:'08.2026',items:['Fix: Deduplizierungs-Dialog wird jetzt angezeigt','async/await in IIFE für korrekten Ablauf']},
   {v:'19.45',d:'08.2026',items:['Deduplizierung mit Bestätigungs-Dialog','Zeige Duplikat-Details vor dem Löschen','findDuplicates() Hilfsfunktion']},
   {v:'19.44',d:'08.2026',items:['Auto-Deduplizierung: Doppelte Verlauf-Einträge entfernen','Pro Artikel+Datum+Typ nur 1 Eintrag erlaubt','Log-Duplikate ebenfalls gelöscht']},
   {v:'19.43',d:'08.2026',items:['Auto-Repair: Fehlende Log-Einträge beim Start reparieren','Statistiken aus alten preisHistorie-Edits werden wiederhergestellt']},
@@ -7018,11 +7019,11 @@ if(!S.a.length){
   ];
   saveL();
 }
-// Dedupliziere zuerst (entfernt doppelte Einträge)
-deduplicatePreisHistorie();
-
-// Repariere dann fehlende Log-Einträge (einmalig)
-repairLogFromPreisHistorie();
+// Dedupliziere und repariere (async)
+(async()=>{
+  await deduplicatePreisHistorie();
+  repairLogFromPreisHistorie();
+})();
 
 nav();sdot(gh.tok?'dt':'ok');renderLager();updateOnlineStatus();
 // API-Guthaben-Warnung beim Start prüfen
