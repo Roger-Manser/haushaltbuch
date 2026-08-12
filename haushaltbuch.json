@@ -8561,7 +8561,7 @@
       "packMenge": 0,
       "packEinheit": "dl",
       "kaufdatum": "2026-08-04",
-      "ablaufdatum": "",
+      "ablaufdatum": "2026-09-11",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785839596868_1785839591018978227199009117855.jpg?t=1786123090173",
       "fotoPath": "1785839596868_1785839591018978227199009117855.jpg",
@@ -8581,9 +8581,10 @@
           "id": 3,
           "menge": 1,
           "kaufdatum": "2026-08-04",
-          "ablaufdatum": ""
+          "ablaufdatum": "2026-09-11"
         }
-      ]
+      ],
+      "geoeffnet": "2026-08-12"
     },
     {
       "id": 229,
@@ -17490,5 +17491,5 @@
       "zeit": 1786533944121
     }
   ],
-  "aktualisiert": "2026-08-12T11:30:59.494Z"
+  "aktualisiert": "2026-08-12T11:31:23.571Z"
 }
