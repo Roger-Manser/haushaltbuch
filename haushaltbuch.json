@@ -8926,23 +8926,14 @@
       "barcode": "20247850",
       "barcodes": [],
       "preis": 0,
-      "packMenge": 500,
-      "packEinheit": "g",
+      "packMenge": 3,
+      "packEinheit": "Stk",
       "kaufdatum": "2026-08-04",
       "ablaufdatum": "2026-08-18",
       "notiz": "Nutri-Score A",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785841416550_off.jpg?t=1786123090173",
       "fotoPath": "1785841416550_off.jpg",
       "preisHistorie": [
-        {
-          "datum": "2026-08-04",
-          "preis": 1.51,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": true,
-          "kaufort": "Lidl"
-        },
         {
           "datum": "2026-08-04",
           "preis": 1.51,
@@ -17481,5 +17472,5 @@
       "zeit": 1786533944121
     }
   ],
-  "aktualisiert": "2026-08-12T11:25:44.883Z"
+  "aktualisiert": "2026-08-12T11:27:36.129Z"
 }
