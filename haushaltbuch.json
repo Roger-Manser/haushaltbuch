@@ -8642,7 +8642,7 @@
       "kat": "Gemüse & Früchte",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
@@ -8664,12 +8664,21 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-12",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
         {
-          "id": 10,
-          "menge": 1,
+          "id": 1,
+          "menge": 0,
           "kaufdatum": "2026-08-04",
           "ablaufdatum": ""
         }
@@ -17489,7 +17498,20 @@
       "aktion": "gekocht",
       "datum": "2026-08-12",
       "zeit": 1786533944121
+    },
+    {
+      "t": "aus",
+      "aid": 230,
+      "name": "Kohlrabi",
+      "lager": "Küche",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-12",
+      "zeit": 1786534298077
     }
   ],
-  "aktualisiert": "2026-08-12T11:31:23.571Z"
+  "aktualisiert": "2026-08-12T11:31:54.815Z"
 }
