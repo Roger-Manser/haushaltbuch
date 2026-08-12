@@ -8941,6 +8941,9 @@
           "kaufdatum": "2026-08-04",
           "ablaufdatum": "2026-08-18"
         }
+      ],
+      "quittungAliase": [
+        "rote Peperoni"
       ]
     },
     {
@@ -17433,5 +17436,5 @@
       "zeit": 1786520448477
     }
   ],
-  "aktualisiert": "2026-08-12T11:24:23.208Z"
+  "aktualisiert": "2026-08-12T11:24:54.338Z"
 }
