@@ -4993,7 +4993,7 @@
       "kat": "Gemüse & Früchte",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 1.098,
+      "menge": 1,
       "einheit": "kg",
       "mindest": 0,
       "barcode": "",
@@ -5001,8 +5001,8 @@
       "preis": 1.69,
       "packMenge": 0,
       "packEinheit": "kg",
-      "kaufdatum": "2026-08-04",
-      "ablaufdatum": "2026-08-25",
+      "kaufdatum": "2026-07-17",
+      "ablaufdatum": "2026-09-18",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784443584487_Zwiebel.jpg?t=1786123090173",
       "fotoPath": "1784443584487_Zwiebel.jpg",
@@ -5033,6 +5033,15 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-12",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "kg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -5041,12 +5050,6 @@
           "menge": 1,
           "kaufdatum": "2026-07-17",
           "ablaufdatum": "2026-09-18"
-        },
-        {
-          "id": 11,
-          "menge": 0.098,
-          "kaufdatum": "2026-08-04",
-          "ablaufdatum": "2026-08-25"
         }
       ],
       "preisProKg": 1.79
@@ -17512,7 +17515,20 @@
       "aktion": false,
       "datum": "2026-08-12",
       "zeit": 1786534298077
+    },
+    {
+      "t": "aus",
+      "aid": 132,
+      "name": "Zwiebel",
+      "lager": "Küche",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-12",
+      "zeit": 1786534413081
     }
   ],
-  "aktualisiert": "2026-08-12T11:32:27.393Z"
+  "aktualisiert": "2026-08-12T11:33:41.530Z"
 }
