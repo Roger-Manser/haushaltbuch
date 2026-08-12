@@ -9155,9 +9155,18 @@
       "kaufdatum": "2026-08-10",
       "ablaufdatum": "",
       "notiz": "",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786534144872_1000063815.jpg?t=1786534158895",
+      "fotoPath": "1786534144872_1000063815.jpg",
       "preisHistorie": [
+        {
+          "datum": "2026-08-10",
+          "preis": 0.39,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
         {
           "datum": "2026-08-10",
           "preis": 0.39,
@@ -17472,5 +17481,5 @@
       "zeit": 1786533944121
     }
   ],
-  "aktualisiert": "2026-08-12T11:27:36.129Z"
+  "aktualisiert": "2026-08-12T11:29:35.578Z"
 }
