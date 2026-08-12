@@ -309,7 +309,7 @@
       "marke": "M Classic",
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "7613312491256",
@@ -326,6 +326,15 @@
           "datum": "2026-06-21",
           "preis": 2.3,
           "menge": 1
+        },
+        {
+          "datum": "2026-08-12",
+          "preis": 2.3,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "weg",
+          "aktion": "gekocht",
+          "kaufort": ""
         }
       ]
     },
@@ -2735,7 +2744,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
@@ -2747,7 +2756,17 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783249810246_17832498025133846087262185417538.jpg?t=1786123090173",
       "fotoPath": "1783249810246_17832498025133846087262185417538.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-08-12",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "weg",
+          "aktion": "gekocht",
+          "kaufort": "Lidl"
+        }
+      ],
       "packungen": [
         {
           "id": 1,
@@ -17434,7 +17453,33 @@
       "aktion": false,
       "datum": "2026-08-12",
       "zeit": 1786520448477
+    },
+    {
+      "t": "weg",
+      "aid": 69,
+      "name": "Petersilie",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": "gekocht",
+      "datum": "2026-08-12",
+      "zeit": 1786533944121
+    },
+    {
+      "t": "weg",
+      "aid": 7,
+      "name": "Senfkörner gelb",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.3,
+      "aktion": "gekocht",
+      "datum": "2026-08-12",
+      "zeit": 1786533944121
     }
   ],
-  "aktualisiert": "2026-08-12T11:24:54.338Z"
+  "aktualisiert": "2026-08-12T11:25:44.883Z"
 }
