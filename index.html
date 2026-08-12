@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.46';
+const APP_VERSION='19.47';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.47',d:'08.2026',items:['Fix: Rezept-Suche zeigt jetzt das richtige Rezept','Nutzt Original-Index aus S.rz statt gefiltertem Index']},
   {v:'19.46',d:'08.2026',items:['Fix: Deduplizierungs-Dialog wird jetzt angezeigt','async/await in IIFE für korrekten Ablauf']},
   {v:'19.45',d:'08.2026',items:['Deduplizierung mit Bestätigungs-Dialog','Zeige Duplikat-Details vor dem Löschen','findDuplicates() Hilfsfunktion']},
   {v:'19.44',d:'08.2026',items:['Auto-Deduplizierung: Doppelte Verlauf-Einträge entfernen','Pro Artikel+Datum+Typ nur 1 Eintrag erlaubt','Log-Duplikate ebenfalls gelöscht']},
@@ -4028,9 +4029,9 @@ function aiMatch(zutat,lagerNamen){
 function renderRezepte(){
   const names=S.a.filter(a=>a.menge>0).map(a=>a.name.toLowerCase());
   const q=(document.getElementById('rezept-search')?.value||'').toLowerCase().trim();
-  const src=S.rz.length?S.rz.map(r=>{
+  const src=S.rz.length?S.rz.map((r,originalIdx)=>{
     const zt=(r.zutaten||[]).map(z=>typeof z==='string'?z:(z.n||z.zutat||z.name||''));
-    return{id:r.id||r.titel,name:r.titel||r.name,emoji:r.emoji||'\uD83C\uDF7D',min:r.dauer||r.zeit||20,port:r.portionen||4,zt,img:r.img||'',ings:r.ings||[],kat:r.kat||r.cat||''};
+    return{id:r.id||r.titel,name:r.titel||r.name,emoji:r.emoji||'\uD83C\uDF7D',min:r.dauer||r.zeit||20,port:r.portionen||4,zt,img:r.img||'',ings:r.ings||[],kat:r.kat||r.cat||'',_originalIdx:originalIdx};
   }):[
     {id:1,name:'Pasta Carbonara',emoji:'\uD83C\uDF5D',min:20,port:4,zt:['Pasta','Eier','Speck','Parmesan','Rahm'],img:''},
     {id:2,name:'Gemüsesuppe',emoji:'\uD83C\uDF72',min:40,port:6,zt:['Karotten','Lauch','Sellerie','Kartoffeln','Bouillon'],img:''},
@@ -4047,7 +4048,7 @@ function renderRezepte(){
   const ablaufNamen=ablaufArtikel.map(a=>({name:a.name.toLowerCase(),tage:effektiveTage(a)}));
 
   const sc=filtered.map((r,idx)=>{
-    r._rezeptIdx=idx;
+    r._rezeptIdx=r._originalIdx;
     // Besseres Matching: Levenshtein + Alias (wie im Koch-Dialog)
     const have=r.zt.filter(zutat=>{
       // 1. Exaktes Match
