@@ -202,41 +202,13 @@
       "fotoPath": "1782190086786_17821900533123253954791247278943.jpg",
       "preisHistorie": [
         {
-          "datum": "2026-06-20",
-          "preis": 0.6,
-          "menge": 6
-        },
-        {
-          "datum": "2026-06-20",
-          "preis": 0.6,
-          "menge": 1,
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-03",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-17",
-          "preis": 0.6,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": ""
-        },
-        {
           "datum": "2026-07-17",
           "preis": 3.6,
           "menge": 1,
           "einheit": "Stk",
           "typ": "ein",
           "aktion": false,
-          "kaufort": ""
+          "kaufort": "Rita Eisenring"
         }
       ],
       "ownCode": "HB-000009",
@@ -248,7 +220,7 @@
           "ablaufdatum": "2026-08-14"
         }
       ],
-      "kaufort": "",
+      "kaufort": "Rita Eisenring",
       "barcodes": []
     },
     {
@@ -4623,7 +4595,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Kühlschrank oben",
       "kaufort": "",
-      "menge": 3,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
@@ -4631,7 +4603,7 @@
       "preis": 0,
       "packMenge": 2,
       "packEinheit": "dl",
-      "kaufdatum": "2026-07-15",
+      "kaufdatum": "2026-08-12",
       "ablaufdatum": "2026-08-19",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784392394723_17843923880276982037855487631665.jpg?t=1786123090173",
@@ -4640,16 +4612,16 @@
       "preisHistorie": [],
       "packungen": [
         {
-          "id": 2,
+          "id": 1,
           "menge": 1,
           "kaufdatum": "2026-07-15",
           "ablaufdatum": "2026-08-19"
         },
         {
           "id": 1,
-          "menge": 2,
-          "kaufdatum": "2026-07-15",
-          "ablaufdatum": "2026-08-19"
+          "menge": 1,
+          "kaufdatum": "2026-08-12",
+          "ablaufdatum": ""
         }
       ],
       "ownCode": "HB-000123"
@@ -9256,7 +9228,8 @@
     "Landi",
     "Galaxus",
     "Spar",
-    "Geschenk"
+    "Geschenk",
+    "Rita Eisenring"
   ],
   "einkauf": [
     {
@@ -9269,13 +9242,6 @@
     {
       "id": 1786295154674,
       "text": "Popcorn Mais",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1786352059035,
-      "text": "Rauchspirale",
       "menge": "1",
       "einheit": "Stk",
       "checked": false
@@ -15529,7 +15495,7 @@
       "aid": 4,
       "d": "2026-07-17",
       "m": 1,
-      "p": 0.6,
+      "p": 3.6,
       "t": "ein",
       "e": "Stk",
       "k": "Milchprodukte",
@@ -17449,7 +17415,20 @@
       "k": "Diverses",
       "aktion": false,
       "kaufort": "Lidl"
+    },
+    {
+      "t": "aus",
+      "aid": 125,
+      "name": "Basilikum Pesto",
+      "lager": "Kühlschrank oben",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-12",
+      "zeit": 1786520448477
     }
   ],
-  "aktualisiert": "2026-08-12T07:37:37.511Z"
+  "aktualisiert": "2026-08-12T07:41:45.728Z"
 }
