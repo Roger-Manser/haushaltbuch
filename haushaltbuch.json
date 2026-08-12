@@ -8837,7 +8837,7 @@
       "packMenge": 250,
       "packEinheit": "g",
       "kaufdatum": "2026-08-04",
-      "ablaufdatum": "2026-09-05",
+      "ablaufdatum": "2026-08-15",
       "notiz": "Nutri-Score C\nPro 100g/ml: 352 kcal, Fett 28g, KH 0.5g, Eiweiss 25g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785841057842_17858410467573171328090644906567.jpg?t=1786123090173",
       "fotoPath": "1785841057842_17858410467573171328090644906567.jpg",
@@ -8866,9 +8866,10 @@
           "id": 17,
           "menge": 1,
           "kaufdatum": "2026-08-04",
-          "ablaufdatum": "2026-09-05"
+          "ablaufdatum": "2026-08-15"
         }
-      ]
+      ],
+      "geoeffnet": "2026-08-12"
     },
     {
       "id": 235,
@@ -8929,7 +8930,7 @@
       "packMenge": 3,
       "packEinheit": "Stk",
       "kaufdatum": "2026-08-04",
-      "ablaufdatum": "2026-08-18",
+      "ablaufdatum": "2026-08-14",
       "notiz": "Nutri-Score A",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785841416550_off.jpg?t=1786123090173",
       "fotoPath": "1785841416550_off.jpg",
@@ -8949,12 +8950,13 @@
           "id": 21,
           "menge": 1,
           "kaufdatum": "2026-08-04",
-          "ablaufdatum": "2026-08-18"
+          "ablaufdatum": "2026-08-14"
         }
       ],
       "quittungAliase": [
         "rote Peperoni"
-      ]
+      ],
+      "geoeffnet": "2026-08-12"
     },
     {
       "id": 237,
@@ -9267,6 +9269,13 @@
     {
       "id": 1786295154674,
       "text": "Popcorn Mais",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1786534227362,
+      "text": "weisser Balsamico",
       "menge": "1",
       "einheit": "Stk",
       "checked": false
@@ -17481,5 +17490,5 @@
       "zeit": 1786533944121
     }
   ],
-  "aktualisiert": "2026-08-12T11:29:35.578Z"
+  "aktualisiert": "2026-08-12T11:30:59.494Z"
 }
