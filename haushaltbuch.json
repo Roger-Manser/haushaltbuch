@@ -9194,15 +9194,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 5.35,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "12:59",
@@ -9222,7 +9213,7 @@
       "kat": "Genussmittel",
       "lager": "Küche",
       "kaufort": "Spar",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "7623900408603",
@@ -9235,30 +9226,11 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786621797188_1000063968.jpg?t=1786621878410",
       "fotoPath": "1786621797188_1000063968.jpg",
-      "preisHistorie": [
-        {
-          "datum": "2026-08-13",
-          "preis": 10,
-          "menge": 0,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Spar"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 10,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Spar"
-        }
-      ],
+      "preisHistorie": [],
       "packungen": [
         {
-          "id": 3,
-          "menge": 1,
+          "id": 4,
+          "menge": 0,
           "kaufdatum": "2026-08-13",
           "ablaufdatum": ""
         }
@@ -18058,5 +18030,5 @@
       "zeit": 1786621911494
     }
   ],
-  "aktualisiert": "2026-08-13T11:52:04.200Z"
+  "aktualisiert": "2026-08-13T11:57:05.789Z"
 }
