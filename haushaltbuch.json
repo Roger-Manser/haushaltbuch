@@ -2340,15 +2340,15 @@
       "kat": "Getränke",
       "lager": "Schlof",
       "kaufort": "Lidl",
-      "menge": 2,
+      "menge": 4,
       "einheit": "Stk",
       "mindest": 2,
       "barcode": "4056489122913",
       "preis": 3.88,
       "packMenge": 44,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-07-18",
-      "ablaufdatum": "2027-05-15",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "2027-05-13",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783140253090_off.jpg?t=1786123090173",
       "fotoPath": "1783140253090_off.jpg",
@@ -2357,6 +2357,15 @@
           "datum": "2026-07-04",
           "preis": 3.88,
           "menge": 10,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 3.88,
+          "menge": 2,
           "einheit": "Stk",
           "typ": "ein",
           "aktion": false,
@@ -2375,6 +2384,12 @@
           "menge": 1,
           "kaufdatum": "2026-07-18",
           "ablaufdatum": "2027-05-31"
+        },
+        {
+          "id": 1,
+          "menge": 2,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": "2027-05-13"
         }
       ]
     },
@@ -8287,38 +8302,11 @@
           "kaufort": "Lidl"
         },
         {
-          "datum": "2026-07-30",
-          "preis": 6.89,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-30",
-          "preis": 6.89,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
           "datum": "2026-08-01",
           "preis": 0,
           "menge": 1,
           "einheit": "Stk",
           "typ": "aus",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-04",
-          "preis": 6.89,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
         },
@@ -9275,13 +9263,6 @@
   ],
   "einkauf": [
     {
-      "id": 1785221892145,
-      "text": "Ristretto - Espresso",
-      "menge": "2",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
       "id": 1786295154674,
       "text": "Popcorn Mais",
       "menge": "1",
@@ -9306,7 +9287,10 @@
   "einkaufOverrides": {
     "40": {
       "einheit": "Pkg",
-      "menge": "4"
+      "menge": "2"
+    },
+    "221": {
+      "menge": "2"
     }
   },
   "log": [
@@ -17580,7 +17564,20 @@
       "k": "Gemüse & Früchte",
       "aktion": false,
       "kaufort": "Lidl"
+    },
+    {
+      "t": "ein",
+      "aid": 61,
+      "name": "Ristretto - Espresso",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 3.88,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786606781440
     }
   ],
-  "aktualisiert": "2026-08-13T06:42:27.205Z"
+  "aktualisiert": "2026-08-13T07:40:55.507Z"
 }
