@@ -9119,15 +9119,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "SPAR"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 3.6,
-          "menge": 1,
-          "einheit": "Flasche",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Spar"
         }
       ],
       "letzteEingangHeute": "09:52",
@@ -17995,17 +17986,6 @@
       "kaufort": "Lidl"
     },
     {
-      "aid": 247,
-      "d": "2026-08-13",
-      "m": 1,
-      "p": 3.6,
-      "t": "ein",
-      "e": "Flasche",
-      "k": "Gewürze & Saucen",
-      "aktion": false,
-      "kaufort": "SPAR"
-    },
-    {
       "t": "ein",
       "aid": 40,
       "name": "Quöllfrisch alkoholfrei",
@@ -18089,7 +18069,18 @@
       "k": "Fleisch & Fisch",
       "aktion": false,
       "kaufort": "Lidl"
+    },
+    {
+      "aid": 247,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 3.6,
+      "t": "ein",
+      "e": "Flasche",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "SPAR"
     }
   ],
-  "aktualisiert": "2026-08-13T12:15:42.748Z"
+  "aktualisiert": "2026-08-13T12:17:40.788Z"
 }
