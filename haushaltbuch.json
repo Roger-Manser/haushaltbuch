@@ -9222,7 +9222,7 @@
       "kat": "Genussmittel",
       "lager": "Küche",
       "kaufort": "Spar",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "7623900408603",
@@ -9244,12 +9244,21 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Spar"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 10,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
         }
       ],
       "packungen": [
         {
-          "id": 2,
-          "menge": 0,
+          "id": 3,
+          "menge": 1,
           "kaufdatum": "2026-08-13",
           "ablaufdatum": ""
         }
@@ -18034,7 +18043,20 @@
       "aktion": false,
       "datum": "2026-08-13",
       "zeit": 1786620018208
+    },
+    {
+      "t": "ein",
+      "aid": 250,
+      "name": "Zigaretten Rot",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 10,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786621911494
     }
   ],
-  "aktualisiert": "2026-08-13T11:51:22.532Z"
+  "aktualisiert": "2026-08-13T11:52:04.200Z"
 }
