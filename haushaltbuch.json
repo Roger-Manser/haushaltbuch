@@ -9089,7 +9089,7 @@
       "marke": "DESPAR",
       "kat": "Gewürze & Saucen",
       "lager": "Kühlschrank oben",
-      "kaufort": "",
+      "kaufort": "Spar",
       "menge": 1,
       "einheit": "Flasche",
       "mindest": 0,
@@ -9119,6 +9119,15 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "SPAR"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 3.6,
+          "menge": 1,
+          "einheit": "Flasche",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
         }
       ],
       "letzteEingangHeute": "09:52",
@@ -18052,5 +18061,5 @@
       "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-13T12:02:35.929Z"
+  "aktualisiert": "2026-08-13T12:04:23.759Z"
 }
