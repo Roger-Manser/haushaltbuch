@@ -18400,7 +18400,216 @@
       "aktion": false,
       "datum": "2026-08-13",
       "zeit": 1786607556124
+    },
+    {
+      "aid": 4,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 5.35,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 12,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 8.65,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Getränke",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 61,
+      "d": "2026-08-13",
+      "m": 2,
+      "p": 3.88,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Getränke",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 69,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 0.99,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 128,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 4.35,
+      "t": "ein",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 132,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 1.59,
+      "t": "ein",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 190,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 1.99,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Konserven & Trockenware",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 211,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 0.95,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Süsswaren",
+      "aktion": false,
+      "kaufort": "Spar"
+    },
+    {
+      "aid": 221,
+      "d": "2026-08-13",
+      "m": 20,
+      "p": 5.75,
+      "t": "ein",
+      "e": "Stange",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 222,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 2.85,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 223,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 6.89,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 235,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 4.95,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 242,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 2.49,
+      "t": "ein",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 243,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 5.49,
+      "t": "ein",
+      "e": "Flasche",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 244,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 1.55,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 245,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 1.19,
+      "t": "ein",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 246,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 3.95,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Getränke",
+      "aktion": false,
+      "kaufort": "Spar"
+    },
+    {
+      "aid": 247,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 3.6,
+      "t": "ein",
+      "e": "Flasche",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "SPAR"
+    },
+    {
+      "aid": 248,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 3.5,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Spar"
     }
   ],
-  "aktualisiert": "2026-08-13T08:02:59.304Z"
+  "aktualisiert": "2026-08-13T08:15:29.371Z"
 }
