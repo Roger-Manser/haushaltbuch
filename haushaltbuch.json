@@ -7662,27 +7662,46 @@
       "name": "PopCorn",
       "marke": "M Classic",
       "kat": "Süsswaren",
-      "lager": "Schlof",
-      "kaufort": "",
-      "menge": 0,
+      "lager": "Vorratsschrank",
+      "kaufort": "Spar",
+      "menge": 1,
       "einheit": "Pkg",
       "mindest": 0,
-      "barcode": "7613312358641",
+      "barcode": "0028190006176",
       "barcodes": [],
-      "preis": 0,
-      "packMenge": 500,
+      "preis": 0.95,
+      "packMenge": 280,
       "packEinheit": "g",
-      "kaufdatum": "2026-07-19",
-      "ablaufdatum": "",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "2027-09-30",
       "notiz": "Nutri-Score A\nPro 100g/ml: 337 kcal, Fett 4.2g, KH 59g, Eiweiss 9.3g",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784466781577_off.jpg?t=1786123090173",
-      "fotoPath": "1784466781577_off.jpg",
-      "preisHistorie": [],
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786607600779_off.jpg?t=1786607649799",
+      "fotoPath": "1786607600779_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-13",
+          "preis": 0.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 0.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
+        }
+      ],
       "packungen": [
         {
-          "id": 13,
-          "menge": 0,
-          "kaufdatum": "2026-07-19",
+          "id": 22,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
           "ablaufdatum": ""
         }
       ]
@@ -9582,6 +9601,192 @@
         }
       ],
       "letzteEingangHeute": "09:45",
+      "barcodes": []
+    },
+    {
+      "id": 246,
+      "name": "BSCHUESSIG HOERNLI",
+      "marke": "Bschüssig",
+      "kat": "Getränke",
+      "lager": "Vorratsschrank",
+      "kaufort": "Spar",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7640120093471",
+      "preis": 3.95,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "2027-10-19",
+      "notiz": "Nutri-Score A\nPro 100g/ml: 361 kcal, Fett 3g, KH 67g, Eiweiss 14g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786607836616_off.jpg?t=1786607872723",
+      "fotoPath": "1786607836616_off.jpg",
+      "packungen": [
+        {
+          "id": 19,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-08-13",
+          "preis": 3.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 3.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 3.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
+        }
+      ],
+      "letzteEingangHeute": "09:51",
+      "barcodes": []
+    },
+    {
+      "id": 247,
+      "name": "weisser Balsamico",
+      "marke": "DESPAR",
+      "kat": "Gewürze & Saucen",
+      "lager": "Kühlschrank oben",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Flasche",
+      "mindest": 0,
+      "barcode": "9100000052427",
+      "preis": 3.6,
+      "packMenge": 500,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "2028-05-24",
+      "notiz": "Vegan, Vegetarisch\nPro 100g/ml: 148 kcal, Fett 0g, KH 32g, Eiweiss 0.5g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786607772092_off.jpg?t=1786607809340",
+      "fotoPath": "1786607772092_off.jpg",
+      "packungen": [
+        {
+          "id": 20,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-08-13",
+          "preis": 3.6,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "SPAR"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 3.6,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "SPAR"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 3.6,
+          "menge": 1,
+          "einheit": "Flasche",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        }
+      ],
+      "letzteEingangHeute": "09:52",
+      "barcodes": []
+    },
+    {
+      "id": 248,
+      "name": "SPAR Zwiebelsprossen",
+      "marke": "Spar",
+      "kat": "Gemüse & Früchte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Spar",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610253594114",
+      "preis": 3.5,
+      "packMenge": 25,
+      "packEinheit": "g",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "2026-08-15",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786607688262_17866076819053310674230653771730.jpg?t=1786607723511",
+      "fotoPath": "1786607688262_17866076819053310674230653771730.jpg",
+      "packungen": [
+        {
+          "id": 21,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-08-13",
+          "preis": 3.5,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 3.5,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 3.5,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 3.5,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
+        }
+      ],
+      "letzteEingangHeute": "09:52",
       "barcodes": []
     }
   ],
@@ -18143,7 +18348,59 @@
       "aktion": false,
       "datum": "2026-08-13",
       "zeit": 1786607135278
+    },
+    {
+      "t": "ein",
+      "aid": 246,
+      "name": "BSCHUESSIG HOERNLI",
+      "lager": "Kühlschrank oben",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 3.95,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607507706
+    },
+    {
+      "t": "ein",
+      "aid": 247,
+      "name": "DESPAR COND. BIAN.",
+      "lager": "Kühlschrank oben",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 3.6,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607523607
+    },
+    {
+      "t": "ein",
+      "aid": 248,
+      "name": "SPAR NAT. BIO ZWI.",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 3.5,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607542006
+    },
+    {
+      "t": "ein",
+      "aid": 211,
+      "name": "PopCorn",
+      "lager": "Schlof",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0.95,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607556124
     }
   ],
-  "aktualisiert": "2026-08-13T07:50:48.680Z"
+  "aktualisiert": "2026-08-13T08:02:59.304Z"
 }
