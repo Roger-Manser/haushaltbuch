@@ -536,10 +536,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.73';
+const APP_VERSION='19.74';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.74',d:'08.2026',items:['Feature: Quittungs-Alias-Manager in Einstellungen','Artikel auswählen und Aliase manuell erstellen/bearbeiten','Ein Alias pro Zeile für besseres Quittungs-Matching']},
   {v:'19.73',d:'08.2026',items:['Feature: Einkaufspreis in Artikel-Übersicht anzeigen','Meta-Zeile: Lager · Marke · Packung · Preis · Kaufdatum','Schneller Überblick über Kosten']},
   {v:'19.72',d:'08.2026',items:['Fix: Quittungs-Matching präziser (verhindert falsche Matches)','Mindestlängen für Fuzzy-Matching erhöht','Levenshtein-Matching statt loose includes()','Hackfleisch wird nicht mehr als Ei gematcht']},
   {v:'19.71',d:'08.2026',items:['Feature: Portionen in Rezept-Detail anpassen vor Export','Klick auf Portionen-Box öffnet Dialog','Mengenschlüssel für fehlende Zutaten werden berechnet','Toast zeigt Portions-Faktor']},
@@ -6451,6 +6452,89 @@ function mindestSpeichernUndSchliessen(){
   renderLager();
 }
 let sgOpen={};
+function openAliasManager(){
+  // Dialog zur Verwaltung von Quittungs-Aliase
+  const dlg=document.createElement('div');
+  dlg.id='alias-manager-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)';
+  
+  dlg.innerHTML=
+    '<div style="background:var(--sf);padding:16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd)">'+
+      '<span style="font-weight:700;font-size:16px">Quittungs-Aliase</span>'+
+      '<button onclick="document.getElementById(\'alias-manager-dlg\').remove()" style="background:none;border:none;cursor:pointer;color:var(--t2);font-size:20px;line-height:1">×</button>'+
+    '</div>'+
+    '<div style="flex:1;overflow-y:auto;padding:12px">'+
+      '<div style="margin-bottom:12px">'+
+        '<label style="font-size:13px;color:var(--t2);display:block;margin-bottom:6px">Artikel wählen</label>'+
+        '<input type="text" id="alias-such" placeholder="Artikel suchen..." oninput="filterAliasArtikel()" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:14px;box-sizing:border-box"/>'+
+      '</div>'+
+      '<div id="alias-artikel-list" style="display:flex;flex-direction:column;gap:8px;max-height:240px;overflow-y:auto"></div>'+
+    '</div>';
+  
+  document.body.appendChild(dlg);
+  filterAliasArtikel();
+}
+
+function filterAliasArtikel(){
+  const q=(document.getElementById('alias-such').value||'').toLowerCase();
+  const liste=document.getElementById('alias-artikel-list');
+  if(!liste)return;
+  
+  const treffer=S.a.filter(a=>!q||a.name.toLowerCase().includes(q)).slice(0,50);
+  
+  liste.innerHTML=treffer.map(a=>'<div style="padding:10px;background:var(--bg);border-radius:var(--rs);cursor:pointer" onclick="editArtikelAlias('+a.id+')" data-aid="'+a.id+'">'+
+    '<div style="font-weight:600;font-size:14px">'+esc(a.name)+'</div>'+
+    '<div style="font-size:12px;color:var(--t3);margin-top:2px">'+
+      ((a.quittungAliase||[]).length?'Aliase: '+esc((a.quittungAliase||[]).join(', ')):'Keine Aliase')+
+    '</div>'+
+  '</div>').join('');
+}
+
+function editArtikelAlias(artikelId){
+  const a=S.a.find(x=>x.id===parseInt(artikelId));
+  if(!a)return;
+  
+  const dlg2=document.createElement('div');
+  dlg2.id='edit-alias-dlg';
+  dlg2.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9100;display:flex;align-items:flex-end;justify-content:center';
+  
+  const aliasText=(a.quittungAliase||[]).join('\n');
+  
+  dlg2.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">'+esc(a.name)+' — Aliase bearbeiten</div>'+
+      '<div style="font-size:12px;color:var(--t2);margin-bottom:12px">Ein Alias pro Zeile. Diese Quittungstexte werden diesem Artikel zugeordnet.</div>'+
+      '<textarea id="alias-input" placeholder="TN Vollmilch 3.5% UHT\nVollmilch 3.5%\nVMilch" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:14px;box-sizing:border-box;font-family:monospace;height:120px;resize:vertical">'+esc(aliasText)+'</textarea>'+
+      '<div style="display:flex;gap:8px;margin-top:12px">'+
+        '<button onclick="document.getElementById(\'edit-alias-dlg\').remove();document.getElementById(\'alias-manager-dlg\').focus()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+        '<button onclick="saveArtikelAlias('+artikelId+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Speichern</button>'+
+      '</div>'+
+    '</div>';
+  
+  document.body.appendChild(dlg2);
+  document.getElementById('alias-input').focus();
+}
+
+function saveArtikelAlias(artikelId){
+  const a=S.a.find(x=>x.id===parseInt(artikelId));
+  if(!a)return;
+  
+  const text=document.getElementById('alias-input').value.trim();
+  const aliase=text.split('\n').map(l=>l.trim()).filter(l=>l.length>0);
+  
+  a.quittungAliase=aliase;
+  saveL();
+  
+  // Schließe Dialoge
+  const dlg2=document.getElementById('edit-alias-dlg');
+  if(dlg2)dlg2.remove();
+  
+  // Update Artikel-Liste
+  filterAliasArtikel();
+  
+  toast('✓ Aliase für '+a.name+' gespeichert ('+(aliase.length)+' Aliase)');
+}
+
 function settingsGroup(id,icon,title,contentHtml,defaultOpen){
   if(sgOpen[id]===undefined)sgOpen[id]=!!defaultOpen;
   const open=sgOpen[id];
@@ -6540,7 +6624,8 @@ function renderSt(){
   settingsGroup('sg-stamm','📋','Stammdaten',
     '<div class="ss"><div class="ssl">Lagerorte</div><div>'+S.lo.map((l,i)=>'<div class="lmi">'+licon(l).replace('20px;height:20px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(l)+'</span><button onclick="editLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=LD.length?'<button onclick="delLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addLo()">+ Neuer Lagerort</button></div>'+
     '<div class="ss"><div class="ssl">Kategorien</div><div>'+S.ka.map((k,i)=>'<div class="lmi">'+KICON.replace('13px;height:13px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(k)+'</span><button onclick="editKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=KD.length?'<button onclick="delKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addKat()">+ Neue Kategorie</button></div>'+
-    '<div class="ss"><div class="ssl">Einheiten</div><div>'+S.ei.map((u,i)=>'<div class="lmi"><span style="flex:1">'+esc(u)+'</span>'+(i>=ED.length?'<button onclick="delEinheit(\''+esc(u)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addEinheitSettings()">+ Neue Einheit</button></div>'
+    '<div class="ss"><div class="ssl">Einheiten</div><div>'+S.ei.map((u,i)=>'<div class="lmi"><span style="flex:1">'+esc(u)+'</span>'+(i>=ED.length?'<button onclick="delEinheit(\''+esc(u)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addEinheitSettings()">+ Neue Einheit</button></div>'+
+    '<div class="ss"><div class="ssl">Quittungs-Aliase</div><button class="db-btn" onclick="openAliasManager()" style="width:100%">✎ Alias verwalten</button><p style="font-size:12px;color:var(--t3);margin-top:8px">Erstelle oder bearbeite Aliase für Quittungstext-Matching. Beispiel: «TN Vollmilch 3.5%» → «Vollmilch»</p></div>'
   )+
   settingsGroup('sg-erfassung','📥','Erfassung & Inventur',
     '<div class="lmi" style="align-items:center"><span style="flex:1">Foto-Pflicht bei neuen Artikeln</span>'+
