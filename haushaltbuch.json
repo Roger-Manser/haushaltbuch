@@ -39,14 +39,6 @@
           "aktion": false
         },
         {
-          "datum": "2026-06-27",
-          "preis": 50.2,
-          "menge": 1,
-          "einheit": "Kiste",
-          "typ": "ein",
-          "aktion": false
-        },
-        {
           "datum": "2026-07-04",
           "preis": 50.2,
           "menge": 1,
@@ -62,15 +54,6 @@
           "einheit": "Kiste",
           "typ": "aus",
           "aktion": false
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 50.2,
-          "menge": 2,
-          "einheit": "Kiste",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Landi"
         },
         {
           "datum": "2026-07-12",
@@ -81,39 +64,12 @@
           "aktion": false
         },
         {
-          "datum": "2026-07-04",
-          "preis": 50.2,
-          "menge": 1,
-          "einheit": "Kiste",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Landi"
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 50.2,
-          "menge": 1,
-          "einheit": "Kiste",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Landi"
-        },
-        {
           "datum": "2026-07-16",
           "preis": 0,
           "menge": 1,
           "einheit": "Kiste",
           "typ": "aus",
           "aktion": false
-        },
-        {
-          "datum": "2026-07-18",
-          "preis": 25.2,
-          "menge": 3,
-          "einheit": "Kiste",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Landi"
         },
         {
           "datum": "2026-07-18",
@@ -138,24 +94,6 @@
           "menge": 4,
           "einheit": "Kiste",
           "typ": "ein",
-          "aktion": false,
-          "kaufort": "Landi"
-        },
-        {
-          "datum": "2026-08-10",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Kiste",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Landi"
-        },
-        {
-          "datum": "2026-08-10",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Kiste",
-          "typ": "aus",
           "aktion": false,
           "kaufort": "Landi"
         },
@@ -476,15 +414,6 @@
           "typ": "ein",
           "aktion": true,
           "kaufort": "Coop"
-        },
-        {
-          "datum": "2026-06-30",
-          "preis": 47.7,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": true,
-          "kaufort": "Coop"
         }
       ]
     },
@@ -607,14 +536,6 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
-        },
-        {
-          "datum": "2026-06-29",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
         }
       ]
     },
@@ -649,22 +570,6 @@
           "einheit": "Stk",
           "typ": "ein",
           "aktion": true
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false
         },
         {
           "datum": "2026-07-04",
@@ -1181,15 +1086,6 @@
           "kaufort": "Lidl"
         },
         {
-          "datum": "2026-08-04",
-          "preis": 2.95,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
           "datum": "2026-08-07",
           "preis": 0,
           "menge": 1,
@@ -1314,12 +1210,6 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542289759_off.jpg?t=1786123090173",
       "fotoPath": "1782542289759_off.jpg",
       "preisHistorie": [
-        {
-          "datum": "2026-06-27",
-          "preis": 0,
-          "menge": 1,
-          "aktion": false
-        },
         {
           "datum": "2026-06-27",
           "preis": 0,
@@ -1468,15 +1358,6 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
-        },
-        {
-          "datum": "2026-08-10",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -1682,43 +1563,8 @@
           "preis": 0,
           "menge": 1,
           "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
           "typ": "aus",
           "aktion": false
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 2.39,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 2.39,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         },
         {
           "datum": "2026-07-15",
@@ -1732,15 +1578,6 @@
           "datum": "2026-07-17",
           "preis": 2.39,
           "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-17",
-          "preis": 2.39,
-          "menge": 0,
           "einheit": "Stk",
           "typ": "ein",
           "aktion": false,
@@ -1901,22 +1738,6 @@
           "aktion": false
         },
         {
-          "datum": "2026-06-29",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-06-29",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
           "datum": "2026-07-04",
           "preis": 1.09,
           "menge": 2,
@@ -1977,14 +1798,6 @@
           "einheit": "Stk",
           "typ": "ein",
           "aktion": true
-        },
-        {
-          "datum": "2026-06-29",
-          "preis": 0,
-          "menge": 3,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false
         }
       ],
       "packungen": [
@@ -2022,15 +1835,6 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782806438806_off.jpg?t=1786123090173",
       "fotoPath": "1782806438806_off.jpg",
       "preisHistorie": [
-        {
-          "datum": "2026-08-04",
-          "preis": 1.99,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
         {
           "datum": "2026-08-04",
           "preis": 1.99,
@@ -2144,15 +1948,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Migros"
-        },
-        {
-          "datum": "2026-07-30",
-          "preis": 2.35,
-          "menge": 2,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -2462,15 +2257,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Aldi"
         },
         {
           "datum": "2026-07-04",
@@ -2925,29 +2711,12 @@
           "aktion": false
         },
         {
-          "datum": "2026-07-05",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
           "datum": "2026-07-18",
           "preis": 3.7,
           "menge": 4,
           "einheit": "Stk",
           "typ": "ein",
           "aktion": false,
-          "kaufort": "Coop"
-        },
-        {
-          "datum": "2026-07-18",
-          "preis": 3.7,
-          "menge": 4,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": true,
           "kaufort": "Coop"
         },
         {
@@ -3157,15 +2926,6 @@
       "preisHistorie": [
         {
           "datum": "2026-07-05",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Migros"
-        },
-        {
-          "datum": "2026-07-12",
           "preis": 0,
           "menge": 1,
           "einheit": "Stk",
@@ -4864,30 +4624,12 @@
           "kaufort": "Lidl"
         },
         {
-          "datum": "2026-08-04",
-          "preis": 1.44,
-          "menge": 0.332,
-          "einheit": "kg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
           "datum": "2026-08-10",
           "preis": 0,
           "menge": 1,
           "einheit": "kg",
           "typ": "aus",
           "aktion": false
-        },
-        {
-          "datum": "2026-08-10",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "kg",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Lidl"
         },
         {
           "datum": "2026-08-13",
@@ -4990,15 +4732,6 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784295080401_17842950736273616472209894154228.jpg?t=1786123090173",
       "fotoPath": "1784295080401_17842950736273616472209894154228.jpg",
       "preisHistorie": [
-        {
-          "datum": "2026-07-17",
-          "preis": 4.95,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
         {
           "datum": "2026-07-17",
           "preis": 4.95,
@@ -5198,33 +4931,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Migros"
-        },
-        {
-          "datum": "2026-07-18",
-          "preis": 0.75,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Migros"
-        },
-        {
-          "datum": "2026-07-18",
-          "preis": 1.3,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Coop"
-        },
-        {
-          "datum": "2026-07-18",
-          "preis": 1.3,
-          "menge": 2,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Coop"
         }
       ],
       "barcodes": []
@@ -5265,15 +4971,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Migros"
-        },
-        {
-          "datum": "2026-07-18",
-          "preis": 3.2,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Migros"
         }
       ],
       "barcodes": []
@@ -5306,15 +5003,6 @@
         }
       ],
       "preisHistorie": [
-        {
-          "datum": "2026-07-18",
-          "preis": 8.2,
-          "menge": 2,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Landi"
-        },
         {
           "datum": "2026-07-18",
           "preis": 8.2,
@@ -5360,15 +5048,6 @@
           "preis": 20,
           "menge": 1,
           "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Coop"
-        },
-        {
-          "datum": "2026-07-18",
-          "preis": 20,
-          "menge": 1,
-          "einheit": "Rolle",
           "typ": "ein",
           "aktion": false,
           "kaufort": "Coop"
@@ -6487,15 +6166,6 @@
       "fotoPath": "1784458645276_17844586387093368349921067944947.jpg",
       "puffer": 360,
       "preisHistorie": [
-        {
-          "datum": "2026-07-19",
-          "preis": 1.5,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": ""
-        },
         {
           "datum": "2026-07-19",
           "preis": 1.5,
@@ -8040,14 +7710,6 @@
           "preis": 0,
           "menge": 1,
           "einheit": "Stange",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-01",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stange",
           "typ": "ein",
           "aktion": false
         },
@@ -8059,14 +7721,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": ""
-        },
-        {
-          "datum": "2026-07-04",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stange",
-          "typ": "ein",
-          "aktion": false
         },
         {
           "datum": "2026-07-06",
@@ -8127,15 +7781,6 @@
           "kaufort": ""
         },
         {
-          "datum": "2026-07-30",
-          "preis": 53,
-          "menge": 5,
-          "einheit": "Stange",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
           "datum": "2026-08-03",
           "preis": 0,
           "menge": 1,
@@ -8144,47 +7789,12 @@
           "aktion": false
         },
         {
-          "datum": "2026-08-03",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stange",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
           "datum": "2026-08-10",
           "preis": 0,
           "menge": 1,
           "einheit": "Stange",
           "typ": "aus",
           "aktion": false
-        },
-        {
-          "datum": "2026-08-10",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stange",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-10",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stange",
-          "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-08-10",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stange",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Lidl"
         },
         {
           "datum": "2026-08-13",
@@ -8271,15 +7881,6 @@
           "kaufort": "Lidl"
         },
         {
-          "datum": "2026-07-17",
-          "preis": 2.85,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
           "datum": "2026-07-30",
           "preis": 2.85,
           "menge": 1,
@@ -8307,30 +7908,12 @@
           "kaufort": "Lidl"
         },
         {
-          "datum": "2026-08-04",
-          "preis": 2.85,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
           "datum": "2026-08-10",
           "preis": 0,
           "menge": 1,
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
-        },
-        {
-          "datum": "2026-08-10",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Lidl"
         },
         {
           "datum": "2026-08-13",
@@ -8528,15 +8111,6 @@
           "kaufort": "Lidl"
         },
         {
-          "datum": "2026-07-30",
-          "preis": 6.59,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
           "datum": "2026-08-03",
           "preis": 0,
           "menge": 1,
@@ -8576,15 +8150,6 @@
         }
       ],
       "preisHistorie": [
-        {
-          "datum": "2026-07-30",
-          "preis": 4.79,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
         {
           "datum": "2026-07-30",
           "preis": 4.79,
@@ -8662,15 +8227,6 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785839310580_off.jpg?t=1786123090173",
       "fotoPath": "1785839310580_off.jpg",
       "preisHistorie": [
-        {
-          "datum": "2026-08-04",
-          "preis": 8.99,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
         {
           "datum": "2026-08-04",
           "preis": 8.99,
@@ -8760,15 +8316,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-04",
-          "preis": 1.19,
-          "menge": 1.334,
-          "einheit": "kg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -8850,15 +8397,6 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785840694783_17858406868043466497277743012073.jpg?t=1786123090173",
       "fotoPath": "1785840694783_17858406868043466497277743012073.jpg",
       "preisHistorie": [
-        {
-          "datum": "2026-08-04",
-          "preis": 1.95,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
         {
           "datum": "2026-08-04",
           "preis": 1.95,
@@ -8998,15 +8536,6 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785841057842_17858410467573171328090644906567.jpg?t=1786123090173",
       "fotoPath": "1785841057842_17858410467573171328090644906567.jpg",
       "preisHistorie": [
-        {
-          "datum": "2026-08-04",
-          "preis": 3.49,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
         {
           "datum": "2026-08-04",
           "preis": 3.49,
@@ -9160,15 +8689,6 @@
           "kaufort": ""
         },
         {
-          "datum": "2026-08-04",
-          "preis": 1.69,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": ""
-        },
-        {
           "datum": "2026-08-09",
           "preis": 0,
           "menge": 1,
@@ -9202,15 +8722,6 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785841628737_off.jpg?t=1786123090173",
       "fotoPath": "1785841628737_off.jpg",
       "preisHistorie": [
-        {
-          "datum": "2026-08-04",
-          "preis": 1.65,
-          "menge": 1,
-          "einheit": "Glas",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
         {
           "datum": "2026-08-04",
           "preis": 1.65,
@@ -9339,24 +8850,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-10",
-          "preis": 0.39,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-10",
-          "preis": 0.39,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -9404,15 +8897,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 2.49,
-          "menge": 1,
-          "einheit": "kg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "09:43"
@@ -9445,24 +8929,6 @@
         }
       ],
       "preisHistorie": [
-        {
-          "datum": "2026-08-13",
-          "preis": 5.49,
-          "menge": 1,
-          "einheit": "Flasche",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 5.49,
-          "menge": 1,
-          "einheit": "Flasche",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
         {
           "datum": "2026-08-13",
           "preis": 5.49,
@@ -9512,24 +8978,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 1.55,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 1.55,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "09:45",
@@ -9563,24 +9011,6 @@
         }
       ],
       "preisHistorie": [
-        {
-          "datum": "2026-08-13",
-          "preis": 1.19,
-          "menge": 1,
-          "einheit": "kg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 1.19,
-          "menge": 1,
-          "einheit": "kg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
         {
           "datum": "2026-08-13",
           "preis": 1.19,
@@ -9671,24 +9101,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "SPAR"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 3.6,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "SPAR"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 3.6,
-          "menge": 1,
-          "einheit": "Flasche",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": ""
         }
       ],
       "letzteEingangHeute": "09:52",
@@ -15914,17 +15326,6 @@
     },
     {
       "aid": 2,
-      "d": "2026-06-27",
-      "m": 1,
-      "p": 50.2,
-      "t": "ein",
-      "e": "Kiste",
-      "k": "Genussmittel",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
-      "aid": 2,
       "d": "2026-06-30",
       "m": 1,
       "p": 0,
@@ -15938,34 +15339,12 @@
       "aid": 2,
       "d": "2026-07-04",
       "m": 1,
-      "p": 50.2,
-      "t": "ein",
-      "e": "Kiste",
-      "k": "Genussmittel",
-      "aktion": false,
-      "kaufort": "Landi"
-    },
-    {
-      "aid": 2,
-      "d": "2026-07-04",
-      "m": 1,
       "p": 0,
       "t": "aus",
       "e": "Kiste",
       "k": "Genussmittel",
       "aktion": false,
       "kaufort": ""
-    },
-    {
-      "aid": 2,
-      "d": "2026-07-04",
-      "m": 2,
-      "p": 50.2,
-      "t": "ein",
-      "e": "Kiste",
-      "k": "Genussmittel",
-      "aktion": false,
-      "kaufort": "Landi"
     },
     {
       "aid": 2,
@@ -15991,17 +15370,6 @@
     },
     {
       "aid": 2,
-      "d": "2026-07-18",
-      "m": 3,
-      "p": 25.2,
-      "t": "ein",
-      "e": "Kiste",
-      "k": "Genussmittel",
-      "aktion": false,
-      "kaufort": "Landi"
-    },
-    {
-      "aid": 2,
       "d": "2026-07-24",
       "m": 1,
       "p": 0,
@@ -16017,17 +15385,6 @@
       "m": 4,
       "p": 25.2,
       "t": "ein",
-      "e": "Kiste",
-      "k": "Genussmittel",
-      "aktion": false,
-      "kaufort": "Landi"
-    },
-    {
-      "aid": 2,
-      "d": "2026-08-10",
-      "m": 1,
-      "p": 0,
-      "t": "aus",
       "e": "Kiste",
       "k": "Genussmittel",
       "aktion": false,
@@ -16155,28 +15512,6 @@
       "kaufort": "Coop"
     },
     {
-      "aid": 10,
-      "d": "2026-06-30",
-      "m": 1,
-      "p": 47.7,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Genussmittel",
-      "aktion": true,
-      "kaufort": "Coop"
-    },
-    {
-      "aid": 14,
-      "d": "2026-06-29",
-      "m": 1,
-      "p": 0,
-      "t": "aus",
-      "e": "Stk",
-      "k": "Gemüse & Früchte",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
       "aid": 15,
       "d": "2026-06-23",
       "m": 3,
@@ -16196,17 +15531,6 @@
       "e": "Stk",
       "k": "Getränke",
       "aktion": true,
-      "kaufort": ""
-    },
-    {
-      "aid": 15,
-      "d": "2026-07-04",
-      "m": 1,
-      "p": 0,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Getränke",
-      "aktion": false,
       "kaufort": ""
     },
     {
@@ -16277,17 +15601,6 @@
     },
     {
       "aid": 32,
-      "d": "2026-08-04",
-      "m": 1,
-      "p": 2.95,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Fleisch & Fisch",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 32,
       "d": "2026-08-07",
       "m": 1,
       "p": 0,
@@ -16340,17 +15653,6 @@
       "k": "Fleisch & Fisch",
       "aktion": false,
       "kaufort": "Lidl"
-    },
-    {
-      "aid": 37,
-      "d": "2026-06-27",
-      "m": 1,
-      "p": 0,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Milchprodukte",
-      "aktion": false,
-      "kaufort": ""
     },
     {
       "aid": 37,
@@ -16485,17 +15787,6 @@
       "kaufort": "Lidl"
     },
     {
-      "aid": 38,
-      "d": "2026-08-10",
-      "m": 1,
-      "p": 0,
-      "t": "aus",
-      "e": "Stk",
-      "k": "Milchprodukte",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
       "aid": 39,
       "d": "2026-06-29",
       "m": 1,
@@ -16520,28 +15811,6 @@
     {
       "aid": 44,
       "d": "2026-06-30",
-      "m": 1,
-      "p": 0,
-      "t": "aus",
-      "e": "Stk",
-      "k": "Fleisch & Fisch",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
-      "aid": 44,
-      "d": "2026-07-04",
-      "m": 1,
-      "p": 0,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Fleisch & Fisch",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 44,
-      "d": "2026-07-04",
       "m": 1,
       "p": 0,
       "t": "aus",
@@ -16618,17 +15887,6 @@
     },
     {
       "aid": 48,
-      "d": "2026-06-29",
-      "m": 1,
-      "p": 0,
-      "t": "aus",
-      "e": "Stk",
-      "k": "Reinigung & Pflege",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
-      "aid": 48,
       "d": "2026-07-04",
       "m": 2,
       "p": 1.09,
@@ -16648,39 +15906,6 @@
       "k": "Reinigung & Pflege",
       "aktion": true,
       "kaufort": ""
-    },
-    {
-      "aid": 49,
-      "d": "2026-06-29",
-      "m": 3,
-      "p": 0,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Reinigung & Pflege",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
-      "aid": 50,
-      "d": "2026-08-04",
-      "m": 1,
-      "p": 1.99,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Gewürze & Saucen",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 53,
-      "d": "2026-07-30",
-      "m": 2,
-      "p": 0,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Gewürze & Saucen",
-      "aktion": false,
-      "kaufort": "Migros"
     },
     {
       "aid": 60,
@@ -16712,17 +15937,6 @@
       "t": "ein",
       "e": "Stk",
       "k": "Getränke",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 62,
-      "d": "2026-07-04",
-      "m": 1,
-      "p": 4.99,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Milchprodukte",
       "aktion": false,
       "kaufort": "Lidl"
     },
@@ -16904,28 +16118,6 @@
     },
     {
       "aid": 71,
-      "d": "2026-07-05",
-      "m": 1,
-      "p": 0,
-      "t": "aus",
-      "e": "Stk",
-      "k": "Gewürze & Saucen",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
-      "aid": 71,
-      "d": "2026-07-18",
-      "m": 4,
-      "p": 3.7,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Gewürze & Saucen",
-      "aktion": false,
-      "kaufort": "Coop"
-    },
-    {
-      "aid": 71,
       "d": "2026-08-01",
       "m": 1,
       "p": 0,
@@ -16949,17 +16141,6 @@
     {
       "aid": 78,
       "d": "2026-07-05",
-      "m": 1,
-      "p": 0,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Konserven & Trockenware",
-      "aktion": false,
-      "kaufort": "Migros"
-    },
-    {
-      "aid": 78,
-      "d": "2026-07-12",
       "m": 1,
       "p": 0,
       "t": "ein",
@@ -17090,28 +16271,6 @@
       "kaufort": "Lidl"
     },
     {
-      "aid": 128,
-      "d": "2026-08-04",
-      "m": 0.332,
-      "p": 1.44,
-      "t": "ein",
-      "e": "kg",
-      "k": "Gemüse & Früchte",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 128,
-      "d": "2026-08-10",
-      "m": 1,
-      "p": 0,
-      "t": "aus",
-      "e": "kg",
-      "k": "Gemüse & Früchte",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
       "aid": 129,
       "d": "2026-07-17",
       "m": 1,
@@ -17152,17 +16311,6 @@
       "t": "aus",
       "e": "Stk",
       "k": "Gemüse & Früchte",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 130,
-      "d": "2026-07-17",
-      "m": 1,
-      "p": 4.95,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Fleisch & Fisch",
       "aktion": false,
       "kaufort": "Lidl"
     },
@@ -17233,61 +16381,6 @@
       "kaufort": "Lidl"
     },
     {
-      "aid": 133,
-      "d": "2026-07-18",
-      "m": 1,
-      "p": 0.75,
-      "t": "ein",
-      "e": "Pkg",
-      "k": "Backwaren & Brot",
-      "aktion": false,
-      "kaufort": "Migros"
-    },
-    {
-      "aid": 133,
-      "d": "2026-07-18",
-      "m": 2,
-      "p": 1.3,
-      "t": "ein",
-      "e": "Pkg",
-      "k": "Backwaren & Brot",
-      "aktion": false,
-      "kaufort": "Coop"
-    },
-    {
-      "aid": 134,
-      "d": "2026-07-18",
-      "m": 1,
-      "p": 3.2,
-      "t": "ein",
-      "e": "Pkg",
-      "k": "Gemüse & Früchte",
-      "aktion": false,
-      "kaufort": "Migros"
-    },
-    {
-      "aid": 135,
-      "d": "2026-07-18",
-      "m": 2,
-      "p": 8.2,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Diverses",
-      "aktion": false,
-      "kaufort": "Landi"
-    },
-    {
-      "aid": 136,
-      "d": "2026-07-18",
-      "m": 1,
-      "p": 20,
-      "t": "ein",
-      "e": "Rolle",
-      "k": "Reinigung & Pflege",
-      "aktion": false,
-      "kaufort": "Coop"
-    },
-    {
       "aid": 169,
       "d": "2026-07-21",
       "m": 1,
@@ -17295,17 +16388,6 @@
       "t": "aus",
       "e": "Pkg",
       "k": "Konserven & Trockenware",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
-      "aid": 173,
-      "d": "2026-07-19",
-      "m": 1,
-      "p": 1.5,
-      "t": "ein",
-      "e": "Pkg",
-      "k": "Gewürze & Saucen",
       "aktion": false,
       "kaufort": ""
     },
@@ -17391,17 +16473,6 @@
       "d": "2026-07-01",
       "m": 1,
       "p": 0,
-      "t": "aus",
-      "e": "Stange",
-      "k": "Genussmittel",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
-      "aid": 221,
-      "d": "2026-07-01",
-      "m": 1,
-      "p": 0,
       "t": "ein",
       "e": "Stange",
       "k": "Genussmittel",
@@ -17413,17 +16484,6 @@
       "d": "2026-07-04",
       "m": 2,
       "p": 57.5,
-      "t": "ein",
-      "e": "Stange",
-      "k": "Genussmittel",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
-      "aid": 221,
-      "d": "2026-07-04",
-      "m": 1,
-      "p": 0,
       "t": "ein",
       "e": "Stange",
       "k": "Genussmittel",
@@ -17508,39 +16568,6 @@
       "kaufort": ""
     },
     {
-      "aid": 221,
-      "d": "2026-07-30",
-      "m": 5,
-      "p": 53,
-      "t": "ein",
-      "e": "Stange",
-      "k": "Genussmittel",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 221,
-      "d": "2026-08-03",
-      "m": 1,
-      "p": 0,
-      "t": "aus",
-      "e": "Stange",
-      "k": "Genussmittel",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
-      "aid": 221,
-      "d": "2026-08-10",
-      "m": 1,
-      "p": 0,
-      "t": "aus",
-      "e": "Stange",
-      "k": "Genussmittel",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
       "aid": 222,
       "d": "2026-06-27",
       "m": 1,
@@ -17575,17 +16602,6 @@
     },
     {
       "aid": 222,
-      "d": "2026-07-17",
-      "m": 1,
-      "p": 2.85,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Milchprodukte",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 222,
       "d": "2026-07-30",
       "m": 1,
       "p": 2.85,
@@ -17605,28 +16621,6 @@
       "k": "Milchprodukte",
       "aktion": false,
       "kaufort": "Lidl"
-    },
-    {
-      "aid": 222,
-      "d": "2026-08-04",
-      "m": 1,
-      "p": 2.85,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Milchprodukte",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 222,
-      "d": "2026-08-10",
-      "m": 1,
-      "p": 0,
-      "t": "aus",
-      "e": "Stk",
-      "k": "Milchprodukte",
-      "aktion": false,
-      "kaufort": ""
     },
     {
       "aid": 223,
@@ -17751,34 +16745,12 @@
     },
     {
       "aid": 224,
-      "d": "2026-07-30",
-      "m": 1,
-      "p": 6.59,
-      "t": "ein",
-      "e": "Pkg",
-      "k": "Fleisch & Fisch",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 224,
       "d": "2026-08-03",
       "m": 1,
       "p": 0,
       "t": "aus",
       "e": "Pkg",
       "k": "Fleisch & Fisch",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 225,
-      "d": "2026-07-30",
-      "m": 1,
-      "p": 4.79,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Milchprodukte",
       "aktion": false,
       "kaufort": "Lidl"
     },
@@ -17794,17 +16766,6 @@
       "kaufort": "Lidl"
     },
     {
-      "aid": 227,
-      "d": "2026-08-04",
-      "m": 1,
-      "p": 8.99,
-      "t": "ein",
-      "e": "Pkg",
-      "k": "Fleisch & Fisch",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
       "aid": 228,
       "d": "2026-08-04",
       "m": 1,
@@ -17816,34 +16777,12 @@
       "kaufort": "Lidl"
     },
     {
-      "aid": 229,
-      "d": "2026-08-04",
-      "m": 1.334,
-      "p": 1.19,
-      "t": "ein",
-      "e": "kg",
-      "k": "Gemüse & Früchte",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
       "aid": 230,
       "d": "2026-08-04",
       "m": 1,
       "p": 1.59,
       "t": "ein",
       "e": "Stk",
-      "k": "Gemüse & Früchte",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 231,
-      "d": "2026-08-04",
-      "m": 1,
-      "p": 1.95,
-      "t": "ein",
-      "e": "Pkg",
       "k": "Gemüse & Früchte",
       "aktion": false,
       "kaufort": "Lidl"
@@ -17893,17 +16832,6 @@
       "kaufort": "Lidl"
     },
     {
-      "aid": 234,
-      "d": "2026-08-04",
-      "m": 1,
-      "p": 3.49,
-      "t": "ein",
-      "e": "Pkg",
-      "k": "Milchprodukte",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
       "aid": 235,
       "d": "2026-08-04",
       "m": 1,
@@ -17927,17 +16855,6 @@
     },
     {
       "aid": 237,
-      "d": "2026-08-04",
-      "m": 1,
-      "p": 1.69,
-      "t": "ein",
-      "e": "Pkg",
-      "k": "Backwaren & Brot",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
-      "aid": 237,
       "d": "2026-08-09",
       "m": 1,
       "p": 0,
@@ -17946,17 +16863,6 @@
       "k": "Backwaren & Brot",
       "aktion": false,
       "kaufort": ""
-    },
-    {
-      "aid": 238,
-      "d": "2026-08-04",
-      "m": 1,
-      "p": 1.65,
-      "t": "ein",
-      "e": "Glas",
-      "k": "Gemüse & Früchte",
-      "aktion": false,
-      "kaufort": "Lidl"
     },
     {
       "aid": 239,
@@ -17979,17 +16885,6 @@
       "k": "Diverses",
       "aktion": false,
       "kaufort": "Landi"
-    },
-    {
-      "aid": 241,
-      "d": "2026-08-10",
-      "m": 1,
-      "p": 0.39,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Diverses",
-      "aktion": false,
-      "kaufort": "Lidl"
     },
     {
       "t": "aus",
@@ -18480,50 +17375,6 @@
       "kaufort": "Lidl"
     },
     {
-      "aid": 242,
-      "d": "2026-08-13",
-      "m": 1,
-      "p": 2.49,
-      "t": "ein",
-      "e": "kg",
-      "k": "Gemüse & Früchte",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 243,
-      "d": "2026-08-13",
-      "m": 1,
-      "p": 5.49,
-      "t": "ein",
-      "e": "Flasche",
-      "k": "Gewürze & Saucen",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 244,
-      "d": "2026-08-13",
-      "m": 1,
-      "p": 1.55,
-      "t": "ein",
-      "e": "Pkg",
-      "k": "Milchprodukte",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
-      "aid": 245,
-      "d": "2026-08-13",
-      "m": 1,
-      "p": 1.19,
-      "t": "ein",
-      "e": "kg",
-      "k": "Gemüse & Früchte",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
       "aid": 246,
       "d": "2026-08-13",
       "m": 1,
@@ -18533,17 +17384,6 @@
       "k": "Getränke",
       "aktion": false,
       "kaufort": "Spar"
-    },
-    {
-      "aid": 247,
-      "d": "2026-08-13",
-      "m": 1,
-      "p": 3.6,
-      "t": "ein",
-      "e": "Flasche",
-      "k": "Gewürze & Saucen",
-      "aktion": false,
-      "kaufort": "SPAR"
     },
     {
       "aid": 248,
@@ -18557,5 +17397,5 @@
       "kaufort": "Spar"
     }
   ],
-  "aktualisiert": "2026-08-13T09:15:46.004Z"
+  "aktualisiert": "2026-08-13T09:16:54.235Z"
 }
