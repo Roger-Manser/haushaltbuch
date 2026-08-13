@@ -536,10 +536,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.69';
+const APP_VERSION='19.70';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.70',d:'08.2026',items:['ENDLICH RICHTIG: Detail nutzt 100% exakte Übersicht-Matching-Logik','Keine separaten Funktionen mehr - direkt die gleichen 4 Filter','Übersicht 5 = Detail 4 (ohne Zucker) ✓']},
   {v:'19.69',d:'08.2026',items:['Revert: checkZutatenVorhanden nutzt exakt Übersicht-Matching-Logik','Levenshtein-Matching (max 2 Fehler) erkennt jetzt Zucker -> Puderzucker','Konsistent mit Übersicht']},
   {v:'19.68',d:'08.2026',items:['Fix: Grundzutaten (Zucker, Salz, Öl...) nicht auf Einkaufsliste','Zwei separate Filter: Anzeige (mit Grundzutaten) vs Einkaufsliste (ohne)','Übersicht und Detail zeigen jetzt gleich viele fehlende Artikel']},
   {v:'19.67',d:'08.2026',items:['FIX: Rezept-Datenstruktur-Mismatch (r.zt vs r.zutaten)','Detail-Ansicht normalisiert Zutaten wie Übersicht','Konsistente Zutat-Anzeige zwischen Übersicht und Detail']},
@@ -4287,12 +4288,28 @@ function showRezeptDetail(el,fromArtikelId){
   const imgUrl=rzImgUrl(r.img||'');
   const imgHtml=imgUrl?'<img src="'+esc(imgUrl)+'" style="width:100%;max-height:220px;object-fit:cover;border-radius:var(--r);margin-bottom:14px" onerror="this.style.display=\'none\'"/>':'';
 
-  // Zutaten mit Lager-Status - normalisiere wie in renderRezepte
+  // Zutaten mit Lager-Status - nutze EXAKT die gleiche Logik wie die Übersicht
   const zt=(r.zt||(r.zutaten||[])).map(z=>typeof z==='string'?z:(z.n||z.zutat||z.name||''));
   const names=S.a.filter(a=>a.menge>0).map(a=>a.name.toLowerCase());
+  
+  // EXAKTE Kopie der Übersicht-Matching-Logik
+  const have=zt.filter(zutat=>{
+    // 1. Exaktes Match
+    if(names.some(n=>n===zutat.toLowerCase()))return true;
+    // 2. Alias-Match
+    const mitAlias=S.a.find(a=>(a.quittungAliase||[]).some(al=>al.toLowerCase()===zutat.toLowerCase())&&a.menge>0);
+    if(mitAlias)return true;
+    // 3. Levenshtein (max 2 Fehler)
+    const levenMatches=S.a.filter(a=>a.menge>0&&levenshteinDistance(a.name,zutat)<=2);
+    if(levenMatches.length>0)return true;
+    // 4. Fuzzy Fallback (nur exakte Wort-Matches am Anfang)
+    const words=zutat.toLowerCase().split(/[\s,\-]+/).filter(w=>w.length>3);
+    return words.some(w=>names.some(n=>n===w||n.startsWith(w)));
+  });
+  
   const ztHtml=zt.map(z=>{
     const grund=istGrundzutat(z);
-    const ok=grund||checkZutatenVorhanden([z]).length>0;
+    const ok=grund||have.includes(z);
     const label=grund?'<span style="font-size:11px;color:var(--t3)">immer da</span>':(ok?'<span style="font-size:11px;color:var(--ok)">vorhanden</span>':'<span style="font-size:11px;color:var(--dg)">fehlt</span>');
     return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd)">'+
       '<span style="font-size:16px">'+(grund?'∞':ok?'✓':'✗')+'</span>'+
@@ -4308,9 +4325,8 @@ function showRezeptDetail(el,fromArtikelId){
       '<span style="font-size:14px;color:var(--t2);white-space:nowrap;margin-left:8px">'+esc((i.q||'')+' '+(i.u||'')).trim()+'</span>'+
     '</div>').join(''):ztHtml;
 
-  const haveZutaten=checkZutatenVorhanden(zt);
-  const missCount=zt.length-haveZutaten.length;
-  const missZt=zt.filter(z=>checkZutatenVorhanden([z]).length===0).map(z=>{
+  const missCount=zt.length-have.length;
+  const missZt=zt.filter(z=>!have.includes(z)).map(z=>{
     const ing=(r.ings||[]).find(i=>(i.n||'')===z);
     return{n:z,q:ing?(ing.q||''):'',u:ing?(ing.u||''):''};
   });
