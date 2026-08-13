@@ -536,10 +536,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.64';
+const APP_VERSION='19.65';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.65',d:'08.2026',items:['Fix: missZt nutzt jetzt auch checkZutatenVorhanden()','Detail-Ansicht zeigt jetzt richtig fehlende Zutaten an']},
   {v:'19.64',d:'08.2026',items:['Fix: Rezept-Übersicht und Detail nutzen gleiches Zutat-Matching','Levenshtein + Alias + Fuzzy-Matching in Detail-Ansicht','Verhindert irritierende Mismatch zwischen Übersicht und Detail']},
   {v:'19.63',d:'08.2026',items:['Einkaufslisten-Einbuchen: Kaufort als Dropdown mit Auswahlliste','«+» Button um neuen Kaufort zu erfassen','Kauforte werden zu S.ge hinzugefügt']},
   {v:'19.62',d:'08.2026',items:['Einkaufslisten-Einbuchen: Preis und Kaufort hinzugefügt','Kaufpreis optional editierbar (vorausgefüllt mit Lagerartikel-Preis)','Kaufort optional (vorausgefüllt mit Lagerartikel-Kaufort)']},
@@ -4299,7 +4300,7 @@ function showRezeptDetail(el,fromArtikelId){
 
   const haveZutaten=checkZutatenVorhanden(r.zt||[]);
   const missCount=(r.zt||[]).length-haveZutaten.length;
-  const missZt=(r.zt||[]).filter(z=>!aiMatch(z,names)).map(z=>{
+  const missZt=(r.zt||[]).filter(z=>checkZutatenVorhanden([z]).length===0).map(z=>{
     const ing=(r.ings||[]).find(i=>(i.n||'')===z);
     return{n:z,q:ing?(ing.q||''):'',u:ing?(ing.u||''):''};
   });
