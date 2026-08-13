@@ -122,15 +122,15 @@
     },
     {
       "id": 4,
-      "name": "Ei",
+      "name": "Eier",
       "marke": "Eisenring",
-      "kat": "Milchprodukte",
+      "kat": "Diverses",
       "lager": "Kühlschrank oben",
       "menge": 2,
-      "einheit": "Stk",
+      "einheit": "Pkg",
       "mindest": 1,
       "barcode": "",
-      "preis": 5.35,
+      "preis": 3.6,
       "packMenge": 6,
       "packEinheit": "Stk",
       "kaufdatum": "2026-08-13",
@@ -147,15 +147,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Rita Eisenring"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 5.35,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "ownCode": "HB-000009",
@@ -17921,5 +17912,5 @@
       "kaufort": "Getränkemarkt Zil"
     }
   ],
-  "aktualisiert": "2026-08-13T10:56:43.138Z"
+  "aktualisiert": "2026-08-13T10:58:24.616Z"
 }
