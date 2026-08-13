@@ -2852,7 +2852,7 @@
       "lager": "Vorratsschrank",
       "kaufort": "Denner",
       "menge": 1,
-      "einheit": "Stk",
+      "einheit": "Pkg",
       "mindest": 0,
       "barcode": "8076809523738",
       "barcodes": [],
@@ -17889,5 +17889,5 @@
       "kaufort": "SPAR"
     }
   ],
-  "aktualisiert": "2026-08-13T09:47:09.837Z"
+  "aktualisiert": "2026-08-13T09:48:03.548Z"
 }
