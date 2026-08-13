@@ -1424,28 +1424,48 @@
       "marke": "Appenzeller Bier",
       "kat": "Getränke",
       "lager": "Kühlschrank unten",
-      "kaufort": "Landi",
-      "menge": 0,
-      "einheit": "Stk",
+      "kaufort": "Getränkemarkt Zil",
+      "menge": 2,
+      "einheit": "Pkg",
       "mindest": 1,
       "barcode": "7611889123334",
-      "preis": 0,
-      "packMenge": 5,
-      "packEinheit": "dl",
-      "kaufdatum": "2026-06-27",
+      "preis": 10.5,
+      "packMenge": 6,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-08-13",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782577901348_off.jpg?t=1786123090173",
       "fotoPath": "1782577901348_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-08-13",
+          "preis": 10.5,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Getränkemarkt Zil"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 10.5,
+          "menge": 2,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Getränkemarkt Zil"
+        }
+      ],
       "packungen": [
         {
           "id": 1,
-          "menge": 0,
-          "kaufdatum": "2026-06-27",
+          "menge": 2,
+          "kaufdatum": "2026-08-13",
           "ablaufdatum": ""
         }
-      ]
+      ],
+      "barcodes": []
     },
     {
       "id": 41,
@@ -9214,14 +9234,11 @@
     "Galaxus",
     "Spar",
     "Geschenk",
-    "Rita Eisenring"
+    "Rita Eisenring",
+    "Getränkemarkt Zil"
   ],
   "einkauf": [],
   "einkaufOverrides": {
-    "40": {
-      "einheit": "Pkg",
-      "menge": "2"
-    },
     "221": {
       "menge": "2"
     }
@@ -17887,7 +17904,20 @@
       "k": "Gewürze & Saucen",
       "aktion": false,
       "kaufort": "SPAR"
+    },
+    {
+      "t": "ein",
+      "aid": 40,
+      "name": "Quöllfrisch alkoholfrei",
+      "lager": "Kühlschrank unten",
+      "kat": "Getränke",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 10.5,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786615314215
     }
   ],
-  "aktualisiert": "2026-08-13T10:01:02.104Z"
+  "aktualisiert": "2026-08-13T10:03:27.188Z"
 }
