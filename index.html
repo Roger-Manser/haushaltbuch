@@ -313,6 +313,9 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
         <span class="sdot" id="sdot"></span>
         <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.21-4.45"/></svg>
       </button>
+      <button class="ib" onclick="showDeduplicateDialog()" title="Doppelte Einträge entfernen" style="position:relative">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 5"/><path d="M3 3v6h6"/><circle cx="12" cy="12" r="0" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/></svg>
+      </button>
       <button class="ib" onclick="goScreen('s-settings')" title="Einstellungen">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
@@ -533,10 +536,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.55';
+const APP_VERSION='19.56';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.56',d:'08.2026',items:['Neue Funktion: Manueller Deduplizierungs-Button','🔄 Button in Lager-Übersicht (neben Sync)','Benutzer kann jederzeit doppelte Einträge entfernen']},
   {v:'19.55',d:'08.2026',items:['Fix: Datum-Farben nutzen jetzt Theme-Variablen','var(--sf) für Background, var(--tx) für Text statt hardcodiert']},
   {v:'19.54',d:'08.2026',items:['Fix: Mobile Datum-Struktur vereinfacht','Flexbox statt absolute Positioning']},
   {v:'19.52-debug',d:'08.2026',items:['Debug: Console-Logs für Datum-Änderungen']},
@@ -861,7 +865,52 @@ async function uploadFoto(b64,fn){
   return 'https://raw.githubusercontent.com/'+gh.own+'/'+gh.repo+'/'+gh.br+'/'+path+'?t='+Date.now();
 }
 
-async function findDuplicates(){
+async function showDeduplicateDialog(){
+  // Manueller Trigger für Deduplizierung (z.B. von Button in Einstellungen)
+  const dups=findDuplicates();
+  if(!dups.length){
+    toast('✓ Keine Duplikate gefunden');
+    return;
+  }
+  
+  const msg='🔄 Deduplizierung\n\n'+dups.length+' doppelte Einträge gefunden:\n\n'+
+    dups.slice(0,15).map(d=>'• '+esc(d.artikel)+' ('+d.datum+')').join('\n')+
+    (dups.length>15?'\n...und '+(dups.length-15)+' weitere':'');
+  
+  if(!confirm(msg+'\n\nJetzt löschen?'))return;
+  
+  // Führe Deduplizierung durch
+  let removed=0;
+  S.a.forEach(a=>{
+    if(!a.preisHistorie||a.preisHistorie.length<2)return;
+    const seen=new Map();
+    const keep=[];
+    a.preisHistorie.forEach((h,idx)=>{
+      const key=(h.datum||'')+'|'+(h.typ||'ein');
+      if(!seen.has(key)){
+        seen.set(key,true);
+        keep.push(h);
+      }else{
+        const logIdx=S.log.findIndex(l=>
+          l.aid===a.id&&l.d===h.datum&&Math.abs((l.m||0)-(h.menge||0))<0.01&&l.t===(h.typ||'ein')
+        );
+        if(logIdx>=0){
+          S.log.splice(logIdx,1);
+          removed++;
+        }
+      }
+    });
+    a.preisHistorie=keep;
+  });
+  
+  if(removed>0){
+    saveL();
+    toast('✓ '+removed+' doppelte Einträge gelöscht');
+    renderLager();
+  }
+}
+
+function findDuplicates(){
   // Findet alle Duplikate vor dem Löschen
   const duplicates=[];
   S.a.forEach(a=>{
