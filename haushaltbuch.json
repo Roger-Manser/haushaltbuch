@@ -9156,6 +9156,56 @@
       ],
       "letzteEingangHeute": "09:52",
       "barcodes": []
+    },
+    {
+      "id": 249,
+      "name": "Hackfleisch gemisch",
+      "marke": "",
+      "kat": "Fleisch & Fisch",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "",
+      "barcodes": [],
+      "preis": 5.35,
+      "packMenge": 300,
+      "packEinheit": "g",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "2026-08-18",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-13",
+          "preis": 5.35,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 5.35,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "letzteEingangHeute": "12:59",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": "2026-08-18"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -17910,7 +17960,20 @@
       "k": "Getränke",
       "aktion": false,
       "kaufort": "Getränkemarkt Zil"
+    },
+    {
+      "t": "ein",
+      "aid": 249,
+      "name": "Hackfleisch gemisch",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 5.35,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786618793416
     }
   ],
-  "aktualisiert": "2026-08-13T10:58:24.616Z"
+  "aktualisiert": "2026-08-13T10:59:59.270Z"
 }
