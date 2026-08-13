@@ -18028,7 +18028,29 @@
       "aktion": false,
       "datum": "2026-08-13",
       "zeit": 1786621911494
+    },
+    {
+      "aid": 221,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stange",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 249,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 5.35,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-13T11:57:05.789Z"
+  "aktualisiert": "2026-08-13T12:02:35.929Z"
 }
