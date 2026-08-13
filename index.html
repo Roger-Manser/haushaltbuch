@@ -533,10 +533,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.52';
+const APP_VERSION='19.52-debug';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.52-debug',d:'08.2026',items:['Debug: Console-Logs für Datum-Änderungen']},
+  {v:'19.53',d:'08.2026',items:['Fix: Mobile Datum-Anzeige wird sofort aktualisiert','Direkte DOM-Manipulation statt nur UI-Refresh']},
   {v:'19.52',d:'08.2026',items:['Fix: Mobile Datum-Anzeige nach Kalender-Auswahl','onblur-Fallback für Date-Input']},
   {v:'19.51',d:'08.2026',items:['Fix: Syntax-Fehler im Datum-Preview entfernt','Vereinfachte Version ohne eingebettetes Script']},
   {v:'19.50',d:'08.2026',items:['Fix: Datum-Preview im Verlauf-Edit-Dialog','Gewähltes Datum wird sofort formatiert angezeigt']},
@@ -1897,6 +1899,14 @@ function doEditPreisHistorie(artikelId,idx){
   }
   
   saveL();
+  
+  // Aktualisiere das Verlaufs-Datum-Display SOFORT (bevor Dialog geschlossen wird)
+  const vlEl=document.querySelector('[id^="vh-item-"]');
+  if(vlEl){
+    const datumSpan=vlEl.querySelector('[data-datum]');
+    if(datumSpan)datumSpan.textContent=fmtDateCH(datum);
+  }
+  
   document.getElementById('vh-edit-dlg').remove();
   refreshAllDateFields();
   showDet(artikelId);
@@ -6784,7 +6794,18 @@ function nativeDateChanged(id){
   const display=document.getElementById(id+'-display');
   if(!inp)return;
   const val=inp.value;
-  if(lbl)lbl.textContent=val?fmtDateCH(val):'Datum wählen';
+  if(lbl){
+    lbl.textContent=val?fmtDateCH(val):'Datum wählen';
+  }
+  if(display&&val){
+    // Aktualisiere auch Display-Farbe wenn Datum gesetzt
+    display.style.color='#000';
+  }
+  // Workaround: Trigger input event damit das Datum auch gespeichert wird
+  if(inp){
+    const event=new Event('change',{bubbles:true});
+    inp.dispatchEvent(event);
+  }
   if(display)display.style.color=val?'var(--tx)':'var(--t3)';
 }
 // Datumsfeld programmatisch setzen: Wert UND sichtbares Label aktualisieren
