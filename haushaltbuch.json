@@ -7695,6 +7695,24 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Spar"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 0.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 0.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
         }
       ],
       "packungen": [
@@ -18611,5 +18629,5 @@
       "kaufort": "Spar"
     }
   ],
-  "aktualisiert": "2026-08-13T08:15:29.371Z"
+  "aktualisiert": "2026-08-13T08:21:44.986Z"
 }
