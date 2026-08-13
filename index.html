@@ -533,10 +533,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.50';
+const APP_VERSION='19.51';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.51',d:'08.2026',items:['Fix: Syntax-Fehler im Datum-Preview entfernt','Vereinfachte Version ohne eingebettetes Script']},
   {v:'19.50',d:'08.2026',items:['Fix: Datum-Preview im Verlauf-Edit-Dialog','Gewähltes Datum wird sofort formatiert angezeigt']},
   {v:'19.49',d:'08.2026',items:['Fix: MHD wird überall nach Eingabe angezeigt','Globale refreshAllDateFields() für alle MHD-Eingabestellen']},
   {v:'19.48',d:'08.2026',items:['Fix: MHD-Datum wird sofort nach Eingabe angezeigt','refreshAllDateFields() aktualisiert das Eingabefeld']},
@@ -1824,8 +1825,7 @@ function editPreisHistorie(artikelId,idx){
           '</div>'
         )+
         '<div class="fd"><label>Datum</label>'+dateField('vhe-dat',h.datum||todayISO())+
-          '<div id="vhe-dat-preview" style="margin-top:4px;font-size:13px;color:var(--t2)"></div>'+
-          '<script>document.getElementById(\'vhe-dat\').oninput=()=>{const d=document.getElementById(\'vhe-dat\').value;document.getElementById(\'vhe-dat-preview\').textContent=d?fmtDateCH(d):\'—\';}(function(){const d=document.getElementById(\'vhe-dat\').value;document.getElementById(\'vhe-dat-preview\').textContent=d?fmtDateCH(d):\'—\';})();</script>'+
+          '<div id="vhe-dat-preview" style="margin-top:4px;font-size:13px;color:var(--t2)">'+fmtDateCH(h.datum||todayISO())+'</div>'+
         '</div>'+
         '<label style="display:flex;align-items:center;gap:8px;margin-top:4px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg)">'+
           '<input type="checkbox" id="vhe-aktion" '+(h.aktion?'checked':'')+' style="width:18px;height:18px;accent-color:var(--wn);cursor:pointer"/>'+
