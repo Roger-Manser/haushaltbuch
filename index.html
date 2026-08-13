@@ -536,10 +536,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.58';
+const APP_VERSION='19.59';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.59',d:'08.2026',items:['Fix: Einkaufslisten-Artikel werden nach Einbuchung gelöscht','Checkbox wird entfernt statt nur abhaken','Artikel erscheint nicht mehr in der Liste nach Speichern']},
   {v:'19.58',d:'08.2026',items:['Auto-Alias: Quittungs-Name wird als Alias gespeichert','«TN Vollmilch 3.5% UHT IP» → Alias für «Vollmilch»','Besseres Matching beim nächsten Scan']},
   {v:'19.57',d:'08.2026',items:['Quittungs-Scan: «⚙ Erweitert»-Button für neue Artikel','Öffnet vollständigen Artikel-Dialog statt Quick-Eingabe','Vollständige Erfassung: Name, Marke, Kategorie, Einheit, Lagerort']},
   {v:'19.56',d:'08.2026',items:['Neue Funktion: Manueller Deduplizierungs-Button','🔄 Button in Lager-Übersicht (neben Sync)','Benutzer kann jederzeit doppelte Einträge entfernen']},
@@ -5172,9 +5173,9 @@ function doEkEinbuchungBekannt(ekId,artikelId){
   if(!a.preisHistorie)a.preisHistorie=[];
   a.preisHistorie.push({datum:todayISO(),preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:a.kaufort||''});
   addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,a.einheit,preis,false,true);
-  // Einkaufslisteneintrag abhaken
-  const e=S.ek.find(x=>x.id===ekId);
-  if(e)e.checked=true;
+  // Einkaufslisteneintrag löschen (nicht nur abhaken)
+  const eIdx=S.ek.findIndex(x=>x.id===ekId);
+  if(eIdx>=0)S.ek.splice(eIdx,1);  // Komplett aus Liste löschen
   saveL();
   const dlg=document.getElementById('ek-einbuch-dlg');if(dlg)dlg.remove();
   const preisInfo=preis>0?' · CHF '+preis.toFixed(2):'';
