@@ -536,10 +536,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.61';
+const APP_VERSION='19.62';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.62',d:'08.2026',items:['Einkaufslisten-Einbuchen: Preis und Kaufort hinzugefügt','Kaufpreis optional editierbar (vorausgefüllt mit Lagerartikel-Preis)','Kaufort optional (vorausgefüllt mit Lagerartikel-Kaufort)']},
   {v:'19.61',d:'08.2026',items:['Fix: Button bucht jetzt auch Automatisch-Artikel (unter Mindestbestand)','Beide Listen verarbeiten: Automatisch + Manuell','Nacheinander-Dialoge für alle gehakten Artikel']},
   {v:'19.60',d:'08.2026',items:['Fix: Button oben rechts bucht jetzt gehakte Artikel ein','Nacheinander-Dialoge für jeden gehakten Artikel','Überspringen/Einbuchen für jeden Artikel möglich']},
   {v:'19.59',d:'08.2026',items:['Fix: Einkaufslisten-Artikel werden nach Einbuchung gelöscht','Checkbox wird entfernt statt nur abhaken','Artikel erscheint nicht mehr in der Liste nach Speichern']},
@@ -5362,6 +5363,8 @@ function processCheckedItemsShowDialogAuto(artikel,idx,allChecked){
       '<div style="font-size:12px;color:var(--ok);margin-bottom:12px">✓ Artikel bekannt · Bestand: '+fmtMenge(artikel.menge)+' '+esc(artikel.einheit||'Stk')+'</div>'+
       '<div class="tc" style="margin-bottom:14px">'+
         '<div class="fd"><label>Menge ('+esc(artikel.einheit||'Stk')+')</label><input type="text" inputmode="decimal" id="pei-mg" value="'+fmtMenge(menge)+'" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:17px;text-align:right;font-weight:600"/></div>'+
+        '<div class="fd"><label>Kaufpreis (CHF, optional)</label><input type="text" inputmode="decimal" id="pei-pr" placeholder="'+(artikel.preis?'CHF '+artikel.preis.toFixed(2)+' (letzter)':'')+'\'" value="" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/></div>'+
+        '<div class="fd"><label>Wo gekauft</label><input type="text" id="pei-kaufort" placeholder="z.B. Coop" value="'+esc(artikel.kaufort||'')+'\'" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px"/></div>'+
         '<div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('pei-mhd','')+'</div>'+
       '</div>'+
       '<div style="display:flex;gap:8px">'+
@@ -5379,14 +5382,18 @@ function processCheckedItemsSaveAuto(artikelId,idx){
   const a=S.a.find(x=>x.id===artikelId);if(!a)return;
   let menge=parseDecimal(document.getElementById('pei-mg').value)||1;
   const mhd=document.getElementById('pei-mhd').value||'';
-  const preis=a.preis||0;
+  const preis=parseDecimal(document.getElementById('pei-pr').value)||a.preis||0;
+  const kaufort=document.getElementById('pei-kaufort').value.trim()||a.kaufort||'';
+  
+  // Aktualisiere Artikel-Daten
+  if(kaufort)a.kaufort=kaufort;
   
   // Einbuchen
   ensurePackungen(a);
   a.packungen.push({id:newPackId(),menge,kaufdatum:todayISO(),ablaufdatum:mhd});
   syncMenge(a);
   if(!a.preisHistorie)a.preisHistorie=[];
-  a.preisHistorie.push({datum:todayISO(),preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:a.kaufort||''});
+  a.preisHistorie.push({datum:todayISO(),preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort});
   addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,a.einheit,preis,false,true);
   
   // Entferne aus S.eko
@@ -5414,6 +5421,8 @@ function processCheckedItemsShowDialog(ekEntry,artikel,idx,allChecked){
       '<div style="font-size:12px;color:var(--ok);margin-bottom:12px">✓ Artikel bekannt · Bestand: '+fmtMenge(artikel.menge)+' '+esc(artikel.einheit||'Stk')+'</div>'+
       '<div class="tc" style="margin-bottom:14px">'+
         '<div class="fd"><label>Menge ('+esc(artikel.einheit||'Stk')+')</label><input type="text" inputmode="decimal" id="pei-mg" value="'+fmtMenge(menge)+'" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:17px;text-align:right;font-weight:600"/></div>'+
+        '<div class="fd"><label>Kaufpreis (CHF, optional)</label><input type="text" inputmode="decimal" id="pei-pr" placeholder="'+(artikel.preis?'CHF '+artikel.preis.toFixed(2)+' (letzter)':'')+'\'" value="" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/></div>'+
+        '<div class="fd"><label>Wo gekauft</label><input type="text" id="pei-kaufort" placeholder="z.B. Coop" value="'+esc(artikel.kaufort||'')+'\'" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px"/></div>'+
         '<div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('pei-mhd','')+'</div>'+
       '</div>'+
       '<div style="display:flex;gap:8px">'+
@@ -5428,14 +5437,18 @@ function processCheckedItemsSave(ekId,artikelId,idx,allChecked){
   const a=S.a.find(x=>x.id===artikelId);if(!a)return;
   let menge=parseDecimal(document.getElementById('pei-mg').value)||1;
   const mhd=document.getElementById('pei-mhd').value||'';
-  const preis=a.preis||0;
+  const preis=parseDecimal(document.getElementById('pei-pr').value)||a.preis||0;
+  const kaufort=document.getElementById('pei-kaufort').value.trim()||a.kaufort||'';
+  
+  // Aktualisiere Artikel-Daten
+  if(kaufort)a.kaufort=kaufort;
   
   // Einbuchen
   ensurePackungen(a);
   a.packungen.push({id:newPackId(),menge,kaufdatum:todayISO(),ablaufdatum:mhd});
   syncMenge(a);
   if(!a.preisHistorie)a.preisHistorie=[];
-  a.preisHistorie.push({datum:todayISO(),preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:a.kaufort||''});
+  a.preisHistorie.push({datum:todayISO(),preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort});
   addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,a.einheit,preis,false,true);
   saveL();
   
