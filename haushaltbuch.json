@@ -1446,15 +1446,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Getränkemarkt Zil"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 10.5,
-          "menge": 2,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Getränkemarkt Zil"
         }
       ],
       "packungen": [
@@ -17917,7 +17908,18 @@
       "aktion": false,
       "datum": "2026-08-13",
       "zeit": 1786615314215
+    },
+    {
+      "aid": 40,
+      "d": "2026-08-13",
+      "m": 2,
+      "p": 10.5,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Getränke",
+      "aktion": false,
+      "kaufort": "Getränkemarkt Zil"
     }
   ],
-  "aktualisiert": "2026-08-13T10:03:27.188Z"
+  "aktualisiert": "2026-08-13T10:08:59.002Z"
 }
