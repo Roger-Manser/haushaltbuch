@@ -5034,16 +5034,16 @@
       "kat": "Gemüse & Früchte",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 2,
       "einheit": "kg",
       "mindest": 0,
       "barcode": "",
       "barcodes": [],
-      "preis": 1.69,
+      "preis": 1.59,
       "packMenge": 0,
       "packEinheit": "kg",
-      "kaufdatum": "2026-07-17",
-      "ablaufdatum": "2026-09-18",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "2026-08-20",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784443584487_Zwiebel.jpg?t=1786123090173",
       "fotoPath": "1784443584487_Zwiebel.jpg",
@@ -5083,6 +5083,15 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 1.59,
+          "menge": 1,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -5091,6 +5100,12 @@
           "menge": 1,
           "kaufdatum": "2026-07-17",
           "ablaufdatum": "2026-09-18"
+        },
+        {
+          "id": 7,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": "2026-08-20"
         }
       ],
       "preisProKg": 1.79
@@ -6944,26 +6959,36 @@
       "marke": "Nature´s Gold",
       "kat": "Konserven & Trockenware",
       "lager": "Schlof",
-      "kaufort": "",
-      "menge": 0,
+      "kaufort": "Lidl",
+      "menge": 1,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "4099200011622",
       "barcodes": [],
-      "preis": 0,
+      "preis": 1.99,
       "packMenge": 230,
       "packEinheit": "g",
-      "kaufdatum": "2026-07-19",
+      "kaufdatum": "2026-08-13",
       "ablaufdatum": "",
       "notiz": "Vegan, Vegetarisch\nNutri-Score B\nPro 100g/ml: 18 kcal, Fett 0.4g, KH 0.2g, Eiweiss 2.1g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784464521197_off.jpg?t=1786123090173",
       "fotoPath": "1784464521197_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-08-13",
+          "preis": 1.99,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
       "packungen": [
         {
-          "id": 1,
-          "menge": 0,
-          "kaufdatum": "2026-07-19",
+          "id": 8,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
           "ablaufdatum": ""
         }
       ]
@@ -8937,16 +8962,16 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "4056489553311",
       "barcodes": [],
-      "preis": 7.25,
+      "preis": 4.95,
       "packMenge": 600,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-04",
-      "ablaufdatum": "2026-09-05",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "2026-08-28",
       "notiz": "Nutri-Score E\nPro 100g/ml: 464 kcal, Fett 40g, KH 1g, Eiweiss 25g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785841104106_off.jpg?t=1786123090173",
       "fotoPath": "1785841104106_off.jpg",
@@ -8954,6 +8979,15 @@
         {
           "datum": "2026-08-04",
           "preis": 7.25,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 4.95,
           "menge": 1,
           "einheit": "Stk",
           "typ": "ein",
@@ -8967,6 +9001,12 @@
           "menge": 1,
           "kaufdatum": "2026-08-04",
           "ablaufdatum": "2026-09-05"
+        },
+        {
+          "id": 6,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": "2026-08-28"
         }
       ],
       "quittungAliase": [
@@ -9255,6 +9295,55 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 242,
+      "name": "Chinakohl",
+      "marke": "",
+      "kat": "Gemüse & Früchte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "kg",
+      "mindest": 0,
+      "barcode": "",
+      "preis": 2.49,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 9,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-08-13",
+          "preis": 2.49,
+          "menge": 1,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 2.49,
+          "menge": 1,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "letzteEingangHeute": "09:43"
     }
   ],
   "lagerorte": [
@@ -17672,7 +17761,59 @@
       "aktion": false,
       "datum": "2026-08-13",
       "zeit": 1786606955857
+    },
+    {
+      "t": "ein",
+      "aid": 235,
+      "name": "Salami Milano",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 4.95,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607000053
+    },
+    {
+      "t": "ein",
+      "aid": 132,
+      "name": "Zwiebel",
+      "lager": "Küche",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 1.59,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607008783
+    },
+    {
+      "t": "ein",
+      "aid": 190,
+      "name": "Champignons",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 1.99,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607015346
+    },
+    {
+      "t": "ein",
+      "aid": 242,
+      "name": "Chinakohl",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 2.49,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607027568
     }
   ],
-  "aktualisiert": "2026-08-13T07:43:11.288Z"
+  "aktualisiert": "2026-08-13T07:44:11.550Z"
 }
