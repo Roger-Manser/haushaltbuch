@@ -536,10 +536,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.65';
+const APP_VERSION='19.66';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.66',d:'08.2026',items:['Debug: Console.log für checkZutatenVorhanden()','Grundzutaten-Prüfung in matching-Funktion']},
   {v:'19.65',d:'08.2026',items:['Fix: missZt nutzt jetzt auch checkZutatenVorhanden()','Detail-Ansicht zeigt jetzt richtig fehlende Zutaten an']},
   {v:'19.64',d:'08.2026',items:['Fix: Rezept-Übersicht und Detail nutzen gleiches Zutat-Matching','Levenshtein + Alias + Fuzzy-Matching in Detail-Ansicht','Verhindert irritierende Mismatch zwischen Übersicht und Detail']},
   {v:'19.63',d:'08.2026',items:['Einkaufslisten-Einbuchen: Kaufort als Dropdown mit Auswahlliste','«+» Button um neuen Kaufort zu erfassen','Kauforte werden zu S.ge hinzugefügt']},
@@ -4116,19 +4117,24 @@ function checkZutatenVorhanden(zutaten){
   // Gemeinsame Matching-Logik für Übersicht + Detail
   // Verwendet die gleiche komplexe Logik wie die Übersicht
   const names=S.a.filter(a=>a.menge>0).map(a=>a.name.toLowerCase());
-  return zutaten.filter(zutat=>{
+  const result=zutaten.filter(zutat=>{
+    const z=zutat.toLowerCase().trim();
+    // Grundzutaten gelten immer als vorhanden
+    if(istGrundzutat(z))return true;
     // 1. Exaktes Match
-    if(names.some(n=>n===zutat.toLowerCase()))return true;
+    if(names.some(n=>n===z))return true;
     // 2. Alias-Match
-    const mitAlias=S.a.find(a=>(a.quittungAliase||[]).some(al=>al.toLowerCase()===zutat.toLowerCase())&&a.menge>0);
+    const mitAlias=S.a.find(a=>(a.quittungAliase||[]).some(al=>al.toLowerCase()===z)&&a.menge>0);
     if(mitAlias)return true;
     // 3. Levenshtein (max 2 Fehler)
     const levenMatches=S.a.filter(a=>a.menge>0&&levenshteinDistance(a.name,zutat)<=2);
     if(levenMatches.length>0)return true;
     // 4. Fuzzy Fallback (nur exakte Wort-Matches am Anfang)
-    const words=zutat.toLowerCase().split(/[\s,\-]+/).filter(w=>w.length>3);
+    const words=z.split(/[\s,\-]+/).filter(w=>w.length>3);
     return words.some(w=>names.some(n=>n===w||n.startsWith(w)));
   });
+  if(zutaten.length>0)console.log('checkZutatenVorhanden:',zutaten,'->',result);
+  return result;
 }
 
 function aiMatch(zutat,lagerNamen){
