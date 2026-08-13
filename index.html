@@ -536,10 +536,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.56';
+const APP_VERSION='19.58';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.58',d:'08.2026',items:['Auto-Alias: Quittungs-Name wird als Alias gespeichert','«TN Vollmilch 3.5% UHT IP» → Alias für «Vollmilch»','Besseres Matching beim nächsten Scan']},
+  {v:'19.57',d:'08.2026',items:['Quittungs-Scan: «⚙ Erweitert»-Button für neue Artikel','Öffnet vollständigen Artikel-Dialog statt Quick-Eingabe','Vollständige Erfassung: Name, Marke, Kategorie, Einheit, Lagerort']},
   {v:'19.56',d:'08.2026',items:['Neue Funktion: Manueller Deduplizierungs-Button','🔄 Button in Lager-Übersicht (neben Sync)','Benutzer kann jederzeit doppelte Einträge entfernen']},
   {v:'19.55',d:'08.2026',items:['Fix: Datum-Farben nutzen jetzt Theme-Variablen','var(--sf) für Background, var(--tx) für Text statt hardcodiert']},
   {v:'19.54',d:'08.2026',items:['Fix: Mobile Datum-Struktur vereinfacht','Flexbox statt absolute Positioning']},
@@ -6675,6 +6677,73 @@ function zuordnungBestaetigen(idx,artikelId){
   startQuittungArtikel(idx);
 }
 
+function openFullArtikelDialog(name,marke,preis,kat){
+  // Speichere Original-Quittungs-Namen für spätere Alias-Erstellung
+  globalThis._quittungsOriginalName=name;
+  // Öffnet den vollständigen Artikel-Dialog mit Quittungs-Daten vorausgefüllt
+  // (für unbekannte Artikel aus Quittungs-Scan)
+  
+  // Leider können wir den bestehenden Dialog nicht direkt mit Daten vorausfüllen
+  // Besser: Neuen Dialog mit allen Feldern bauen
+  
+  const dlg=document.createElement('div');
+  dlg.id='full-artikel-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:12px">Artikel erfassen</div>'+
+      '<div class="fd"><label>Produktname *</label><input type="text" id="fa-name" value="'+esc(name||'')+'"/></div>'+
+      '<div class="fd"><label>Marke</label><input type="text" id="fa-marke" value="'+esc(marke||'')+'"/></div>'+
+      '<div class="fd"><label>Kategorie</label><input type="text" id="fa-kat" value="'+esc(kat||'Diverses')+'"/></div>'+
+      '<div class="fd"><label>Einheit</label><input type="text" id="fa-ei" value="Stk"/></div>'+
+      '<div class="fd"><label>Preis pro Einheit (CHF)</label><input type="text" inputmode="decimal" id="fa-pr" value="'+(preis||0).toFixed(2)+'"/></div>'+
+      '<div class="fd"><label>Lagerort</label>'+
+        '<div class="lcw">'+S.lo.map(l=>'<button class="chip'+(l===S.lo[0]?' on':'')+'" data-lo="'+esc(l)+'" onclick="document.querySelectorAll(\'#fa-lo .chip[data-lo]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\');this.dataset.lo">'+esc(l)+'</button>').join('')+'</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:8px;margin-top:14px">'+
+        '<button onclick="document.getElementById(\'full-artikel-dlg\').remove()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+        '<button onclick="saveFullArtikelDialog()" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Speichern</button>'+
+      '</div>'+
+    '</div>';
+  dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.remove();});
+  document.body.appendChild(dlg);
+  
+  // Setze Lagerort ID
+  dlg.querySelector('#fa-lo').id='fa-lo';
+}
+
+function saveFullArtikelDialog(){
+  const name=document.getElementById('fa-name').value.trim();
+  if(!name){alert('Produktname erforderlich');return;}
+  
+  const marke=document.getElementById('fa-marke').value.trim();
+  const kat=document.getElementById('fa-kat').value.trim()||'Diverses';
+  const einheit=document.getElementById('fa-ei').value.trim()||'Stk';
+  const preis=parseDecimal(document.getElementById('fa-pr').value)||0;
+  const lager=document.querySelector('#fa-lo .chip.on')?.getAttribute('data-lo')||S.lo[0];
+  
+  // Neuer Artikel
+  const newId=S.nid++;
+  
+  // Quittungs-Original-Name als Alias speichern (für besseres Matching)
+  const quittungsName=(globalThis._quittungsOriginalName||'').trim();
+  const aliases=quittungsName&&quittungsName!==name?[quittungsName]:[];
+  
+  S.a.push({
+    id:newId,name,marke,kat,lager,kaufort:'',
+    menge:0,einheit,mindest:0,barcode:'',preis,
+    packMenge:0,packEinheit:'',kaufdatum:'',ablaufdatum:'',
+    notiz:'',foto:'',fotoPath:'',packungen:[],preisHistorie:[],
+    quittungAliase:aliases
+  });
+  saveL();
+  
+  document.getElementById('full-artikel-dlg').remove();
+  toast('✓ '+name+' erstellt');
+  // Zurück zur Quittung
+  renderQuittungUebersicht(todayISO());
+}
+
 function startQuittungArtikel(idx){
   const it=quittungItems[idx];
   const body=document.getElementById('quittung-body');
@@ -6736,7 +6805,8 @@ function startQuittungArtikel(idx){
   const buttonLabel=duplikatWarnung?'Duplikat ignorieren':'Überspringen';
   h+='<div style="display:flex;gap:8px;margin-top:14px">'+
     '<button onclick="renderQuittungUebersicht(\''+esc(datum)+'\')" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">'+buttonLabel+'</button>'+
-    '<button onclick="confirmQuittungArtikel('+idx+','+!!existing+(existing?','+existing.id:',null')+')" style="flex:2;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">Eingang buchen</button>'+
+    (!existing?'<button onclick="openFullArtikelDialog(\''+esc(it.name)+'\',,'+it.preis+',\'' +esc(it.kat||'Diverses')+'\')" style="flex:1;padding:12px;border:1px solid var(--am);background:var(--al);border-radius:var(--rs);font-size:13px;cursor:pointer;color:var(--ac)">⚙ Erweitert</button>':'')+ 
+    '<button onclick="confirmQuittungArtikel('+idx+','+!!existing+(existing?','+existing.id:',null')+')" style="flex:'+(existing?'2':'1')+';padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">Eingang buchen</button>'+
   '</div>';
 
   h=h.replace('class="lcw">','class="lcw" id="qq-ge">');
