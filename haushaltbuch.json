@@ -499,18 +499,44 @@
       "marke": "",
       "kat": "Getränke",
       "lager": "Schlof",
-      "menge": 4,
+      "menge": 5,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "5449000131812",
-      "preis": 0,
+      "preis": 8.65,
       "packMenge": 6,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-06-23",
+      "kaufdatum": "2026-08-13",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782210102278_17822100962698500523542825312716.jpg?t=1786123090173",
-      "fotoPath": "1782210102278_17822100962698500523542825312716.jpg"
+      "fotoPath": "1782210102278_17822100962698500523542825312716.jpg",
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 4,
+          "kaufdatum": "2026-06-23",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": ""
+        }
+      ],
+      "kaufort": "Lidl",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-13",
+          "preis": 8.65,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ]
     },
     {
       "id": 13,
@@ -7895,15 +7921,15 @@
       "kat": "Genussmittel",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 21,
       "einheit": "Stange",
       "mindest": 2,
       "barcode": "4006396071576",
       "barcodes": [],
-      "preis": 53,
+      "preis": 5.75,
       "packMenge": 10,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-07-30",
+      "kaufdatum": "2026-08-13",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785472429123_17854724199238898588606765505778.jpg?t=1786123090173",
@@ -8078,6 +8104,15 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 5.75,
+          "menge": 20,
+          "einheit": "Stange",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -8085,6 +8120,12 @@
           "id": 3,
           "menge": 1,
           "kaufdatum": "2026-07-30",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 2,
+          "menge": 20,
+          "kaufdatum": "2026-08-13",
           "ablaufdatum": ""
         }
       ]
@@ -8215,15 +8256,15 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
-      "preis": 0,
+      "preis": 6.89,
       "packMenge": 330,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-10",
-      "ablaufdatum": "2026-08-10",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "2026-08-17",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542205864_off.jpg?t=1786123090173",
       "fotoPath": "1782542205864_off.jpg",
@@ -8233,6 +8274,12 @@
           "menge": 1,
           "kaufdatum": "2026-08-10",
           "ablaufdatum": ""
+        },
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": "2026-08-17"
         }
       ],
       "preisHistorie": [
@@ -8325,6 +8372,15 @@
           "menge": 1,
           "einheit": "Stk",
           "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 6.89,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
         }
@@ -17577,7 +17633,46 @@
       "aktion": false,
       "datum": "2026-08-13",
       "zeit": 1786606781440
+    },
+    {
+      "t": "ein",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 20,
+      "einheit": "Stange",
+      "preis": 5.75,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786606910012
+    },
+    {
+      "t": "ein",
+      "aid": 12,
+      "name": "Cola Zero",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 8.65,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786606916118
+    },
+    {
+      "t": "ein",
+      "aid": 223,
+      "name": "Pouletbrust Minutenschnitzel",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 6.89,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786606955857
     }
   ],
-  "aktualisiert": "2026-08-13T07:40:55.507Z"
+  "aktualisiert": "2026-08-13T07:43:11.288Z"
 }
