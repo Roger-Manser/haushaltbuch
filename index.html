@@ -536,10 +536,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.71';
+const APP_VERSION='19.73';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.73',d:'08.2026',items:['Feature: Einkaufspreis in Artikel-Übersicht anzeigen','Meta-Zeile: Lager · Marke · Packung · Preis · Kaufdatum','Schneller Überblick über Kosten']},
+  {v:'19.72',d:'08.2026',items:['Fix: Quittungs-Matching präziser (verhindert falsche Matches)','Mindestlängen für Fuzzy-Matching erhöht','Levenshtein-Matching statt loose includes()','Hackfleisch wird nicht mehr als Ei gematcht']},
   {v:'19.71',d:'08.2026',items:['Feature: Portionen in Rezept-Detail anpassen vor Export','Klick auf Portionen-Box öffnet Dialog','Mengenschlüssel für fehlende Zutaten werden berechnet','Toast zeigt Portions-Faktor']},
   {v:'19.70',d:'08.2026',items:['ENDLICH RICHTIG: Detail nutzt 100% exakte Übersicht-Matching-Logik','Keine separaten Funktionen mehr - direkt die gleichen 4 Filter','Übersicht 5 = Detail 4 (ohne Zucker) ✓']},
   {v:'19.69',d:'08.2026',items:['Revert: checkZutatenVorhanden nutzt exakt Übersicht-Matching-Logik','Levenshtein-Matching (max 2 Fehler) erkennt jetzt Zucker -> Puderzucker','Konsistent mit Übersicht']},
@@ -1699,7 +1701,7 @@ function arRow(a){
   const bc=a.menge===0?'lo':a.menge<a.mindest?'wn':'ok';
   const th=a.foto?'<div class="at has-photo" data-thumb-id="'+a.id+'"><img src="'+esc(a.foto)+'" loading="lazy"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div>';
   const pinfo=packInfo(a);
-  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'')+(a.kaufdatum?' · '+fmtDateCH(a.kaufdatum):'');
+  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'')+(a.preis?' · CHF '+a.preis.toFixed(2):'')+(a.kaufdatum?' · '+fmtDateCH(a.kaufdatum):'');
   const eb=(a.ablaufdatum&&a.menge>0)?expBadgeA(a):'';
   const unitLabel=a.packMenge>0?esc(a.einheit||'Stk'):esc(a.einheit||'Stk');
   const aufListe=S.ek.some(e=>e.text.toLowerCase()===a.name.toLowerCase()&&!e.checked);
@@ -6875,17 +6877,25 @@ function findQuittungMatch(name){
   // 2. Exakter Name-Match (case-insensitiv)
   m=S.a.find(a=>a.name.toLowerCase().trim()===nl);
   if(m)return m;
-  // 3. Alias enthält Quittungsname oder umgekehrt
+  // 3. Alias enthält Quittungsname oder umgekehrt (nur bei mind. 4 Zeichen)
   m=S.a.find(a=>(a.quittungAliase||[]).some(al=>{
     const al2=al.toLowerCase().trim();
+    if(al2.length<4||nl.length<4)return false;  // Nicht bei sehr kurzen Wörtern
     return al2.includes(nl)||nl.includes(al2);
   }));
   if(m)return m;
-  // 4. Fuzzy Name (min 5 Zeichen)
-  if(nl.length>=5){
-    m=S.a.find(a=>
-      a.name.toLowerCase().includes(nl)||nl.includes(a.name.toLowerCase())
-    );
+  // 4. Levenshtein-Matching (max 3 Fehler, nur bei längeren Namen)
+  if(nl.length>=8){
+    const matches=S.a.filter(a=>levenshteinDistance(a.name,name)<=3);
+    if(matches.length>0)m=matches[0];
+  }
+  // 5. Wort-Anfang-Matching: Quittungsname muss mit Artikel-Namen-Wort ANFANGEN
+  if(!m&&nl.length>=5){
+    const words=nl.split(/\s+/);
+    m=S.a.find(a=>{
+      const aname=a.name.toLowerCase();
+      return words.some(w=>w.length>=4&&aname.startsWith(w));  // Nur Wort-Anfänge, mind. 4 Zeichen
+    });
   }
   return m||null;
 }
