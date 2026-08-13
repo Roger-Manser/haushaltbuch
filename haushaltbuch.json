@@ -9263,8 +9263,8 @@
       "kaufdatum": "2026-08-13",
       "ablaufdatum": "",
       "notiz": "",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786622869049_1000063969.png?t=1786622876300",
+      "fotoPath": "1786622869049_1000063969.png",
       "preisHistorie": [],
       "packungen": [
         {
@@ -18091,5 +18091,5 @@
       "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-13T12:07:35.850Z"
+  "aktualisiert": "2026-08-13T12:07:59.076Z"
 }
