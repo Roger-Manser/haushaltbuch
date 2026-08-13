@@ -730,7 +730,15 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782224617427_17822246017915494784069699740850.jpg?t=1786123090173",
       "fotoPath": "1782224617427_17822246017915494784069699740850.jpg",
-      "preisHistorie": []
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 4,
+          "kaufdatum": "2026-06-23",
+          "ablaufdatum": "2027-04-21"
+        }
+      ]
     },
     {
       "id": 22,
@@ -9208,29 +9216,7 @@
     "Geschenk",
     "Rita Eisenring"
   ],
-  "einkauf": [
-    {
-      "id": 1786295154674,
-      "text": "Popcorn Mais",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1786534227362,
-      "text": "weisser Balsamico",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1786534482775,
-      "text": "Senf mild",
-      "menge": "1",
-      "einheit": "Tube",
-      "checked": false
-    }
-  ],
+  "einkauf": [],
   "einkaufOverrides": {
     "40": {
       "einheit": "Pkg",
@@ -17397,5 +17383,5 @@
       "kaufort": "Spar"
     }
   ],
-  "aktualisiert": "2026-08-13T09:16:54.235Z"
+  "aktualisiert": "2026-08-13T09:32:25.491Z"
 }
