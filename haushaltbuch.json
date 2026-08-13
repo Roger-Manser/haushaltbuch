@@ -9277,7 +9277,7 @@
     {
       "id": 1785221892145,
       "text": "Ristretto - Espresso",
-      "menge": "1",
+      "menge": "2",
       "einheit": "Stk",
       "checked": false
     },
@@ -17582,5 +17582,5 @@
       "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-13T05:36:16.875Z"
+  "aktualisiert": "2026-08-13T06:42:27.205Z"
 }
