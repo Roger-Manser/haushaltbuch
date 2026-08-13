@@ -9244,6 +9244,36 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 251,
+      "name": "Bundzwiebel",
+      "marke": "",
+      "kat": "Gemüse & Früchte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 0,
+      "einheit": "Bund",
+      "mindest": 0,
+      "barcode": "",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 0,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -18061,5 +18091,5 @@
       "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-13T12:04:23.759Z"
+  "aktualisiert": "2026-08-13T12:07:35.850Z"
 }
