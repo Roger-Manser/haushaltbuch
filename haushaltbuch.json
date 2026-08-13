@@ -188,14 +188,14 @@
       "marke": "Eisenring",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "menge": 1,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "",
-      "preis": 3.6,
+      "preis": 5.35,
       "packMenge": 6,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-07-17",
+      "kaufdatum": "2026-08-13",
       "ablaufdatum": "2026-08-14",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782190086786_17821900533123253954791247278943.jpg?t=1786123090173",
@@ -209,6 +209,15 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Rita Eisenring"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 5.35,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "ownCode": "HB-000009",
@@ -218,9 +227,15 @@
           "menge": 1,
           "kaufdatum": "2026-07-17",
           "ablaufdatum": "2026-08-14"
+        },
+        {
+          "id": 14,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": "2026-08-18"
         }
       ],
-      "kaufort": "Rita Eisenring",
+      "kaufort": "Lidl",
       "barcodes": []
     },
     {
@@ -2785,14 +2800,14 @@
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 0,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
-      "preis": 0,
+      "preis": 0.99,
       "packMenge": 2,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-07-05",
+      "kaufdatum": "2026-08-13",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783249810246_17832498025133846087262185417538.jpg?t=1786123090173",
@@ -2806,6 +2821,15 @@
           "typ": "weg",
           "aktion": "gekocht",
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 0.99,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -2813,6 +2837,12 @@
           "id": 1,
           "menge": 1,
           "kaufdatum": "2026-07-05",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 15,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
           "ablaufdatum": ""
         }
       ],
@@ -4792,7 +4822,7 @@
       "kat": "Gemüse & Früchte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 0,
+      "menge": 1,
       "einheit": "kg",
       "mindest": 0,
       "barcode": "",
@@ -4800,8 +4830,8 @@
       "preis": 4.35,
       "packMenge": 0,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-04",
-      "ablaufdatum": "2026-08-11",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "2026-08-20",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784294784518_17842947801542754882233135963092.jpg?t=1786123090173",
       "fotoPath": "1784294784518_17842947801542754882233135963092.jpg",
@@ -4858,9 +4888,25 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 4.35,
+          "menge": 1,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 13,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": "2026-08-20"
+        }
+      ],
       "preisProKg": 4.35
     },
     {
@@ -8162,19 +8208,26 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
       "preis": 2.85,
       "packMenge": 0,
       "packEinheit": "",
-      "kaufdatum": "2026-08-04",
-      "ablaufdatum": "2026-08-22",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "2026-09-02",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542043787_off.jpg?t=1786123090173",
       "fotoPath": "1782542043787_off.jpg",
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 11,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": "2026-09-02"
+        }
+      ],
       "preisHistorie": [
         {
           "datum": "2026-06-27",
@@ -8266,6 +8319,15 @@
           "menge": 1,
           "einheit": "Stk",
           "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 2.85,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
         }
@@ -9344,6 +9406,183 @@
         }
       ],
       "letzteEingangHeute": "09:43"
+    },
+    {
+      "id": 243,
+      "name": "Natives Olivenöl extra",
+      "marke": "Deluxe",
+      "kat": "Gewürze & Saucen",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Flasche",
+      "mindest": 0,
+      "barcode": "4335619378810",
+      "preis": 5.49,
+      "packMenge": 500,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "2027-04-29",
+      "notiz": "Pro 100g/ml: 824 kcal, Fett 91.6g, KH 0g, Eiweiss 0g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786607170313_1786607163343895234457745307262.jpg?t=1786607209678",
+      "fotoPath": "1786607170313_1786607163343895234457745307262.jpg",
+      "packungen": [
+        {
+          "id": 16,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-08-13",
+          "preis": 5.49,
+          "menge": 1,
+          "einheit": "Flasche",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 5.49,
+          "menge": 1,
+          "einheit": "Flasche",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 5.49,
+          "menge": 1,
+          "einheit": "Flasche",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "letzteEingangHeute": "09:45",
+      "barcodes": []
+    },
+    {
+      "id": 244,
+      "name": "TN Vollmilch 3.5% UHT IP",
+      "marke": "Milbona",
+      "kat": "Milchprodukte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4056489781578",
+      "preis": 1.55,
+      "packMenge": 1,
+      "packEinheit": "l",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "2026-10-09",
+      "notiz": "Pro 100g/ml: 65 kcal, Fett 3.6g, KH 4.9g, Eiweiss 3.2g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786607256193_off.jpg?t=1786607282796",
+      "fotoPath": "1786607256193_off.jpg",
+      "packungen": [
+        {
+          "id": 17,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-08-13",
+          "preis": 1.55,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 1.55,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 1.55,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "letzteEingangHeute": "09:45",
+      "barcodes": []
+    },
+    {
+      "id": 245,
+      "name": "Bananen",
+      "marke": "",
+      "kat": "Gemüse & Früchte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "kg",
+      "mindest": 0,
+      "barcode": "",
+      "preis": 1.19,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-08-13",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786607232912_17866072255603719976396906354021.jpg?t=1786607242141",
+      "fotoPath": "1786607232912_17866072255603719976396906354021.jpg",
+      "packungen": [
+        {
+          "id": 18,
+          "menge": 1,
+          "kaufdatum": "2026-08-13",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-08-13",
+          "preis": 1.19,
+          "menge": 1,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 1.19,
+          "menge": 1,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 1.19,
+          "menge": 1,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "letzteEingangHeute": "09:45",
+      "barcodes": []
     }
   ],
   "lagerorte": [
@@ -17813,7 +18052,98 @@
       "aktion": false,
       "datum": "2026-08-13",
       "zeit": 1786607027568
+    },
+    {
+      "t": "ein",
+      "aid": 222,
+      "name": "Mozzarella Stange",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.85,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607069506
+    },
+    {
+      "t": "ein",
+      "aid": 128,
+      "name": "Tomaten San Marzano",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 4.35,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607076585
+    },
+    {
+      "t": "ein",
+      "aid": 4,
+      "name": "Ei",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 5.35,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607085883
+    },
+    {
+      "t": "ein",
+      "aid": 69,
+      "name": "Petersilie",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0.99,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607092939
+    },
+    {
+      "t": "ein",
+      "aid": 243,
+      "name": "Natives Olivenöl extra",
+      "lager": "Kühlschrank oben",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Flasche",
+      "preis": 5.49,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607120422
+    },
+    {
+      "t": "ein",
+      "aid": 244,
+      "name": "TN Vollmilch 3.5% UHT IP",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 1.55,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607127485
+    },
+    {
+      "t": "ein",
+      "aid": 245,
+      "name": "Bananen",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 1.19,
+      "aktion": false,
+      "datum": "2026-08-13",
+      "zeit": 1786607135278
     }
   ],
-  "aktualisiert": "2026-08-13T07:44:11.550Z"
+  "aktualisiert": "2026-08-13T07:50:48.680Z"
 }
