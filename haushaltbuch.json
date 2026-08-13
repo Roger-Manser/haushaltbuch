@@ -426,7 +426,15 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782308273931_off.jpg?t=1786123090173",
       "fotoPath": "1782308273931_off.jpg",
-      "preisHistorie": []
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 6,
+          "kaufdatum": "2026-06-23",
+          "ablaufdatum": ""
+        }
+      ]
     },
     {
       "id": 12,
@@ -18086,5 +18094,5 @@
       "kaufort": "SPAR"
     }
   ],
-  "aktualisiert": "2026-08-13T12:27:03.133Z"
+  "aktualisiert": "2026-08-13T12:38:53.064Z"
 }
