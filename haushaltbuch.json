@@ -9630,24 +9630,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Spar"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 3.95,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Spar"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 3.95,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Spar"
         }
       ],
       "letzteEingangHeute": "09:51",
@@ -9745,33 +9727,6 @@
           "preis": 3.5,
           "menge": 1,
           "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Spar"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 3.5,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Spar"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 3.5,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Spar"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 3.5,
-          "menge": 1,
-          "einheit": "Pkg",
           "typ": "ein",
           "aktion": false,
           "kaufort": "Spar"
@@ -18602,5 +18557,5 @@
       "kaufort": "Spar"
     }
   ],
-  "aktualisiert": "2026-08-13T09:09:48.524Z"
+  "aktualisiert": "2026-08-13T09:14:57.465Z"
 }
