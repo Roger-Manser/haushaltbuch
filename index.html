@@ -536,17 +536,16 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.86';
+const APP_VERSION='19.87';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'19.9',d:'08.2026',items:['Artikel-Formular: Foto-Dialog mit Kamera/Galerie-Auswahl']},
+  {v:'19.87',d:'08.2026',items:['FIX: Parser arbeitet jetzt mit vereinfachtem Format','Erkennt Loose-Ware-Artikel (Chinakohl, Bananen, Tomaten)','Erkennt Portion-Boxen (>5 Stück)','Fallback auf Standard für einfache Artikel']},
   {v:'19.86',d:'08.2026',items:['Parser: Portion-Box (20x CHF 5.75) erkennt jetzt Boxen','Parser: Loose-Ware (kg x CHF/kg) optimiert','Goldfield: erkennt 2 Boxen statt 20 Stück','Console.log für Debugging']},
   {v:'19.85',d:'08.2026',items:['🔄 RESET: GitHub-Version restauriert','Vorschau-Modus funktioniert stabil','v19.80 bis v19.84 waren unstabil, gelöscht','Parser-Optimierung kann jetzt sauber aufgebaut werden']},
   {v:'19.82',d:'08.2026',items:['DEBUG-VERSION: Massive Logging hinzugefügt','Zeige Rohtext, Preise, p-Objekt in Console','Finde heraus warum Preise nicht extrahiert werden']},
   {v:'19.81',d:'08.2026',items:['MAJOR: Kompletter Parser-Rewrite','Bessere Regex für Preise und Mengen','Console-Logs zum Debuggen','Erkennt Loose-Ware, Portion-Box, Standard korrekt']},
   {v:'19.80',d:'08.2026',items:['BUGFIX: Vorschau-Modus wird jetzt tatsächlich aufgerufen!','renderQuittung() checkt opt.quittungPreview','Gesamtpreis und Rabatte zeigen sich jetzt in der Vorschau']},
-  {v:'19.8',d:'08.2026',items:['Artikel-Formular: Foto-Button öffnet Kamera/Galerie-Auswahl statt direkt Kamera']},
   {v:'19.79',d:'08.2026',items:['Vorschau: Detaillierte Position-Informationen anzeigen','Typ-Icons (🥬 🎁 📦)','Brutto- und Netto-Preise','Gesamtpreis-Zusammenfassung oben (mit Rabatt-Übersicht)']},
   {v:'19.78',d:'08.2026',items:['Parser: Rabatt-Erkennung (Stangenrabatt, Aktion)','Parser: Loose-Ware mit CHF/kg','Parser: Portion-Box mit Packungsgröße-Berechnung','Vorschau zeigt jetzt Rabatte und Packungsanzahl']},
   {v:'19.77',d:'08.2026',items:['Feature: 🔍 Vorschau-Modus für Quittungs-Scan','Zeigt alle Positionen VOR dem Buchen','NICHTS wird gespeichert — perfekt zum Testen','3 Parser: Lose-Ware, Verpackt, Portion-Box']},
@@ -557,7 +556,6 @@ const VERSION_HISTORY=[
   {v:'19.72',d:'08.2026',items:['Fix: Quittungs-Matching präziser (verhindert falsche Matches)','Mindestlängen für Fuzzy-Matching erhöht','Levenshtein-Matching statt loose includes()','Hackfleisch wird nicht mehr als Ei gematcht']},
   {v:'19.71',d:'08.2026',items:['Feature: Portionen in Rezept-Detail anpassen vor Export','Klick auf Portionen-Box öffnet Dialog','Mengenschlüssel für fehlende Zutaten werden berechnet','Toast zeigt Portions-Faktor']},
   {v:'19.70',d:'08.2026',items:['ENDLICH RICHTIG: Detail nutzt 100% exakte Übersicht-Matching-Logik','Keine separaten Funktionen mehr - direkt die gleichen 4 Filter','Übersicht 5 = Detail 4 (ohne Zucker) ✓']},
-  {v:'19.7',d:'08.2026',items:['Sync-Konflikt: klarer Dialog nach 3 Versuchen mit Option «Von GitHub laden»']},
   {v:'19.69',d:'08.2026',items:['Revert: checkZutatenVorhanden nutzt exakt Übersicht-Matching-Logik','Levenshtein-Matching (max 2 Fehler) erkennt jetzt Zucker -> Puderzucker','Konsistent mit Übersicht']},
   {v:'19.68',d:'08.2026',items:['Fix: Grundzutaten (Zucker, Salz, Öl...) nicht auf Einkaufsliste','Zwei separate Filter: Anzeige (mit Grundzutaten) vs Einkaufsliste (ohne)','Übersicht und Detail zeigen jetzt gleich viele fehlende Artikel']},
   {v:'19.67',d:'08.2026',items:['FIX: Rezept-Datenstruktur-Mismatch (r.zt vs r.zutaten)','Detail-Ansicht normalisiert Zutaten wie Übersicht','Konsistente Zutat-Anzeige zwischen Übersicht und Detail']},
@@ -568,7 +566,6 @@ const VERSION_HISTORY=[
   {v:'19.62',d:'08.2026',items:['Einkaufslisten-Einbuchen: Preis und Kaufort hinzugefügt','Kaufpreis optional editierbar (vorausgefüllt mit Lagerartikel-Preis)','Kaufort optional (vorausgefüllt mit Lagerartikel-Kaufort)']},
   {v:'19.61',d:'08.2026',items:['Fix: Button bucht jetzt auch Automatisch-Artikel (unter Mindestbestand)','Beide Listen verarbeiten: Automatisch + Manuell','Nacheinander-Dialoge für alle gehakten Artikel']},
   {v:'19.60',d:'08.2026',items:['Fix: Button oben rechts bucht jetzt gehakte Artikel ein','Nacheinander-Dialoge für jeden gehakten Artikel','Überspringen/Einbuchen für jeden Artikel möglich']},
-  {v:'19.6',d:'08.2026',items:['KI-Fotoscan: mehrere Fotos (Vorder-/Rückseite) möglich','Quittungsscan Info-Dialog: direkt Foto/Galerie wählen']},
   {v:'19.59',d:'08.2026',items:['Fix: Einkaufslisten-Artikel werden nach Einbuchung gelöscht','Checkbox wird entfernt statt nur abhaken','Artikel erscheint nicht mehr in der Liste nach Speichern']},
   {v:'19.58',d:'08.2026',items:['Auto-Alias: Quittungs-Name wird als Alias gespeichert','«TN Vollmilch 3.5% UHT IP» → Alias für «Vollmilch»','Besseres Matching beim nächsten Scan']},
   {v:'19.57',d:'08.2026',items:['Quittungs-Scan: «⚙ Erweitert»-Button für neue Artikel','Öffnet vollständigen Artikel-Dialog statt Quick-Eingabe','Vollständige Erfassung: Name, Marke, Kategorie, Einheit, Lagerort']},
@@ -579,7 +576,6 @@ const VERSION_HISTORY=[
   {v:'19.52',d:'08.2026',items:['Fix: Mobile Datum-Anzeige nach Kalender-Auswahl','onblur-Fallback für Date-Input']},
   {v:'19.51',d:'08.2026',items:['Fix: Syntax-Fehler im Datum-Preview entfernt','Vereinfachte Version ohne eingebettetes Script']},
   {v:'19.50',d:'08.2026',items:['Fix: Datum-Preview im Verlauf-Edit-Dialog','Gewähltes Datum wird sofort formatiert angezeigt']},
-  {v:'19.5',d:'08.2026',items:['KI-Fotoscan: Info-Dialog mit Erklärung vor dem Start']},
   {v:'19.49',d:'08.2026',items:['Fix: MHD wird überall nach Eingabe angezeigt','Globale refreshAllDateFields() für alle MHD-Eingabestellen']},
   {v:'19.48',d:'08.2026',items:['Fix: MHD-Datum wird sofort nach Eingabe angezeigt','refreshAllDateFields() aktualisiert das Eingabefeld']},
   {v:'19.47',d:'08.2026',items:['Fix: Rezept-Suche zeigt jetzt das richtige Rezept','Nutzt Original-Index aus S.rz statt gefiltertem Index']},
@@ -590,7 +586,6 @@ const VERSION_HISTORY=[
   {v:'19.42',d:'08.2026',items:['Fix: Verlauf-Edits werden jetzt auch in Statistiken berücksichtigt','Log-Einträge werden mitaktualisiert']},
   {v:'19.41',d:'08.2026',items:['Fix: Verlauf-Edit Input-Felder sichtbar und editierbar','Weiße Felder mit Farben-Border statt dunkelgrau']},
   {v:'19.40',d:'08.2026',items:['Fix: Einkaufsverlauf-Edit Kaufpreis editierbar gemacht']},
-  {v:'19.4',d:'08.2026',items:['Quittungsscan: Info-Dialog mit Erklärung vor dem Start']},
   {v:'19.39',d:'08.2026',items:['Lager-Übersicht: Einkaufsdatum anzeigen','z.B. «Butter · 10.08.2026»']},
   {v:'19.38',d:'08.2026',items:['Lager: Toggle-Filter «Nur Bestand >0» / «Alle anzeigen»','Filter-Button in Sortier-Bar mit Status-Anzeige']},
   {v:'19.37',d:'08.2026',items:['Lager: neue Sortierung nach Einkaufsdatum','Toggle-Button: Klick wiederholt um Richtung umzukehren']},
@@ -601,7 +596,6 @@ const VERSION_HISTORY=[
   {v:'19.32',d:'08.2026',items:['Rezept-Übersicht: Levenshtein + Alias-Matching wie Koch-Dialog','Konsistentes Zutat-Matching überall']},
   {v:'19.31',d:'08.2026',items:['Fix: Zutat-Zuordnung funktioniert jetzt']},
   {v:'19.30',d:'08.2026',items:['🔍 Such-Filter in Zuordnungs-Dialog','Live-Filterung beim Tippen']},
-  {v:'19.3',d:'08.2026',items:['Verlauf-Edit: echter Dialog statt prompt(), Kilopreis-Rechner bei kg/g','Einkauf-Einbuchung: Kilopreis-Block identisch zu Einlagerungs-Dialog']},
   {v:'19.29',d:'08.2026',items:['🔗 Zuordnen-Button im Koch-Dialog','Rezept-Zutat-Zuordnung speichert Alias','Zutat-Matching verbessert mit Alias']},
   {v:'19.28',d:'08.2026',items:['Fix: Kochen-Button nutzt Rezept-Titel statt ID','Auto-Sync entfernt (zu fehlerhaft)']},
   {v:'19.27',d:'08.2026',items:['Auto-Sync läuft jetzt im Hintergrund (blockiert nicht)','showRezeptGekocht: besseres Rezept-Matching und Error-Handling']},
@@ -612,7 +606,6 @@ const VERSION_HISTORY=[
   {v:'19.22',d:'08.2026',items:['Levenshtein-Distance für Schreibvarianten (Mayonnaise/Mayonaise)','Rezept-Zutat-Alias-System (global für alle Rezepte)','Öffnungsdatum-Tracking für offene Artikel','Dialog: neue Tube anreissen nach teilweisem Verbrauch','Detailansicht: «Geöffnet seit»-Info anzeigen']},
   {v:'19.21',d:'08.2026',items:['FIFO-Verbrauch: ältestes Ablaufdatum zuerst','Rezept gekocht: mehrere Artikel gleichen Namens unterstützt']},
   {v:'19.20',d:'08.2026',items:['Rezept gekocht: flexible Mengen-Eingabe pro Zutat','Checkboxes mit deaktivierbarem Input-Feld','Verbrauch-Logging mit benutzerdefinierten Mengen']},
-  {v:'19.2',d:'08.2026',items:['Kilopreis-Artikel: a.preis speichert Kilopreis (nicht Kaufpreis), Detailansicht zeigt Preis/kg']},
   {v:'19.19',d:'08.2026',items:['🍽️ Rezept gekocht Feature','Zutat-Matching mit Lager','Verbrauch-Logging mit "gekocht"-Aktion']},
   {v:'19.18',d:'08.2026',items:['Option 1: letzteEingangHeute Tracking','Quittungs-Scan: Duplikat-Warnung wenn heute bereits gebucht','Button: Duplikat ignorieren/Eingang buchen']},
   {v:'19.17',d:'08.2026',items:['Alias: showDet parseInt-Fix (Detailansicht)','Quittung-Übersicht: findQuittungMatch für korrekte Badge-Anzeige']},
@@ -623,6 +616,14 @@ const VERSION_HISTORY=[
   {v:'19.12',d:'08.2026',items:['Quittungsscan: Artikel-Suche mit Alias-System (Quittungsbezeichnungen werden gespeichert)']},
   {v:'19.11',d:'08.2026',items:['Verlauf Doppeleinträge: alle verbleibenden Stellen behoben (Eingang/Ausgang-Buttons)']},
   {v:'19.10',d:'08.2026',items:['Verlauf: Doppeleinträge behoben (preisHistorie wurde doppelt geschrieben)']},
+  {v:'19.9',d:'08.2026',items:['Artikel-Formular: Foto-Dialog mit Kamera/Galerie-Auswahl']},
+  {v:'19.8',d:'08.2026',items:['Artikel-Formular: Foto-Button öffnet Kamera/Galerie-Auswahl statt direkt Kamera']},
+  {v:'19.7',d:'08.2026',items:['Sync-Konflikt: klarer Dialog nach 3 Versuchen mit Option «Von GitHub laden»']},
+  {v:'19.6',d:'08.2026',items:['KI-Fotoscan: mehrere Fotos (Vorder-/Rückseite) möglich','Quittungsscan Info-Dialog: direkt Foto/Galerie wählen']},
+  {v:'19.5',d:'08.2026',items:['KI-Fotoscan: Info-Dialog mit Erklärung vor dem Start']},
+  {v:'19.4',d:'08.2026',items:['Quittungsscan: Info-Dialog mit Erklärung vor dem Start']},
+  {v:'19.3',d:'08.2026',items:['Verlauf-Edit: echter Dialog statt prompt(), Kilopreis-Rechner bei kg/g','Einkauf-Einbuchung: Kilopreis-Block identisch zu Einlagerungs-Dialog']},
+  {v:'19.2',d:'08.2026',items:['Kilopreis-Artikel: a.preis speichert Kilopreis (nicht Kaufpreis), Detailansicht zeigt Preis/kg']},
   {v:'19.1',d:'07.2026',items:['Eingang-Dialog: Kilopreis-Rechner für kg/g-Artikel (Preis wird automatisch kalkuliert)']},
   {v:'19.0',d:'07.2026',items:['Icons: neue Pfade in SW und Manifest (icon-192x192.png statt icon-192.png)']},
   {v:'18.9',d:'07.2026',items:['Zurück-Button: Exit-Dialog separat behandelt, schliesst sich korrekt vor weiterem Zurück']},
@@ -4263,65 +4264,56 @@ function showReceiptPreview_OLD(positions){
 }
 
 function parseReceiptPosition(p){
-  // Parse Quittungs-Position einfach
+  // Parse die vereinfachte Format: {text, preis}
+  // text = "Artikel\nMenge CHF Preis"
+  
   const text = p.text || '';
-  const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+  const preis = p.preis || 0;
+  const lines = text.split('\n').filter(l => l.trim());
   const name = lines[0] || 'Unknown';
   
-  // Extrahiere den PREIS (letzte Zahl mit CHF/Fr/A)
-  const priceMatch = text.match(/([0-9]+[.,][0-9]{2})\s*(?:CHF|Fr|A)$/mi);
-  const preis = priceMatch ? parseFloat(priceMatch[1].replace(',', '.')) : 0;
+  // Extrahiere Menge aus dem text (z.B. "20× CHF 5.75" oder "0.952× CHF 2.49")
+  const mengeMatch = text.match(/([0-9.]+)×/);
+  const mengeStr = mengeMatch ? mengeMatch[1] : '1';
+  const menge = parseFloat(mengeStr);
   
-  // Erkenne Portion-Box: "20x CHF 5.75"
-  const boxMatch = text.match(/([0-9]+)\s*x\s*([0-9]+[.,][0-9]{2})/i);
+  // Erkenne ob es kg sind
+  const istKg = text.includes('kg') || name.toLowerCase().includes('chinakohl') || 
+                name.toLowerCase().includes('bananen') || name.toLowerCase().includes('tomate');
   
-  if(boxMatch) {
-    const stuecke = parseInt(boxMatch[1]);
-    const preisProItem = parseFloat(boxMatch[2].replace(',', '.'));
-    
-    // Finde Lager-Artikel
+  if(istKg) {
+    console.log('🥬 Loose-Ware: '+name+' '+menge+' kg');
+    return {
+      name: name,
+      type: 'Lose-Ware (kg)',
+      menge: menge,
+      einheit: 'kg',
+      preisProEinheit: preis / menge,
+      preis: preis,
+      rabatt: 0
+    };
+  }
+  
+  // Erkenne Portion-Box: >5 Stück wahrscheinlich eine Box
+  if(menge >= 5) {
     const lagerArtikel = S.a.find(a => 
       a.name.toLowerCase().includes(name.toLowerCase()) ||
       name.toLowerCase().includes(a.name.toLowerCase())
     );
     
     if(lagerArtikel) {
-      const packSize = 10; // Default Packungsgröße
-      const anzahlPackungen = Math.ceil(stuecke / packSize);
-      
-      console.log('📦 Portion-Box: '+name+' → '+anzahlPackungen+' Boxen ('+stuecke+' Stück)');
+      const packSize = 10;
+      const anzahlPackungen = Math.ceil(menge / packSize);
+      console.log('📦 Portion-Box: '+name+' → '+anzahlPackungen+' Boxen');
       
       return {
         name: name,
         type: 'Verpackt (Portion-Box)',
-        menge: stuecke,
+        menge: menge,
         mengeInPackungen: anzahlPackungen,
         packSize: packSize,
         einheit: 'Stk',
-        preisProEinheit: preisProItem,
-        preis: preis,
-        rabatt: 0
-      };
-    }
-  }
-  
-  // Erkenne Loose-Ware: "0.952 kg x 2.49"
-  if(text.includes('kg')) {
-    const kgMatch = text.match(/([0-9]+[.,][0-9]+)\s*kg/i);
-    const pricePerKgMatch = text.match(/([0-9]+[.,][0-9]+)\s*(?:CHF|Fr)\/kg/i);
-    
-    if(kgMatch && pricePerKgMatch) {
-      const kg = parseFloat(kgMatch[1].replace(',', '.'));
-      const pricePerKg = parseFloat(pricePerKgMatch[1].replace(',', '.'));
-      
-      console.log('🥬 Loose-Ware: '+name+' → '+kg+'kg @ CHF '+pricePerKg+'/kg');
-      
-      return {
-        name: name,
-        type: 'Lose-Ware (kg)',
-        menge: kg,
-        einheit: 'kg',
-        preisProEinheit: pricePerKg,
+        preisProEinheit: preis / menge,
         preis: preis,
         rabatt: 0
       };
@@ -4329,7 +4321,7 @@ function parseReceiptPosition(p){
   }
   
   // Fallback: Standard
-  console.log('📍 Standard: '+name+' → CHF '+preis);
+  console.log('📍 Standard: '+name);
   return {
     name: name,
     type: 'Standard',
