@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='20.4';
+const APP_VERSION='20.5';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'20.5',d:'08.2026',items:['FIX: Korrigieren Button funktioniert','Edit-Dialog für Menge, Einheit, Preis, Rabatt','Änderungen werden in Vorschau aktualisiert','Modal für benutzerfreundliche Edits']},
   {v:'20.4',d:'08.2026',items:['FEATURE: Info bei gefundenen Lager-Artikeln','Zeigt Artikel-Name + Foto','Button um anderen Artikel zu wählen','Kann falsch erkannte Artikel korrigieren']},
   {v:'20.3',d:'08.2026',items:['MAJOR: Manuelle Lager-Artikel-Auswahl','? Button wenn Artikel nicht gefunden','Speichert Verbindung via Quittungs-Alias','App lernt die Zuordnung automatically']},
   {v:'20.2',d:'08.2026',items:['FIX: Grosszügiger Lager-Match für Artikel-Zusätze','Goldfield Gold Box matched Goldfield Gold Box Zigaretten','Filtert: Zigaretten, Tabak, Rauchen aus Name','Findet nun auch Artikel mit Suffix-Unterschieden']},
@@ -4540,9 +4541,59 @@ function parseReceiptPosition(p){
 }
 
 function editPreviewPosition(idx){
-  toast('✎ Position-Editing im Vorschau-Modus wird in nächster Version implementiert');
+  // Edit position in preview before booking
+  const p = quittungItems[idx];
+  if(!p) return;
+  
+  const dlg = document.createElement('div');
+  dlg.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:9600;display:flex;align-items:center;justify-content:center;padding:8px';
+  
+  dlg.innerHTML = '<div style="background:var(--sf);border-radius:var(--r);padding:16px;max-width:90vw;max-width:min(90vw,400px)">'+
+    '<h3 style="margin:0 0 12px;color:var(--tx)">Artikel bearbeiten</h3>'+
+    '<div style="margin-bottom:12px">'+
+      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Menge:</label>'+
+      '<input type="number" id="edit-menge" value="'+p.menge+'" step="0.001" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
+    '</div>'+
+    '<div style="margin-bottom:12px">'+
+      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Einheit:</label>'+
+      '<input type="text" id="edit-einheit" value="'+(p.einheit||'Stk')+'" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
+    '</div>'+
+    '<div style="margin-bottom:12px">'+
+      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Preis Brutto (CHF):</label>'+
+      '<input type="number" id="edit-preis" value="'+(p.preis_brutto||p.preis||0).toFixed(2)+'" step="0.01" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
+    '</div>'+
+    '<div style="margin-bottom:12px">'+
+      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Rabatt (CHF):</label>'+
+      '<input type="number" id="edit-rabatt" value="'+(p.rabatt||0).toFixed(2)+'" step="0.01" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
+    '</div>'+
+    '<div style="display:flex;gap:8px">'+
+      '<button onclick="saveEditPosition('+idx+');dlg.remove()" style="flex:1;padding:10px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-weight:600">✓ Speichern</button>'+
+      '<button onclick="dlg.remove()" style="flex:1;padding:10px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);cursor:pointer">Abbrechen</button>'+
+    '</div>'+
+  '</div>';
+  
+  document.body.appendChild(dlg);
 }
 
+function saveEditPosition(idx){
+  const p = quittungItems[idx];
+  if(!p) return;
+  
+  p.menge = parseFloat(document.getElementById('edit-menge').value) || 1;
+  p.einheit = document.getElementById('edit-einheit').value || 'Stk';
+  p.preis_brutto = parseFloat(document.getElementById('edit-preis').value) || 0;
+  p.rabatt = parseFloat(document.getElementById('edit-rabatt').value) || 0;
+  p.preis_netto = p.preis_brutto - p.rabatt;
+  
+  console.log('✓ Position '+idx+' geändert:', p);
+  
+  // Refresh Preview
+  const receipt = document.getElementById('receipt-preview-dlg');
+  if(receipt) receipt.remove();
+  
+  const parsed_positions = quittungItems.map(it=>({name:it.name||'Unknown',text:it.name+'\n'+it.menge+' '+it.einheit+' CHF '+(it.preis_brutto||it.preis_netto||it.preis||0).toFixed(2),preis_brutto:it.preis_brutto||it.preis_netto||it.preis||0,preis_netto:it.preis_netto||it.preis||0,preis:it.preis_netto||it.preis||0,rabatt:it.rabatt||0,einheit:it.einheit||'Stk',menge:it.menge||1,kat:it.kat||'Diverses'}));
+  showReceiptPreview(parsed_positions);
+}
 function confirmPreviewBooking(){
   toast('ℹ️ Vorschau-Modus beendet. Starte normalen Scan für echter Buchung.');
   const dlg=document.getElementById('receipt-preview-dlg');
