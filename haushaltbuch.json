@@ -438,18 +438,18 @@
     },
     {
       "id": 12,
-      "name": "Cola Zero",
+      "name": "Coca-Cola Zero",
       "marke": "",
       "kat": "Getränke",
       "lager": "Schlof",
-      "menge": 5,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "5449000131812",
       "preis": 8.65,
       "packMenge": 6,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-08-13",
+      "kaufdatum": "2026-06-23",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782210102278_17822100962698500523542825312716.jpg?t=1786123090173",
@@ -457,14 +457,8 @@
       "packungen": [
         {
           "id": 3,
-          "menge": 4,
+          "menge": 2,
           "kaufdatum": "2026-06-23",
-          "ablaufdatum": ""
-        },
-        {
-          "id": 4,
-          "menge": 1,
-          "kaufdatum": "2026-08-13",
           "ablaufdatum": ""
         }
       ],
@@ -479,7 +473,8 @@
           "aktion": false,
           "kaufort": "Lidl"
         }
-      ]
+      ],
+      "barcodes": []
     },
     {
       "id": 13,
@@ -17371,17 +17366,6 @@
       "kaufort": "Lidl"
     },
     {
-      "aid": 12,
-      "d": "2026-08-13",
-      "m": 1,
-      "p": 8.65,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Getränke",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
       "aid": 61,
       "d": "2026-08-13",
       "m": 2,
@@ -18105,5 +18089,5 @@
       "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-15T08:15:08.534Z"
+  "aktualisiert": "2026-08-15T08:23:52.832Z"
 }
