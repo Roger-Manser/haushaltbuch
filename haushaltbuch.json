@@ -8900,12 +8900,12 @@
       "barcode": "",
       "preis": 2.49,
       "packMenge": 0,
-      "packEinheit": "",
+      "packEinheit": "dl",
       "kaufdatum": "2026-08-13",
       "ablaufdatum": "",
       "notiz": "",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786778806950_1000064052.webp?t=1786778811593",
+      "fotoPath": "1786778806950_1000064052.webp",
       "packungen": [
         {
           "id": 9,
@@ -8923,9 +8923,19 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-13",
+          "preis": 2.49,
+          "menge": 1,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
-      "letzteEingangHeute": "09:43"
+      "letzteEingangHeute": "09:43",
+      "barcodes": []
     },
     {
       "id": 243,
@@ -9194,15 +9204,6 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786778469684_1000064051.jpg?t=1786778479877",
       "fotoPath": "1786778469684_1000064051.jpg",
       "preisHistorie": [
-        {
-          "datum": "2026-08-13",
-          "preis": 5.35,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
         {
           "datum": "2026-08-13",
           "preis": 5.35,
@@ -18091,17 +18092,6 @@
       "kaufort": ""
     },
     {
-      "aid": 249,
-      "d": "2026-08-13",
-      "m": 1,
-      "p": 5.35,
-      "t": "ein",
-      "e": "Pkg",
-      "k": "Fleisch & Fisch",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
       "aid": 247,
       "d": "2026-08-13",
       "m": 1,
@@ -18111,7 +18101,18 @@
       "k": "Gewürze & Saucen",
       "aktion": false,
       "kaufort": "SPAR"
+    },
+    {
+      "aid": 249,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 5.35,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-15T07:25:49.449Z"
+  "aktualisiert": "2026-08-15T07:26:56.729Z"
 }
