@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v19.87-FINAL cache-bust -->
+<!-- HAUSHALTBUCH v19.94-FINAL cache-bust-9999 -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
 <!-- CACHE BUST v99 -->
-<link rel="manifest" href="manifest.json?v=999"/>
+<link rel="manifest" href="manifest.json?v=9999"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
 <title>Haushaltbuch</title>
@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.94';
+const APP_VERSION='19.95';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.95',d:'08.2026',items:['UI: Dialog max-width 420px Wrapper','UI: Abbrechen-Button Akzent-Farbe + weiß + fett + ESC','FIX: Loading-Spinner wird gelöscht vor Vorschau','Dialog mobile-optimiert']},
   {v:'19.94',d:'08.2026',items:['UI: Vorschau-Dialog schmaler (max 420px)','UI: Abbrechen-Button bessere Farbe (Akzent, weiß, fett)','FIX: Loading-Spinner verschwindet nach Vorschau','Dialog-Anzeige optimiert für Handy']},
   {v:'19.93',d:'08.2026',items:['FIX: parsed_positions zeigt preis_brutto statt netto','Vorschau zeigt jetzt korrekten Brutto-Preis','Goldfield: CHF 115 brutto korrekt angezeigt','Rabatt wird von Brutto abgezogen = Netto']},
   {v:'19.92',d:'08.2026',items:['DEBUG: Verbessertes Logging im Validierungs-Pass','Zeigt alle KI-Rückgaben für jeden Artikel','Bessere Fehler-Erkennung bei Einzelpreis-Verwechslung','Console-Logs für Fehlersuche']},
@@ -745,6 +746,12 @@ function showVersionHistory(){
         ).join('')+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.remove();});
 }
@@ -1935,6 +1942,12 @@ function editPreisHistorie(artikelId,idx){
         '<button onclick="doEditPreisHistorie('+artikelId+','+idx+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Speichern</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   setTimeout(()=>suppressAutofill(dlg),0);
 }
@@ -2084,6 +2097,12 @@ function bestandManuellDialog(id){
         '<button onclick="document.getElementById(\'bestand-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Abbrechen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   setTimeout(()=>{const inp=document.getElementById('bestand-neu');if(inp){inp.focus();inp.select();}},100);
 }
@@ -2174,6 +2193,12 @@ function chgBEingangGrund(a){
         '<button onclick="document.getElementById(\'pack-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Abbrechen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -2206,6 +2231,12 @@ function chgBAusgangGrund(a,aktive){
         '<button onclick="document.getElementById(\'pack-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Abbrechen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -2273,6 +2304,12 @@ function showEingangMhdDialog(a){
         '<button onclick="doEingangSchnell('+a.id+');refreshAllDateFields()" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Einlagern</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   setTimeout(()=>suppressAutofill(dlg),0);
 }
@@ -2370,6 +2407,12 @@ function showPackDialog(a,typ){
       (typ==='ein'?'<div onclick="doPackNew('+a.id+')" style="display:flex;align-items:center;justify-content:space-between;padding:14px 10px;cursor:pointer;color:var(--ac)"><span style="font-size:14px;font-weight:500">+ Neue Packung anlegen</span></div>':'')+
       '<button onclick="document.getElementById(\'pack-dlg\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -2440,6 +2483,12 @@ function openSplitDialog(id){
         '<button onclick="splitManuell('+id+')" style="flex:2;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✂ Abtrennen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   suppressAutofill(dlg);
 }
@@ -2538,6 +2587,12 @@ function openMergeDialog(id){
       '<div id="merge-list" style="overflow-y:auto;flex:1"></div>'+
       '<button onclick="document.getElementById(\'merge-dlg\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2);flex-shrink:0">Abbrechen</button>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   filterMergeList(id);
 }
@@ -2825,6 +2880,12 @@ function showFotoWahl(){
         '<button onclick="document.getElementById(\'foto-wahl-dlg\').remove()" style="width:100%;padding:11px;background:none;border:none;font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -3531,6 +3592,12 @@ function showAusgangConfirmDialog(a,packId,list){
         '<button onclick="document.getElementById(\'ausgang-confirm-dlg\').remove();ausgangPackAbbuchen(S.a.find(x=>x.id==='+a.id+'),'+packId+',1,document.getElementById(\'ausgang-list\'))" style="flex:2;padding:12px;background:var(--dg);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">−1 entnehmen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -3577,6 +3644,12 @@ function showAusgangPackDialog(a,list){
     }).join('')+
     '<button onclick="document.getElementById(\'pack-dialog\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -3699,6 +3772,12 @@ function showEtikettPackDialog(a){
     }).join('')+
     '<button onclick="document.getElementById(\'etikett-pack-dlg\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -4246,11 +4325,17 @@ function showReceiptPreview(positions){
   
   const footer=
     '<div style="padding:12px 16px;display:flex;gap:8px;border-top:1px solid var(--bd)">'+
-      '<button onclick="document.getElementById(\'receipt-preview-dlg\').remove()" style="flex:1;padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer">✗ Abbrechen</button>'+
+      '<button onclick="document.getElementById(\'receipt-preview-dlg\').remove()" style="flex:1;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer">✗ Abbrechen (ESC)</button>'+
       '<button onclick="confirmPreviewBooking()" style="flex:1;padding:12px;background:var(--ol);border:none;border-radius:var(--rs);color:var(--ok);font-weight:600;font-size:14px;cursor:pointer">⚠️ Verstanden, normal buchen</button>'+
     '</div>';
   
   dlg.innerHTML=header+'<div style="flex:1;overflow-y:auto;padding:12px 16px">'+summaryHtml+positionsHtml+'</div>'+footer;
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -4298,11 +4383,17 @@ function showReceiptPreview_OLD(positions){
   
   const footer=
     '<div style="padding:12px 16px;display:flex;gap:8px;border-top:1px solid var(--bd)">'+
-      '<button onclick="document.getElementById(\'receipt-preview-dlg\').remove()" style="flex:1;padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer">✗ Abbrechen</button>'+
+      '<button onclick="document.getElementById(\'receipt-preview-dlg\').remove()" style="flex:1;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer">✗ Abbrechen (ESC)</button>'+
       '<button onclick="confirmPreviewBooking()" style="flex:1;padding:12px;background:var(--ol);border:none;border-radius:var(--rs);color:var(--ok);font-weight:600;font-size:14px;cursor:pointer">⚠️ Verstanden, normal buchen</button>'+
     '</div>';
   
   dlg.innerHTML=header+'<div style="flex:1;overflow-y:auto;padding:12px 16px">'+summaryHtml+positionsHtml+'</div>'+footer;
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -4664,6 +4755,12 @@ function showZutatZuordnung(zutat,context){
   
   dlg.innerHTML=h;
   dlg.dataset.zutat=zutat;
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // Initial rendern
@@ -4794,6 +4891,12 @@ function showRezeptGekocht(rezeptId){
   '</div>';
   
   dlg.innerHTML=h;
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -5372,6 +5475,12 @@ function showLadenKaufDialog(id){
         '<button onclick="confirmLadenKauf('+a.id+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Gekauft</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -5490,6 +5599,12 @@ function showEkEinbuchungBekannt(ekEntry,artikel){
         '<button onclick="doEkEinbuchungBekannt('+ekEntry.id+','+artikel.id+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Einbuchen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   setTimeout(()=>suppressAutofill(dlg),0);
 }
@@ -5556,6 +5671,12 @@ function showEkEinbuchungNeu(ekEntry){
         '<button onclick="document.getElementById(\'ek-einbuch-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Abbrechen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -5638,6 +5759,12 @@ function showEkArtikelInfo(artikelId){
         '<button onclick="document.getElementById(\'ek-info-dlg\').remove()" style="width:100%;margin-top:14px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Schliessen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   dlg.addEventListener('click',ev=>{if(ev.target===dlg)dlg.remove();});
 }
@@ -5718,6 +5845,12 @@ function showPortionDialog(originalPort){
         '<button onclick="applyPortionFactor('+originalPort+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Übernehmen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -5811,6 +5944,12 @@ function processCheckedItemsShowDialogAuto(artikel,idx,allChecked){
         '<button onclick="processCheckedItemsSaveAuto('+artikel.id+','+idx+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Einbuchen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // Speichere allChecked global für Callback
@@ -5877,6 +6016,12 @@ function processCheckedItemsShowDialog(ekEntry,artikel,idx,allChecked){
         '<button onclick="processCheckedItemsSave('+ekEntry.id+','+artikel.id+','+idx+',allChecked)" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Einbuchen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -6119,6 +6264,12 @@ function askInvMengeMhd(barcode,editIndex){
         '<button onclick="saveInvBufferEntry(\''+esc(barcode)+'\','+(editIndex!==undefined?editIndex:-1)+')" style="flex:2;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">'+(editIndex!==undefined?'Speichern':'✓ Weiter')+'</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   // Autofill unterdrücken VOR focus() — verhindert Passwort-Bestätigen-Dialog
   suppressAutofill(dlg);
@@ -6222,6 +6373,12 @@ function showInvMissingDataDialog(idx){
         '<button onclick="document.getElementById(\'inv-missing-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Später ergänzen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -6317,6 +6474,12 @@ function lagerKiScan(){
         '<button onclick="document.getElementById(\'kiscan-info-dlg\').remove()" style="width:100%;padding:11px;background:none;border:none;font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -6733,6 +6896,12 @@ function renderMindestManager(){
         ).join(''))+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -6783,6 +6952,12 @@ function openAliasManager(){
       '<div id="alias-artikel-list" style="display:flex;flex-direction:column;gap:8px;max-height:240px;overflow-y:auto"></div>'+
     '</div>';
   
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   filterAliasArtikel();
 }
@@ -6824,6 +6999,12 @@ function editDetailAliase(artikelId){
       '</div>'+
     '</div>';
   
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   document.getElementById('alias-input-detail').focus();
 }
@@ -7116,6 +7297,12 @@ function openQuittung(){
         '<button onclick="document.getElementById(\'quittung-info-dlg\').remove()" style="width:100%;padding:11px;background:none;border:none;font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -7305,6 +7492,8 @@ function renderQuittungUebersicht(datum){
   }
   // VORSCHAU-MODUS CHECK
   if(opt.quittungPreview){
+    const body=document.getElementById('quittung-body');
+    if(body)body.innerHTML=''; // Lösche Spinner
     const parsed_positions=quittungItems.map(it=>({text:it.name+'\n'+it.menge+' '+it.einheit+' CHF '+(it.preis_brutto||it.preis_netto||it.preis||0).toFixed(2),preis_brutto:it.preis_brutto||it.preis_netto||it.preis||0,preis_netto:it.preis_netto||it.preis||0,preis:it.preis_netto||it.preis||0,rabatt:it.rabatt||0,einheit:it.einheit||'Stk',menge:it.menge||1}));
     showReceiptPreview(parsed_positions);
     return;
@@ -7518,6 +7707,12 @@ function openFullArtikelDialog(name,marke,preis,kat){
       '</div>'+
     '</div>';
   dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.remove();});
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // Setze Lagerort ID
@@ -7811,7 +8006,13 @@ function confirmDialog(msg,jaTxt,neinTxt){
         '</div>'+
       '</div>';
     window._confirmRes=res;
-    document.body.appendChild(dlg);
+    // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
+  document.body.appendChild(dlg);
   });
 }
 
