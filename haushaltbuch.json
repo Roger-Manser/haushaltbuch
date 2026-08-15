@@ -9191,9 +9191,18 @@
       "kaufdatum": "2026-08-13",
       "ablaufdatum": "2026-08-18",
       "notiz": "",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786778469684_1000064051.jpg?t=1786778479877",
+      "fotoPath": "1786778469684_1000064051.jpg",
       "preisHistorie": [
+        {
+          "datum": "2026-08-13",
+          "preis": 5.35,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
         {
           "datum": "2026-08-13",
           "preis": 5.35,
@@ -9216,7 +9225,7 @@
     },
     {
       "id": 250,
-      "name": "Zigaretten Rot",
+      "name": "Marlboro Rot Zigaretten",
       "marke": "Marlboro",
       "kat": "Genussmittel",
       "lager": "Küche",
@@ -9234,7 +9243,17 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786621797188_1000063968.jpg?t=1786621878410",
       "fotoPath": "1786621797188_1000063968.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-08-13",
+          "preis": 10,
+          "menge": 0,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
+        }
+      ],
       "packungen": [
         {
           "id": 4,
@@ -18094,5 +18113,5 @@
       "kaufort": "SPAR"
     }
   ],
-  "aktualisiert": "2026-08-15T07:18:35.115Z"
+  "aktualisiert": "2026-08-15T07:21:49.641Z"
 }
