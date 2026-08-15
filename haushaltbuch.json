@@ -8923,15 +8923,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-13",
-          "preis": 2.49,
-          "menge": 1,
-          "einheit": "kg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "09:43",
@@ -17974,17 +17965,6 @@
       "kaufort": "Lidl"
     },
     {
-      "aid": 242,
-      "d": "2026-08-13",
-      "m": 1,
-      "p": 2.49,
-      "t": "ein",
-      "e": "kg",
-      "k": "Gemüse & Früchte",
-      "aktion": false,
-      "kaufort": "Lidl"
-    },
-    {
       "aid": 243,
       "d": "2026-08-13",
       "m": 1,
@@ -18114,5 +18094,5 @@
       "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-15T07:26:56.729Z"
+  "aktualisiert": "2026-08-15T07:27:06.808Z"
 }
