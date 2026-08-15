@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.89';
+const APP_VERSION='19.90';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.90',d:'08.2026',items:['FIX: Vorschau-Dialog Escape-Handler hinzugefügt','ESC-Taste schließt Vorschau sofort','Abbrechen-Button funktioniert zuverlässig','Keine Trap im Vorschau-Modus mehr']},
   {v:'19.89',d:'08.2026',items:['FIX: KI-Fehlerkorrektur für falsche Brutto-Preise','Parser erkennt wenn KI Netto als Brutto zurückgibt','Berechnet richtig: Brutto = Netto + Rabatt','Goldfield: 20×CHF5.75=CHF115 brutto korrekt']},
   {v:'19.88',d:'08.2026',items:['MAJOR: KI-Prompt für Rabatt-Handling','Preis_brutto, rabatt, preis_netto statt einzelner Preis','Goldfield mit CHF 115 Brutto - CHF 9 Rabatt = CHF 106 Netto','Loose-Ware mit richtigem Gesamtpreis']},
   {v:'19.87',d:'08.2026',items:['FIX: Parser arbeitet jetzt mit vereinfachtem Format','Erkennt Loose-Ware-Artikel (Chinakohl, Bananen, Tomaten)','Erkennt Portion-Boxen (>5 Stück)','Fallback auf Standard für einfache Artikel']},
@@ -2170,6 +2171,10 @@ function chgBEingangGrund(a){
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function chgBEingangKorrektur(id){
@@ -2198,6 +2203,10 @@ function chgBAusgangGrund(a,aktive){
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function chgBAusgangAusfuehren(id,typ){
@@ -2358,6 +2367,10 @@ function showPackDialog(a,typ){
       '<button onclick="document.getElementById(\'pack-dlg\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function doPackChange(artikelId,packId,typ){
@@ -2809,6 +2822,10 @@ function showFotoWahl(){
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function onPh(ev){
@@ -3511,6 +3528,10 @@ function showAusgangConfirmDialog(a,packId,list){
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function showAusgangPackDialog(a,list){
@@ -3553,6 +3574,10 @@ function showAusgangPackDialog(a,list){
     '<button onclick="document.getElementById(\'pack-dialog\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function ausgangPackAbbuchen(a,packId,menge,list){
@@ -3671,6 +3696,10 @@ function showEtikettPackDialog(a){
     '<button onclick="document.getElementById(\'etikett-pack-dlg\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function chooseEtikettPack(ablaufdatum,kaufdatum){
@@ -4219,6 +4248,10 @@ function showReceiptPreview(positions){
   
   dlg.innerHTML=header+'<div style="flex:1;overflow-y:auto;padding:12px 16px">'+summaryHtml+positionsHtml+'</div>'+footer;
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function showReceiptPreview_OLD(positions){
@@ -4267,6 +4300,10 @@ function showReceiptPreview_OLD(positions){
   
   dlg.innerHTML=header+'<div style="flex:1;overflow-y:auto;padding:12px 16px">'+summaryHtml+positionsHtml+'</div>'+footer;
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function parseReceiptPosition(p){
@@ -4754,6 +4791,10 @@ function showRezeptGekocht(rezeptId){
   
   dlg.innerHTML=h;
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function verbrauchZutaten(rezeptName){
@@ -5328,6 +5369,10 @@ function showLadenKaufDialog(id){
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function confirmLadenKauf(id){
@@ -5508,6 +5553,10 @@ function showEkEinbuchungNeu(ekEntry){
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function doEkNeuMitScan(ekId){
@@ -5666,6 +5715,10 @@ function showPortionDialog(originalPort){
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function updatePortText(){
@@ -5821,6 +5874,10 @@ function processCheckedItemsShowDialog(ekEntry,artikel,idx,allChecked){
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function processCheckedItemsSave(ekId,artikelId,idx,allChecked){
@@ -6162,6 +6219,10 @@ function showInvMissingDataDialog(idx){
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 // KI-Fotoanalyse direkt im Artikel-Formular — verwendet das bereits hochgeladene Foto
@@ -6253,6 +6314,10 @@ function lagerKiScan(){
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function kiScanAddFoto(input){
@@ -6665,6 +6730,10 @@ function renderMindestManager(){
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 function mindestSetzen(id,val){
   const a=S.a.find(x=>x.id===id);
@@ -7044,6 +7113,10 @@ function openQuittung(){
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function _openQuittungDo(preselectedInput){
