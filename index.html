@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.96';
+const APP_VERSION='19.97';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.97',d:'08.2026',items:['FIX: Lager-Match mit Debug-Logging','Bessere Name-Normalisierung für Artikel-Suche','FIX: Body wird bei Preview komplett hidden','Dialog border-radius angepasst']},
   {v:'19.96',d:'08.2026',items:['UI: Vorschau-Dialog vertikal zentriert','UI: Lager-Status-Badge für jeden Artikel','✓ Grün: Artikel im Lager gefunden','⚠️ Rot: Artikel NICHT im Lager']},
   {v:'19.95',d:'08.2026',items:['UI: Dialog max-width 420px Wrapper','UI: Abbrechen-Button Akzent-Farbe + weiß + fett + ESC','FIX: Loading-Spinner wird gelöscht vor Vorschau','Dialog mobile-optimiert']},
   {v:'19.94',d:'08.2026',items:['UI: Vorschau-Dialog schmaler (max 420px)','UI: Abbrechen-Button bessere Farbe (Akzent, weiß, fett)','FIX: Loading-Spinner verschwindet nach Vorschau','Dialog-Anzeige optimiert für Handy']},
@@ -749,7 +750,7 @@ function showVersionHistory(){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -1945,7 +1946,7 @@ function editPreisHistorie(artikelId,idx){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -2100,7 +2101,7 @@ function bestandManuellDialog(id){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -2196,7 +2197,7 @@ function chgBEingangGrund(a){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -2234,7 +2235,7 @@ function chgBAusgangGrund(a,aktive){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -2307,7 +2308,7 @@ function showEingangMhdDialog(a){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -2410,7 +2411,7 @@ function showPackDialog(a,typ){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -2486,7 +2487,7 @@ function openSplitDialog(id){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -2590,7 +2591,7 @@ function openMergeDialog(id){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -2883,7 +2884,7 @@ function showFotoWahl(){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -3595,7 +3596,7 @@ function showAusgangConfirmDialog(a,packId,list){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -3647,7 +3648,7 @@ function showAusgangPackDialog(a,list){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -3775,7 +3776,7 @@ function showEtikettPackDialog(a){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -4339,7 +4340,7 @@ function showReceiptPreview(positions){
   dlg.innerHTML=header+'<div style="flex:1;overflow-y:auto;padding:12px 16px">'+summaryHtml+positionsHtml+'</div>'+footer;
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -4397,7 +4398,7 @@ function showReceiptPreview_OLD(positions){
   dlg.innerHTML=header+'<div style="flex:1;overflow-y:auto;padding:12px 16px">'+summaryHtml+positionsHtml+'</div>'+footer;
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -4472,10 +4473,25 @@ function parseReceiptPosition(p){
   console.log('📍 Standard: '+name);
   
   // Check ob Artikel im Lager existiert
-  const lagerMatch = S.a.find(a => 
-    a.name.toLowerCase() === name.toLowerCase() ||
-    a.name.toLowerCase().includes(name.toLowerCase().split(' ')[0])
-  );
+  // S.a = Lager-Artikel Array, suche nach Namen-Match
+  let lagerMatch = null;
+  if(S && S.a && S.a.length > 0) {
+    // Normalisiere Namen für Vergleich
+    const searchName = name.toLowerCase().trim();
+    
+    // Exakter Match
+    lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().trim() === searchName);
+    
+    // Teilstring-Match (erstes Wort)
+    if(!lagerMatch) {
+      const firstWord = searchName.split(/\s+/)[0];
+      lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().includes(firstWord));
+    }
+    
+    console.log('🔍 Lager-Match für "'+name+'": ' + (lagerMatch ? '✓ GEFUNDEN ('+lagerMatch.name+')' : '❌ nicht gefunden'));
+  } else {
+    console.log('⚠️ Lager nicht verfügbar (S.a leer oder undefined)');
+  }
   
   return {
     name: name,
@@ -4773,7 +4789,7 @@ function showZutatZuordnung(zutat,context){
   dlg.dataset.zutat=zutat;
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -4909,7 +4925,7 @@ function showRezeptGekocht(rezeptId){
   dlg.innerHTML=h;
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -5493,7 +5509,7 @@ function showLadenKaufDialog(id){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -5617,7 +5633,7 @@ function showEkEinbuchungBekannt(ekEntry,artikel){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -5689,7 +5705,7 @@ function showEkEinbuchungNeu(ekEntry){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -5777,7 +5793,7 @@ function showEkArtikelInfo(artikelId){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -5863,7 +5879,7 @@ function showPortionDialog(originalPort){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -5962,7 +5978,7 @@ function processCheckedItemsShowDialogAuto(artikel,idx,allChecked){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -6034,7 +6050,7 @@ function processCheckedItemsShowDialog(ekEntry,artikel,idx,allChecked){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -6282,7 +6298,7 @@ function askInvMengeMhd(barcode,editIndex){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -6391,7 +6407,7 @@ function showInvMissingDataDialog(idx){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -6492,7 +6508,7 @@ function lagerKiScan(){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -6914,7 +6930,7 @@ function renderMindestManager(){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -6970,7 +6986,7 @@ function openAliasManager(){
   
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -7017,7 +7033,7 @@ function editDetailAliase(artikelId){
   
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -7315,7 +7331,7 @@ function openQuittung(){
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -7357,6 +7373,8 @@ async function handleQuittungFile(input){
   const file=input.files[0];if(!file)return;
   const body=document.getElementById('quittung-body');
   body.innerHTML='<div style="text-align:center;padding:24px;color:var(--t2)"><div class="spn" style="margin:0 auto 12px"></div>Claude analysiert die Quittung…</div>';
+  
+  // WICHTIG: Wenn Vorschau aktiv ist, wird der body gleich geleert
 
   // Bild als Base64 lesen
   const b64=await new Promise((res,rej)=>{
@@ -7509,7 +7527,7 @@ function renderQuittungUebersicht(datum){
   // VORSCHAU-MODUS CHECK
   if(opt.quittungPreview){
     const body=document.getElementById('quittung-body');
-    if(body)body.innerHTML=''; // Lösche Spinner
+    if(body){body.innerHTML='';body.style.display='none';} // VERSTECKE body komplett // Lösche Spinner
     const parsed_positions=quittungItems.map(it=>({text:it.name+'\n'+it.menge+' '+it.einheit+' CHF '+(it.preis_brutto||it.preis_netto||it.preis||0).toFixed(2),preis_brutto:it.preis_brutto||it.preis_netto||it.preis||0,preis_netto:it.preis_netto||it.preis||0,preis:it.preis_netto||it.preis||0,rabatt:it.rabatt||0,einheit:it.einheit||'Stk',menge:it.menge||1}));
     showReceiptPreview(parsed_positions);
     return;
@@ -7725,7 +7743,7 @@ function openFullArtikelDialog(name,marke,preis,kat){
   dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.remove();});
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
@@ -8024,7 +8042,7 @@ function confirmDialog(msg,jaTxt,neinTxt){
     window._confirmRes=res;
     // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r) var(--r) 0 0;background:var(--sf)';
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf)';
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
