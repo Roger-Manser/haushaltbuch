@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.1';
+const APP_VERSION='21.2';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.2',d:'08.2026',items:['DEBUG: Ausführliches Lager-Match-Logging','Zeigt gesuchte Namen in Console','Zeigt alle verfügbaren Artikel','Hilft um Matching-Probleme zu debuggen']},
   {v:'21.1',d:'08.2026',items:['FEATURE: Toast-Bestätigung beim Speichern','Zeigt "✓ Alias gespeichert!"','Grün oben rechts für 3 Sekunden','Visuelles Feedback für erfolgreiche Zuweisung']},
   {v:'21.0',d:'08.2026',items:['MAJOR: Artikel-Wahl Modal komplett neu','Suchfeld zum Filtern der Lagerliste','Alle Lager-Artikel zeigen','Klick um zuzuweisen + Alias speichern']},
   {v:'20.10',d:'08.2026',items:['FIX: TypeError a.id.replace','a.id zu String konvertiert','Lager-Artikel-Wahl Modal öffnet jetzt','FINAL RELEASE!']},
@@ -4493,8 +4494,12 @@ function parseReceiptPosition(p){
     // Normalisiere Namen für Vergleich
     const searchName = name.toLowerCase().trim();
     
+    console.log('🔍 Suche nach:', searchName);
+    console.log('📦 Verfügbare Artikel:', S.a.map(a => a.name.toLowerCase().trim()));
+    
     // 1. Exakter Match auf Namen
     lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().trim() === searchName);
+    if(lagerMatch) console.log('✓ Exakter Match gefunden!');
     
     // 2. Match auf Quittungs-Aliase
     if(!lagerMatch) {
