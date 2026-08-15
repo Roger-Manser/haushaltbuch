@@ -536,10 +536,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.75';
+const APP_VERSION='19.76';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.76',d:'08.2026',items:['Fix: Foto-Dialog bleibt offen bis Abbrechen','Dialog wird jetzt nach Datei-Auswahl geschlossen','Kamera/Galerie-Wahl funktioniert nahtlos']},
   {v:'19.75',d:'08.2026',items:['Feature: Quittungs-Aliase in Artikel-Detail editierbar','✎ Bearbeiten Button direkt in der Detail-Ansicht','Ein Alias pro Zeile eingeben']},
   {v:'19.74',d:'08.2026',items:['Feature: Quittungs-Alias-Manager in Einstellungen','Artikel auswählen und Aliase manuell erstellen/bearbeiten','Ein Alias pro Zeile für besseres Quittungs-Matching']},
   {v:'19.73',d:'08.2026',items:['Feature: Einkaufspreis in Artikel-Übersicht anzeigen','Meta-Zeile: Lager · Marke · Packung · Preis · Kaufdatum','Schneller Überblick über Kosten']},
@@ -2784,11 +2785,11 @@ function showFotoWahl(){
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px;text-align:center">Foto hinzufügen</div>'+
       '<div style="display:flex;flex-direction:column;gap:8px">'+
-        '<button onclick="document.getElementById(\'foto-wahl-dlg\').remove();document.getElementById(\'fph-cam\').click()" style="width:100%;padding:13px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
+        '<button onclick="document.getElementById(\'fph-cam\').click()" style="width:100%;padding:13px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>'+
           'Kamera'+
         '</button>'+
-        '<button onclick="document.getElementById(\'foto-wahl-dlg\').remove();document.getElementById(\'fph\').click()" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
+        '<button onclick="document.getElementById(\'fph\').click()" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'+
           'Aus Galerie'+
         '</button>'+
@@ -2799,6 +2800,10 @@ function showFotoWahl(){
 }
 
 function onPh(ev){
+  // Dialog hier schließen (NACH Datei-Auswahl, nicht davor)
+  const dlg=document.getElementById('foto-wahl-dlg');
+  if(dlg)dlg.remove();
+  
   const file=ev.target.files[0];if(!file)return;
   ffn=Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
   const rd=new FileReader();
