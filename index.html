@@ -536,10 +536,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.78';
+const APP_VERSION='19.79';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.79',d:'08.2026',items:['Vorschau: Detaillierte Position-Informationen anzeigen','Typ-Icons (🥬 🎁 📦)','Brutto- und Netto-Preise','Gesamtpreis-Zusammenfassung oben (mit Rabatt-Übersicht)']},
   {v:'19.78',d:'08.2026',items:['Parser: Rabatt-Erkennung (Stangenrabatt, Aktion)','Parser: Loose-Ware mit CHF/kg','Parser: Portion-Box mit Packungsgröße-Berechnung','Vorschau zeigt jetzt Rabatte und Packungsanzahl']},
   {v:'19.77',d:'08.2026',items:['Feature: 🔍 Vorschau-Modus für Quittungs-Scan','Zeigt alle Positionen VOR dem Buchen','NICHTS wird gespeichert — perfekt zum Testen','3 Parser: Lose-Ware, Verpackt, Portion-Box']},
   {v:'19.76',d:'08.2026',items:['Fix: Foto-Dialog bleibt offen bis Abbrechen','Dialog wird jetzt nach Datei-Auswahl geschlossen','Kamera/Galerie-Wahl funktioniert nahtlos']},
@@ -4148,30 +4149,55 @@ function showReceiptPreview(positions){
       '<span style="font-size:14px;color:var(--wn);font-weight:700">🔍 VORSCHAU-MODUS — NICHTS WIRD GESPEICHERT</span>'+
     '</div>';
   
+  let gesamtPreis=0;
+  let gesamtRabatt=0;
+  
   const positionsHtml=positions.map((p,i)=>{
     const parsed=parseReceiptPosition(p);
-    const details=[
-      '• Typ: '+parsed.type,
-      '• Menge: '+parsed.menge+' '+parsed.einheit,
-      parsed.mengeInPackungen?'• Packungen: '+parsed.mengeInPackungen+' (à '+parsed.packSize+' Stk)':'',
-      parsed.preisProEinheit?'• Preis/Einheit: CHF '+parsed.preisProEinheit.toFixed(2):'',
-      '• Gesamtpreis: CHF '+parsed.preis.toFixed(2),
-      parsed.rabatt?'• Rabatt: −CHF '+parsed.rabatt.toFixed(2):''
-    ].filter(x=>x).join('</div><div>');
+    gesamtPreis+=parsed.preis;
+    gesamtRabatt+=parsed.rabatt||0;
     
-    return '<div style="background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin-bottom:8px">'+
-      '<div style="font-weight:600;font-size:14px;margin-bottom:8px">Position '+(i+1)+': '+esc(parsed.name)+'</div>'+
-      '<div style="font-size:11px;color:var(--t2);background:var(--sf);padding:8px;border-radius:var(--rs);margin-bottom:8px;font-family:monospace">'+
-        '<div><strong>Rohtext:</strong> '+esc(p.text)+'</div>'+
-        '<div style="margin-top:4px"><strong>Interpretation:</strong></div>'+
-        '<div>'+details+'</div>'+
-      '</div>'+
-      (parsed.rabatt?'<div style="font-size:11px;background:var(--ol);color:var(--ok);padding:6px;border-radius:var(--rs);margin-bottom:8px">−CHF '+parsed.rabatt.toFixed(2)+' Rabatt</div>':'')+
-      '<div style="display:flex;gap:6px">'+
+    const bruttoPreis=(parsed.preis||0)+(parsed.rabatt||0);
+    const typeLabel=parsed.type==='Lose-Ware (kg)'?'🥬 Lose-Ware':
+                    parsed.type==='Verpackt (Portion-Box)'?'📦 Portion-Box':
+                    parsed.type==='Standard'?'📍 Standard':'?';
+    
+    const details=[
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'+
+        '<span style="font-size:11px;background:var(--ac);color:#fff;padding:2px 6px;border-radius:4px;font-weight:600">'+typeLabel+'</span>'+
+      '</div>',
+      '<div><strong>Rohtext:</strong> '+esc(p.text)+'</div>',
+      '<div style="margin-top:8px"><strong>📊 Details:</strong></div>',
+      '<div style="margin-left:8px;font-size:11px">'+
+        '• Menge: <strong>'+parsed.menge+' '+parsed.einheit+'</strong>'+
+        (parsed.mengeInPackungen?' (= <strong>'+parsed.mengeInPackungen+' Packungen</strong> à '+parsed.packSize+' Stk)':'')+
+      '</div>',
+      parsed.preisProEinheit?'<div style="margin-left:8px;font-size:11px">• Preis/Einheit: <strong>CHF '+parsed.preisProEinheit.toFixed(2)+'</strong></div>':'',
+      '<div style="margin-left:8px;font-size:11px;margin-top:4px">'+
+        '<div>• Brutto-Preis: <strong>CHF '+bruttoPreis.toFixed(2)+'</strong></div>'+
+        (parsed.rabatt?'<div style="color:var(--ok)">• Rabatt: <strong>−CHF '+parsed.rabatt.toFixed(2)+'</strong></div>':'')+
+        '<div style="background:var(--ol);color:var(--ok);padding:4px;border-radius:4px;margin-top:4px;font-weight:600">💰 Netto: CHF '+parsed.preis.toFixed(2)+'</div>'+
+      '</div>'
+    ].filter(x=>x).join('');
+    
+    return '<div style="background:var(--bg);border:2px solid '+(parsed.rabatt?'var(--ok)':'var(--bd)')+';border-radius:var(--rs);padding:12px;margin-bottom:12px">'+
+      '<div style="font-weight:700;font-size:15px;margin-bottom:12px">'+esc(parsed.name)+'</div>'+
+      '<div style="font-size:12px;color:var(--t2)">'+details+'</div>'+
+      '<div style="display:flex;gap:6px;margin-top:10px">'+
         '<button onclick="editPreviewPosition('+i+')" style="flex:1;padding:8px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:12px;cursor:pointer">✎ Korrigieren</button>'+
       '</div>'+
     '</div>';
   }).join('');
+  
+  // Gesamtpreis-Zusammenfassung
+  const summaryHtml='<div style="background:var(--ol);border:2px solid var(--ok);border-radius:var(--rs);padding:12px;margin-bottom:12px">'+
+    '<div style="font-weight:700;font-size:14px;color:var(--ok);margin-bottom:8px">💳 GESAMTPREIS</div>'+
+    '<div style="font-size:12px;color:var(--ok)">'+
+      '<div>Brutto (ohne Rabatte): CHF '+(gesamtPreis+gesamtRabatt).toFixed(2)+'</div>'+
+      (gesamtRabatt?'<div style="margin-top:4px">Rabatte insgesamt: −CHF '+gesamtRabatt.toFixed(2)+'</div>':'')+
+      '<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--ok);font-weight:700">NETTO ZUM BUCHEN: CHF '+gesamtPreis.toFixed(2)+'</div>'+
+    '</div>'+
+  '</div>';
   
   const footer=
     '<div style="padding:12px 16px;display:flex;gap:8px;border-top:1px solid var(--bd)">'+
@@ -4179,7 +4205,7 @@ function showReceiptPreview(positions){
       '<button onclick="confirmPreviewBooking()" style="flex:1;padding:12px;background:var(--ol);border:none;border-radius:var(--rs);color:var(--ok);font-weight:600;font-size:14px;cursor:pointer">⚠️ Verstanden, normal buchen</button>'+
     '</div>';
   
-  dlg.innerHTML=header+'<div style="flex:1;overflow-y:auto;padding:12px 16px">'+positionsHtml+'</div>'+footer;
+  dlg.innerHTML=header+'<div style="flex:1;overflow-y:auto;padding:12px 16px">'+summaryHtml+positionsHtml+'</div>'+footer;
   document.body.appendChild(dlg);
 }
 
@@ -4226,7 +4252,7 @@ function showReceiptPreview_OLD(positions){
       '<button onclick="confirmPreviewBooking()" style="flex:1;padding:12px;background:var(--ol);border:none;border-radius:var(--rs);color:var(--ok);font-weight:600;font-size:14px;cursor:pointer">⚠️ Verstanden, normal buchen</button>'+
     '</div>';
   
-  dlg.innerHTML=header+'<div style="flex:1;overflow-y:auto;padding:12px 16px">'+positionsHtml+'</div>'+footer;
+  dlg.innerHTML=header+'<div style="flex:1;overflow-y:auto;padding:12px 16px">'+summaryHtml+positionsHtml+'</div>'+footer;
   document.body.appendChild(dlg);
 }
 
