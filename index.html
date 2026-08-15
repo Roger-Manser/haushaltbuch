@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='20.10';
+const APP_VERSION='21.0';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.0',d:'08.2026',items:['MAJOR: Artikel-Wahl Modal komplett neu','Suchfeld zum Filtern der Lagerliste','Alle Lager-Artikel zeigen','Klick um zuzuweisen + Alias speichern']},
   {v:'20.10',d:'08.2026',items:['FIX: TypeError a.id.replace','a.id zu String konvertiert','Lager-Artikel-Wahl Modal öffnet jetzt','FINAL RELEASE!']},
   {v:'20.9',d:'08.2026',items:['DEBUG: openLagerArtikleWahl Logging','Prüfe ob Modal korrekt öffnet','Console zeigt Fehler wenn aufgerufen','Next: Artikel-Wahl richtig implementieren']},
   {v:'20.8',d:'08.2026',items:['FIX: Anderen Artikel wählen funktioniert','Edit-Dialog wird geschlossen vor Modal','FINAL FIX: Spinner komplett eliminiert','querySelectorAll für alle quittung-Elemente']},
@@ -8658,34 +8659,101 @@ function showAppInfo(){
 }
 
 function openLagerArtikleWahl(quittungName, posIdx, isMatched){
-  console.log('🔍 MODAL ÖFFNEN:', quittungName, 'isMatched='+isMatched);
-  // Modal um Artikel aus Lager zu wählen und via Alias zu merken
-  // isMatched=true bedeutet: Es wurde bereits einen Artikel gefunden, User will wechseln
+  console.log('🔍 Artikel-Wahl Modal öffnet für:', quittungName);
   
   const dlg = document.createElement('div');
-  dlg.id = 'lager-wahl-dlg';
-  dlg.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:9500;display:flex;align-items:center;justify-content:center;padding:8px';
+  dlg.id = 'artikel-wahl-dlg';
+  dlg.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:9700;display:flex;align-items:center;justify-content:center;padding:8px';
   
-  // Filtere Lager-Artikel die ähnlich sind
-  const matches = S.a.filter(a => {
-    const q = quittungName.toLowerCase();
-    const n = a.name.toLowerCase();
-    // Ganz ähnliche Namen oder erste Wörter match
-    return n.includes(q.split(/\s+/)[0]) || q.includes(n.split(/\s+/)[0]);
-  });
-  
-  const html = '<div style="background:var(--sf);border-radius:var(--r);padding:16px;max-width:90vw;max-width:min(90vw,400px);max-height:80vh;overflow-y:auto">'+
-    '<h3 style="margin:0 0 12px;color:var(--tx)">Welcher Lager-Artikel ist "'+esc(quittungName)+'"?</h3>'+
-    (matches.length > 0 ? 
-      '<div>'+matches.map((a,i) => 
-        '<button onclick="selectLagerArtikleAlias(\''+String(a.id).replace(/'/g,"\\'")+'\',\''+quittungName.replace(/'/g,"\\'")+'\');document.getElementById(\'lager-wahl-dlg\').remove()" style="display:block;width:100%;padding:10px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:8px;text-align:left;cursor:pointer;color:var(--tx)">'+esc(a.name)+'</button>'
-      ).join('')+'</div>'
-      : '<div style="color:var(--t2);text-align:center">Keine ähnlichen Artikel gefunden</div>')+
-    '<button onclick="document.getElementById(\'lager-wahl-dlg\').remove()" style="display:block;width:100%;padding:10px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);margin-top:12px;cursor:pointer;font-weight:600">Abbrechen</button>'+
+  dlg.innerHTML = '<div style="background:var(--sf);border-radius:var(--r);padding:16px;max-width:90vw;max-width:min(90vw,450px);max-height:85vh;overflow:hidden;display:flex;flex-direction:column">'+
+    '<h3 style="margin:0 0 12px;color:var(--tx)">Artikel zuweisen: "'+esc(quittungName)+'"</h3>'+
+    '<div style="margin-bottom:12px">'+
+      '<input id="artikel-such" type="text" placeholder="Suchen..." style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)" autofocus>'+
+    '</div>'+
+    '<div id="artikel-list" style="flex:1;overflow-y:auto;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);padding:0"></div>'+
+    '<div style="display:flex;gap:8px;margin-top:12px">'+
+      '<button id="btn-artikel-close" style="flex:1;padding:10px;background:var(--wn);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-weight:600">✗ Abbrechen</button>'+
+    '</div>'+
   '</div>';
   
-  dlg.innerHTML = html;
   document.body.appendChild(dlg);
+  
+  // Rendern der Artikel-Liste
+  function renderList(searchTerm=''){
+    const list = document.getElementById('artikel-list');
+    const search = searchTerm.toLowerCase();
+    
+    let html = '';
+    (S.a || []).forEach(artikel => {
+      if(!search || artikel.name.toLowerCase().includes(search)) {
+        html += '<button onclick="assignArtikelAlias(\''+String(artikel.id).replace(/'/g,"\\'")+'\',\''+quittungName.replace(/'/g,"\\'")+'\','+posIdx+')" '+
+          'style="display:block;width:100%;padding:10px;background:transparent;border:1px solid var(--bd);border-bottom:none;text-align:left;cursor:pointer;color:var(--tx);font-size:13px">'+
+          esc(artikel.name)+
+        '</button>';
+      }
+    });
+    
+    if(!html) html = '<div style="padding:16px;color:var(--t2);text-align:center">Keine Artikel gefunden</div>';
+    list.innerHTML = html;
+  }
+  
+  // Initial render
+  renderList();
+  
+  // Search-Handler
+  document.getElementById('artikel-such').addEventListener('input', (e) => {
+    renderList(e.target.value);
+  });
+  
+  // Close-Handler
+  document.getElementById('btn-artikel-close').addEventListener('click', () => {
+    dlg.remove();
+  });
+  
+  // ESC zum Schließen
+  const escHandler = (e) => {
+    if(e.key === 'Escape') {
+      dlg.remove();
+      document.removeEventListener('keydown', escHandler);
+    }
+  };
+  document.addEventListener('keydown', escHandler);
+}
+
+function assignArtikelAlias(artikelId, quittungName, posIdx){
+  // Zuweise Quittungs-Alias zum Lager-Artikel
+  const artikel = S.a.find(a => String(a.id) === String(artikelId));
+  if(!artikel) {
+    console.error('❌ Artikel nicht gefunden:', artikelId);
+    return;
+  }
+  
+  // Füge Alias hinzu
+  if(!artikel.quittungAliase) artikel.quittungAliase = '';
+  const aliases = artikel.quittungAliase.split('\n').filter(a => a.trim());
+  
+  if(!aliases.includes(quittungName)) {
+    aliases.push(quittungName);
+    artikel.quittungAliase = aliases.join('\n');
+  }
+  
+  console.log('✓ Alias gespeichert:', quittungName, '→', artikel.name);
+  
+  // Schließe Modal
+  const dlg = document.getElementById('artikel-wahl-dlg') || document.getElementById('artikel-wahl-dlg') || 
+              document.querySelector('[id*="artikel-wahl"]') || 
+              document.querySelector('[id*="edit-preview"]');
+  if(dlg) dlg.remove();
+  
+  // Speichere Änderungen
+  saveL();
+  
+  // Refresh Preview
+  const receipt = document.getElementById('receipt-preview-dlg');
+  if(receipt) receipt.remove();
+  
+  const parsed_positions = quittungItems.map(it=>({name:it.name||'Unknown',text:it.name+'\n'+it.menge+' '+it.einheit+' CHF '+(it.preis_brutto||it.preis_netto||it.preis||0).toFixed(2),preis_brutto:it.preis_brutto||it.preis_netto||it.preis||0,preis_netto:it.preis_netto||it.preis||0,preis:it.preis_netto||it.preis||0,rabatt:it.rabatt||0,einheit:it.einheit||'Stk',menge:it.menge||1,kat:it.kat||'Diverses',lagerArtikelId:it.lagerArtikelId,lagerMatch:it.lagerMatch,needsManualMatch:it.needsManualMatch}));
+  showReceiptPreview(parsed_positions);
 }
 
 function selectLagerArtikleAlias(artikelId, quittungName){
