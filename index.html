@@ -544,11 +544,8 @@ const VERSION_HISTORY=[
   {v:'19.86',d:'08.2026',items:['Parser: Portion-Box (20x CHF 5.75) erkennt jetzt Boxen','Parser: Loose-Ware (kg x CHF/kg) optimiert','Goldfield: erkennt 2 Boxen statt 20 Stück','Console.log für Debugging']},
   {v:'19.85',d:'08.2026',items:['🔄 RESET: GitHub-Version restauriert','Vorschau-Modus funktioniert stabil','v19.80 bis v19.84 waren unstabil, gelöscht','Parser-Optimierung kann jetzt sauber aufgebaut werden']},
   {v:'19.82',d:'08.2026',items:['DEBUG-VERSION: Massive Logging hinzugefügt','Zeige Rohtext, Preise, p-Objekt in Console','Finde heraus warum Preise nicht extrahiert werden']},
-  {v:'19.82',d:'08.2026',items:['DEBUG-VERSION: Massive Logging hinzugefügt','Zeige Rohtext, Preise, p-Objekt in Console','Finde heraus warum Preise nicht extrahiert werden']},
-  {v:'19.81',d:'08.2026',items:['MAJOR: Kompletter Parser-Rewrite','Bessere Regex für Preise und Mengen','Console-Logs zum Debuggen','Erkennt Loose-Ware, Portion-Box, Standard korrekt']},
   {v:'19.81',d:'08.2026',items:['MAJOR: Kompletter Parser-Rewrite','Bessere Regex für Preise und Mengen','Console-Logs zum Debuggen','Erkennt Loose-Ware, Portion-Box, Standard korrekt']},
   {v:'19.80',d:'08.2026',items:['BUGFIX: Vorschau-Modus wird jetzt tatsächlich aufgerufen!','renderQuittung() checkt opt.quittungPreview','Gesamtpreis und Rabatte zeigen sich jetzt in der Vorschau']},
-  {v:'19.80',d:'08.2026',items:['Debug: Console.log in Vorschau-Modus','Force neue showReceiptPreview Logik','Prüfe ob alte Funktionen überschrieben werden']},
   {v:'19.8',d:'08.2026',items:['Artikel-Formular: Foto-Button öffnet Kamera/Galerie-Auswahl statt direkt Kamera']},
   {v:'19.79',d:'08.2026',items:['Vorschau: Detaillierte Position-Informationen anzeigen','Typ-Icons (🥬 🎁 📦)','Brutto- und Netto-Preise','Gesamtpreis-Zusammenfassung oben (mit Rabatt-Übersicht)']},
   {v:'19.78',d:'08.2026',items:['Parser: Rabatt-Erkennung (Stangenrabatt, Aktion)','Parser: Loose-Ware mit CHF/kg','Parser: Portion-Box mit Packungsgröße-Berechnung','Vorschau zeigt jetzt Rabatte und Packungsanzahl']},
@@ -712,8 +709,7 @@ const VERSION_HISTORY=[
   {v:'10.8',d:'07.2026',items:['Rezept-Zutaten mit Menge auf Einkaufsliste']},
   {v:'10.7',d:'07.2026',items:['Einkaufswagen-Icon je Lagerzeile mit Duplikat-Schutz']},
   {v:'10.6',d:'07.2026',items:['Sprung-Pfeile ↑↓ in Detailansicht (bei langem Inhalt)']},
-  {v:'10.5',d:'07.2026',items:['Etikett-Packungsauswahl bei mehreren MHDs']},
-  {v:'19.52-debug',d:'08.2026',items:['Debug: Console-Logs für Datum-Änderungen']}
+  {v:'10.5',d:'07.2026',items:['Etikett-Packungsauswahl bei mehreren MHDs']}
 ];
 function showVersionHistory(){
   const existing=document.getElementById('vh-modal');if(existing)existing.remove();
