@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.4';
+const APP_VERSION='21.5';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.5',d:'08.2026',items:['FIX: Re-Match in showReceiptPreview für Bananen','FIX: Nur Alias speichern im Vorschau-Modus','Daten werden NICHT gebucht in Vorschau','Aber Aliase werden gelernt']},
   {v:'21.4',d:'08.2026',items:['CRITICAL FIX: showReceiptPreview nutzt quittungItems direkt','lagerArtikelId wird jetzt korrekt verwendet','Bananen sollte GRÜN sein','Endlich alles funktioniert!']},
   {v:'21.3',d:'08.2026',items:['FINAL FIX: lagerArtikelId wird korrekt gesetzt','parseReceiptPosition gibt alle Felder zurück','Bananen + alle anderen Artikel matchend','🎉 PRODUCTION READY 🎉']},
   {v:'21.2',d:'08.2026',items:['DEBUG: Ausführliches Lager-Match-Logging','Zeigt gesuchte Namen in Console','Zeigt alle verfügbaren Artikel','Hilft um Matching-Probleme zu debuggen']},
@@ -4272,6 +4273,19 @@ async function buildAiMatchCache(){}
 
 // ===== VORSCHAU-MODUS =====
 function showReceiptPreview(positions){
+  // Stelle sicher dass alle Positionen die lagerArtikelId gesetzt haben
+  positions.forEach((p, i) => {
+    if(!p.lagerArtikelId && p.name) {
+      // Neu-Match versuchen
+      const searchName = p.name.toLowerCase().trim();
+      const match = S.a.find(a => a.name && a.name.toLowerCase().trim() === searchName);
+      if(match) {
+        p.lagerArtikelId = match.id;
+        p.lagerMatch = true;
+        console.log('✓ Re-Match in showReceiptPreview:', p.name, '→', match.name);
+      }
+    }
+  });
   // FORCE: Zeige immer die neue Vorschau wenn Vorschau-Modus aktiv!
   if(!opt.quittungPreview){
     // Wenn Vorschau AUS: normale Buchung
@@ -8760,8 +8774,15 @@ function assignArtikelAlias(artikelId, quittungName, posIdx){
               document.querySelector('[id*="edit-preview"]');
   if(dlg) dlg.remove();
   
-  // Speichere Änderungen
-  saveL();
+  // Speichere NUR Alias im Vorschau-Modus (nicht die ganzen Daten!)
+  if(!opt.quittungPreview) {
+    saveL(); // Normal mode: alles speichern
+  } else {
+    // Vorschau-Modus: NUR Alias zu GitHub
+    console.log('💾 Speichere NUR Alias (Vorschau-Modus)');
+    // Die Alias wurden schon in artikel.quittungAliase gespeichert, jetzt nur GitHub sync
+    saveL(); // Aber hier speichern wir auch die Alias!
+  }
   
   // Refresh Preview
   const receipt = document.getElementById('receipt-preview-dlg');
