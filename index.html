@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v19.94-FINAL cache-bust-9999 -->
+<!-- HAUSHALTBUCH v20.1-FINAL-CACHE-BUST-99999 cache-bust-9999 -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
 <!-- CACHE BUST v99 -->
-<link rel="manifest" href="manifest.json?v=9999"/>
+<link rel="manifest" href="manifest.json?v=99999"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
 <title>Haushaltbuch</title>
@@ -538,11 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='20.1';
+const APP_VERSION='20.2';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'20.1',d:'08.2026',items:['MAJOR: Lager-Match mit Quittungs-Aliase','4-Stufen-Strategie: exakt, Alias, Teilstring, Alias-Teil','Findet nun auch Artikel mit abweichenden Quittungs-Namen','FIX: Spinner radikal versteckt (display+visibility+height)']},
+  {v:'20.2',d:'08.2026',items:['FIX: Grosszügiger Lager-Match für Artikel-Zusätze','Goldfield Gold Box matched Goldfield Gold Box Zigaretten','Filtert: Zigaretten, Tabak, Rauchen aus Name','Findet nun auch Artikel mit Suffix-Unterschieden]},
   {v:'20.0',d:'08.2026',items:['MAJOR FIX: name Feld in parsed_positions','Artikel-Namen werden jetzt korrekt weitergegeben','Lager-Abgleich funktioniert mit echten Namen','Goldfield findet echten Namen statt Unknown']},
   {v:'19.99',d:'08.2026',items:['DEBUG: KI-Response Logging in Console','UI: Dialog margin:auto für Zentrierung','FIX: Quittung-Container verstecken','Spinner-Problem angehen']},
   {v:'19.98',d:'08.2026',items:['FIX: showAppInfo ReferenceError behoben','Stub-Funktion öffnet Settings','Console-Fehler eliminiert','Lager-Match-Logging kann jetzt arbeiten']},
@@ -4495,23 +4495,26 @@ function parseReceiptPosition(p){
       });
     }
     
-    // 3. Teilstring-Match (erstes Wort des Such-Namens)
+    // 3. GROSSZÜGIGER Teilstring-Match: Wenn Such-Name in Lager-Name enthalten
     if(!lagerMatch) {
-      const firstWord = searchName.split(/\s+/)[0];
-      if(firstWord.length > 2) { // Nur wenn Wort länger als 2 Zeichen
-        lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().includes(firstWord));
-      }
+      lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().includes(searchName));
     }
     
-    // 4. Match auf Alias-Teilstring
+    // 4. Umgekehrter Match: Wenn Lager-Name (ohne Zusätze) in Such-Name enthalten
+    if(!lagerMatch) {
+      lagerMatch = S.a.find(a => {
+        if(!a.name) return false;
+        // Z.B. "Goldfield Gold Box" matched "Goldfield Gold Box Zigaretten"
+        const baseName = a.name.toLowerCase().split(/zigaretten|tabak|rauchen/i)[0].trim();
+        return baseName && searchName.includes(baseName);
+      });
+    }
+    
+    // 5. Erstes Wort Match (fallback)
     if(!lagerMatch) {
       const firstWord = searchName.split(/\s+/)[0];
       if(firstWord.length > 2) {
-        lagerMatch = S.a.find(a => {
-          if(!a.quittungAliase) return false;
-          const aliases = typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase;
-          return aliases.some(alias => alias.toLowerCase().includes(firstWord));
-        });
+        lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().includes(firstWord));
       }
     }
     
