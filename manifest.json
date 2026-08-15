@@ -1,23 +1,67 @@
 {
   "name": "Haushaltbuch",
   "short_name": "Haushaltbuch",
-  "description": "Lagerverwaltung, Barcode-Erfassung, Rezeptabgleich und Statistik für den Haushalt",
+  "description": "Lagerverwaltung, Barcode-Erfassung, Rezeptabgleich und Statistik f\u00fcr den Haushalt",
   "start_url": "./index.html?source=pwa-v2",
   "scope": "./",
   "display": "standalone",
   "background_color": "#F8F9FA",
   "theme_color": "#2563EB",
   "icons": [
-    { "src": "./icons/icon-72x72.png",   "sizes": "72x72",   "type": "image/png" },
-    { "src": "./icons/icon-96x96.png",   "sizes": "96x96",   "type": "image/png" },
-    { "src": "./icons/icon-128x128.png", "sizes": "128x128", "type": "image/png" },
-    { "src": "./icons/icon-144x144.png", "sizes": "144x144", "type": "image/png" },
-    { "src": "./icons/icon-152x152.png", "sizes": "152x152", "type": "image/png" },
-    { "src": "./icons/icon-192x192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "./icons/icon-192x192-maskable.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
-    { "src": "./icons/icon-384x384.png", "sizes": "384x384", "type": "image/png" },
-    { "src": "./icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "./icons/icon-512x512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "./icons/icon-72x72.png",
+      "sizes": "72x72",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-128x128.png",
+      "sizes": "128x128",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-144x144.png",
+      "sizes": "144x144",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-152x152.png",
+      "sizes": "152x152",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-192x192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "./icons/icon-384x384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "./icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icons/icon-512x512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ],
   "shortcuts": [
     {
@@ -25,21 +69,37 @@
       "short_name": "Ausgang",
       "description": "Warenausgang per Barcode-Scan",
       "url": "./index.html?action=ausgang",
-      "icons": [{ "src": "./icons/icon-192x192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "./icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Eingang scannen",
       "short_name": "Eingang",
       "description": "Wareneingang per Barcode-Scan",
       "url": "./index.html?action=eingang",
-      "icons": [{ "src": "./icons/icon-192x192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "./icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     },
     {
       "name": "Einkaufsliste",
       "short_name": "Einkauf",
-      "description": "Einkaufsliste öffnen",
+      "description": "Einkaufsliste \u00f6ffnen",
       "url": "./index.html?action=einkauf",
-      "icons": [{ "src": "./icons/icon-192x192.png", "sizes": "192x192" }]
+      "icons": [
+        {
+          "src": "./icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
     }
-  ]
+  ],
+  "version": "19.87-99"
 }
