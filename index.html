@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='20.0';
+const APP_VERSION='20.1';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'20.1',d:'08.2026',items:['MAJOR: Lager-Match mit Quittungs-Aliase','4-Stufen-Strategie: exakt, Alias, Teilstring, Alias-Teil','Findet nun auch Artikel mit abweichenden Quittungs-Namen','FIX: Spinner radikal versteckt (display+visibility+height)']},
   {v:'20.0',d:'08.2026',items:['MAJOR FIX: name Feld in parsed_positions','Artikel-Namen werden jetzt korrekt weitergegeben','Lager-Abgleich funktioniert mit echten Namen','Goldfield findet echten Namen statt Unknown']},
   {v:'19.99',d:'08.2026',items:['DEBUG: KI-Response Logging in Console','UI: Dialog margin:auto für Zentrierung','FIX: Quittung-Container verstecken','Spinner-Problem angehen']},
   {v:'19.98',d:'08.2026',items:['FIX: showAppInfo ReferenceError behoben','Stub-Funktion öffnet Settings','Console-Fehler eliminiert','Lager-Match-Logging kann jetzt arbeiten']},
@@ -4476,19 +4477,42 @@ function parseReceiptPosition(p){
   console.log('📍 Standard: '+name);
   
   // Check ob Artikel im Lager existiert
-  // S.a = Lager-Artikel Array, suche nach Namen-Match
+  // S.a = Lager-Artikel Array, suche nach Namen-Match mit Aliase
   let lagerMatch = null;
   if(S && S.a && S.a.length > 0) {
     // Normalisiere Namen für Vergleich
     const searchName = name.toLowerCase().trim();
     
-    // Exakter Match
+    // 1. Exakter Match auf Namen
     lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().trim() === searchName);
     
-    // Teilstring-Match (erstes Wort)
+    // 2. Match auf Quittungs-Aliase
+    if(!lagerMatch) {
+      lagerMatch = S.a.find(a => {
+        if(!a.quittungAliase) return false;
+        const aliases = typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase;
+        return aliases.some(alias => alias.toLowerCase().trim() === searchName);
+      });
+    }
+    
+    // 3. Teilstring-Match (erstes Wort des Such-Namens)
     if(!lagerMatch) {
       const firstWord = searchName.split(/\s+/)[0];
-      lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().includes(firstWord));
+      if(firstWord.length > 2) { // Nur wenn Wort länger als 2 Zeichen
+        lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().includes(firstWord));
+      }
+    }
+    
+    // 4. Match auf Alias-Teilstring
+    if(!lagerMatch) {
+      const firstWord = searchName.split(/\s+/)[0];
+      if(firstWord.length > 2) {
+        lagerMatch = S.a.find(a => {
+          if(!a.quittungAliase) return false;
+          const aliases = typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase;
+          return aliases.some(alias => alias.toLowerCase().includes(firstWord));
+        });
+      }
     }
     
     console.log('🔍 Lager-Match für "'+name+'": ' + (lagerMatch ? '✓ GEFUNDEN ('+lagerMatch.name+')' : '❌ nicht gefunden'));
@@ -7532,7 +7556,10 @@ function renderQuittungUebersicht(datum){
   // VORSCHAU-MODUS CHECK
   if(opt.quittungPreview){
     const body=document.getElementById('quittung-body');
-    if(body){body.innerHTML='';body.style.display='none';} // VERSTECKE body komplett // Lösche Spinner
+    if(body){body.innerHTML='';body.style.display='none';body.style.visibility='hidden';body.style.height='0';body.style.overflow='hidden';}
+    // Auch den Parent-Container verstecken
+    const quittungSection = document.getElementById('quittung');
+    if(quittungSection) quittungSection.style.display='none'; // Lösche Spinner
     const parsed_positions=quittungItems.map(it=>({name:it.name||'Unknown',text:it.name+'\n'+it.menge+' '+it.einheit+' CHF '+(it.preis_brutto||it.preis_netto||it.preis||0).toFixed(2),preis_brutto:it.preis_brutto||it.preis_netto||it.preis||0,preis_netto:it.preis_netto||it.preis||0,preis:it.preis_netto||it.preis||0,rabatt:it.rabatt||0,einheit:it.einheit||'Stk',menge:it.menge||1,kat:it.kat||'Diverses'}));
     showReceiptPreview(parsed_positions);
     return;
