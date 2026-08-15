@@ -536,10 +536,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.79';
+const APP_VERSION='19.80';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.80',d:'08.2026',items:['BUGFIX: Vorschau-Modus wird jetzt tatsächlich aufgerufen!','renderQuittung() checkt opt.quittungPreview','Gesamtpreis und Rabatte zeigen sich jetzt in der Vorschau']},
+  {v:'19.80',d:'08.2026',items:['Debug: Console.log in Vorschau-Modus','Force neue showReceiptPreview Logik','Prüfe ob alte Funktionen überschrieben werden']},
   {v:'19.79',d:'08.2026',items:['Vorschau: Detaillierte Position-Informationen anzeigen','Typ-Icons (🥬 🎁 📦)','Brutto- und Netto-Preise','Gesamtpreis-Zusammenfassung oben (mit Rabatt-Übersicht)']},
   {v:'19.78',d:'08.2026',items:['Parser: Rabatt-Erkennung (Stangenrabatt, Aktion)','Parser: Loose-Ware mit CHF/kg','Parser: Portion-Box mit Packungsgröße-Berechnung','Vorschau zeigt jetzt Rabatte und Packungsanzahl']},
   {v:'19.77',d:'08.2026',items:['Feature: 🔍 Vorschau-Modus für Quittungs-Scan','Zeigt alle Positionen VOR dem Buchen','NICHTS wird gespeichert — perfekt zum Testen','3 Parser: Lose-Ware, Verpackt, Portion-Box']},
@@ -4132,12 +4134,14 @@ async function buildAiMatchCache(){}
 
 // ===== VORSCHAU-MODUS =====
 function showReceiptPreview(positions){
-  // Zeige Scan-Ergebnisse zur Vorschau - SPEICHERT NICHTS!
+  // FORCE: Zeige immer die neue Vorschau wenn Vorschau-Modus aktiv!
   if(!opt.quittungPreview){
-    // Normal buchen wenn nicht im Vorschau-Modus
+    // Wenn Vorschau AUS: normale Buchung
     doReceiptPositions(positions);
     return;
   }
+  
+  console.log('✅ Vorschau-Modus: '+positions.length+' Positionen');
   
   // VORSCHAU-MODUS: Nur anzeigen
   const dlg=document.createElement('div');
@@ -7182,6 +7186,13 @@ function renderQuittungUebersicht(datum){
       qbody.parentElement.insertBefore(b,qbody);
     }
   }
+  // VORSCHAU-MODUS CHECK
+  if(opt.quittungPreview){
+    const parsed_positions=quittungItems.map(it=>({text:it.name+'\n'+it.menge+'× CHF '+it.preis.toFixed(2),preis:it.preis}));
+    showReceiptPreview(parsed_positions);
+    return;
+  }
+  
   const body=document.getElementById('quittung-body');
   const ge=quittungGeschaeft;
   let h='<div style="background:var(--ol);border-radius:var(--rs);padding:10px 14px;margin-bottom:14px;font-size:13px">'+
@@ -7189,7 +7200,7 @@ function renderQuittungUebersicht(datum){
     (ge?' · '+esc(ge):'')+
     (datum?' · '+fmtDateCH(datum):'')+
   '</div>';
-  h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">Jeden Artikel einzeln bestätigen:</div>';
+  h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">🔍 VORSCHAU-MODUS AKTIV — Alle Positionen überprüfen:</div>';
   h+=quittungItems.map((it,i)=>{
     const existing=findQuittungMatch(it.name);
     const badge=existing?'<span style="font-size:10px;background:var(--al);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px">im Lager</span>':'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:6px">neu</span>';
