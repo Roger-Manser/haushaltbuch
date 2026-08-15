@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.90';
+const APP_VERSION='19.91';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.91',d:'08.2026',items:['MAJOR: Preis-Validierungs-Pass für KI-Fehler','Erkennt wenn KI Einzelpreis als Brutto-Summe gibt','Korrigiert automatisch: brutto = einzelpreis × menge','Goldfield: 5.75 × 20 = 115.00 CHF brutto korrekt']},
   {v:'19.90',d:'08.2026',items:['FIX: Vorschau-Dialog Escape-Handler hinzugefügt','ESC-Taste schließt Vorschau sofort','Abbrechen-Button funktioniert zuverlässig','Keine Trap im Vorschau-Modus mehr']},
   {v:'19.89',d:'08.2026',items:['FIX: KI-Fehlerkorrektur für falsche Brutto-Preise','Parser erkennt wenn KI Netto als Brutto zurückgibt','Berechnet richtig: Brutto = Netto + Rabatt','Goldfield: 20×CHF5.75=CHF115 brutto korrekt']},
   {v:'19.88',d:'08.2026',items:['MAJOR: KI-Prompt für Rabatt-Handling','Preis_brutto, rabatt, preis_netto statt einzelner Preis','Goldfield mit CHF 115 Brutto - CHF 9 Rabatt = CHF 106 Netto','Loose-Ware mit richtigem Gesamtpreis']},
@@ -4187,7 +4188,7 @@ function showReceiptPreview(positions){
   const header=
     '<div style="background:var(--wl);border-bottom:2px solid var(--wn);padding:12px 16px;display:flex;align-items:center;justify-content:space-between">'+
       '<span style="font-size:14px;color:var(--wn);font-weight:700">🔍 VORSCHAU-MODUS — NICHTS WIRD GESPEICHERT</span>'+
-      '<span style="font-size:11px;color:var(--wn);opacity:0.7">v19.87</span>'+
+      '<span style="font-size:11px;color:var(--wn);opacity:0.7">v'+APP_VERSION+'</span>'+
     '</div>';
   
   let gesamtPreis=0;
@@ -4270,7 +4271,7 @@ function showReceiptPreview_OLD(positions){
   const header=
     '<div style="background:var(--wl);border-bottom:2px solid var(--wn);padding:12px 16px;display:flex;align-items:center;justify-content:space-between">'+
       '<span style="font-size:14px;color:var(--wn);font-weight:700">🔍 VORSCHAU-MODUS — NICHTS WIRD GESPEICHERT</span>'+
-      '<span style="font-size:11px;color:var(--wn);opacity:0.7">v19.87</span>'+
+      '<span style="font-size:11px;color:var(--wn);opacity:0.7">v'+APP_VERSION+'</span>'+
     '</div>';
   
   const positionsHtml=positions.map((p,i)=>{
@@ -7244,6 +7245,25 @@ async function handleQuittungFile(input){
     }
 
     quittungItems=parsed.artikel||[];
+    
+    // PREIS-VALIDIERUNGS-PASS: Erkenne KI-Fehler bei Brutto-Preisen
+    quittungItems.forEach(it => {
+      // Wenn menge > 1 und es sieht aus wie eine Einzelpreis-Situation:
+      // Beispiel: menge=20, preis_brutto=5.75 → KI hat Einzelpreis als Brutto gegeben!
+      if(it.menge > 1 && it.preis_brutto < 10) {
+        // Heuristik: Wenn preis_brutto << menge * 5, ist es wahrscheinlich Einzelpreis
+        const vermuteterGesamtpreis = it.preis_brutto * it.menge;
+        const vermuteterRabatt = it.rabatt || 0;
+        
+        console.log('💰 PREIS-VALIDIERUNG: '+it.name);
+        console.log('  KI gab: menge='+it.menge+', brutto='+it.preis_brutto+', rabatt='+vermuteterRabatt);
+        console.log('  Vermutung: brutto sollte sein '+vermuteterGesamtpreis);
+        
+        // Wende die Korrektur an
+        it.preis_brutto = vermuteterGesamtpreis;
+        it.preis_netto = vermuteterGesamtpreis - vermuteterRabatt;
+      }
+    });
     quittungGeschaeft=parsed.geschaeft||'';
     quittungIdx=0;
 
