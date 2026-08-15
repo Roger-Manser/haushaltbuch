@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='20.7';
+const APP_VERSION='20.8';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'20.8',d:'08.2026',items:['FIX: Anderen Artikel wählen funktioniert','Edit-Dialog wird geschlossen vor Modal','FINAL FIX: Spinner komplett eliminiert','querySelectorAll für alle quittung-Elemente']},
   {v:'20.7',d:'08.2026',items:['FIX: Schaltflächen im Edit-Dialog funktionieren','Umgestellt auf Event Listener statt onclick','Speichern und Abbrechen zuverlässig','Artikel-Wechsel funktioniert']},
   {v:'20.6',d:'08.2026',items:['UI: Button-Farben grün/rot statt grau','FEATURE: Artikel-Auswahl im Edit-Dialog','? Button um anderen Artikel zu wählen','FIX: Spinner radikal versteckt (display+visibility+height+overflow)']},
   {v:'20.5',d:'08.2026',items:['FIX: Korrigieren Button funktioniert','Edit-Dialog für Menge, Einheit, Preis, Rabatt','Änderungen werden in Vorschau aktualisiert','Modal für benutzerfreundliche Edits']},
@@ -4583,6 +4584,7 @@ function editPreviewPosition(idx){
   
   // Event Listener (nicht onclick!)
   document.getElementById('btn-wahl-'+idx).addEventListener('click', () => {
+    dlg.remove(); // Schließe Edit-Dialog erst
     openLagerArtikleWahl(p.name, idx, true);
   });
   
@@ -7647,18 +7649,21 @@ function renderQuittungUebersicht(datum){
   // VORSCHAU-MODUS CHECK
   if(opt.quittungPreview){
     const body=document.getElementById('quittung-body');
-    if(body){body.innerHTML='';body.style.display='none';}
-    // Verstecke ALLES was mit Quittung zu tun hat
-    const quittungDiv = document.getElementById('quittung');
-    if(quittungDiv) {
-      quittungDiv.style.display='none';
-      quittungDiv.style.visibility='hidden';
-      quittungDiv.style.height='0';
-      quittungDiv.style.overflow='hidden';
-    }
-    // Auch der Spinner-Container
-    const screen = document.querySelector('[id*="s-quittung"]');
-    if(screen) screen.style.display='none'; // Lösche Spinner
+    if(body){body.innerHTML='';body.style.display='none';body.style.height='0';}
+    // Verstecke ALLES quittung-bezogene
+    document.querySelectorAll('[id*="quittung"]').forEach(el => {
+      el.style.display='none';
+      el.style.visibility='hidden';
+      el.style.height='0';
+      el.style.overflow='hidden';
+      el.style.pointerEvents='none';
+    });
+    // Spinner explizit weg
+    const spinner = document.querySelector('.spn');
+    if(spinner) {
+      spinner.style.display='none';
+      spinner.parentElement.style.display='none';
+    } // Lösche Spinner
     const parsed_positions=quittungItems.map(it=>({name:it.name||'Unknown',text:it.name+'\n'+it.menge+' '+it.einheit+' CHF '+(it.preis_brutto||it.preis_netto||it.preis||0).toFixed(2),preis_brutto:it.preis_brutto||it.preis_netto||it.preis||0,preis_netto:it.preis_netto||it.preis||0,preis:it.preis_netto||it.preis||0,rabatt:it.rabatt||0,einheit:it.einheit||'Stk',menge:it.menge||1,kat:it.kat||'Diverses'}));
     showReceiptPreview(parsed_positions);
     return;
