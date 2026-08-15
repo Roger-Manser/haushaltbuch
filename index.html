@@ -538,10 +538,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='20.2';
+const APP_VERSION='20.4';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'20.4',d:'08.2026',items:['FEATURE: Info bei gefundenen Lager-Artikeln','Zeigt Artikel-Name + Foto','Button um anderen Artikel zu wählen','Kann falsch erkannte Artikel korrigieren']},
+  {v:'20.3',d:'08.2026',items:['MAJOR: Manuelle Lager-Artikel-Auswahl','? Button wenn Artikel nicht gefunden','Speichert Verbindung via Quittungs-Alias','App lernt die Zuordnung automatically']},
   {v:'20.2',d:'08.2026',items:['FIX: Grosszügiger Lager-Match für Artikel-Zusätze','Goldfield Gold Box matched Goldfield Gold Box Zigaretten','Filtert: Zigaretten, Tabak, Rauchen aus Name','Findet nun auch Artikel mit Suffix-Unterschieden']},
   {v:'20.0',d:'08.2026',items:['MAJOR FIX: name Feld in parsed_positions','Artikel-Namen werden jetzt korrekt weitergegeben','Lager-Abgleich funktioniert mit echten Namen','Goldfield findet echten Namen statt Unknown']},
   {v:'19.99',d:'08.2026',items:['DEBUG: KI-Response Logging in Console','UI: Dialog margin:auto für Zentrierung','FIX: Quittung-Container verstecken','Spinner-Problem angehen']},
@@ -4532,7 +4534,8 @@ function parseReceiptPosition(p){
     preis: nettoPreis,
     rabatt: rabatt,
     lagerMatch: lagerMatch ? true : false,
-    lagerArtikelId: lagerMatch ? lagerMatch.id : null
+    lagerArtikelId: lagerMatch ? lagerMatch.id : null,
+    needsManualMatch: !lagerMatch // FLAG: Braucht manuelle Auswahl
   };
 }
 
@@ -8552,6 +8555,82 @@ async function installApp(){
 function showAppInfo(){
   // Show app version, stats, links
   goScreen('s-settings');
+}
+
+function openLagerArtikleWahl(quittungName, posIdx, isMatched){
+  // Modal um Artikel aus Lager zu wählen und via Alias zu merken
+  // isMatched=true bedeutet: Es wurde bereits einen Artikel gefunden, User will wechseln
+  
+  const dlg = document.createElement('div');
+  dlg.id = 'lager-wahl-dlg';
+  dlg.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:9500;display:flex;align-items:center;justify-content:center;padding:8px';
+  
+  // Filtere Lager-Artikel die ähnlich sind
+  const matches = S.a.filter(a => {
+    const q = quittungName.toLowerCase();
+    const n = a.name.toLowerCase();
+    // Ganz ähnliche Namen oder erste Wörter match
+    return n.includes(q.split(/\s+/)[0]) || q.includes(n.split(/\s+/)[0]);
+  });
+  
+  const html = '<div style="background:var(--sf);border-radius:var(--r);padding:16px;max-width:90vw;max-width:min(90vw,400px);max-height:80vh;overflow-y:auto">'+
+    '<h3 style="margin:0 0 12px;color:var(--tx)">Welcher Lager-Artikel ist "'+esc(quittungName)+'"?</h3>'+
+    (matches.length > 0 ? 
+      '<div>'+matches.map((a,i) => 
+        '<button onclick="selectLagerArtikleAlias(\''+a.id.replace(/'/g,"\\'")+'\',\''+quittungName.replace(/'/g,"\\'")+'\');document.getElementById(\'lager-wahl-dlg\').remove()" style="display:block;width:100%;padding:10px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:8px;text-align:left;cursor:pointer;color:var(--tx)">'+esc(a.name)+'</button>'
+      ).join('')+'</div>'
+      : '<div style="color:var(--t2);text-align:center">Keine ähnlichen Artikel gefunden</div>')+
+    '<button onclick="document.getElementById(\'lager-wahl-dlg\').remove()" style="display:block;width:100%;padding:10px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);margin-top:12px;cursor:pointer;font-weight:600">Abbrechen</button>'+
+  '</div>';
+  
+  dlg.innerHTML = html;
+  document.body.appendChild(dlg);
+}
+
+function selectLagerArtikleAlias(artikelId, quittungName){
+  // Speichere den Alias für diesen Artikel
+  const artikel = S.a.find(a => a.id === artikelId);
+  if(!artikel) return;
+  
+  // Füge Quittungs-Alias hinzu
+  if(!artikel.quittungAliase) artikel.quittungAliase = '';
+  const aliases = artikel.quittungAliase.split('\n').filter(a => a.trim());
+  
+  if(!aliases.includes(quittungName)) {
+    aliases.push(quittungName);
+    artikel.quittungAliase = aliases.join('\n');
+    console.log('✓ Alias gespeichert: "'+quittungName+'" → "'+artikel.name+'"');
+  }
+  
+  // Speichere zu GitHub
+  saveL();
+}
+
+function renderLagerInfo(parsed){
+  // Zeige gefundenen Lager-Artikel mit Foto und Wechsel-Option
+  if(!parsed.lagerArtikelId && parsed.needsManualMatch) {
+    return '<div style="background:var(--wn);color:#fff;padding:8px 12px;border-radius:4px;margin-bottom:12px">'+
+      '<button onclick="openLagerArtikleWahl(\''+parsed.name.replace(/'/g,"\\'")+'\',0)" style="background:transparent;color:#fff;border:none;font-weight:600;cursor:pointer;text-decoration:underline">? Artikel wählen</button>'+
+    '</div>';
+  }
+  
+  if(parsed.lagerArtikelId) {
+    const artikel = S.a.find(a => a.id === parsed.lagerArtikelId);
+    if(!artikel) return '';
+    
+    return '<div style="background:var(--ok);padding:12px;border-radius:4px;margin-bottom:12px">'+
+      '<div style="display:flex;gap:12px;align-items:flex-start">'+
+        '<div style="flex:1">'+
+          '<div style="color:#fff;font-weight:600;margin-bottom:4px">📦 Lager-Artikel:</div>'+
+          '<div style="color:#fff;font-size:14px;margin-bottom:8px">'+esc(artikel.name)+'</div>'+
+          '<button onclick="openLagerArtikleWahl(\''+parsed.name.replace(/'/g,"\\'")+'\',0,true)" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.5);padding:4px 8px;border-radius:3px;cursor:pointer;font-size:11px">Anderer Artikel</button>'+
+        '</div>'+
+        (artikel.foto ? '<img src="'+artikel.foto+'" style="width:60px;height:60px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openFotoLightbox(\''+artikel.foto.replace(/'/g,"\\'")+'\',\''+esc(artikel.name).replace(/'/g,"\\'")+'\')" title="Klick zum Vergrößern">' : '')+
+      '</div>'+
+    '</div>';
+  }
+  
+  return '';
 }
 </script>
 </body>
