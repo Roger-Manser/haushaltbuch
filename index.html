@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='20.8';
+const APP_VERSION='20.9';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'20.9',d:'08.2026',items:['DEBUG: openLagerArtikleWahl Logging','Prüfe ob Modal korrekt öffnet','Console zeigt Fehler wenn aufgerufen','Next: Artikel-Wahl richtig implementieren']},
   {v:'20.8',d:'08.2026',items:['FIX: Anderen Artikel wählen funktioniert','Edit-Dialog wird geschlossen vor Modal','FINAL FIX: Spinner komplett eliminiert','querySelectorAll für alle quittung-Elemente']},
   {v:'20.7',d:'08.2026',items:['FIX: Schaltflächen im Edit-Dialog funktionieren','Umgestellt auf Event Listener statt onclick','Speichern und Abbrechen zuverlässig','Artikel-Wechsel funktioniert']},
   {v:'20.6',d:'08.2026',items:['UI: Button-Farben grün/rot statt grau','FEATURE: Artikel-Auswahl im Edit-Dialog','? Button um anderen Artikel zu wählen','FIX: Spinner radikal versteckt (display+visibility+height+overflow)']},
@@ -8656,6 +8657,7 @@ function showAppInfo(){
 }
 
 function openLagerArtikleWahl(quittungName, posIdx, isMatched){
+  console.log('🔍 MODAL ÖFFNEN:', quittungName, 'isMatched='+isMatched);
   // Modal um Artikel aus Lager zu wählen und via Alias zu merken
   // isMatched=true bedeutet: Es wurde bereits einen Artikel gefunden, User will wechseln
   
