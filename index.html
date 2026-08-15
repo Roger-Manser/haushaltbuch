@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.6';
+const APP_VERSION='21.7';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.7',d:'08.2026',items:['FIX: showReceiptPreview mit korrektem positions Array','Normalisiert quittungItems zu positions','Re-Match funktioniert jetzt','Bananen sollte endlich GRÜN sein']},
   {v:'21.6',d:'08.2026',items:['DEBUG: Detailliertes Re-Match Logging','Zeigt was ankommt in showReceiptPreview','Zeigt ob Match funktioniert','Findet Bananen-Problem']},
   {v:'21.5',d:'08.2026',items:['FIX: Re-Match in showReceiptPreview für Bananen','FIX: Nur Alias speichern im Vorschau-Modus','Daten werden NICHT gebucht in Vorschau','Aber Aliase werden gelernt']},
   {v:'21.4',d:'08.2026',items:['CRITICAL FIX: showReceiptPreview nutzt quittungItems direkt','lagerArtikelId wird jetzt korrekt verwendet','Bananen sollte GRÜN sein','Endlich alles funktioniert!']},
@@ -4640,8 +4641,19 @@ function editPreviewPosition(idx){
     const receipt = document.getElementById('receipt-preview-dlg');
     if(receipt) receipt.remove();
     
-    // Gebe die kompletten quittungItems direkt durch, nicht nur gemappte Positionen!
-    showReceiptPreview(quittungItems);
+    // Erstelle positions Array mit allen Feldern aus quittungItems
+    const positions = (quittungItems || []).map(it => ({
+      name: it.name || 'Unknown',
+      menge: it.menge || 1,
+      einheit: it.einheit || 'Stk',
+      preis_brutto: it.preis_brutto || it.preis || 0,
+      rabatt: it.rabatt || 0,
+      lagerArtikelId: it.lagerArtikelId || null,
+      lagerMatch: it.lagerMatch || false,
+      needsManualMatch: it.needsManualMatch === undefined ? !it.lagerArtikelId : it.needsManualMatch,
+      kat: it.kat || 'Diverses'
+    }));
+    showReceiptPreview(positions);
   });
   
   document.getElementById('btn-cancel-'+idx).addEventListener('click', () => {
