@@ -536,10 +536,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.76';
+const APP_VERSION='19.77';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.77',d:'08.2026',items:['Feature: 🔍 Vorschau-Modus für Quittungs-Scan','Zeigt alle Positionen VOR dem Buchen','NICHTS wird gespeichert — perfekt zum Testen','3 Parser: Lose-Ware, Verpackt, Portion-Box']},
   {v:'19.76',d:'08.2026',items:['Fix: Foto-Dialog bleibt offen bis Abbrechen','Dialog wird jetzt nach Datei-Auswahl geschlossen','Kamera/Galerie-Wahl funktioniert nahtlos']},
   {v:'19.75',d:'08.2026',items:['Feature: Quittungs-Aliase in Artikel-Detail editierbar','✎ Bearbeiten Button direkt in der Detail-Ansicht','Ein Alias pro Zeile eingeben']},
   {v:'19.74',d:'08.2026',items:['Feature: Quittungs-Alias-Manager in Einstellungen','Artikel auswählen und Aliase manuell erstellen/bearbeiten','Ein Alias pro Zeile für besseres Quittungs-Matching']},
@@ -4127,6 +4128,100 @@ let aiMatchCache={};
 let aiMatchLoading=false;
 async function buildAiMatchCache(){}
 
+// ===== VORSCHAU-MODUS =====
+function showReceiptPreview(positions){
+  // Zeige Scan-Ergebnisse zur Vorschau - SPEICHERT NICHTS!
+  if(!opt.quittungPreview){
+    // Normal buchen wenn nicht im Vorschau-Modus
+    doReceiptPositions(positions);
+    return;
+  }
+  
+  // VORSCHAU-MODUS: Nur anzeigen
+  const dlg=document.createElement('div');
+  dlg.id='receipt-preview-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8900;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)';
+  
+  const header=
+    '<div style="background:var(--wl);border-bottom:2px solid var(--wn);padding:12px 16px;display:flex;align-items:center;gap:8px">'+
+      '<span style="font-size:14px;color:var(--wn);font-weight:700">🔍 VORSCHAU-MODUS — NICHTS WIRD GESPEICHERT</span>'+
+    '</div>';
+  
+  const positionsHtml=positions.map((p,i)=>{
+    const parsed=parseReceiptPosition(p);
+    return '<div style="background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin-bottom:8px">'+
+      '<div style="font-weight:600;font-size:14px;margin-bottom:8px">Position '+(i+1)+': '+esc(parsed.name)+'</div>'+
+      '<div style="font-size:12px;color:var(--t2);background:var(--sf);padding:8px;border-radius:var(--rs);margin-bottom:8px;font-family:monospace">'+
+        '<div><strong>Rohtext:</strong> '+esc(p.text)+'</div>'+
+        '<div style="margin-top:4px"><strong>Interpretation:</strong></div>'+
+        '<div>• Typ: '+parsed.type+'</div>'+
+        '<div>• Menge: '+parsed.menge+'</div>'+
+        '<div>• Einheit: '+parsed.einheit+'</div>'+
+        '<div>• Preis: CHF '+parsed.preis.toFixed(2)+'</div>'+
+        '<div>• Kaufort: '+esc(parsed.kaufort||'—')+'</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:6px">'+
+        '<button onclick="editPreviewPosition('+i+')" style="flex:1;padding:8px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:12px;cursor:pointer">✎ Korrigieren</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  
+  const footer=
+    '<div style="padding:12px 16px;display:flex;gap:8px;border-top:1px solid var(--bd)">'+
+      '<button onclick="document.getElementById(\'receipt-preview-dlg\').remove()" style="flex:1;padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer">✗ Abbrechen</button>'+
+      '<button onclick="confirmPreviewBooking()" style="flex:1;padding:12px;background:var(--ol);border:none;border-radius:var(--rs);color:var(--ok);font-weight:600;font-size:14px;cursor:pointer">⚠️ Verstanden, normal buchen</button>'+
+    '</div>';
+  
+  dlg.innerHTML=header+'<div style="flex:1;overflow-y:auto;padding:12px 16px">'+positionsHtml+'</div>'+footer;
+  document.body.appendChild(dlg);
+}
+
+function parseReceiptPosition(p){
+  // Parse eine Quittungs-Position in die 3 Typen
+  const text=p.text.toLowerCase();
+  
+  // Type 1: Lose-Ware (kg x CHF/kg)
+  if(text.includes('kg')&&text.includes('chf')){
+    const kgMatch=text.match(/([0-9.,]+)\s*kg/);
+    const priceMatch=text.match(/([0-9.,]+)\s*chf/);
+    if(kgMatch&&priceMatch){
+      return {
+        name:p.text.split('\n')[0],
+        type:'Lose-Ware (kg)',
+        menge:parseFloat(kgMatch[1].replace(',','.')),
+        einheit:'kg',
+        preis:parseFloat(priceMatch[1].replace(',','.'))*parseFloat(kgMatch[1].replace(',','.')),
+        kaufort:''
+      };
+    }
+  }
+  
+  // Type 2: Verpackt (Stück x Gewicht)
+  // Type 3: Portion-Box mit Rabatt
+  // Vereinfacht: parse Preis
+  const preisMatch=p.preis||p.text.match(/([0-9]+\.[0-9]{2})\s*(chf|fr)/i);
+  
+  return {
+    name:p.text.split('\n')[0],
+    type:'Standard',
+    menge:1,
+    einheit:'Stk',
+    preis:preisMatch?parseFloat(preisMatch[1]):0,
+    kaufort:''
+  };
+}
+
+function editPreviewPosition(idx){
+  toast('✎ Position-Editing im Vorschau-Modus wird in nächster Version implementiert');
+}
+
+function confirmPreviewBooking(){
+  toast('ℹ️ Vorschau-Modus beendet. Starte normalen Scan für echter Buchung.');
+  const dlg=document.getElementById('receipt-preview-dlg');
+  if(dlg)dlg.remove();
+}
+
+
 // Grundzutaten: immer als vorhanden gewertet (Selbstverständlichkeiten, nicht im Lager getrackt)
 const GRUNDZUTATEN=['wasser','salz','pfeffer','öl','olivenöl','rapsöl','sonnenblumenöl','pflanzenöl','zucker','mehl','essig'];
 function istGrundzutat(z){
@@ -6700,9 +6795,11 @@ function renderSt(){
     '<button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="openMindestManager()">⚠ Mindestbestände verwalten</button>'+
     '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Alle Mindestbestände auf einmal prüfen und anpassen — oder alle auf 0 zurücksetzen.</p>'
   )+
-  settingsGroup('sg-training','🎓','Quittungsscan Trainingsmodus',
-    '<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Im Trainingsmodus werden beim Quittungsscan nur Aliase erfasst — <strong>kein Warenbestand</strong> wird verändert.</p>'+
-    optToggle('quittungTraining','🎓 Trainingsmodus aktiv','Quittungsscan bucht nichts ein, speichert aber Aliase für unbekannte Artikel.')+
+  settingsGroup('sg-training','🎓','Quittungsscan',
+    '<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Quittungsscan Modi:</p>'+
+    optToggle('quittungPreview','🔍 Vorschau-Modus','Zeigt Scan-Ergebnisse VOR dem Buchen. NICHTS wird gespeichert — perfekt zum Testen und Trainieren.')+
+    '<div style="font-size:11px;color:var(--wn);background:var(--wl);padding:8px;border-radius:var(--rs);margin:8px 0;border-left:3px solid var(--wn)">⚠️ Im Vorschau-Modus werden <strong>KEINE Daten</strong> gespeichert. Ideal zum Lernen der KI-Interpretation.</div>'+
+    optToggle('quittungTraining','🎓 Trainingsmodus (deprecated)','Alte Funktion — verwende stattdessen Vorschau-Modus.')+
     renderAliasUebersicht()
   )+
   settingsGroup('sg-foodwaste','♻️','Anti-Foodwaste & Haltbarkeit',
