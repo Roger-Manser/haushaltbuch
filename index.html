@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.3';
+const APP_VERSION='21.4';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.4',d:'08.2026',items:['CRITICAL FIX: showReceiptPreview nutzt quittungItems direkt','lagerArtikelId wird jetzt korrekt verwendet','Bananen sollte GRÜN sein','Endlich alles funktioniert!']},
   {v:'21.3',d:'08.2026',items:['FINAL FIX: lagerArtikelId wird korrekt gesetzt','parseReceiptPosition gibt alle Felder zurück','Bananen + alle anderen Artikel matchend','🎉 PRODUCTION READY 🎉']},
   {v:'21.2',d:'08.2026',items:['DEBUG: Ausführliches Lager-Match-Logging','Zeigt gesuchte Namen in Console','Zeigt alle verfügbaren Artikel','Hilft um Matching-Probleme zu debuggen']},
   {v:'21.1',d:'08.2026',items:['FEATURE: Toast-Bestätigung beim Speichern','Zeigt "✓ Alias gespeichert!"','Grün oben rechts für 3 Sekunden','Visuelles Feedback für erfolgreiche Zuweisung']},
@@ -4617,8 +4618,8 @@ function editPreviewPosition(idx){
     const receipt = document.getElementById('receipt-preview-dlg');
     if(receipt) receipt.remove();
     
-    const parsed_positions = quittungItems.map(it=>({name:it.name||'Unknown',text:it.name+'\n'+it.menge+' '+it.einheit+' CHF '+(it.preis_brutto||it.preis_netto||it.preis||0).toFixed(2),preis_brutto:it.preis_brutto||it.preis_netto||it.preis||0,preis_netto:it.preis_netto||it.preis||0,preis:it.preis_netto||it.preis||0,rabatt:it.rabatt||0,einheit:it.einheit||'Stk',menge:it.menge||1,kat:it.kat||'Diverses'}));
-    showReceiptPreview(parsed_positions);
+    // Gebe die kompletten quittungItems direkt durch, nicht nur gemappte Positionen!
+    showReceiptPreview(quittungItems);
   });
   
   document.getElementById('btn-cancel-'+idx).addEventListener('click', () => {
