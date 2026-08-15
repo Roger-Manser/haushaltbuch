@@ -536,11 +536,13 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.80';
+const APP_VERSION='19.81';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.81',d:'08.2026',items:['MAJOR: Kompletter Parser-Rewrite','Bessere Regex für Preise und Mengen','Console-Logs zum Debuggen','Erkennt Loose-Ware, Portion-Box, Standard korrekt']},
   {v:'19.80',d:'08.2026',items:['BUGFIX: Vorschau-Modus wird jetzt tatsächlich aufgerufen!','renderQuittung() checkt opt.quittungPreview','Gesamtpreis und Rabatte zeigen sich jetzt in der Vorschau']},
+  {v:'19.81',d:'08.2026',items:['MAJOR: Kompletter Parser-Rewrite','Bessere Regex für Preise und Mengen','Console-Logs zum Debuggen','Erkennt Loose-Ware, Portion-Box, Standard korrekt']},
   {v:'19.80',d:'08.2026',items:['Debug: Console.log in Vorschau-Modus','Force neue showReceiptPreview Logik','Prüfe ob alte Funktionen überschrieben werden']},
   {v:'19.79',d:'08.2026',items:['Vorschau: Detaillierte Position-Informationen anzeigen','Typ-Icons (🥬 🎁 📦)','Brutto- und Netto-Preise','Gesamtpreis-Zusammenfassung oben (mit Rabatt-Übersicht)']},
   {v:'19.78',d:'08.2026',items:['Parser: Rabatt-Erkennung (Stangenrabatt, Aktion)','Parser: Loose-Ware mit CHF/kg','Parser: Portion-Box mit Packungsgröße-Berechnung','Vorschau zeigt jetzt Rabatte und Packungsanzahl']},
@@ -4261,47 +4263,74 @@ function showReceiptPreview_OLD(positions){
 }
 
 function parseReceiptPosition(p){
-  // Parse eine Quittungs-Position in die 3 Typen
-  const text=p.text.toLowerCase();
-  const lines=p.text.split('\n');
+  // NEUER PARSER mit besseren Regex-Patterns
+  const fullText=p.text;
+  const text=fullText.toLowerCase().trim();
+  const lines=fullText.split('\n').map(l=>l.trim()).filter(l=>l);
+  const artikelName=lines[0];
   
-  // Erkenne Rabatt-Zeilen (Stangenrabatt, Rabatt, Discount, etc.)
-  const rabattMatch=text.match(/(rabatt|discount|stangenrabatt|aktion)[^0-9]*-?\s*([0-9.,]+)\s*(chf|fr)/i);
-  const rabattBetrag=rabattMatch?parseFloat(rabattMatch[2].replace(',','.')):0;
+  console.log('🔍 Parse Position: '+artikelName);
   
-  // Type 1: Lose-Ware (kg x CHF/kg)
-  if(text.includes('kg')&&text.includes('chf')){
-    const kgMatch=text.match(/([0-9.,]+)\s*kg/);
-    const pricePerKgMatch=text.match(/([0-9.,]+)\s*chf.*kg/);
+  // Extrahiere ALL Preise aus dem Text (auch mehrere Zeilen)
+  const allePricesMatches=text.match(/([0-9]+[.,][0-9]{2})\s*(chf|fr|a)/gi)||[];
+  const preise=allePricesMatches.map(m=>parseFloat(m.replace(/[^0-9.,]/g,'').replace(',','.')));
+  
+  // Erkenne Rabatt-Zeilen (negativ oder nach «rabatt»)
+  let rabattBetrag=0;
+  const rabattMatch=text.match(/(rabatt|discount|stangenrabatt|aktion|aktion.*-|.*rabatt)[^0-9]*-?\s*([0-9]+[.,][0-9]{2})/i);
+  if(rabattMatch){
+    rabattBetrag=parseFloat(rabattMatch[2].replace(',','.'));
+    console.log('  → Rabatt erkannt: CHF '+rabattBetrag);
+  }
+  
+  // PREIS-LOGIK: Der LETZTE Preis ist meist der Gesamtpreis (nach Rabatt)
+  const nettoPreis=preise.length>0?preise[preise.length-1]:0;
+  const bruttoPreis=nettoPreis+rabattBetrag;
+  
+  // TYPE 1: LOOSE-WARE (kg x CHF/kg)
+  if(text.includes('kg')&&preise.length>=2){
+    const kgMatch=text.match(/([0-9]+[.,][0-9]+)\s*kg/);
+    const pricePerKgMatch=text.match(/([0-9]+[.,][0-9]+)\s*chf.*kg/);
+    
     if(kgMatch&&pricePerKgMatch){
       const kg=parseFloat(kgMatch[1].replace(',','.'));
       const pricePerKg=parseFloat(pricePerKgMatch[1].replace(',','.'));
-      const totalPreis=kg*pricePerKg-rabattBetrag;
+      console.log('  → Loose-Ware: '+kg+'kg @ CHF '+pricePerKg+'/kg');
+      
       return {
-        name:lines[0],
+        name:artikelName,
         type:'Lose-Ware (kg)',
         menge:kg,
         einheit:'kg',
         preisProEinheit:pricePerKg,
-        preis:totalPreis,
+        preis:nettoPreis,
         rabatt:rabattBetrag,
         kaufort:''
       };
     }
   }
   
-  // Type 2: Verpackt mit Stückzahl (20x 5.75 = Portion-Box)
-  const stueckMatch=text.match(/([0-9]+)\s*x\s*([0-9.,]+)/);
-  if(stueckMatch){
-    const stuecke=parseInt(stueckMatch[1]);
-    const preisProStueck=parseFloat(stueckMatch[2].replace(',','.'));
-    const totalPreis=stuecke*preisProStueck-rabattBetrag;
+  // TYPE 2: PORTION-BOX (20x CHF 5.75)
+  const boxMatch=text.match(/([0-9]+)\s*x\s*([0-9]+[.,][0-9]{2})/);
+  if(boxMatch){
+    const stuecke=parseInt(boxMatch[1]);
+    const preisPerItem=parseFloat(boxMatch[2].replace(',','.'));
+    console.log('  → Portion-Box: '+stuecke+'x @ CHF '+preisPerItem);
     
-    // Erkenne ob Packungsgröße im Lager existiert
-    const artikelName=lines[0];
-    const lagerArtikel=S.a.find(a=>a.name.toLowerCase().includes(artikelName.toLowerCase()));
-    const packSize=lagerArtikel?lagerArtikel.packSize||1:1;
-    const anzahlPackungen=Math.ceil(stuecke/packSize);
+    // Finde Lager-Artikel um Packungsgröße zu erkennen
+    const lagerArtikel=S.a.find(a=>
+      a.name.toLowerCase().includes(artikelName.toLowerCase()) ||
+      artikelName.toLowerCase().includes(a.name.toLowerCase())
+    );
+    
+    let packSize=1;
+    let anzahlPackungen=stuecke;
+    
+    if(lagerArtikel){
+      packSize=lagerArtikel.packSize||10;  // Default 10 wenn nicht gesetzt
+      anzahlPackungen=Math.ceil(stuecke/packSize);
+      console.log('  → Lager: '+lagerArtikel.name+' ('+packSize+' Stk/Box) → '+anzahlPackungen+' Boxen');
+    }
     
     return {
       name:artikelName,
@@ -4310,23 +4339,22 @@ function parseReceiptPosition(p){
       mengeInPackungen:anzahlPackungen,
       packSize:packSize,
       einheit:'Stk',
-      preisProEinheit:preisProStueck,
-      preis:totalPreis,
+      preisProEinheit:preisPerItem,
+      preis:nettoPreis,
       rabatt:rabattBetrag,
       kaufort:''
     };
   }
   
-  // Fallback: Standard
-  const preisMatcher=p.text.match(/([0-9]+\.[0-9]{2})\s*(chf|fr)/i);
-  const preis=preisMatcher?parseFloat(preisMatcher[1]):0;
-  
+  // TYPE 3: STANDARD (1x CHF X.XX)
+  console.log('  → Standard: CHF '+nettoPreis);
   return {
-    name:lines[0],
+    name:artikelName,
     type:'Standard',
     menge:1,
     einheit:'Stk',
-    preis:preis-rabattBetrag,
+    preisProEinheit:nettoPreis,
+    preis:nettoPreis,
     rabatt:rabattBetrag,
     kaufort:''
   };
