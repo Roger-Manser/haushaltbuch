@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.95';
+const APP_VERSION='19.96';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.96',d:'08.2026',items:['UI: Vorschau-Dialog vertikal zentriert','UI: Lager-Status-Badge für jeden Artikel','✓ Grün: Artikel im Lager gefunden','⚠️ Rot: Artikel NICHT im Lager']},
   {v:'19.95',d:'08.2026',items:['UI: Dialog max-width 420px Wrapper','UI: Abbrechen-Button Akzent-Farbe + weiß + fett + ESC','FIX: Loading-Spinner wird gelöscht vor Vorschau','Dialog mobile-optimiert']},
   {v:'19.94',d:'08.2026',items:['UI: Vorschau-Dialog schmaler (max 420px)','UI: Abbrechen-Button bessere Farbe (Akzent, weiß, fett)','FIX: Loading-Spinner verschwindet nach Vorschau','Dialog-Anzeige optimiert für Handy']},
   {v:'19.93',d:'08.2026',items:['FIX: parsed_positions zeigt preis_brutto statt netto','Vorschau zeigt jetzt korrekten Brutto-Preis','Goldfield: CHF 115 brutto korrekt angezeigt','Rabatt wird von Brutto abgezogen = Netto']},
@@ -4304,7 +4305,13 @@ function showReceiptPreview(positions){
       '</div>'
     ].filter(x=>x).join('');
     
+    // Lager-Status-Badge
+    const lagerBadge = parsed.lagerMatch ? 
+      '<div style="background:var(--ok);color:#fff;padding:3px 8px;border-radius:3px;margin-bottom:8px;font-size:10px;font-weight:600;display:inline-block">✓ Im Lager</div>' :
+      '<div style="background:var(--wn);color:#fff;padding:3px 8px;border-radius:3px;margin-bottom:8px;font-size:10px;font-weight:600;display:inline-block">⚠️ NICHT im Lager</div>';
+    
     return '<div style="background:var(--bg);border:2px solid '+(parsed.rabatt?'var(--ok)':'var(--bd)')+';border-radius:var(--rs);padding:12px;margin-bottom:12px">'+
+      lagerBadge+
       '<div style="font-weight:700;font-size:15px;margin-bottom:12px">'+esc(parsed.name)+'</div>'+
       '<div style="font-size:12px;color:var(--t2)">'+details+'</div>'+
       '<div style="display:flex;gap:6px;margin-top:10px">'+
@@ -4463,6 +4470,13 @@ function parseReceiptPosition(p){
   
   // Standard-Artikel
   console.log('📍 Standard: '+name);
+  
+  // Check ob Artikel im Lager existiert
+  const lagerMatch = S.a.find(a => 
+    a.name.toLowerCase() === name.toLowerCase() ||
+    a.name.toLowerCase().includes(name.toLowerCase().split(' ')[0])
+  );
+  
   return {
     name: name,
     type: 'Standard',
@@ -4470,7 +4484,9 @@ function parseReceiptPosition(p){
     einheit: einheit,
     preisProEinheit: nettoPreis,
     preis: nettoPreis,
-    rabatt: rabatt
+    rabatt: rabatt,
+    lagerMatch: lagerMatch ? true : false,
+    lagerArtikelId: lagerMatch ? lagerMatch.id : null
   };
 }
 
