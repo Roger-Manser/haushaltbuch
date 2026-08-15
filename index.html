@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.7';
+const APP_VERSION='21.8';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.8',d:'08.2026',items:['FINAL: Sehr defensives showReceiptPreview','Try-catch überall','Einfache quittungItems Übergabe','Sollte ENDLICH funktionieren']},
   {v:'21.7',d:'08.2026',items:['FIX: showReceiptPreview mit korrektem positions Array','Normalisiert quittungItems zu positions','Re-Match funktioniert jetzt','Bananen sollte endlich GRÜN sein']},
   {v:'21.6',d:'08.2026',items:['DEBUG: Detailliertes Re-Match Logging','Zeigt was ankommt in showReceiptPreview','Zeigt ob Match funktioniert','Findet Bananen-Problem']},
   {v:'21.5',d:'08.2026',items:['FIX: Re-Match in showReceiptPreview für Bananen','FIX: Nur Alias speichern im Vorschau-Modus','Daten werden NICHT gebucht in Vorschau','Aber Aliase werden gelernt']},
@@ -4275,24 +4276,41 @@ async function buildAiMatchCache(){}
 
 // ===== VORSCHAU-MODUS =====
 function showReceiptPreview(positions){
-  // Stelle sicher dass alle Positionen die lagerArtikelId gesetzt haben
-  positions.forEach((p, i) => {
-    const searchName = p.name.toLowerCase().trim();
-    console.log('📍 showReceiptPreview Pos '+i+':', p.name, '| lagerArtikelId='+p.lagerArtikelId);
-    
-    if(!p.lagerArtikelId && p.name) {
-      // Neu-Match versuchen
-      console.log('🔍 Suche Re-Match für:', searchName);
-      console.log('📦 Verfügbare:', (S.a||[]).map(a => a.name.toLowerCase().trim()));
+  console.log('🎬 showReceiptPreview START');
+  
+  // Defensive checks
+  if(!positions) {
+    console.error('❌ positions ist null/undefined');
+    return;
+  }
+  if(!Array.isArray(positions)) {
+    console.error('❌ positions ist nicht Array:', typeof positions);
+    return;
+  }
+  
+  console.log('📋 Processing', positions.length, 'positions');
+  
+  // Re-Match für alle Positionen
+  (positions || []).forEach((p, i) => {
+    try {
+      if(!p || !p.name) return;
       
-      const match = S.a.find(a => a.name && a.name.toLowerCase().trim() === searchName);
-      if(match) {
-        p.lagerArtikelId = match.id;
-        p.lagerMatch = true;
-        console.log('✓ Re-Match GEFUNDEN:', p.name, '→', match.name);
-      } else {
-        console.log('❌ Re-Match NICHT gefunden:', searchName);
+      const searchName = p.name.toLowerCase().trim();
+      console.log('📍 Pos '+i+': "'+p.name+'" (lagerArtikelId='+(p.lagerArtikelId||'null')+')');
+      
+      if(!p.lagerArtikelId) {
+        console.log('🔍 Suche nach:', searchName);
+        const match = (S.a||[]).find(a => a && a.name && a.name.toLowerCase().trim() === searchName);
+        if(match) {
+          p.lagerArtikelId = match.id;
+          p.lagerMatch = true;
+          console.log('✓ FOUND:', match.name);
+        } else {
+          console.log('❌ NOT found');
+        }
       }
+    } catch(e) {
+      console.error('❌ Error in Re-Match:', e.message);
     }
   });
   // FORCE: Zeige immer die neue Vorschau wenn Vorschau-Modus aktiv!
@@ -4641,19 +4659,13 @@ function editPreviewPosition(idx){
     const receipt = document.getElementById('receipt-preview-dlg');
     if(receipt) receipt.remove();
     
-    // Erstelle positions Array mit allen Feldern aus quittungItems
-    const positions = (quittungItems || []).map(it => ({
-      name: it.name || 'Unknown',
-      menge: it.menge || 1,
-      einheit: it.einheit || 'Stk',
-      preis_brutto: it.preis_brutto || it.preis || 0,
-      rabatt: it.rabatt || 0,
-      lagerArtikelId: it.lagerArtikelId || null,
-      lagerMatch: it.lagerMatch || false,
-      needsManualMatch: it.needsManualMatch === undefined ? !it.lagerArtikelId : it.needsManualMatch,
-      kat: it.kat || 'Diverses'
-    }));
-    showReceiptPreview(positions);
+    // EINFACH: Übergebe quittungItems direkt
+    console.log('📢 showReceiptPreview wird aufgerufen mit', quittungItems.length, 'Items');
+    try {
+      showReceiptPreview(quittungItems);
+    } catch(e) {
+      console.error('❌ showReceiptPreview Error:', e.message, e);
+    }
   });
   
   document.getElementById('btn-cancel-'+idx).addEventListener('click', () => {
