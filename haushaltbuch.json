@@ -18087,7 +18087,18 @@
       "k": "Gemüse & Früchte",
       "aktion": false,
       "kaufort": "Lidl"
+    },
+    {
+      "aid": 12,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 8.65,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Getränke",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-15T08:23:52.832Z"
+  "aktualisiert": "2026-08-15T08:26:21.179Z"
 }
