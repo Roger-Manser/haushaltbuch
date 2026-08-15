@@ -536,12 +536,14 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.81';
+const APP_VERSION='19.82';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.82',d:'08.2026',items:['DEBUG-VERSION: Massive Logging hinzugefügt','Zeige Rohtext, Preise, p-Objekt in Console','Finde heraus warum Preise nicht extrahiert werden']},
   {v:'19.81',d:'08.2026',items:['MAJOR: Kompletter Parser-Rewrite','Bessere Regex für Preise und Mengen','Console-Logs zum Debuggen','Erkennt Loose-Ware, Portion-Box, Standard korrekt']},
   {v:'19.80',d:'08.2026',items:['BUGFIX: Vorschau-Modus wird jetzt tatsächlich aufgerufen!','renderQuittung() checkt opt.quittungPreview','Gesamtpreis und Rabatte zeigen sich jetzt in der Vorschau']},
+  {v:'19.82',d:'08.2026',items:['DEBUG-VERSION: Massive Logging hinzugefügt','Zeige Rohtext, Preise, p-Objekt in Console','Finde heraus warum Preise nicht extrahiert werden']},
   {v:'19.81',d:'08.2026',items:['MAJOR: Kompletter Parser-Rewrite','Bessere Regex für Preise und Mengen','Console-Logs zum Debuggen','Erkennt Loose-Ware, Portion-Box, Standard korrekt']},
   {v:'19.80',d:'08.2026',items:['Debug: Console.log in Vorschau-Modus','Force neue showReceiptPreview Logik','Prüfe ob alte Funktionen überschrieben werden']},
   {v:'19.79',d:'08.2026',items:['Vorschau: Detaillierte Position-Informationen anzeigen','Typ-Icons (🥬 🎁 📦)','Brutto- und Netto-Preise','Gesamtpreis-Zusammenfassung oben (mit Rabatt-Übersicht)']},
@@ -4263,17 +4265,29 @@ function showReceiptPreview_OLD(positions){
 }
 
 function parseReceiptPosition(p){
+  // DEBUG: Zeige was reinkommt
+  console.log('===== POSITION ROHTEXT =====');
+  console.log('p.text:', p.text);
+  console.log('p.preis:', p.preis);
+  console.log('p:', p);
+  
   // NEUER PARSER mit besseren Regex-Patterns
-  const fullText=p.text;
+  const fullText=p.text||'';
   const text=fullText.toLowerCase().trim();
   const lines=fullText.split('\n').map(l=>l.trim()).filter(l=>l);
-  const artikelName=lines[0];
+  const artikelName=lines[0]||'UNKNOWN';
   
   console.log('🔍 Parse Position: '+artikelName);
+  console.log('fullText:', fullText);
   
   // Extrahiere ALL Preise aus dem Text (auch mehrere Zeilen)
-  const allePricesMatches=text.match(/([0-9]+[.,][0-9]{2})\s*(chf|fr|a)/gi)||[];
-  const preise=allePricesMatches.map(m=>parseFloat(m.replace(/[^0-9.,]/g,'').replace(',','.')));
+  const allePricesMatches=text.match(/([0-9]+[.,][0-9]{2})\s*(chf|fr|a)?/gi)||[];
+  console.log('Gefundene Preis-Matches:', allePricesMatches);
+  const preise=allePricesMatches.map(m=>{
+    const num=parseFloat(m.replace(/[^0-9.,]/g,'').replace(',','.'));
+    console.log('  → '+m+' = CHF '+num);
+    return num;
+  });
   
   // Erkenne Rabatt-Zeilen (negativ oder nach «rabatt»)
   let rabattBetrag=0;
