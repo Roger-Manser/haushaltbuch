@@ -18092,7 +18092,18 @@
       "k": "Fleisch & Fisch",
       "aktion": false,
       "kaufort": "Lidl"
+    },
+    {
+      "aid": 242,
+      "d": "2026-08-13",
+      "m": 1,
+      "p": 2.49,
+      "t": "ein",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-15T07:27:06.808Z"
+  "aktualisiert": "2026-08-15T07:41:02.295Z"
 }
