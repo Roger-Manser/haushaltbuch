@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.87';
+const APP_VERSION='19.88';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.88',d:'08.2026',items:['MAJOR: KI-Prompt für Rabatt-Handling','Preis_brutto, rabatt, preis_netto statt einzelner Preis','Goldfield mit CHF 115 Brutto - CHF 9 Rabatt = CHF 106 Netto','Loose-Ware mit richtigem Gesamtpreis']},
   {v:'19.87',d:'08.2026',items:['FIX: Parser arbeitet jetzt mit vereinfachtem Format','Erkennt Loose-Ware-Artikel (Chinakohl, Bananen, Tomaten)','Erkennt Portion-Boxen (>5 Stück)','Fallback auf Standard für einfache Artikel']},
   {v:'19.86',d:'08.2026',items:['Parser: Portion-Box (20x CHF 5.75) erkennt jetzt Boxen','Parser: Loose-Ware (kg x CHF/kg) optimiert','Goldfield: erkennt 2 Boxen statt 20 Stück','Console.log für Debugging']},
   {v:'19.85',d:'08.2026',items:['🔄 RESET: GitHub-Version restauriert','Vorschau-Modus funktioniert stabil','v19.80 bis v19.84 waren unstabil, gelöscht','Parser-Optimierung kann jetzt sauber aufgebaut werden']},
@@ -4268,38 +4269,32 @@ function showReceiptPreview_OLD(positions){
 }
 
 function parseReceiptPosition(p){
-  // Parse die vereinfachte Format: {text, preis}
-  // text = "Artikel\nMenge CHF Preis"
+  // Parse mit neuen Feldern: preis_brutto, rabatt, preis_netto, einheit, menge
+  const name = p.name || 'Unknown';
+  const menge = p.menge || 1;
+  const einheit = p.einheit || 'Stk';
+  const bruttoPreis = p.preis_brutto || p.preis || 0;
+  const rabatt = p.rabatt || 0;
+  const nettoPreis = p.preis_netto || (bruttoPreis - rabatt);
   
-  const text = p.text || '';
-  const preis = p.preis || 0;
-  const lines = text.split('\n').filter(l => l.trim());
-  const name = lines[0] || 'Unknown';
+  console.log('📝 Parse: '+name+' ('+menge+' '+einheit+', Brutto: CHF '+bruttoPreis.toFixed(2)+', Rabatt: CHF '+rabatt.toFixed(2)+')');
   
-  // Extrahiere Menge aus dem text (z.B. "20× CHF 5.75" oder "0.952× CHF 2.49")
-  const mengeMatch = text.match(/([0-9.]+)×/);
-  const mengeStr = mengeMatch ? mengeMatch[1] : '1';
-  const menge = parseFloat(mengeStr);
-  
-  // Erkenne ob es kg sind
-  const istKg = text.includes('kg') || name.toLowerCase().includes('chinakohl') || 
-                name.toLowerCase().includes('bananen') || name.toLowerCase().includes('tomate');
-  
-  if(istKg) {
-    console.log('🥬 Loose-Ware: '+name+' '+menge+' kg');
+  // Erkenne Loose-Ware (kg/g)
+  if(einheit === 'kg' || einheit === 'g') {
+    console.log('🥬 Loose-Ware: '+name+' '+menge+' '+einheit);
     return {
       name: name,
-      type: 'Lose-Ware (kg)',
+      type: 'Lose-Ware ('+einheit+')',
       menge: menge,
-      einheit: 'kg',
-      preisProEinheit: preis / menge,
-      preis: preis,
-      rabatt: 0
+      einheit: einheit,
+      preisProEinheit: menge > 0 ? nettoPreis / menge : nettoPreis,
+      preis: nettoPreis,
+      rabatt: rabatt
     };
   }
   
   // Erkenne Portion-Box: >5 Stück wahrscheinlich eine Box
-  if(menge >= 5) {
+  if(menge >= 5 && einheit === 'Stk') {
     const lagerArtikel = S.a.find(a => 
       a.name.toLowerCase().includes(name.toLowerCase()) ||
       name.toLowerCase().includes(a.name.toLowerCase())
@@ -4317,23 +4312,23 @@ function parseReceiptPosition(p){
         mengeInPackungen: anzahlPackungen,
         packSize: packSize,
         einheit: 'Stk',
-        preisProEinheit: preis / menge,
-        preis: preis,
-        rabatt: 0
+        preisProEinheit: menge > 0 ? nettoPreis / menge : nettoPreis,
+        preis: nettoPreis,
+        rabatt: rabatt
       };
     }
   }
   
-  // Fallback: Standard
+  // Standard-Artikel
   console.log('📍 Standard: '+name);
   return {
     name: name,
     type: 'Standard',
-    menge: 1,
-    einheit: 'Stk',
-    preisProEinheit: preis,
-    preis: preis,
-    rabatt: 0
+    menge: menge,
+    einheit: einheit,
+    preisProEinheit: nettoPreis,
+    preis: nettoPreis,
+    rabatt: rabatt
   };
 }
 
@@ -7091,25 +7086,30 @@ async function handleQuittungFile(input){
   // Claude Vision API
   try{
     const prompt=
-      'Analysiere diese Quittung/Kassenbon und extrahiere alle gekauften Artikel.\n'+
+      'Analysiere diese Quittung/Kassenbon und extrahiere alle gekauften Artikel mit Rabatten.\n'+
       'Antworte NUR mit einem JSON-Objekt, keine andere Ausgabe:\n'+
       '{\n'+
-      '  "geschaeft": "Migros",\n'+
-      '  "datum": "2026-06-23",\n'+
+      '  "geschaeft": "Lidl",\n'+
+      '  "datum": "2026-08-13",\n'+
       '  "artikel": [\n'+
-      '    {"name":"Vollmilch","menge":2,"preis":1.85,"einheit":"Stk","kat":"Milchprodukte"},\n'+
+      '    {"name":"Goldfield Gold Box","menge":20,"preis_brutto":115.00,"rabatt":9.00,"preis_netto":106.00,"einheit":"Stk","kat":"Süsswaren"},\n'+
+      '    {"name":"Chinakohl","menge":0.952,"preis_brutto":2.37,"rabatt":0,"preis_netto":2.37,"einheit":"kg","kat":"Gemüse & Früchte"},\n'+
       '    ...\n'+
       '  ]\n'+
       '}\n\n'+
       'Regeln:\n'+
       '- name: Produktname von der Quittung\n'+
-      '- menge: Anzahl (Standard 1)\n'+
-      '- preis: Preis PRO EINHEIT in CHF (Zahl, kein Währungssymbol)\n'+
-      '- einheit: Stk/kg/g/l/dl/Pkg/Flasche/Dose etc.\n'+
+      '- menge: Anzahl/Gewicht (Standard 1)\n'+
+      '- preis_brutto: GESAMT-PREIS DES ARTIKELS VOR RABATT in CHF\n'+
+      '- rabatt: Rabatt-Betrag für diesen Artikel in CHF (z.B. Stangenrabatt, Aktion) - Standard 0\n'+
+      '- preis_netto: preis_brutto - rabatt = Finaler Preis in CHF\n'+
+      '- einheit: Stk/kg/g/l/ml/Pkg/Flasche/Dose etc. (WICHTIG: bei Lose-Ware kg/g, bei Verpackung Stk)\n'+
       '- kat: eine von: Milchprodukte, Fleisch & Fisch, Gemüse & Früchte, Tiefkühl, Getränke, Konserven & Trockenware, Backwaren & Brot, Gewürze & Saucen, Süsswaren, Reinigung & Pflege, Diverses\n'+
       '- geschaeft: Geschäftsname (Migros/Coop/Lidl/Aldi/Denner/Volg/Online oder erkannter Name)\n'+
       '- datum: Datum im Format JJJJ-MM-TT (oder heutiges Datum falls nicht lesbar)\n'+
-      '- Nur echte Produkte, keine Rabatte/Steuern/Totals als eigene Artikel';
+      '- WICHTIG: Rabatte ZUORDNEN zu Artikeln (z.B. Stangenrabatt zur Goldfield-Box, NICHT als eigener Artikel)\n'+
+      '- Loose-Ware (kg) mit GESAMT-PREIS, nicht Preis pro kg\n'+
+      '- Nur echte Produkte, keine Steuern/Totals als eigene Artikel';
 
     const aiKey=localStorage.getItem('hb_ai_key')||'';
     if(!aiKey){
@@ -7193,7 +7193,7 @@ function renderQuittungUebersicht(datum){
   }
   // VORSCHAU-MODUS CHECK
   if(opt.quittungPreview){
-    const parsed_positions=quittungItems.map(it=>({text:it.name+'\n'+it.menge+'× CHF '+it.preis.toFixed(2),preis:it.preis}));
+    const parsed_positions=quittungItems.map(it=>({text:it.name+'\n'+it.menge+' '+it.einheit+' CHF '+((it.preis_netto||it.preis)||0).toFixed(2),preis:it.preis_netto||it.preis||0,rabatt:it.rabatt||0,einheit:it.einheit||'Stk',menge:it.menge||1}));
     showReceiptPreview(parsed_positions);
     return;
   }
