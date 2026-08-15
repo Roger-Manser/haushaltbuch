@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='19.97';
+const APP_VERSION='19.98';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'19.98',d:'08.2026',items:['FIX: showAppInfo ReferenceError behoben','Stub-Funktion öffnet Settings','Console-Fehler eliminiert','Lager-Match-Logging kann jetzt arbeiten']},
   {v:'19.97',d:'08.2026',items:['FIX: Lager-Match mit Debug-Logging','Bessere Name-Normalisierung für Artikel-Suche','FIX: Body wird bei Preview komplett hidden','Dialog border-radius angepasst']},
   {v:'19.96',d:'08.2026',items:['UI: Vorschau-Dialog vertikal zentriert','UI: Lager-Status-Badge für jeden Artikel','✓ Grün: Artikel im Lager gefunden','⚠️ Rot: Artikel NICHT im Lager']},
   {v:'19.95',d:'08.2026',items:['UI: Dialog max-width 420px Wrapper','UI: Abbrechen-Button Akzent-Farbe + weiß + fett + ESC','FIX: Loading-Spinner wird gelöscht vor Vorschau','Dialog mobile-optimiert']},
@@ -8513,6 +8514,10 @@ async function installApp(){
   const choice=await deferredInstallPrompt.userChoice;
   if(choice.outcome==='accepted')toast('Wird installiert…');
   deferredInstallPrompt=null;
+}
+function showAppInfo(){
+  // Show app version, stats, links
+  goScreen('s-settings');
 }
 </script>
 </body>
