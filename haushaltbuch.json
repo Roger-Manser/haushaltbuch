@@ -2240,7 +2240,8 @@
           "kaufdatum": "2026-08-13",
           "ablaufdatum": "2027-05-13"
         }
-      ]
+      ],
+      "quittungAliase": "Espressokapseln Ristretto"
     },
     {
       "id": 62,
@@ -4662,7 +4663,8 @@
           "ablaufdatum": "2026-08-20"
         }
       ],
-      "preisProKg": 4.35
+      "preisProKg": 4.35,
+      "quittungAliase": "Tomaten San Marzano"
     },
     {
       "id": 129,
@@ -7840,7 +7842,8 @@
           "kaufdatum": "2026-08-13",
           "ablaufdatum": ""
         }
-      ]
+      ],
+      "quittungAliase": "Goldfield Gold Box"
     },
     {
       "id": 222,
@@ -8921,7 +8924,8 @@
         }
       ],
       "letzteEingangHeute": "09:43",
-      "barcodes": []
+      "barcodes": [],
+      "quittungAliase": "Chinakohl"
     },
     {
       "id": 243,
@@ -9044,7 +9048,8 @@
         }
       ],
       "letzteEingangHeute": "09:45",
-      "barcodes": []
+      "barcodes": [],
+      "quittungAliase": "Bananen"
     },
     {
       "id": 246,
@@ -18100,5 +18105,5 @@
       "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-15T17:24:17.827Z"
+  "aktualisiert": "2026-08-16T11:06:17.443Z"
 }
