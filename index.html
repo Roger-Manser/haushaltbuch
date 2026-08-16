@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.9';
+const APP_VERSION='21.10';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.10',d:'08.2026',items:['DEBUG: Detailliertes findQuittungMatch Logging','Zeigt alle 4 Stufen','Zeigt verfügbare Artikel','MUSS zeigen warum Bananen nicht passt']},
   {v:'21.9',d:'08.2026',items:['MAJOR: Nutzt findQuittungMatch() in Vorschau','4-Stufen-Fallback: Alias → Name → Partial → Fuzzy','Same Logik wie produktive Quittung-Verarbeitung','Bananen sollte JETZT funktionieren! 🎉']},
   {v:'21.8',d:'08.2026',items:['FINAL: Sehr defensives showReceiptPreview','Try-catch überall','Einfache quittungItems Übergabe','Sollte ENDLICH funktionieren']},
   {v:'21.7',d:'08.2026',items:['FIX: showReceiptPreview mit korrektem positions Array','Normalisiert quittungItems zu positions','Re-Match funktioniert jetzt','Bananen sollte endlich GRÜN sein']},
@@ -7778,34 +7779,57 @@ function levenshteinDistance(s1,s2){
 }
 
 function findQuittungMatch(name){
+  console.log('🔎 findQuittungMatch START für: "'+name+'"');
   const nl=name.toLowerCase().trim();
-  // 1. Exakter Alias-Match (case-insensitiv)
-  let m=S.a.find(a=>(a.quittungAliase||[]).some(al=>al.toLowerCase().trim()===nl));
-  if(m)return m;
-  // 2. Exakter Name-Match (case-insensitiv)
-  m=S.a.find(a=>a.name.toLowerCase().trim()===nl);
-  if(m)return m;
-  // 3. Alias enthält Quittungsname oder umgekehrt (nur bei mind. 4 Zeichen)
-  m=S.a.find(a=>(a.quittungAliase||[]).some(al=>{
-    const al2=al.toLowerCase().trim();
-    if(al2.length<4||nl.length<4)return false;  // Nicht bei sehr kurzen Wörtern
-    return al2.includes(nl)||nl.includes(al2);
-  }));
-  if(m)return m;
-  // 4. Levenshtein-Matching (max 3 Fehler, nur bei längeren Namen)
-  if(nl.length>=8){
-    const matches=S.a.filter(a=>levenshteinDistance(a.name,name)<=3);
-    if(matches.length>0)m=matches[0];
-  }
-  // 5. Wort-Anfang-Matching: Quittungsname muss mit Artikel-Namen-Wort ANFANGEN
-  if(!m&&nl.length>=5){
-    const words=nl.split(/\s+/);
-    m=S.a.find(a=>{
-      const aname=a.name.toLowerCase();
-      return words.some(w=>w.length>=4&&aname.startsWith(w));  // Nur Wort-Anfänge, mind. 4 Zeichen
+  console.log('   normalized: "'+nl+'"');
+  
+  // 1. Exakter Alias-Match
+  console.log('   Stufe 1: Alias exakt?');
+  let m=S.a.find(a=>{
+    const has = (a.quittungAliase||[]).some(al=>al.toLowerCase().trim()===nl);
+    if(has) console.log('   ✓ Found via Alias exakt: '+a.name);
+    return has;
+  });
+  if(m){console.log('✓ Stufe 1 MATCH: '+m.name); return m;}
+  
+  // 2. Exakter Name-Match
+  console.log('   Stufe 2: Name exakt?');
+  m=S.a.find(a=>{
+    const match = a.name.toLowerCase().trim()===nl;
+    if(match) console.log('   ✓ Found via Name exakt: '+a.name);
+    return match;
+  });
+  if(m){console.log('✓ Stufe 2 MATCH: '+m.name); return m;}
+  
+  // 3. Alias/Name Partial
+  console.log('   Stufe 3: Partial match?');
+  m=S.a.find(a=>{
+    const found = (a.quittungAliase||[]).some(al=>{
+      const al2=al.toLowerCase().trim();
+      const match = al2.includes(nl)||nl.includes(al2);
+      if(match) console.log('   ✓ Found via Alias partial: '+al+' <-> '+nl);
+      return match;
     });
+    return found;
+  });
+  if(m){console.log('✓ Stufe 3 MATCH: '+m.name); return m;}
+  
+  // 4. Fuzzy Name (min 5 Zeichen)
+  console.log('   Stufe 4: Fuzzy (min 5 chars)?');
+  if(nl.length>=5){
+    m=S.a.find(a=>{
+      const match = a.name.toLowerCase().includes(nl)||nl.includes(a.name.toLowerCase());
+      if(match) console.log('   ✓ Found via Fuzzy: '+a.name+' includes '+nl);
+      return match;
+    });
+    if(m){console.log('✓ Stufe 4 MATCH: '+m.name); return m;}
+  }else{
+    console.log('   (Name zu kurz: '+nl.length+' < 5)');
   }
-  return m||null;
+  
+  console.log('❌ KEIN MATCH gefunden für: "'+name+'"');
+  console.log('   Verfügbare Artikel: '+S.a.map(a => a.name).slice(0,10).join(', '));
+  return null;
 }
 
 function renderQuittungSuche(idx){
