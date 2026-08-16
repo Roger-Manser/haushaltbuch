@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.8';
+const APP_VERSION='21.9';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.9',d:'08.2026',items:['MAJOR: Nutzt findQuittungMatch() in Vorschau','4-Stufen-Fallback: Alias → Name → Partial → Fuzzy','Same Logik wie produktive Quittung-Verarbeitung','Bananen sollte JETZT funktionieren! 🎉']},
   {v:'21.8',d:'08.2026',items:['FINAL: Sehr defensives showReceiptPreview','Try-catch überall','Einfache quittungItems Übergabe','Sollte ENDLICH funktionieren']},
   {v:'21.7',d:'08.2026',items:['FIX: showReceiptPreview mit korrektem positions Array','Normalisiert quittungItems zu positions','Re-Match funktioniert jetzt','Bananen sollte endlich GRÜN sein']},
   {v:'21.6',d:'08.2026',items:['DEBUG: Detailliertes Re-Match Logging','Zeigt was ankommt in showReceiptPreview','Zeigt ob Match funktioniert','Findet Bananen-Problem']},
@@ -4290,27 +4291,26 @@ function showReceiptPreview(positions){
   
   console.log('📋 Processing', positions.length, 'positions');
   
-  // Re-Match für alle Positionen
+  // Re-Match für alle Positionen mit findQuittungMatch() (die bewährte Funktion!)
   (positions || []).forEach((p, i) => {
     try {
       if(!p || !p.name) return;
       
-      const searchName = p.name.toLowerCase().trim();
       console.log('📍 Pos '+i+': "'+p.name+'" (lagerArtikelId='+(p.lagerArtikelId||'null')+')');
       
       if(!p.lagerArtikelId) {
-        console.log('🔍 Suche nach:', searchName);
-        const match = (S.a||[]).find(a => a && a.name && a.name.toLowerCase().trim() === searchName);
+        // Nutze die bewährte findQuittungMatch() Funktion (4-Stufen-Fallback)
+        const match = findQuittungMatch(p.name);
         if(match) {
           p.lagerArtikelId = match.id;
           p.lagerMatch = true;
-          console.log('✓ FOUND:', match.name);
+          console.log('✓ findQuittungMatch GEFUNDEN:', match.name, '(Stufe ?, Name: '+p.name+')');
         } else {
-          console.log('❌ NOT found');
+          console.log('❌ findQuittungMatch NOT found für:', p.name);
         }
       }
     } catch(e) {
-      console.error('❌ Error in Re-Match:', e.message);
+      console.error('❌ Error in findQuittungMatch:', e.message);
     }
   });
   // FORCE: Zeige immer die neue Vorschau wenn Vorschau-Modus aktiv!
