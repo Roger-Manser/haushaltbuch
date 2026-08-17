@@ -126,7 +126,7 @@
       "marke": "Eisenring",
       "kat": "Diverses",
       "lager": "Kühlschrank oben",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Pkg",
       "mindest": 1,
       "barcode": "",
@@ -134,7 +134,7 @@
       "packMenge": 6,
       "packEinheit": "Stk",
       "kaufdatum": "2026-08-13",
-      "ablaufdatum": "2026-08-14",
+      "ablaufdatum": "2026-08-18",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782190086786_17821900533123253954791247278943.jpg?t=1786123090173",
       "fotoPath": "1782190086786_17821900533123253954791247278943.jpg",
@@ -147,16 +147,19 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Rita Eisenring"
+        },
+        {
+          "datum": "2026-08-17",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "ownCode": "HB-000009",
       "packungen": [
-        {
-          "id": 6,
-          "menge": 1,
-          "kaufdatum": "2026-07-17",
-          "ablaufdatum": "2026-08-14"
-        },
         {
           "id": 14,
           "menge": 1,
@@ -18214,7 +18217,20 @@
       "k": "Reinigung & Pflege",
       "aktion": false,
       "kaufort": ""
+    },
+    {
+      "t": "aus",
+      "aid": 4,
+      "name": "Eier",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-17",
+      "zeit": 1786985600335
     }
   ],
-  "aktualisiert": "2026-08-16T14:13:47.028Z"
+  "aktualisiert": "2026-08-17T17:22:58.115Z"
 }
