@@ -9326,6 +9326,48 @@
       ],
       "letzteEingangHeute": "10:29",
       "packungen": []
+    },
+    {
+      "id": 253,
+      "name": "Mezzi Rigatoni Al Bronzo",
+      "marke": "Barilla",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Coop",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 270,
+      "packEinheit": "g",
+      "kaufdatum": "2026-08-18",
+      "ablaufdatum": "2029-01-01",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787036893985_178703688782015373297820782360.jpg?t=1787036958247",
+      "fotoPath": "1787036893985_178703688782015373297820782360.jpg",
+      "puffer": 360,
+      "preisHistorie": [
+        {
+          "datum": "2026-08-18",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
+        }
+      ],
+      "letzteEingangHeute": "09:09",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-08-18",
+          "ablaufdatum": "2029-01-01"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -18261,7 +18303,20 @@
       "k": "Fleisch & Fisch",
       "aktion": false,
       "kaufort": "Lidl"
+    },
+    {
+      "t": "ein",
+      "aid": 253,
+      "name": "Mezzi Rigatoni Al Bronzo",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-18",
+      "zeit": 1787036958253
     }
   ],
-  "aktualisiert": "2026-08-18T07:07:57.149Z"
+  "aktualisiert": "2026-08-18T07:09:23.733Z"
 }
