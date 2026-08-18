@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<link rel="manifest" href="manifest.json?v=214-10"/>
+<link rel="manifest" href="manifest.json?v=10"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
 <title>Haushaltbuch</title>
@@ -293,8 +293,6 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 <script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2@1.8.4/dist/quagga.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.12.1/JsBarcode.all.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-<!-- CACHE BUSTER v21.14 -->
 </head>
 <body>
 <div id="app">
@@ -535,7 +533,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.14';
+const APP_VERSION='19.50';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
@@ -7171,7 +7169,7 @@ window.addEventListener('offline',()=>{
 /* ── PWA: Service Worker + Install-Prompt + Update-Erkennung ─────── */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw.js?v=214',{scope:'./'}).then(reg=>{
+    navigator.serviceWorker.register('./sw.js',{scope:'./'}).then(reg=>{
       console.log('Service Worker registriert:',reg.scope);
       // Beim Laden direkt nach Updates fragen
       reg.update().catch(()=>{});
@@ -7324,14 +7322,6 @@ async function installApp(){
   const choice=await deferredInstallPrompt.userChoice;
   if(choice.outcome==='accepted')toast('Wird installiert…');
   deferredInstallPrompt=null;
-}
-
-// INIT: Lade Daten beim Start
-try{
-  loadL();
-  console.log('✓ App initialisiert');
-}catch(e){
-  console.error('❌ Init error:', e);
 }
 </script>
 </body>
