@@ -2192,7 +2192,7 @@
       "kat": "Getränke",
       "lager": "Schlof",
       "kaufort": "Lidl",
-      "menge": 4,
+      "menge": 3,
       "einheit": "Stk",
       "mindest": 2,
       "barcode": "4056489122913",
@@ -2225,12 +2225,6 @@
         }
       ],
       "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-07-04",
-          "ablaufdatum": "2027-05-15"
-        },
         {
           "id": 1,
           "menge": 1,
@@ -9181,7 +9175,7 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "",
@@ -9203,17 +9197,19 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-17",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "12:59",
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-08-13",
-          "ablaufdatum": "2026-08-18"
-        }
-      ]
+      "packungen": []
     },
     {
       "id": 250,
@@ -18230,7 +18226,42 @@
       "aktion": false,
       "datum": "2026-08-17",
       "zeit": 1786985600335
+    },
+    {
+      "t": "aus",
+      "aid": 249,
+      "name": "Hackfleisch gemisch",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-17",
+      "zeit": 1786987395288
+    },
+    {
+      "aid": 4,
+      "d": "2026-08-17",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 249,
+      "d": "2026-08-17",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-17T17:22:58.115Z"
+  "aktualisiert": "2026-08-18T02:23:36.008Z"
 }
