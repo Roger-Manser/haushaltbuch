@@ -7167,9 +7167,9 @@ window.addEventListener('offline',()=>{
 });
 
 /* ── PWA: Service Worker + Install-Prompt + Update-Erkennung ─────── */
-if('serviceWorker' in navigator){
+if(false) // SW disabled{
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw.js',{scope:'./'}).then(reg=>{
+    // SW deaktiviert: console.log('SW disabled').then(reg=>{
       console.log('Service Worker registriert:',reg.scope);
       // Beim Laden direkt nach Updates fragen
       reg.update().catch(()=>{});
@@ -7271,7 +7271,7 @@ async function runPwaDiagnose(){
   }
 
   // 5. Service Worker
-  if('serviceWorker' in navigator){
+  if(false) // SW disabled{
     const reg=await navigator.serviceWorker.getRegistration();
     rows.push([reg?ok:bad,'Service Worker registriert',reg?reg.scope:'kein Worker gefunden']);
     if(reg){
