@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<link rel="manifest" href="manifest.json?v=10"/>
+<link rel="manifest" href="manifest.json?v=214-10"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
 <title>Haushaltbuch</title>
@@ -293,6 +293,8 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 <script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2@1.8.4/dist/quagga.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.12.1/JsBarcode.all.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<!-- CACHE BUSTER v21.14 -->
 </head>
 <body>
 <div id="app">
@@ -7169,7 +7171,7 @@ window.addEventListener('offline',()=>{
 /* ── PWA: Service Worker + Install-Prompt + Update-Erkennung ─────── */
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker.register('./sw.js',{scope:'./'}).then(reg=>{
+    navigator.serviceWorker.register('./sw.js?v=214',{scope:'./'}).then(reg=>{
       console.log('Service Worker registriert:',reg.scope);
       // Beim Laden direkt nach Updates fragen
       reg.update().catch(()=>{});
