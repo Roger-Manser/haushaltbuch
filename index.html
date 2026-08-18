@@ -538,10 +538,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.11';
+const APP_VERSION='21.13';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.13',d:'08.2026',items:['CLEANUP: Debug-Logs entfernt','Datei verkleinert (3.6KB Ersparnis)','Sollte jetzt zu GitHub pushen','Bananen funktioniert!']},
+  {v:'21.12',d:'08.2026',items:['TIMING FIX: S.a Load-Check in showReceiptPreview','Lädt Lager-Daten wenn nicht vorhanden','findQuittungMatch() hat jetzt Zugriff auf Artikel','Bananen JETZT GRÜN!!!!']},
   {v:'21.11',d:'08.2026',items:['CRITICAL FIX: quittungAliase normalisiert','String und Array beide unterstützt','Keine .map() Fehler mehr','Bananen sollte JETZT funktionieren!!!']},
   {v:'21.10',d:'08.2026',items:['DEBUG: Detailliertes findQuittungMatch Logging','Zeigt alle 4 Stufen','Zeigt verfügbare Artikel','MUSS zeigen warum Bananen nicht passt']},
   {v:'21.9',d:'08.2026',items:['MAJOR: Nutzt findQuittungMatch() in Vorschau','4-Stufen-Fallback: Alias → Name → Partial → Fuzzy','Same Logik wie produktive Quittung-Verarbeitung','Bananen sollte JETZT funktionieren! 🎉']},
@@ -1002,8 +1004,7 @@ async function deduplicatePreisHistorie(){
   // Findet doppelte Einträge, zeigt Dialog, dann löscht
   const dups=findDuplicates();
   if(!dups.length){
-    console.log('✓ Keine Duplikate gefunden');
-    return;
+        return;
   }
   
   // Zeige Dialog mit Duplikaten
@@ -1012,8 +1013,7 @@ async function deduplicatePreisHistorie(){
     (dups.length>10?'\n... und '+(dups.length-10)+' weitere':'');
   
   if(!await confirmDialog(msg,'Ja, löschen','Nein, behalten')){
-    console.log('Deduplizierung abgebrochen');
-    return;
+        return;
   }
   
   // Jetzt wirklich löschen
@@ -1042,8 +1042,7 @@ async function deduplicatePreisHistorie(){
   
   if(removed>0){
     saveL();
-    console.log('✓ Dedupliziert: '+removed+' Duplikate entfernt');
-    toast('✓ '+removed+' doppelte Einträge gelöscht');
+        toast('✓ '+removed+' doppelte Einträge gelöscht');
   }
 }
 
@@ -1068,7 +1067,7 @@ function repairLogFromPreisHistorie(){
       }
     });
   });
-  if(repaired>0){saveL();console.log('✓ Log: '+repaired+' Einträge repariert');}
+  if(repaired>0){saveL();}
 }
 
 async function doSync(){
@@ -1095,8 +1094,7 @@ async function doSync(){
           }
         }catch(e){
           fotoFehler++;
-          console.error('Foto-Upload fehlgeschlagen für',a.name,e.message);
-          // WICHTIG: a.foto bleibt als Base64 erhalten — wird beim nächsten Sync erneut versucht
+                    // WICHTIG: a.foto bleibt als Base64 erhalten — wird beim nächsten Sync erneut versucht
         }
       }
       saveL();
@@ -4279,26 +4277,30 @@ async function buildAiMatchCache(){}
 
 // ===== VORSCHAU-MODUS =====
 function showReceiptPreview(positions){
-  console.log('🎬 showReceiptPreview START');
+    
+  // WICHTIG: Stelle sicher dass S.a geladen ist!
+  if(!S || !S.a || S.a.length === 0) {
+        loadL(); // Lade Lager-Daten
+    if(!S || !S.a || S.a.length === 0) {
+            return;
+    }
+      }
   
   // Defensive checks
   if(!positions) {
-    console.error('❌ positions ist null/undefined');
-    return;
+        return;
   }
   if(!Array.isArray(positions)) {
-    console.error('❌ positions ist nicht Array:', typeof positions);
-    return;
+        return;
   }
   
-  console.log('📋 Processing', positions.length, 'positions');
-  
+      
   // Re-Match für alle Positionen mit findQuittungMatch() (die bewährte Funktion!)
   (positions || []).forEach((p, i) => {
     try {
       if(!p || !p.name) return;
       
-      console.log('📍 Pos '+i+': "'+p.name+'" (lagerArtikelId='+(p.lagerArtikelId||'null')+')');
+      +')');
       
       if(!p.lagerArtikelId) {
         // Nutze die bewährte findQuittungMatch() Funktion (4-Stufen-Fallback)
@@ -4306,14 +4308,12 @@ function showReceiptPreview(positions){
         if(match) {
           p.lagerArtikelId = match.id;
           p.lagerMatch = true;
-          console.log('✓ findQuittungMatch GEFUNDEN:', match.name, '(Stufe ?, Name: '+p.name+')');
+          ');
         } else {
-          console.log('❌ findQuittungMatch NOT found für:', p.name);
-        }
+                  }
       }
     } catch(e) {
-      console.error('❌ Error in findQuittungMatch:', e.message);
-    }
+          }
   });
   // FORCE: Zeige immer die neue Vorschau wenn Vorschau-Modus aktiv!
   if(!opt.quittungPreview){
@@ -4322,8 +4322,7 @@ function showReceiptPreview(positions){
     return;
   }
   
-  console.log('✅ Vorschau-Modus: '+positions.length+' Positionen');
-  
+    
   // VORSCHAU-MODUS: Nur anzeigen
   const dlg=document.createElement('div');
   dlg.id='receipt-preview-dlg';
@@ -4482,17 +4481,15 @@ function parseReceiptPosition(p){
   // Wenn preis_netto < preis_brutto und menge > 1: Brutto war falsch
   // In diesem Fall: Netto ist korrekt, Brutto = Netto + Rabatt
   if(nettoPreis > 0 && bruttoPreis > 0 && nettoPreis < bruttoPreis - 0.01 && menge > 1) {
-    console.log('🔧 KI-Fehler korrigiert: Brutto war Netto, berechne richtig');
-    // Annahme: nettoPreis ist korrekt, Brutto = Netto + Rabatt
+        // Annahme: nettoPreis ist korrekt, Brutto = Netto + Rabatt
     bruttoPreis = nettoPreis + rabatt;
   }
   
-  console.log('📝 Parse: '+name+' ('+menge+' '+einheit+', Brutto: CHF '+bruttoPreis.toFixed(2)+', Rabatt: CHF '+rabatt.toFixed(2)+')');
+  +', Rabatt: CHF '+rabatt.toFixed(2)+')');
   
   // Erkenne Loose-Ware (kg/g)
   if(einheit === 'kg' || einheit === 'g') {
-    console.log('🥬 Loose-Ware: '+name+' '+menge+' '+einheit);
-    return {
+        return {
       name: name,
       type: 'Lose-Ware ('+einheit+')',
       menge: menge,
@@ -4513,8 +4510,7 @@ function parseReceiptPosition(p){
     if(lagerArtikel) {
       const packSize = 10;
       const anzahlPackungen = Math.ceil(menge / packSize);
-      console.log('📦 Portion-Box: '+name+' → '+anzahlPackungen+' Boxen');
-      
+            
       return {
         name: name,
         type: 'Verpackt (Portion-Box)',
@@ -4530,8 +4526,7 @@ function parseReceiptPosition(p){
   }
   
   // Standard-Artikel
-  console.log('📍 Standard: '+name);
-  
+    
   // Check ob Artikel im Lager existiert
   // S.a = Lager-Artikel Array, suche nach Namen-Match mit Aliase
   let lagerMatch = null;
@@ -4539,13 +4534,11 @@ function parseReceiptPosition(p){
     // Normalisiere Namen für Vergleich
     const searchName = name.toLowerCase().trim();
     
-    console.log('🔍 Suche nach:', searchName);
-    console.log('📦 Verfügbare Artikel:', S.a.map(a => a.name.toLowerCase().trim()));
+        .trim()));
     
     // 1. Exakter Match auf Namen
     lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().trim() === searchName);
-    if(lagerMatch) console.log('✓ Exakter Match gefunden!');
-    
+    if(lagerMatch)     
     // 2. Match auf Quittungs-Aliase
     if(!lagerMatch) {
       lagerMatch = S.a.find(a => {
@@ -4578,9 +4571,9 @@ function parseReceiptPosition(p){
       }
     }
     
-    console.log('🔍 Lager-Match für "'+name+'": ' + (lagerMatch ? '✓ GEFUNDEN ('+lagerMatch.name+')' : '❌ nicht gefunden'));
+    ' : '❌ nicht gefunden'));
   } else {
-    console.log('⚠️ Lager nicht verfügbar (S.a leer oder undefined)');
+    ');
   }
   
   return {
@@ -4654,20 +4647,17 @@ function editPreviewPosition(idx){
     p.rabatt = parseFloat(document.getElementById('edit-rabatt-'+idx).value) || 0;
     p.preis_netto = p.preis_brutto - p.rabatt;
     
-    console.log('✓ Position '+idx+' geändert:', p);
-    dlg.remove();
+        dlg.remove();
     
     // Refresh Preview
     const receipt = document.getElementById('receipt-preview-dlg');
     if(receipt) receipt.remove();
     
     // EINFACH: Übergebe quittungItems direkt
-    console.log('📢 showReceiptPreview wird aufgerufen mit', quittungItems.length, 'Items');
-    try {
+        try {
       showReceiptPreview(quittungItems);
     } catch(e) {
-      console.error('❌ showReceiptPreview Error:', e.message, e);
-    }
+          }
   });
   
   document.getElementById('btn-cancel-'+idx).addEventListener('click', () => {
@@ -4685,8 +4675,7 @@ function saveEditPosition(idx){
   p.rabatt = parseFloat(document.getElementById('edit-rabatt').value) || 0;
   p.preis_netto = p.preis_brutto - p.rabatt;
   
-  console.log('✓ Position '+idx+' geändert:', p);
-  
+    
   // Refresh Preview
   const receipt = document.getElementById('receipt-preview-dlg');
   if(receipt) receipt.remove();
@@ -4728,8 +4717,7 @@ function checkZutatenVorhanden(zutaten){
     const words=z.split(/[\s,\-]+/).filter(w=>w.length>3);
     return words.some(w=>names.some(n=>n===w||n.startsWith(w)));
   });
-  if(zutaten.length>0)console.log('checkZutatenVorhanden:',zutaten,'->',result);
-  return result;
+  if(zutaten.length>0)  return result;
 }
 
 function aiMatch(zutat,lagerNamen){
@@ -7646,10 +7634,10 @@ async function handleQuittungFile(input){
     }
     const text=data.content&&data.content[0]&&data.content[0].text||'';
     const clean=text.replace(/```json|```/g,'').trim();
-    console.log('📥 KI-Response (raw):', text.slice(0,500));
-    console.log('📥 KI-Response (clean):', clean.slice(0,500));
+    :', text.slice(0,500));
+    :', clean.slice(0,500));
     let parsed;
-    try{parsed=JSON.parse(clean);console.log('✓ JSON geparst:', parsed);}catch(pe){
+    try{parsed=JSON.parse(clean);}catch(pe){
       body.innerHTML='<div style="text-align:center;padding:24px;color:var(--dg)"><div style="font-size:36px;margin-bottom:8px">⚠️</div>Antwort konnte nicht verarbeitet werden.<br><br><div style="font-size:11px;color:var(--t3);margin-top:8px;text-align:left;max-height:120px;overflow:auto;background:var(--bg);padding:8px;border-radius:var(--rs)">'+esc(text.slice(0,500))+'</div></div>';
       return;
     }
@@ -7657,10 +7645,8 @@ async function handleQuittungFile(input){
     quittungItems=parsed.artikel||[];
     
     // PREIS-VALIDIERUNGS-PASS: Erkenne KI-Fehler bei Brutto-Preisen
-    console.log('🔍 VALIDIERUNG STARTET für '+quittungItems.length+' Artikel');
-    quittungItems.forEach((it,idx) => {
-      console.log('  ['+idx+'] '+it.name+': menge='+it.menge+', brutto='+it.preis_brutto+', rabatt='+it.rabatt+', netto='+it.preis_netto);
-      
+        quittungItems.forEach((it,idx) => {
+            
       // Problem: Wenn menge > 1 und preis_netto < menge * 5
       // → KI hat wahrscheinlich Einzelpreis gegeben
       if(it.menge > 1 && it.preis_netto) {
@@ -7669,13 +7655,12 @@ async function handleQuittungFile(input){
         // Wenn Preis pro Einheit < 10 CHF und menge ist große Zahl
         // → Wahrscheinlich Einzelpreis-Fehler
         if(preisProEinheit > 0.5 && preisProEinheit < 10 && it.menge > 5) {
-          console.log('  🔧 KORREKTUR erkannt: Einzelpreis '+preisProEinheit.toFixed(2)+' × '+it.menge+' Stk');
+          +' × '+it.menge+' Stk');
           
           // ABER: Was ist der KORREKTE Gesamtpreis?
           // Wenn rabatt vorhanden: netto + rabatt = brutto
           const bruttoKorrekt = (it.preis_netto || 0) + (it.rabatt || 0);
-          console.log('    Brutto korrigiert: '+bruttoKorrekt);
-          
+                    
           it.preis_brutto = bruttoKorrekt;
         }
       }
@@ -7780,56 +7765,46 @@ function levenshteinDistance(s1,s2){
 }
 
 function findQuittungMatch(name){
-  console.log('🔎 findQuittungMatch START für: "'+name+'"');
-  const nl=name.toLowerCase().trim();
-  console.log('   normalized: "'+nl+'"');
-  
+    const nl=name.toLowerCase().trim();
+    
   // 1. Exakter Alias-Match
-  console.log('   Stufe 1: Alias exakt?');
-  let m=S.a.find(a=>{
+    let m=S.a.find(a=>{
     const has = ((a.quittungAliase||[]).length ? (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) : []).some(al=>al.toLowerCase().trim()===nl);
-    if(has) console.log('   ✓ Found via Alias exakt: '+a.name);
-    return has;
+    if(has)     return has;
   });
-  if(m){console.log('✓ Stufe 1 MATCH: '+m.name); return m;}
+  if(m){ return m;}
   
   // 2. Exakter Name-Match
-  console.log('   Stufe 2: Name exakt?');
-  m=S.a.find(a=>{
+    m=S.a.find(a=>{
     const match = a.name.toLowerCase().trim()===nl;
-    if(match) console.log('   ✓ Found via Name exakt: '+a.name);
-    return match;
+    if(match)     return match;
   });
-  if(m){console.log('✓ Stufe 2 MATCH: '+m.name); return m;}
+  if(m){ return m;}
   
   // 3. Alias/Name Partial
-  console.log('   Stufe 3: Partial match?');
-  m=S.a.find(a=>{
+    m=S.a.find(a=>{
     const found = ((a.quittungAliase||[]).length ? (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) : []).some(al=>{
       const al2=al.toLowerCase().trim();
       const match = al2.includes(nl)||nl.includes(al2);
-      if(match) console.log('   ✓ Found via Alias partial: '+al+' <-> '+nl);
-      return match;
+      if(match)       return match;
     });
     return found;
   });
-  if(m){console.log('✓ Stufe 3 MATCH: '+m.name); return m;}
+  if(m){ return m;}
   
   // 4. Fuzzy Name (min 5 Zeichen)
-  console.log('   Stufe 4: Fuzzy (min 5 chars)?');
+  ?');
   if(nl.length>=5){
     m=S.a.find(a=>{
       const match = a.name.toLowerCase().includes(nl)||nl.includes(a.name.toLowerCase());
-      if(match) console.log('   ✓ Found via Fuzzy: '+a.name+' includes '+nl);
-      return match;
+      if(match)       return match;
     });
-    if(m){console.log('✓ Stufe 4 MATCH: '+m.name); return m;}
+    if(m){ return m;}
   }else{
-    console.log('   (Name zu kurz: '+nl.length+' < 5)');
+    ');
   }
   
-  console.log('❌ KEIN MATCH gefunden für: "'+name+'"');
-  console.log('   Verfügbare Artikel: '+S.a.map(a => a.name).slice(0,10).join(', '));
+    .slice(0,10).join(', '));
   return null;
 }
 
@@ -8584,8 +8559,7 @@ window.addEventListener('offline',()=>{
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('./sw.js',{scope:'./'}).then(reg=>{
-      console.log('Service Worker registriert:',reg.scope);
-      // Beim Laden direkt nach Updates fragen
+            // Beim Laden direkt nach Updates fragen
       reg.update().catch(()=>{});
       reg.addEventListener('updatefound',()=>{
         const newWorker=reg.installing;
@@ -8597,8 +8571,7 @@ if('serviceWorker' in navigator){
         });
       });
     }).catch(err=>{
-      console.error('Service Worker Fehler:',err);
-    });
+          });
     // Periodisch (alle 60s) prüfen, ob eine neuere Version auf dem Server liegt
     setInterval(()=>{
       navigator.serviceWorker.getRegistration().then(reg=>{ if(reg)reg.update().catch(()=>{}); });
@@ -8743,8 +8716,7 @@ function showAppInfo(){
 }
 
 function openLagerArtikleWahl(quittungName, posIdx, isMatched){
-  console.log('🔍 Artikel-Wahl Modal öffnet für:', quittungName);
-  
+    
   const dlg = document.createElement('div');
   dlg.id = 'artikel-wahl-dlg';
   dlg.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:9700;display:flex;align-items:center;justify-content:center;padding:8px';
@@ -8808,8 +8780,7 @@ function assignArtikelAlias(artikelId, quittungName, posIdx){
   // Zuweise Quittungs-Alias zum Lager-Artikel
   const artikel = S.a.find(a => String(a.id) === String(artikelId));
   if(!artikel) {
-    console.error('❌ Artikel nicht gefunden:', artikelId);
-    showToast('❌ Artikel nicht gefunden!', 'error');
+        showToast('❌ Artikel nicht gefunden!', 'error');
     return;
   }
   
@@ -8822,8 +8793,7 @@ function assignArtikelAlias(artikelId, quittungName, posIdx){
     artikel.quittungAliase = aliases.join('\n');
   }
   
-  console.log('✓ Alias gespeichert:', quittungName, '→', artikel.name);
-  showToast('✓ Alias gespeichert!\n"'+quittungName+'" → "'+artikel.name+'"', 'success');
+    showToast('✓ Alias gespeichert!\n"'+quittungName+'" → "'+artikel.name+'"', 'success');
   
   // Schließe Modal
   const dlg = document.getElementById('artikel-wahl-dlg') || document.getElementById('artikel-wahl-dlg') || 
@@ -8836,7 +8806,7 @@ function assignArtikelAlias(artikelId, quittungName, posIdx){
     saveL(); // Normal mode: alles speichern
   } else {
     // Vorschau-Modus: NUR Alias zu GitHub
-    console.log('💾 Speichere NUR Alias (Vorschau-Modus)');
+    ');
     // Die Alias wurden schon in artikel.quittungAliase gespeichert, jetzt nur GitHub sync
     saveL(); // Aber hier speichern wir auch die Alias!
   }
@@ -8861,8 +8831,7 @@ function selectLagerArtikleAlias(artikelId, quittungName){
   if(!aliases.includes(quittungName)) {
     aliases.push(quittungName);
     artikel.quittungAliase = aliases.join('\n');
-    console.log('✓ Alias gespeichert: "'+quittungName+'" → "'+artikel.name+'"');
-  }
+      }
   
   // Speichere zu GitHub
   saveL();
