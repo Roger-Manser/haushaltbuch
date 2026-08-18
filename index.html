@@ -1816,7 +1816,7 @@ function editPreisHistorie(artikelId,idx){
             '<input type="text" inputmode="decimal" id="vhe-kgpreis" placeholder="z.B. 3.90" value="'+(a.preisProKg||'')+'" oninput="vheKalkulieren('+artikelId+')" style="width:100%;padding:11px;border:2px solid var(--ac);border-radius:var(--rs);background:#fff;color:#000;font-size:16px;text-align:right"/>'+
           '</div>'+
           '<div class="fd"><label>Kaufpreis (CHF)</label>'+
-            '<input type="text" inputmode="decimal" id="vhe-pr" placeholder="z.B. 4.50" value="'+(h.preis||'')+'" oninput="" style="width:100%;padding:11px;border:2px solid var(--ac);border-radius:var(--rs);background:#fff;color:#000;font-size:17px;text-align:right;font-weight:600"/>'+
+            '<input type="text" inputmode="decimal" id="vhe-pr-kg" placeholder="z.B. 4.50" value="'+(h.preis||'')+'" oninput="" style="width:100%;padding:11px;border:2px solid var(--ac);border-radius:var(--rs);background:#fff;color:#000;font-size:17px;text-align:right;font-weight:600"/>'+
           '</div>'
         :
           '<div class="fd"><label>Kaufpreis (CHF)</label>'+
@@ -1844,7 +1844,7 @@ function editPreisHistorie(artikelId,idx){
 function vheKalkulieren(artikelId){
   const a=S.a.find(x=>x.id===artikelId);if(!a)return;
   const kgEl=document.getElementById('vhe-kgpreis');
-  const prEl=document.getElementById('vhe-pr');
+  const prEl=document.getElementById('vhe-pr-kg');
   const mgEl=document.getElementById('vhe-mg');
   if(!kgEl||!prEl||!mgEl)return;
   const kgPreis=parseDecimal(kgEl.value)||0;
@@ -1863,9 +1863,9 @@ function doEditPreisHistorie(artikelId,idx){
   if(!a||!a.preisHistorie||!a.preisHistorie[idx])return;
   const h=a.preisHistorie[idx];
   const istGewicht=['kg','g'].includes(a.einheit);
-  const prEl=document.getElementById('vhe-pr');
+  const prEl=document.getElementById('vhe-pr-kg')||document.getElementById('vhe-pr');
   const kgEl=document.getElementById('vhe-kgpreis');
-  const p=parseDecimal(prEl.value)||0;
+  const p=parseDecimal(prEl?.value)||0;
   let menge=parseDecimal(document.getElementById('vhe-mg').value)||1;
   if(!isDecUnit(a.einheit))menge=Math.max(1,Math.round(menge));
   const datum=document.getElementById('vhe-dat').value||h.datum||todayISO();
@@ -2145,7 +2145,7 @@ function showEingangMhdDialog(a){
             '<input type="text" inputmode="decimal" id="eingang-kgpreis" placeholder="z.B. 3.90" value="'+(a.einheit==='g'&&a.preis?((a.preis||0)*1000).toFixed(2):a.preis||'')+'" oninput="eingangKalkulieren('+a.id+')" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/>'+
           '</div>'+
           '<div class="fd"><label>Kaufpreis (CHF)</label>'+
-            '<input type="text" inputmode="decimal" id="eingang-schnell-pr" placeholder="wird berechnet" value="" style="width:100%;padding:11px;border:1px solid var(--ok);border-radius:var(--rs);background:var(--bg);color:var(--ok);font-size:17px;text-align:right;font-weight:700"/>'+
+            '<input type="text" inputmode="decimal" id="eingang-schnell-pr-kg" placeholder="wird berechnet" value="" style="width:100%;padding:11px;border:1px solid var(--ok);border-radius:var(--rs);background:var(--bg);color:var(--ok);font-size:17px;text-align:right;font-weight:700"/>'+
           '</div>'
         :
           '<div class="fd"><label>Kaufpreis (CHF, optional)</label>'+
@@ -2190,7 +2190,7 @@ function refreshAllDateFields(){
 function eingangKalkulieren(artikelId){
   const a=S.a.find(x=>x.id===artikelId);if(!a)return;
   const kgPreisEl=document.getElementById('eingang-kgpreis');
-  const prEl=document.getElementById('eingang-schnell-pr');
+  const prEl=document.getElementById('eingang-schnell-pr-kg');
   const mgEl=document.getElementById('eingang-schnell-mg');
   if(!kgPreisEl||!prEl||!mgEl)return;
   const kgPreis=parseDecimal(kgPreisEl.value)||0;
@@ -2212,7 +2212,7 @@ function doEingangSchnell(artikelId){
   if(!decOk)menge=Math.max(1,Math.round(menge));
   const mhd=document.getElementById('eingang-schnell-mhd').value||'';
   // Preis: kalkulierter Kaufpreis oder letzter Standardpreis
-  const prEl=document.getElementById('eingang-schnell-pr');
+  const prEl=document.getElementById('eingang-schnell-pr-kg')||document.getElementById('eingang-schnell-pr');
   const kgEl=document.getElementById('eingang-kgpreis');
   let preis=prEl&&prEl.value?parseDecimal(prEl.value)||0:a.preis||0;
   // Standardpreis aktualisieren: bei kg/g-Artikeln immer Kilopreis speichern
@@ -5053,7 +5053,7 @@ function showEkEinbuchungBekannt(ekEntry,artikel){
             '<input type="text" inputmode="decimal" id="ekb-kgpreis" placeholder="z.B. 3.90" value="'+(artikel.preisProKg||artikel.preis||'')+'" oninput="ekbKalkulieren('+artikel.id+')" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/>'+
           '</div>'+
           '<div class="fd"><label>Kaufpreis (CHF)</label>'+
-            '<input type="text" inputmode="decimal" id="ekb-pr" placeholder="wird berechnet" value="" style="width:100%;padding:11px;border:1px solid var(--ok);border-radius:var(--rs);background:var(--bg);color:var(--ok);font-size:17px;text-align:right;font-weight:700"/>'+
+            '<input type="text" inputmode="decimal" id="ekb-pr-kg" placeholder="wird berechnet" value="" style="width:100%;padding:11px;border:1px solid var(--ok);border-radius:var(--rs);background:var(--bg);color:var(--ok);font-size:17px;text-align:right;font-weight:700"/>'+
           '</div>'
         :
           '<div class="fd"><label>Kaufpreis (CHF, optional)</label>'+
@@ -5074,7 +5074,7 @@ function showEkEinbuchungBekannt(ekEntry,artikel){
 function ekbKalkulieren(artikelId){
   const a=S.a.find(x=>x.id===artikelId);if(!a)return;
   const kgEl=document.getElementById('ekb-kgpreis');
-  const prEl=document.getElementById('ekb-pr');
+  const prEl=document.getElementById('ekb-pr-kg');
   const mgEl=document.getElementById('ekb-mg');
   if(!kgEl||!prEl||!mgEl)return;
   const kgPreis=parseDecimal(kgEl.value)||0;
@@ -5095,7 +5095,7 @@ function doEkEinbuchungBekannt(ekId,artikelId){
   if(!decOk)menge=Math.max(1,Math.round(menge));
   const mhd=document.getElementById('ekb-mhd').value||'';
   // Preis auslesen
-  const prEl=document.getElementById('ekb-pr');
+  const prEl=document.getElementById('ekb-pr-kg')||document.getElementById('ekb-pr');
   const kgEl=document.getElementById('ekb-kgpreis');
   let preis=prEl&&prEl.value?parseDecimal(prEl.value)||0:a.preis||0;
   if(kgEl&&kgEl.value){
