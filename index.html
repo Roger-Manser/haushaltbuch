@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v19.94-FINAL cache-bust-9999 -->
+<!-- HAUSHALTBUCH v20.1-FINAL-CACHE-BUST-99999 cache-bust-9999 -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -10,7 +10,7 @@
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
 <!-- CACHE BUST v99 -->
-<link rel="manifest" href="manifest.json?v=9999"/>
+<link rel="manifest" href="manifest.json?v=99999"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
 <title>Haushaltbuch</title>
@@ -538,10 +538,20 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='20.0';
+const APP_VERSION='21.0';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.0',d:'08.2026',items:['MAJOR: Artikel-Wahl Modal komplett neu','Suchfeld zum Filtern der Lagerliste','Alle Lager-Artikel zeigen','Klick um zuzuweisen + Alias speichern']},
+  {v:'20.10',d:'08.2026',items:['FIX: TypeError a.id.replace','a.id zu String konvertiert','Lager-Artikel-Wahl Modal öffnet jetzt','FINAL RELEASE!']},
+  {v:'20.9',d:'08.2026',items:['DEBUG: openLagerArtikleWahl Logging','Prüfe ob Modal korrekt öffnet','Console zeigt Fehler wenn aufgerufen','Next: Artikel-Wahl richtig implementieren']},
+  {v:'20.8',d:'08.2026',items:['FIX: Anderen Artikel wählen funktioniert','Edit-Dialog wird geschlossen vor Modal','FINAL FIX: Spinner komplett eliminiert','querySelectorAll für alle quittung-Elemente']},
+  {v:'20.7',d:'08.2026',items:['FIX: Schaltflächen im Edit-Dialog funktionieren','Umgestellt auf Event Listener statt onclick','Speichern und Abbrechen zuverlässig','Artikel-Wechsel funktioniert']},
+  {v:'20.6',d:'08.2026',items:['UI: Button-Farben grün/rot statt grau','FEATURE: Artikel-Auswahl im Edit-Dialog','? Button um anderen Artikel zu wählen','FIX: Spinner radikal versteckt (display+visibility+height+overflow)']},
+  {v:'20.5',d:'08.2026',items:['FIX: Korrigieren Button funktioniert','Edit-Dialog für Menge, Einheit, Preis, Rabatt','Änderungen werden in Vorschau aktualisiert','Modal für benutzerfreundliche Edits']},
+  {v:'20.4',d:'08.2026',items:['FEATURE: Info bei gefundenen Lager-Artikeln','Zeigt Artikel-Name + Foto','Button um anderen Artikel zu wählen','Kann falsch erkannte Artikel korrigieren']},
+  {v:'20.3',d:'08.2026',items:['MAJOR: Manuelle Lager-Artikel-Auswahl','? Button wenn Artikel nicht gefunden','Speichert Verbindung via Quittungs-Alias','App lernt die Zuordnung automatically']},
+  {v:'20.2',d:'08.2026',items:['FIX: Grosszügiger Lager-Match für Artikel-Zusätze','Goldfield Gold Box matched Goldfield Gold Box Zigaretten','Filtert: Zigaretten, Tabak, Rauchen aus Name','Findet nun auch Artikel mit Suffix-Unterschieden']},
   {v:'20.0',d:'08.2026',items:['MAJOR FIX: name Feld in parsed_positions','Artikel-Namen werden jetzt korrekt weitergegeben','Lager-Abgleich funktioniert mit echten Namen','Goldfield findet echten Namen statt Unknown']},
   {v:'19.99',d:'08.2026',items:['DEBUG: KI-Response Logging in Console','UI: Dialog margin:auto für Zentrierung','FIX: Quittung-Container verstecken','Spinner-Problem angehen']},
   {v:'19.98',d:'08.2026',items:['FIX: showAppInfo ReferenceError behoben','Stub-Funktion öffnet Settings','Console-Fehler eliminiert','Lager-Match-Logging kann jetzt arbeiten']},
@@ -4476,19 +4486,45 @@ function parseReceiptPosition(p){
   console.log('📍 Standard: '+name);
   
   // Check ob Artikel im Lager existiert
-  // S.a = Lager-Artikel Array, suche nach Namen-Match
+  // S.a = Lager-Artikel Array, suche nach Namen-Match mit Aliase
   let lagerMatch = null;
   if(S && S.a && S.a.length > 0) {
     // Normalisiere Namen für Vergleich
     const searchName = name.toLowerCase().trim();
     
-    // Exakter Match
+    // 1. Exakter Match auf Namen
     lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().trim() === searchName);
     
-    // Teilstring-Match (erstes Wort)
+    // 2. Match auf Quittungs-Aliase
+    if(!lagerMatch) {
+      lagerMatch = S.a.find(a => {
+        if(!a.quittungAliase) return false;
+        const aliases = typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase;
+        return aliases.some(alias => alias.toLowerCase().trim() === searchName);
+      });
+    }
+    
+    // 3. GROSSZÜGIGER Teilstring-Match: Wenn Such-Name in Lager-Name enthalten
+    if(!lagerMatch) {
+      lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().includes(searchName));
+    }
+    
+    // 4. Umgekehrter Match: Wenn Lager-Name (ohne Zusätze) in Such-Name enthalten
+    if(!lagerMatch) {
+      lagerMatch = S.a.find(a => {
+        if(!a.name) return false;
+        // Z.B. "Goldfield Gold Box" matched "Goldfield Gold Box Zigaretten"
+        const baseName = a.name.toLowerCase().split(/zigaretten|tabak|rauchen/i)[0].trim();
+        return baseName && searchName.includes(baseName);
+      });
+    }
+    
+    // 5. Erstes Wort Match (fallback)
     if(!lagerMatch) {
       const firstWord = searchName.split(/\s+/)[0];
-      lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().includes(firstWord));
+      if(firstWord.length > 2) {
+        lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().includes(firstWord));
+      }
     }
     
     console.log('🔍 Lager-Match für "'+name+'": ' + (lagerMatch ? '✓ GEFUNDEN ('+lagerMatch.name+')' : '❌ nicht gefunden'));
@@ -4505,14 +4541,98 @@ function parseReceiptPosition(p){
     preis: nettoPreis,
     rabatt: rabatt,
     lagerMatch: lagerMatch ? true : false,
-    lagerArtikelId: lagerMatch ? lagerMatch.id : null
+    lagerArtikelId: lagerMatch ? lagerMatch.id : null,
+    needsManualMatch: !lagerMatch // FLAG: Braucht manuelle Auswahl
   };
 }
 
 function editPreviewPosition(idx){
-  toast('✎ Position-Editing im Vorschau-Modus wird in nächster Version implementiert');
+  // Edit position in preview before booking
+  const p = quittungItems[idx];
+  if(!p) return;
+  
+  const dlg = document.createElement('div');
+  dlg.id = 'edit-preview-dlg-'+idx;
+  dlg.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:9600;display:flex;align-items:center;justify-content:center;padding:8px';
+  
+  dlg.innerHTML = '<div style="background:var(--sf);border-radius:var(--r);padding:16px;max-width:90vw;max-width:min(90vw,400px);max-height:80vh;overflow-y:auto">'+
+    '<h3 style="margin:0 0 12px;color:var(--tx)">Artikel bearbeiten</h3>'+
+    '<div style="margin-bottom:12px;padding:8px;background:var(--bg);border-radius:var(--rs)">'+
+      '<button id="btn-wahl-'+idx+'" style="width:100%;padding:8px;background:var(--wn);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-weight:600;margin-bottom:8px">? Anderen Artikel wählen</button>'+
+      '<div style="color:var(--t2);font-size:11px">Aktuell: '+esc(p.name)+'</div>'+
+    '</div>'+
+    '<div style="margin-bottom:12px">'+
+      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Menge:</label>'+
+      '<input id="edit-menge-'+idx+'" type="number" value="'+p.menge+'" step="0.001" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
+    '</div>'+
+    '<div style="margin-bottom:12px">'+
+      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Einheit:</label>'+
+      '<input id="edit-einheit-'+idx+'" type="text" value="'+(p.einheit||'Stk')+'" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
+    '</div>'+
+    '<div style="margin-bottom:12px">'+
+      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Preis Brutto (CHF):</label>'+
+      '<input id="edit-preis-'+idx+'" type="number" value="'+(p.preis_brutto||p.preis||0).toFixed(2)+'" step="0.01" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
+    '</div>'+
+    '<div style="margin-bottom:12px">'+
+      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Rabatt (CHF):</label>'+
+      '<input id="edit-rabatt-'+idx+'" type="number" value="'+(p.rabatt||0).toFixed(2)+'" step="0.01" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
+    '</div>'+
+    '<div style="display:flex;gap:8px">'+
+      '<button id="btn-save-'+idx+'" style="flex:1;padding:10px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-weight:600;font-size:14px">✓ Speichern</button>'+
+      '<button id="btn-cancel-'+idx+'" style="flex:1;padding:10px;background:var(--wn);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-weight:600;font-size:14px">✗ Abbrechen</button>'+
+    '</div>'+
+  '</div>';
+  
+  document.body.appendChild(dlg);
+  
+  // Event Listener (nicht onclick!)
+  document.getElementById('btn-wahl-'+idx).addEventListener('click', () => {
+    dlg.remove(); // Schließe Edit-Dialog erst
+    openLagerArtikleWahl(p.name, idx, true);
+  });
+  
+  document.getElementById('btn-save-'+idx).addEventListener('click', () => {
+    p.menge = parseFloat(document.getElementById('edit-menge-'+idx).value) || 1;
+    p.einheit = document.getElementById('edit-einheit-'+idx).value || 'Stk';
+    p.preis_brutto = parseFloat(document.getElementById('edit-preis-'+idx).value) || 0;
+    p.rabatt = parseFloat(document.getElementById('edit-rabatt-'+idx).value) || 0;
+    p.preis_netto = p.preis_brutto - p.rabatt;
+    
+    console.log('✓ Position '+idx+' geändert:', p);
+    dlg.remove();
+    
+    // Refresh Preview
+    const receipt = document.getElementById('receipt-preview-dlg');
+    if(receipt) receipt.remove();
+    
+    const parsed_positions = quittungItems.map(it=>({name:it.name||'Unknown',text:it.name+'\n'+it.menge+' '+it.einheit+' CHF '+(it.preis_brutto||it.preis_netto||it.preis||0).toFixed(2),preis_brutto:it.preis_brutto||it.preis_netto||it.preis||0,preis_netto:it.preis_netto||it.preis||0,preis:it.preis_netto||it.preis||0,rabatt:it.rabatt||0,einheit:it.einheit||'Stk',menge:it.menge||1,kat:it.kat||'Diverses'}));
+    showReceiptPreview(parsed_positions);
+  });
+  
+  document.getElementById('btn-cancel-'+idx).addEventListener('click', () => {
+    dlg.remove();
+  });
 }
 
+function saveEditPosition(idx){
+  const p = quittungItems[idx];
+  if(!p) return;
+  
+  p.menge = parseFloat(document.getElementById('edit-menge').value) || 1;
+  p.einheit = document.getElementById('edit-einheit').value || 'Stk';
+  p.preis_brutto = parseFloat(document.getElementById('edit-preis').value) || 0;
+  p.rabatt = parseFloat(document.getElementById('edit-rabatt').value) || 0;
+  p.preis_netto = p.preis_brutto - p.rabatt;
+  
+  console.log('✓ Position '+idx+' geändert:', p);
+  
+  // Refresh Preview
+  const receipt = document.getElementById('receipt-preview-dlg');
+  if(receipt) receipt.remove();
+  
+  const parsed_positions = quittungItems.map(it=>({name:it.name||'Unknown',text:it.name+'\n'+it.menge+' '+it.einheit+' CHF '+(it.preis_brutto||it.preis_netto||it.preis||0).toFixed(2),preis_brutto:it.preis_brutto||it.preis_netto||it.preis||0,preis_netto:it.preis_netto||it.preis||0,preis:it.preis_netto||it.preis||0,rabatt:it.rabatt||0,einheit:it.einheit||'Stk',menge:it.menge||1,kat:it.kat||'Diverses'}));
+  showReceiptPreview(parsed_positions);
+}
 function confirmPreviewBooking(){
   toast('ℹ️ Vorschau-Modus beendet. Starte normalen Scan für echter Buchung.');
   const dlg=document.getElementById('receipt-preview-dlg');
@@ -7532,7 +7652,21 @@ function renderQuittungUebersicht(datum){
   // VORSCHAU-MODUS CHECK
   if(opt.quittungPreview){
     const body=document.getElementById('quittung-body');
-    if(body){body.innerHTML='';body.style.display='none';} // VERSTECKE body komplett // Lösche Spinner
+    if(body){body.innerHTML='';body.style.display='none';body.style.height='0';}
+    // Verstecke ALLES quittung-bezogene
+    document.querySelectorAll('[id*="quittung"]').forEach(el => {
+      el.style.display='none';
+      el.style.visibility='hidden';
+      el.style.height='0';
+      el.style.overflow='hidden';
+      el.style.pointerEvents='none';
+    });
+    // Spinner explizit weg
+    const spinner = document.querySelector('.spn');
+    if(spinner) {
+      spinner.style.display='none';
+      spinner.parentElement.style.display='none';
+    } // Lösche Spinner
     const parsed_positions=quittungItems.map(it=>({name:it.name||'Unknown',text:it.name+'\n'+it.menge+' '+it.einheit+' CHF '+(it.preis_brutto||it.preis_netto||it.preis||0).toFixed(2),preis_brutto:it.preis_brutto||it.preis_netto||it.preis||0,preis_netto:it.preis_netto||it.preis||0,preis:it.preis_netto||it.preis||0,rabatt:it.rabatt||0,einheit:it.einheit||'Stk',menge:it.menge||1,kat:it.kat||'Diverses'}));
     showReceiptPreview(parsed_positions);
     return;
@@ -8522,6 +8656,150 @@ async function installApp(){
 function showAppInfo(){
   // Show app version, stats, links
   goScreen('s-settings');
+}
+
+function openLagerArtikleWahl(quittungName, posIdx, isMatched){
+  console.log('🔍 Artikel-Wahl Modal öffnet für:', quittungName);
+  
+  const dlg = document.createElement('div');
+  dlg.id = 'artikel-wahl-dlg';
+  dlg.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:9700;display:flex;align-items:center;justify-content:center;padding:8px';
+  
+  dlg.innerHTML = '<div style="background:var(--sf);border-radius:var(--r);padding:16px;max-width:90vw;max-width:min(90vw,450px);max-height:85vh;overflow:hidden;display:flex;flex-direction:column">'+
+    '<h3 style="margin:0 0 12px;color:var(--tx)">Artikel zuweisen: "'+esc(quittungName)+'"</h3>'+
+    '<div style="margin-bottom:12px">'+
+      '<input id="artikel-such" type="text" placeholder="Suchen..." style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)" autofocus>'+
+    '</div>'+
+    '<div id="artikel-list" style="flex:1;overflow-y:auto;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);padding:0"></div>'+
+    '<div style="display:flex;gap:8px;margin-top:12px">'+
+      '<button id="btn-artikel-close" style="flex:1;padding:10px;background:var(--wn);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-weight:600">✗ Abbrechen</button>'+
+    '</div>'+
+  '</div>';
+  
+  document.body.appendChild(dlg);
+  
+  // Rendern der Artikel-Liste
+  function renderList(searchTerm=''){
+    const list = document.getElementById('artikel-list');
+    const search = searchTerm.toLowerCase();
+    
+    let html = '';
+    (S.a || []).forEach(artikel => {
+      if(!search || artikel.name.toLowerCase().includes(search)) {
+        html += '<button onclick="assignArtikelAlias(\''+String(artikel.id).replace(/'/g,"\\'")+'\',\''+quittungName.replace(/'/g,"\\'")+'\','+posIdx+')" '+
+          'style="display:block;width:100%;padding:10px;background:transparent;border:1px solid var(--bd);border-bottom:none;text-align:left;cursor:pointer;color:var(--tx);font-size:13px">'+
+          esc(artikel.name)+
+        '</button>';
+      }
+    });
+    
+    if(!html) html = '<div style="padding:16px;color:var(--t2);text-align:center">Keine Artikel gefunden</div>';
+    list.innerHTML = html;
+  }
+  
+  // Initial render
+  renderList();
+  
+  // Search-Handler
+  document.getElementById('artikel-such').addEventListener('input', (e) => {
+    renderList(e.target.value);
+  });
+  
+  // Close-Handler
+  document.getElementById('btn-artikel-close').addEventListener('click', () => {
+    dlg.remove();
+  });
+  
+  // ESC zum Schließen
+  const escHandler = (e) => {
+    if(e.key === 'Escape') {
+      dlg.remove();
+      document.removeEventListener('keydown', escHandler);
+    }
+  };
+  document.addEventListener('keydown', escHandler);
+}
+
+function assignArtikelAlias(artikelId, quittungName, posIdx){
+  // Zuweise Quittungs-Alias zum Lager-Artikel
+  const artikel = S.a.find(a => String(a.id) === String(artikelId));
+  if(!artikel) {
+    console.error('❌ Artikel nicht gefunden:', artikelId);
+    return;
+  }
+  
+  // Füge Alias hinzu
+  if(!artikel.quittungAliase) artikel.quittungAliase = '';
+  const aliases = artikel.quittungAliase.split('\n').filter(a => a.trim());
+  
+  if(!aliases.includes(quittungName)) {
+    aliases.push(quittungName);
+    artikel.quittungAliase = aliases.join('\n');
+  }
+  
+  console.log('✓ Alias gespeichert:', quittungName, '→', artikel.name);
+  
+  // Schließe Modal
+  const dlg = document.getElementById('artikel-wahl-dlg') || document.getElementById('artikel-wahl-dlg') || 
+              document.querySelector('[id*="artikel-wahl"]') || 
+              document.querySelector('[id*="edit-preview"]');
+  if(dlg) dlg.remove();
+  
+  // Speichere Änderungen
+  saveL();
+  
+  // Refresh Preview
+  const receipt = document.getElementById('receipt-preview-dlg');
+  if(receipt) receipt.remove();
+  
+  const parsed_positions = quittungItems.map(it=>({name:it.name||'Unknown',text:it.name+'\n'+it.menge+' '+it.einheit+' CHF '+(it.preis_brutto||it.preis_netto||it.preis||0).toFixed(2),preis_brutto:it.preis_brutto||it.preis_netto||it.preis||0,preis_netto:it.preis_netto||it.preis||0,preis:it.preis_netto||it.preis||0,rabatt:it.rabatt||0,einheit:it.einheit||'Stk',menge:it.menge||1,kat:it.kat||'Diverses',lagerArtikelId:it.lagerArtikelId,lagerMatch:it.lagerMatch,needsManualMatch:it.needsManualMatch}));
+  showReceiptPreview(parsed_positions);
+}
+
+function selectLagerArtikleAlias(artikelId, quittungName){
+  // Speichere den Alias für diesen Artikel
+  const artikel = S.a.find(a => a.id === artikelId);
+  if(!artikel) return;
+  
+  // Füge Quittungs-Alias hinzu
+  if(!artikel.quittungAliase) artikel.quittungAliase = '';
+  const aliases = artikel.quittungAliase.split('\n').filter(a => a.trim());
+  
+  if(!aliases.includes(quittungName)) {
+    aliases.push(quittungName);
+    artikel.quittungAliase = aliases.join('\n');
+    console.log('✓ Alias gespeichert: "'+quittungName+'" → "'+artikel.name+'"');
+  }
+  
+  // Speichere zu GitHub
+  saveL();
+}
+
+function renderLagerInfo(parsed){
+  // Zeige gefundenen Lager-Artikel mit Foto und Wechsel-Option
+  if(!parsed.lagerArtikelId && parsed.needsManualMatch) {
+    return '<div style="background:var(--wn);color:#fff;padding:8px 12px;border-radius:4px;margin-bottom:12px">'+
+      '<button onclick="openLagerArtikleWahl(\''+parsed.name.replace(/'/g,"\\'")+'\',0)" style="background:transparent;color:#fff;border:none;font-weight:600;cursor:pointer;text-decoration:underline">? Artikel wählen</button>'+
+    '</div>';
+  }
+  
+  if(parsed.lagerArtikelId) {
+    const artikel = S.a.find(a => a.id === parsed.lagerArtikelId);
+    if(!artikel) return '';
+    
+    return '<div style="background:var(--ok);padding:12px;border-radius:4px;margin-bottom:12px">'+
+      '<div style="display:flex;gap:12px;align-items:flex-start">'+
+        '<div style="flex:1">'+
+          '<div style="color:#fff;font-weight:600;margin-bottom:4px">📦 Lager-Artikel:</div>'+
+          '<div style="color:#fff;font-size:14px;margin-bottom:8px">'+esc(artikel.name)+'</div>'+
+          '<button onclick="openLagerArtikleWahl(\''+parsed.name.replace(/'/g,"\\'")+'\',0,true)" style="background:rgba(255,255,255,.2);color:#fff;border:1px solid rgba(255,255,255,.5);padding:4px 8px;border-radius:3px;cursor:pointer;font-size:11px">Anderer Artikel</button>'+
+        '</div>'+
+        (artikel.foto ? '<img src="'+artikel.foto+'" style="width:60px;height:60px;object-fit:cover;border-radius:4px;cursor:pointer" onclick="openFotoLightbox(\''+artikel.foto.replace(/'/g,"\\'")+'\',\''+esc(artikel.name).replace(/'/g,"\\'")+'\')" title="Klick zum Vergrößern">' : '')+
+      '</div>'+
+    '</div>';
+  }
+  
+  return '';
 }
 </script>
 </body>
