@@ -4683,11 +4683,15 @@ function editPreviewPosition(idx){
   const p = quittungItems[idx];
   if(!p) return;
   
+  const menge = p.menge || 1;
+  const einzelpreis = menge > 0 ? (p.preis_brutto || p.preis || 0) / menge : (p.preis_brutto || p.preis || 0);
+  const gesamtpreis = p.preis_brutto || p.preis || 0;
+  
   const dlg = document.createElement('div');
   dlg.id = 'edit-preview-dlg-'+idx;
   dlg.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:9600;display:flex;align-items:center;justify-content:center;padding:8px';
   
-  dlg.innerHTML = '<div style="background:var(--sf);border-radius:var(--r);padding:16px;max-width:90vw;max-width:min(90vw,400px);max-height:80vh;overflow-y:auto">'+
+  dlg.innerHTML = '<div style="background:var(--sf);border-radius:var(--r);padding:16px;max-width:90vw;max-width:min(90vw,420px);max-height:80vh;overflow-y:auto">'+
     '<h3 style="margin:0 0 12px;color:var(--tx)">Artikel bearbeiten</h3>'+
     '<div style="margin-bottom:12px;padding:8px;background:var(--bg);border-radius:var(--rs)">'+
       '<button id="btn-wahl-'+idx+'" style="width:100%;padding:8px;background:var(--wn);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-weight:600;margin-bottom:8px">? Anderen Artikel wählen</button>'+
@@ -4695,19 +4699,29 @@ function editPreviewPosition(idx){
     '</div>'+
     '<div style="margin-bottom:12px">'+
       '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Menge:</label>'+
-      '<input id="edit-menge-'+idx+'" type="number" value="'+p.menge+'" step="0.001" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
+      '<input id="edit-menge-'+idx+'" type="number" value="'+menge+'" step="0.001" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)" oninput="updateGesamtpreis('+idx+')">'+
     '</div>'+
     '<div style="margin-bottom:12px">'+
       '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Einheit:</label>'+
-      '<input id="edit-einheit-'+idx+'" type="text" value="'+(p.einheit||'Stk')+'" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
+      '<select id="edit-einheit-'+idx+'" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
+        '<option value="Stk" '+(p.einheit==='Stk'?'selected':'')+'>Stk (Stück)</option>'+
+        '<option value="Stangen" '+(p.einheit==='Stangen'?'selected':'')+'>Stangen</option>'+
+        '<option value="Packungen" '+(p.einheit==='Packungen'?'selected':'')+'>Packungen</option>'+
+        '<option value="Kisten" '+(p.einheit==='Kisten'?'selected':'')+'>Kisten</option>'+
+        '<option value="kg" '+(p.einheit==='kg'?'selected':'')+'>kg</option>'+
+        '<option value="g" '+(p.einheit==='g'?'selected':'')+'>g</option>'+
+        '<option value="l" '+(p.einheit==='l'?'selected':'')+'>l</option>'+
+        '<option value="ml" '+(p.einheit==='ml'?'selected':'')+'>ml</option>'+
+        '<option value="Paar" '+(p.einheit==='Paar'?'selected':'')+'>Paar</option>'+
+      '</select>'+
     '</div>'+
     '<div style="margin-bottom:12px">'+
-      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Preis Brutto (CHF):</label>'+
-      '<input id="edit-preis-'+idx+'" type="number" value="'+(p.preis_brutto||p.preis||0).toFixed(2)+'" step="0.01" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
+      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Einzelpreis (CHF):</label>'+
+      '<input id="edit-einzelpreis-'+idx+'" type="number" value="'+einzelpreis.toFixed(2)+'" step="0.01" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)" oninput="updateGesamtpreis('+idx+')">'+
     '</div>'+
-    '<div style="margin-bottom:12px">'+
-      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Rabatt (CHF):</label>'+
-      '<input id="edit-rabatt-'+idx+'" type="number" value="'+(p.rabatt||0).toFixed(2)+'" step="0.01" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
+    '<div style="margin-bottom:12px;padding:8px;background:var(--bg);border-radius:var(--rs);border:1px solid var(--bd)">'+
+      '<div style="color:var(--t2);font-size:11px;margin-bottom:4px">Gesamtpreis (berechnet):</div>'+
+      '<div id="edit-gesamtpreis-'+idx+'" style="font-size:18px;font-weight:600;color:var(--ok)">CHF '+gesamtpreis.toFixed(2)+'</div>'+
     '</div>'+
     '<div style="display:flex;gap:8px">'+
       '<button id="btn-save-'+idx+'" style="flex:1;padding:10px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-weight:600;font-size:14px">✓ Speichern</button>'+
@@ -4717,18 +4731,23 @@ function editPreviewPosition(idx){
   
   document.body.appendChild(dlg);
   
-  // Event Listener (nicht onclick!)
+  // Event Listener
   document.getElementById('btn-wahl-'+idx).addEventListener('click', () => {
-    dlg.remove(); // Schließe Edit-Dialog erst
+    dlg.remove();
     openLagerArtikleWahl(p.name, idx, true);
   });
   
   document.getElementById('btn-save-'+idx).addEventListener('click', () => {
-    p.menge = parseFloat(document.getElementById('edit-menge-'+idx).value) || 1;
+    const newMenge = parseFloat(document.getElementById('edit-menge-'+idx).value) || 1;
+    const newEinzelpreis = parseFloat(document.getElementById('edit-einzelpreis-'+idx).value) || 0;
+    const newGesamtpreis = newMenge * newEinzelpreis;
+    
+    p.menge = newMenge;
     p.einheit = document.getElementById('edit-einheit-'+idx).value || 'Stk';
-    p.preis_brutto = parseFloat(document.getElementById('edit-preis-'+idx).value) || 0;
-    p.rabatt = parseFloat(document.getElementById('edit-rabatt-'+idx).value) || 0;
-    p.preis_netto = p.preis_brutto - p.rabatt;
+    p.preis_brutto = newGesamtpreis;
+    p.preis = newGesamtpreis;
+    p.preis_netto = newGesamtpreis;
+    p.rabatt = 0;
     
     console.log('✓ Position '+idx+' geändert:', p);
     dlg.remove();
@@ -4737,7 +4756,6 @@ function editPreviewPosition(idx){
     const receipt = document.getElementById('receipt-preview-dlg');
     if(receipt) receipt.remove();
     
-    // EINFACH: Übergebe quittungItems direkt
     console.log('📢 showReceiptPreview wird aufgerufen mit', quittungItems.length, 'Items');
     try {
       showReceiptPreview(quittungItems);
@@ -4748,6 +4766,19 @@ function editPreviewPosition(idx){
   
   document.getElementById('btn-cancel-'+idx).addEventListener('click', () => {
     dlg.remove();
+  });
+}
+
+// Helper-Funktion für Live-Berechnung
+function updateGesamtpreis(idx){
+  const menge = parseFloat(document.getElementById('edit-menge-'+idx).value) || 0;
+  const einzelpreis = parseFloat(document.getElementById('edit-einzelpreis-'+idx).value) || 0;
+  const gesamtpreis = menge * einzelpreis;
+  const gesamtEl = document.getElementById('edit-gesamtpreis-'+idx);
+  if(gesamtEl){
+    gesamtEl.textContent = 'CHF ' + gesamtpreis.toFixed(2);
+  }
+}
   });
 }
 
