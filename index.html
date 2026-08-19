@@ -1,3 +1,4 @@
+<!-- HAUSHALTBUCH v19.94-FINAL cache-bust-9999 -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -8,7 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<link rel="manifest" href="manifest.json?v=10"/>
+<!-- CACHE BUST v99 -->
+<link rel="manifest" href="manifest.json?v=9999"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
 <title>Haushaltbuch</title>
@@ -313,6 +315,9 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
         <span class="sdot" id="sdot"></span>
         <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.21-4.45"/></svg>
       </button>
+      <button class="ib" onclick="showDeduplicateDialog()" title="Doppelte Einträge entfernen" style="position:relative">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 5"/><path d="M3 3v6h6"/><circle cx="12" cy="12" r="0" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/></svg>
+      </button>
       <button class="ib" onclick="goScreen('s-settings')" title="Einstellungen">
         <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
@@ -493,7 +498,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   <div id="laden-content" style="display:flex;flex-direction:column;height:100%;overflow:hidden"></div>
 </div>
 <div id="quittung-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:5000;align-items:flex-end;justify-content:center">
-  <div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;max-height:90vh;overflow-y:auto;padding:0 0 env(safe-area-inset-bottom)">
+  <div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);max-height:90vh;overflow-y:auto;padding:0 0 env(safe-area-inset-bottom)">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd)">
       <span style="font-weight:600;font-size:16px">📄 Quittung scannen</span>
       <button onclick="closeQuittung()" style="background:none;border:none;cursor:pointer;color:var(--t2);font-size:22px;line-height:1">×</button>
@@ -533,10 +538,58 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.13';
+const APP_VERSION='20.0';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'20.0',d:'08.2026',items:['MAJOR FIX: name Feld in parsed_positions','Artikel-Namen werden jetzt korrekt weitergegeben','Lager-Abgleich funktioniert mit echten Namen','Goldfield findet echten Namen statt Unknown']},
+  {v:'19.99',d:'08.2026',items:['DEBUG: KI-Response Logging in Console','UI: Dialog margin:auto für Zentrierung','FIX: Quittung-Container verstecken','Spinner-Problem angehen']},
+  {v:'19.98',d:'08.2026',items:['FIX: showAppInfo ReferenceError behoben','Stub-Funktion öffnet Settings','Console-Fehler eliminiert','Lager-Match-Logging kann jetzt arbeiten']},
+  {v:'19.97',d:'08.2026',items:['FIX: Lager-Match mit Debug-Logging','Bessere Name-Normalisierung für Artikel-Suche','FIX: Body wird bei Preview komplett hidden','Dialog border-radius angepasst']},
+  {v:'19.96',d:'08.2026',items:['UI: Vorschau-Dialog vertikal zentriert','UI: Lager-Status-Badge für jeden Artikel','✓ Grün: Artikel im Lager gefunden','⚠️ Rot: Artikel NICHT im Lager']},
+  {v:'19.95',d:'08.2026',items:['UI: Dialog max-width 420px Wrapper','UI: Abbrechen-Button Akzent-Farbe + weiß + fett + ESC','FIX: Loading-Spinner wird gelöscht vor Vorschau','Dialog mobile-optimiert']},
+  {v:'19.94',d:'08.2026',items:['UI: Vorschau-Dialog schmaler (max 420px)','UI: Abbrechen-Button bessere Farbe (Akzent, weiß, fett)','FIX: Loading-Spinner verschwindet nach Vorschau','Dialog-Anzeige optimiert für Handy']},
+  {v:'19.93',d:'08.2026',items:['FIX: parsed_positions zeigt preis_brutto statt netto','Vorschau zeigt jetzt korrekten Brutto-Preis','Goldfield: CHF 115 brutto korrekt angezeigt','Rabatt wird von Brutto abgezogen = Netto']},
+  {v:'19.92',d:'08.2026',items:['DEBUG: Verbessertes Logging im Validierungs-Pass','Zeigt alle KI-Rückgaben für jeden Artikel','Bessere Fehler-Erkennung bei Einzelpreis-Verwechslung','Console-Logs für Fehlersuche']},
+  {v:'19.91',d:'08.2026',items:['MAJOR: Preis-Validierungs-Pass für KI-Fehler','Erkennt wenn KI Einzelpreis als Brutto-Summe gibt','Korrigiert automatisch: brutto = einzelpreis × menge','Goldfield: 5.75 × 20 = 115.00 CHF brutto korrekt']},
+  {v:'19.90',d:'08.2026',items:['FIX: Vorschau-Dialog Escape-Handler hinzugefügt','ESC-Taste schließt Vorschau sofort','Abbrechen-Button funktioniert zuverlässig','Keine Trap im Vorschau-Modus mehr']},
+  {v:'19.89',d:'08.2026',items:['FIX: KI-Fehlerkorrektur für falsche Brutto-Preise','Parser erkennt wenn KI Netto als Brutto zurückgibt','Berechnet richtig: Brutto = Netto + Rabatt','Goldfield: 20×CHF5.75=CHF115 brutto korrekt']},
+  {v:'19.88',d:'08.2026',items:['MAJOR: KI-Prompt für Rabatt-Handling','Preis_brutto, rabatt, preis_netto statt einzelner Preis','Goldfield mit CHF 115 Brutto - CHF 9 Rabatt = CHF 106 Netto','Loose-Ware mit richtigem Gesamtpreis']},
+  {v:'19.87',d:'08.2026',items:['FIX: Parser arbeitet jetzt mit vereinfachtem Format','Erkennt Loose-Ware-Artikel (Chinakohl, Bananen, Tomaten)','Erkennt Portion-Boxen (>5 Stück)','Fallback auf Standard für einfache Artikel']},
+  {v:'19.86',d:'08.2026',items:['Parser: Portion-Box (20x CHF 5.75) erkennt jetzt Boxen','Parser: Loose-Ware (kg x CHF/kg) optimiert','Goldfield: erkennt 2 Boxen statt 20 Stück','Console.log für Debugging']},
+  {v:'19.85',d:'08.2026',items:['🔄 RESET: GitHub-Version restauriert','Vorschau-Modus funktioniert stabil','v19.80 bis v19.84 waren unstabil, gelöscht','Parser-Optimierung kann jetzt sauber aufgebaut werden']},
+  {v:'19.82',d:'08.2026',items:['DEBUG-VERSION: Massive Logging hinzugefügt','Zeige Rohtext, Preise, p-Objekt in Console','Finde heraus warum Preise nicht extrahiert werden']},
+  {v:'19.81',d:'08.2026',items:['MAJOR: Kompletter Parser-Rewrite','Bessere Regex für Preise und Mengen','Console-Logs zum Debuggen','Erkennt Loose-Ware, Portion-Box, Standard korrekt']},
+  {v:'19.80',d:'08.2026',items:['BUGFIX: Vorschau-Modus wird jetzt tatsächlich aufgerufen!','renderQuittung() checkt opt.quittungPreview','Gesamtpreis und Rabatte zeigen sich jetzt in der Vorschau']},
+  {v:'19.79',d:'08.2026',items:['Vorschau: Detaillierte Position-Informationen anzeigen','Typ-Icons (🥬 🎁 📦)','Brutto- und Netto-Preise','Gesamtpreis-Zusammenfassung oben (mit Rabatt-Übersicht)']},
+  {v:'19.78',d:'08.2026',items:['Parser: Rabatt-Erkennung (Stangenrabatt, Aktion)','Parser: Loose-Ware mit CHF/kg','Parser: Portion-Box mit Packungsgröße-Berechnung','Vorschau zeigt jetzt Rabatte und Packungsanzahl']},
+  {v:'19.77',d:'08.2026',items:['Feature: 🔍 Vorschau-Modus für Quittungs-Scan','Zeigt alle Positionen VOR dem Buchen','NICHTS wird gespeichert — perfekt zum Testen','3 Parser: Lose-Ware, Verpackt, Portion-Box']},
+  {v:'19.76',d:'08.2026',items:['Fix: Foto-Dialog bleibt offen bis Abbrechen','Dialog wird jetzt nach Datei-Auswahl geschlossen','Kamera/Galerie-Wahl funktioniert nahtlos']},
+  {v:'19.75',d:'08.2026',items:['Feature: Quittungs-Aliase in Artikel-Detail editierbar','✎ Bearbeiten Button direkt in der Detail-Ansicht','Ein Alias pro Zeile eingeben']},
+  {v:'19.74',d:'08.2026',items:['Feature: Quittungs-Alias-Manager in Einstellungen','Artikel auswählen und Aliase manuell erstellen/bearbeiten','Ein Alias pro Zeile für besseres Quittungs-Matching']},
+  {v:'19.73',d:'08.2026',items:['Feature: Einkaufspreis in Artikel-Übersicht anzeigen','Meta-Zeile: Lager · Marke · Packung · Preis · Kaufdatum','Schneller Überblick über Kosten']},
+  {v:'19.72',d:'08.2026',items:['Fix: Quittungs-Matching präziser (verhindert falsche Matches)','Mindestlängen für Fuzzy-Matching erhöht','Levenshtein-Matching statt loose includes()','Hackfleisch wird nicht mehr als Ei gematcht']},
+  {v:'19.71',d:'08.2026',items:['Feature: Portionen in Rezept-Detail anpassen vor Export','Klick auf Portionen-Box öffnet Dialog','Mengenschlüssel für fehlende Zutaten werden berechnet','Toast zeigt Portions-Faktor']},
+  {v:'19.70',d:'08.2026',items:['ENDLICH RICHTIG: Detail nutzt 100% exakte Übersicht-Matching-Logik','Keine separaten Funktionen mehr - direkt die gleichen 4 Filter','Übersicht 5 = Detail 4 (ohne Zucker) ✓']},
+  {v:'19.69',d:'08.2026',items:['Revert: checkZutatenVorhanden nutzt exakt Übersicht-Matching-Logik','Levenshtein-Matching (max 2 Fehler) erkennt jetzt Zucker -> Puderzucker','Konsistent mit Übersicht']},
+  {v:'19.68',d:'08.2026',items:['Fix: Grundzutaten (Zucker, Salz, Öl...) nicht auf Einkaufsliste','Zwei separate Filter: Anzeige (mit Grundzutaten) vs Einkaufsliste (ohne)','Übersicht und Detail zeigen jetzt gleich viele fehlende Artikel']},
+  {v:'19.67',d:'08.2026',items:['FIX: Rezept-Datenstruktur-Mismatch (r.zt vs r.zutaten)','Detail-Ansicht normalisiert Zutaten wie Übersicht','Konsistente Zutat-Anzeige zwischen Übersicht und Detail']},
+  {v:'19.66',d:'08.2026',items:['Debug: Console.log für checkZutatenVorhanden()','Grundzutaten-Prüfung in matching-Funktion']},
+  {v:'19.65',d:'08.2026',items:['Fix: missZt nutzt jetzt auch checkZutatenVorhanden()','Detail-Ansicht zeigt jetzt richtig fehlende Zutaten an']},
+  {v:'19.64',d:'08.2026',items:['Fix: Rezept-Übersicht und Detail nutzen gleiches Zutat-Matching','Levenshtein + Alias + Fuzzy-Matching in Detail-Ansicht','Verhindert irritierende Mismatch zwischen Übersicht und Detail']},
+  {v:'19.63',d:'08.2026',items:['Einkaufslisten-Einbuchen: Kaufort als Dropdown mit Auswahlliste','«+» Button um neuen Kaufort zu erfassen','Kauforte werden zu S.ge hinzugefügt']},
+  {v:'19.62',d:'08.2026',items:['Einkaufslisten-Einbuchen: Preis und Kaufort hinzugefügt','Kaufpreis optional editierbar (vorausgefüllt mit Lagerartikel-Preis)','Kaufort optional (vorausgefüllt mit Lagerartikel-Kaufort)']},
+  {v:'19.61',d:'08.2026',items:['Fix: Button bucht jetzt auch Automatisch-Artikel (unter Mindestbestand)','Beide Listen verarbeiten: Automatisch + Manuell','Nacheinander-Dialoge für alle gehakten Artikel']},
+  {v:'19.60',d:'08.2026',items:['Fix: Button oben rechts bucht jetzt gehakte Artikel ein','Nacheinander-Dialoge für jeden gehakten Artikel','Überspringen/Einbuchen für jeden Artikel möglich']},
+  {v:'19.59',d:'08.2026',items:['Fix: Einkaufslisten-Artikel werden nach Einbuchung gelöscht','Checkbox wird entfernt statt nur abhaken','Artikel erscheint nicht mehr in der Liste nach Speichern']},
+  {v:'19.58',d:'08.2026',items:['Auto-Alias: Quittungs-Name wird als Alias gespeichert','«TN Vollmilch 3.5% UHT IP» → Alias für «Vollmilch»','Besseres Matching beim nächsten Scan']},
+  {v:'19.57',d:'08.2026',items:['Quittungs-Scan: «⚙ Erweitert»-Button für neue Artikel','Öffnet vollständigen Artikel-Dialog statt Quick-Eingabe','Vollständige Erfassung: Name, Marke, Kategorie, Einheit, Lagerort']},
+  {v:'19.56',d:'08.2026',items:['Neue Funktion: Manueller Deduplizierungs-Button','🔄 Button in Lager-Übersicht (neben Sync)','Benutzer kann jederzeit doppelte Einträge entfernen']},
+  {v:'19.55',d:'08.2026',items:['Fix: Datum-Farben nutzen jetzt Theme-Variablen','var(--sf) für Background, var(--tx) für Text statt hardcodiert']},
+  {v:'19.54',d:'08.2026',items:['Fix: Mobile Datum-Struktur vereinfacht','Flexbox statt absolute Positioning']},
+  {v:'19.53',d:'08.2026',items:['Fix: Mobile Datum-Anzeige wird sofort aktualisiert','Direkte DOM-Manipulation statt nur UI-Refresh']},
+  {v:'19.52',d:'08.2026',items:['Fix: Mobile Datum-Anzeige nach Kalender-Auswahl','onblur-Fallback für Date-Input']},
+  {v:'19.51',d:'08.2026',items:['Fix: Syntax-Fehler im Datum-Preview entfernt','Vereinfachte Version ohne eingebettetes Script']},
   {v:'19.50',d:'08.2026',items:['Fix: Datum-Preview im Verlauf-Edit-Dialog','Gewähltes Datum wird sofort formatiert angezeigt']},
   {v:'19.49',d:'08.2026',items:['Fix: MHD wird überall nach Eingabe angezeigt','Globale refreshAllDateFields() für alle MHD-Eingabestellen']},
   {v:'19.48',d:'08.2026',items:['Fix: MHD-Datum wird sofort nach Eingabe angezeigt','refreshAllDateFields() aktualisiert das Eingabefeld']},
@@ -672,7 +725,7 @@ const VERSION_HISTORY=[
   {v:'10.8',d:'07.2026',items:['Rezept-Zutaten mit Menge auf Einkaufsliste']},
   {v:'10.7',d:'07.2026',items:['Einkaufswagen-Icon je Lagerzeile mit Duplikat-Schutz']},
   {v:'10.6',d:'07.2026',items:['Sprung-Pfeile ↑↓ in Detailansicht (bei langem Inhalt)']},
-  {v:'10.5',d:'07.2026',items:['Etikett-Packungsauswahl bei mehreren MHDs']},
+  {v:'10.5',d:'07.2026',items:['Etikett-Packungsauswahl bei mehreren MHDs']}
 ];
 function showVersionHistory(){
   const existing=document.getElementById('vh-modal');if(existing)existing.remove();
@@ -680,7 +733,7 @@ function showVersionHistory(){
   dlg.id='vh-modal';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:480px;max-height:80vh;overflow-y:auto;padding:0">'+
+    '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:90vw;max-width:min(90vw,420px);max-height:80vh;overflow-y:auto;padding:0">'+
       '<div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:var(--sf);z-index:1">'+
         '<span style="font-weight:700;font-size:16px">📋 Versionshistorie</span>'+
         '<button onclick="document.getElementById(\'vh-modal\').remove()" style="background:none;border:none;cursor:pointer;color:var(--t2);font-size:22px;line-height:1">×</button>'+
@@ -698,6 +751,12 @@ function showVersionHistory(){
         ).join('')+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.remove();});
 }
@@ -855,7 +914,52 @@ async function uploadFoto(b64,fn){
   return 'https://raw.githubusercontent.com/'+gh.own+'/'+gh.repo+'/'+gh.br+'/'+path+'?t='+Date.now();
 }
 
-async function findDuplicates(){
+async function showDeduplicateDialog(){
+  // Manueller Trigger für Deduplizierung (z.B. von Button in Einstellungen)
+  const dups=findDuplicates();
+  if(!dups.length){
+    toast('✓ Keine Duplikate gefunden');
+    return;
+  }
+  
+  const msg='🔄 Deduplizierung\n\n'+dups.length+' doppelte Einträge gefunden:\n\n'+
+    dups.slice(0,15).map(d=>'• '+esc(d.artikel)+' ('+d.datum+')').join('\n')+
+    (dups.length>15?'\n...und '+(dups.length-15)+' weitere':'');
+  
+  if(!confirm(msg+'\n\nJetzt löschen?'))return;
+  
+  // Führe Deduplizierung durch
+  let removed=0;
+  S.a.forEach(a=>{
+    if(!a.preisHistorie||a.preisHistorie.length<2)return;
+    const seen=new Map();
+    const keep=[];
+    a.preisHistorie.forEach((h,idx)=>{
+      const key=(h.datum||'')+'|'+(h.typ||'ein');
+      if(!seen.has(key)){
+        seen.set(key,true);
+        keep.push(h);
+      }else{
+        const logIdx=S.log.findIndex(l=>
+          l.aid===a.id&&l.d===h.datum&&Math.abs((l.m||0)-(h.menge||0))<0.01&&l.t===(h.typ||'ein')
+        );
+        if(logIdx>=0){
+          S.log.splice(logIdx,1);
+          removed++;
+        }
+      }
+    });
+    a.preisHistorie=keep;
+  });
+  
+  if(removed>0){
+    saveL();
+    toast('✓ '+removed+' doppelte Einträge gelöscht');
+    renderLager();
+  }
+}
+
+function findDuplicates(){
   // Findet alle Duplikate vor dem Löschen
   const duplicates=[];
   S.a.forEach(a=>{
@@ -1629,7 +1733,7 @@ function arRow(a){
   const bc=a.menge===0?'lo':a.menge<a.mindest?'wn':'ok';
   const th=a.foto?'<div class="at has-photo" data-thumb-id="'+a.id+'"><img src="'+esc(a.foto)+'" loading="lazy"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div>';
   const pinfo=packInfo(a);
-  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'')+(a.kaufdatum?' · '+fmtDateCH(a.kaufdatum):'');
+  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'')+(a.preis?' · CHF '+a.preis.toFixed(2):'')+(a.kaufdatum?' · '+fmtDateCH(a.kaufdatum):'');
   const eb=(a.ablaufdatum&&a.menge>0)?expBadgeA(a):'';
   const unitLabel=a.packMenge>0?esc(a.einheit||'Stk'):esc(a.einheit||'Stk');
   const aufListe=S.ek.some(e=>e.text.toLowerCase()===a.name.toLowerCase()&&!e.checked);
@@ -1725,6 +1829,13 @@ function showDet(id){
       '</div></div>';
   }
 
+  // Quittungs-Aliase anzeigen
+  const aliasHtml=(a.quittungAliase||[]).length?
+    '<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">Quittungs-Aliase</span><button onclick="editDetailAliase('+id+')" style="background:none;border:none;color:var(--ac);cursor:pointer;font-size:12px;padding:0;font-weight:600">✎ Bearbeiten</button></div>'+
+    (a.quittungAliase||[]).map(al=>'<div class="ir" style="align-items:center"><div style="flex:1;font-size:13px">'+esc(al)+'</div></div>').join('')+
+    '</div>':
+    '<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">Quittungs-Aliase</span><button onclick="editDetailAliase('+id+')" style="background:none;border:none;color:var(--ac);cursor:pointer;font-size:12px;padding:0;font-weight:600">✎ Hinzufügen</button></div><div class="ir"><span style="font-size:12px;color:var(--t2)">Keine Aliase — diese Quittungstexte werden diesem Artikel zugeordnet</span></div></div>';
+
   const histHtml=hist.length?'<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">Verlauf</span></div>'+
     hist.map((h,ri)=>{
       const i=(a.preisHistorie.length-1-ri);
@@ -1784,7 +1895,7 @@ function showDet(id){
       return '<div class="ir" style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showRezeptDetail(this,'+id+')" data-r=\''+rJson+'\'>'+thumb+'<div><div style="font-size:13px;font-weight:500">'+esc(r.name)+'</div><div style="font-size:11px;color:var(--t2)">'+r.port+' Port. · '+r.min+' min</div></div></div>';
     }).join('')+'</div>':
     '';
-  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span>'+(a.ablaufdatum?'<span style="flex:1;text-align:center">'+expBadgeKurz(a)+'</span><span class="iv" style="flex:none">'+fmtDateCH(a.ablaufdatum)+'</span>':'<span class="iv">—</span>')+'</div>'+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'" onclick="bestandManuellDialog('+id+')" style="cursor:pointer;text-decoration:underline dotted" title="Antippen zum direkten Eingeben">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+(a.oeffnungsdatum?'<div style="margin-top:14px;padding:10px 12px;background:var(--dl);border-radius:var(--rs);font-size:12px;color:var(--dg)">📂 Geöffnet seit '+fmtDateCH(a.oeffnungsdatum)+'</div>':'')+(a.quittungAliase&&a.quittungAliase.length?'<div style="margin-top:14px;padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs)"><div style="font-size:12px;font-weight:600;color:var(--t3);margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">📎 Quittungs-Aliase</div><div style="display:flex;flex-wrap:wrap;gap:6px">'+a.quittungAliase.map((al,i)=>'<span style="display:inline-flex;align-items:center;gap:4px;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:3px 8px;font-size:12px;color:var(--tx)">'+esc(al)+'<button onclick="delAlias('+id+','+i+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;padding:0 0 0 2px">×</button></span>').join('')+'</div></div>':'')+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button><button class="acb" style="color:var(--ac)" onclick="openSplitDialog('+id+')">✂ Trennen'+(a.mergeSources&&a.mergeSources.length?' ('+a.mergeSources.length+')':'')+'</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+
+  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span>'+(a.ablaufdatum?'<span style="flex:1;text-align:center">'+expBadgeKurz(a)+'</span><span class="iv" style="flex:none">'+fmtDateCH(a.ablaufdatum)+'</span>':'<span class="iv">—</span>')+'</div>'+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'" onclick="bestandManuellDialog('+id+')" style="cursor:pointer;text-decoration:underline dotted" title="Antippen zum direkten Eingeben">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+(a.oeffnungsdatum?'<div style="margin-top:14px;padding:10px 12px;background:var(--dl);border-radius:var(--rs);font-size:12px;color:var(--dg)">📂 Geöffnet seit '+fmtDateCH(a.oeffnungsdatum)+'</div>':'')+aliasHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button><button class="acb" style="color:var(--ac)" onclick="openSplitDialog('+id+')">✂ Trennen'+(a.mergeSources&&a.mergeSources.length?' ('+a.mergeSources.length+')':'')+'</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+
     (a.ablaufdatum?'<div class="acr" style="margin-top:8px"><button class="acb" onclick="toggleAblaufIgnoriert('+id+')" style="'+(a.ablaufIgnoriert?'color:var(--ac)':'')+'">'+(a.ablaufIgnoriert?'↑ Wieder einreihen (Ablauf aktiv)':'↓ Bei Ablauf ans Ende setzen')+'</button></div>':'')+
     (opt.fwAnbruch?'<div class="acr" style="margin-top:8px"><button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen (abgelaufen)</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>':'<div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>')+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
   const heroEl=document.getElementById('dh-hero-img');
@@ -1805,18 +1916,18 @@ function editPreisHistorie(artikelId,idx){
   dlg.id='vh-edit-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px">Verlauf-Eintrag bearbeiten</div>'+
       '<div class="tc" style="margin-bottom:14px">'+
         '<div class="fd"><label>Menge ('+esc(a.einheit||'Stk')+')</label>'+
-          '<input type="text" inputmode="decimal" id="vhe-mg" value="'+fmtMenge(h.menge||1)+'" oninput="vheKalkulieren('+artikelId+')" style="width:100%;padding:11px;border:2px solid var(--ac);border-radius:var(--rs);background:#fff;color:#000;font-size:17px;text-align:right;font-weight:600"/>'+
+          '<input type="text" inputmode="decimal" id="vhe-mg" value="'+fmtMenge(h.menge||1)+'" oninput="vheKalkulieren('+artikelId+')" style="width:100%;padding:11px;border:2px solid var(--ac);border-radius:var(--rs);background:var(--sf);color:var(--tx);font-size:17px;text-align:right;font-weight:600"/>'+
         '</div>'+
         (istGewicht?
           '<div class="fd"><label>Preis pro kg (CHF)</label>'+
-            '<input type="text" inputmode="decimal" id="vhe-kgpreis" placeholder="z.B. 3.90" value="'+(a.preisProKg||'')+'" oninput="vheKalkulieren('+artikelId+')" style="width:100%;padding:11px;border:2px solid var(--ac);border-radius:var(--rs);background:#fff;color:#000;font-size:16px;text-align:right"/>'+
+            '<input type="text" inputmode="decimal" id="vhe-kgpreis" placeholder="z.B. 3.90" value="'+(a.preisProKg||'')+'" oninput="vheKalkulieren('+artikelId+')" style="width:100%;padding:11px;border:2px solid var(--ac);border-radius:var(--rs);background:var(--sf);color:var(--tx);font-size:16px;text-align:right"/>'+
           '</div>'+
           '<div class="fd"><label>Kaufpreis (CHF)</label>'+
-            '<input type="text" inputmode="decimal" id="vhe-pr-kg" placeholder="z.B. 4.50" value="'+(h.preis||'')+'" oninput="" style="width:100%;padding:11px;border:2px solid var(--ac);border-radius:var(--rs);background:#fff;color:#000;font-size:17px;text-align:right;font-weight:600"/>'+
+            '<input type="text" inputmode="decimal" id="vhe-pr" placeholder="z.B. 4.50" value="'+(h.preis||'')+'" oninput="" style="width:100%;padding:11px;border:2px solid var(--ac);border-radius:var(--rs);background:var(--sf);color:var(--tx);font-size:17px;text-align:right;font-weight:600"/>'+
           '</div>'
         :
           '<div class="fd"><label>Kaufpreis (CHF)</label>'+
@@ -1824,8 +1935,7 @@ function editPreisHistorie(artikelId,idx){
           '</div>'
         )+
         '<div class="fd"><label>Datum</label>'+dateField('vhe-dat',h.datum||todayISO())+
-          '<div id="vhe-dat-preview" style="margin-top:4px;font-size:13px;color:var(--t2)"></div>'+
-          '<script>document.getElementById(\'vhe-dat\').oninput=()=>{const d=document.getElementById(\'vhe-dat\').value;document.getElementById(\'vhe-dat-preview\').textContent=d?fmtDateCH(d):\'—\';}(function(){const d=document.getElementById(\'vhe-dat\').value;document.getElementById(\'vhe-dat-preview\').textContent=d?fmtDateCH(d):\'—\';})();</script>'+
+          '<div id="vhe-dat-preview" style="margin-top:4px;font-size:13px;color:var(--t2)">'+fmtDateCH(h.datum||todayISO())+'</div>'+
         '</div>'+
         '<label style="display:flex;align-items:center;gap:8px;margin-top:4px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg)">'+
           '<input type="checkbox" id="vhe-aktion" '+(h.aktion?'checked':'')+' style="width:18px;height:18px;accent-color:var(--wn);cursor:pointer"/>'+
@@ -1837,6 +1947,12 @@ function editPreisHistorie(artikelId,idx){
         '<button onclick="doEditPreisHistorie('+artikelId+','+idx+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Speichern</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   setTimeout(()=>suppressAutofill(dlg),0);
 }
@@ -1844,7 +1960,7 @@ function editPreisHistorie(artikelId,idx){
 function vheKalkulieren(artikelId){
   const a=S.a.find(x=>x.id===artikelId);if(!a)return;
   const kgEl=document.getElementById('vhe-kgpreis');
-  const prEl=document.getElementById('vhe-pr-kg');
+  const prEl=document.getElementById('vhe-pr');
   const mgEl=document.getElementById('vhe-mg');
   if(!kgEl||!prEl||!mgEl)return;
   const kgPreis=parseDecimal(kgEl.value)||0;
@@ -1863,9 +1979,9 @@ function doEditPreisHistorie(artikelId,idx){
   if(!a||!a.preisHistorie||!a.preisHistorie[idx])return;
   const h=a.preisHistorie[idx];
   const istGewicht=['kg','g'].includes(a.einheit);
-  const prEl=document.getElementById('vhe-pr-kg')||document.getElementById('vhe-pr');
+  const prEl=document.getElementById('vhe-pr');
   const kgEl=document.getElementById('vhe-kgpreis');
-  const p=parseDecimal(prEl?.value)||0;
+  const p=parseDecimal(prEl.value)||0;
   let menge=parseDecimal(document.getElementById('vhe-mg').value)||1;
   if(!isDecUnit(a.einheit))menge=Math.max(1,Math.round(menge));
   const datum=document.getElementById('vhe-dat').value||h.datum||todayISO();
@@ -1896,6 +2012,14 @@ function doEditPreisHistorie(artikelId,idx){
   }
   
   saveL();
+  
+  // Aktualisiere das Verlaufs-Datum-Display SOFORT (bevor Dialog geschlossen wird)
+  const vlEl=document.querySelector('[id^="vh-item-"]');
+  if(vlEl){
+    const datumSpan=vlEl.querySelector('[data-datum]');
+    if(datumSpan)datumSpan.textContent=fmtDateCH(datum);
+  }
+  
   document.getElementById('vh-edit-dlg').remove();
   refreshAllDateFields();
   showDet(artikelId);
@@ -1965,7 +2089,7 @@ function bestandManuellDialog(id){
   dlg.id='bestand-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:2px">Bestand anpassen</div>'+
       '<div style="font-size:13px;color:var(--t2);margin-bottom:14px">«'+esc(a.name)+'» — aktuell: <strong>'+fmtMenge(a.menge)+' '+esc(a.einheit||'Stk')+'</strong></div>'+
       '<div class="ghf"><label>Neuer Bestand</label>'+
@@ -1978,6 +2102,12 @@ function bestandManuellDialog(id){
         '<button onclick="document.getElementById(\'bestand-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Abbrechen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   setTimeout(()=>{const inp=document.getElementById('bestand-neu');if(inp){inp.focus();inp.select();}},100);
 }
@@ -2059,7 +2189,7 @@ function chgBEingangGrund(a){
   dlg.id='pack-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">«'+esc(a.name)+'» +1</div>'+
       '<div style="font-size:13px;color:var(--t2);margin-bottom:14px">Was ist der Grund der Bestandsänderung?</div>'+
       '<div style="display:flex;flex-direction:column;gap:8px">'+
@@ -2068,7 +2198,17 @@ function chgBEingangGrund(a){
         '<button onclick="document.getElementById(\'pack-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Abbrechen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function chgBEingangKorrektur(id){
@@ -2087,7 +2227,7 @@ function chgBAusgangGrund(a,aktive){
   dlg.id='pack-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">«'+esc(a.name)+'» −1</div>'+
       '<div style="font-size:13px;color:var(--t2);margin-bottom:14px">Was ist der Grund der Bestandsänderung?</div>'+
       '<div style="display:flex;flex-direction:column;gap:8px">'+
@@ -2096,7 +2236,17 @@ function chgBAusgangGrund(a,aktive){
         '<button onclick="document.getElementById(\'pack-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Abbrechen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function chgBAusgangAusfuehren(id,typ){
@@ -2136,7 +2286,7 @@ function showEingangMhdDialog(a){
   dlg.id='pack-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px">«'+esc(a.name)+'» einlagern</div>'+
       '<div class="tc" style="margin-bottom:14px">'+
         '<div class="fd"><label>Menge ('+esc(a.einheit||'Stk')+')</label><input type="text" inputmode="decimal" id="eingang-schnell-mg" value="'+(a.einheit==='g'?'100':'1')+'" oninput="eingangKalkulieren('+a.id+')" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:17px;text-align:right;font-weight:600"/></div>'+
@@ -2145,7 +2295,7 @@ function showEingangMhdDialog(a){
             '<input type="text" inputmode="decimal" id="eingang-kgpreis" placeholder="z.B. 3.90" value="'+(a.einheit==='g'&&a.preis?((a.preis||0)*1000).toFixed(2):a.preis||'')+'" oninput="eingangKalkulieren('+a.id+')" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/>'+
           '</div>'+
           '<div class="fd"><label>Kaufpreis (CHF)</label>'+
-            '<input type="text" inputmode="decimal" id="eingang-schnell-pr-kg" placeholder="wird berechnet" value="" style="width:100%;padding:11px;border:1px solid var(--ok);border-radius:var(--rs);background:var(--bg);color:var(--ok);font-size:17px;text-align:right;font-weight:700"/>'+
+            '<input type="text" inputmode="decimal" id="eingang-schnell-pr" placeholder="wird berechnet" value="" style="width:100%;padding:11px;border:1px solid var(--ok);border-radius:var(--rs);background:var(--bg);color:var(--ok);font-size:17px;text-align:right;font-weight:700"/>'+
           '</div>'
         :
           '<div class="fd"><label>Kaufpreis (CHF, optional)</label>'+
@@ -2159,6 +2309,12 @@ function showEingangMhdDialog(a){
         '<button onclick="doEingangSchnell('+a.id+');refreshAllDateFields()" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Einlagern</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   setTimeout(()=>suppressAutofill(dlg),0);
 }
@@ -2190,7 +2346,7 @@ function refreshAllDateFields(){
 function eingangKalkulieren(artikelId){
   const a=S.a.find(x=>x.id===artikelId);if(!a)return;
   const kgPreisEl=document.getElementById('eingang-kgpreis');
-  const prEl=document.getElementById('eingang-schnell-pr-kg');
+  const prEl=document.getElementById('eingang-schnell-pr');
   const mgEl=document.getElementById('eingang-schnell-mg');
   if(!kgPreisEl||!prEl||!mgEl)return;
   const kgPreis=parseDecimal(kgPreisEl.value)||0;
@@ -2212,7 +2368,7 @@ function doEingangSchnell(artikelId){
   if(!decOk)menge=Math.max(1,Math.round(menge));
   const mhd=document.getElementById('eingang-schnell-mhd').value||'';
   // Preis: kalkulierter Kaufpreis oder letzter Standardpreis
-  const prEl=document.getElementById('eingang-schnell-pr-kg')||document.getElementById('eingang-schnell-pr');
+  const prEl=document.getElementById('eingang-schnell-pr');
   const kgEl=document.getElementById('eingang-kgpreis');
   let preis=prEl&&prEl.value?parseDecimal(prEl.value)||0:a.preis||0;
   // Standardpreis aktualisieren: bei kg/g-Artikeln immer Kilopreis speichern
@@ -2239,7 +2395,7 @@ function showPackDialog(a,typ){
   dlg.id='pack-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">'+'Ausgang: Welche Packung entnehmen?'+'</div>'+
       '<div style="font-size:12px;color:var(--t2);margin-bottom:12px">'+'Empfehlung: Älteste zuerst (FIFO) — ganz oben.'+'</div>'+
       aktive.map(p=>{
@@ -2256,7 +2412,17 @@ function showPackDialog(a,typ){
       (typ==='ein'?'<div onclick="doPackNew('+a.id+')" style="display:flex;align-items:center;justify-content:space-between;padding:14px 10px;cursor:pointer;color:var(--ac)"><span style="font-size:14px;font-weight:500">+ Neue Packung anlegen</span></div>':'')+
       '<button onclick="document.getElementById(\'pack-dlg\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function doPackChange(artikelId,packId,typ){
@@ -2307,7 +2473,7 @@ function openSplitDialog(id){
   ).join(''):'';
 
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);max-height:85vh;overflow-y:auto;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">✂ «'+esc(a.name)+'» aufteilen</div>'+
       '<div style="font-size:13px;color:var(--t2);margin-bottom:14px">Aktueller Bestand: '+fmtMenge(a.menge)+' '+(a.einheit||'Stk')+'</div>'+
       (hasSources?'<div style="font-size:12px;font-weight:600;color:var(--ok);margin-bottom:8px">📋 Früher zusammengeführte Artikel:</div>'+sourceRows+'<div style="height:1px;background:var(--bd);margin:12px 0"></div>':'')+ 
@@ -2322,6 +2488,12 @@ function openSplitDialog(id){
         '<button onclick="splitManuell('+id+')" style="flex:2;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✂ Abtrennen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   suppressAutofill(dlg);
 }
@@ -2413,13 +2585,19 @@ function openMergeDialog(id){
   dlg.id='merge-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;max-height:80vh;display:flex;flex-direction:column;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);max-height:80vh;display:flex;flex-direction:column;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">«'+esc(a.name)+'» zusammenführen mit…</div>'+
       '<div style="font-size:12px;color:var(--t2);margin-bottom:12px">Der gewählte Artikel wird in «'+esc(a.name)+'» eingegliedert: Bestände addiert, Barcodes übernommen, danach gelöscht. Name, Kategorie und Lagerort von «'+esc(a.name)+'» bleiben erhalten.</div>'+
       '<input type="text" id="merge-search" placeholder="🔍 Artikel suchen…" oninput="filterMergeList('+id+')" style="width:100%;padding:10px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:14px;margin-bottom:10px;flex-shrink:0"/>'+
       '<div id="merge-list" style="overflow-y:auto;flex:1"></div>'+
       '<button onclick="document.getElementById(\'merge-dlg\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2);flex-shrink:0">Abbrechen</button>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   filterMergeList(id);
 }
@@ -2693,24 +2871,38 @@ function showFotoWahl(){
   dlg.id='foto-wahl-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px;text-align:center">Foto hinzufügen</div>'+
       '<div style="display:flex;flex-direction:column;gap:8px">'+
-        '<button onclick="document.getElementById(\'foto-wahl-dlg\').remove();document.getElementById(\'fph-cam\').click()" style="width:100%;padding:13px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
+        '<button onclick="document.getElementById(\'fph-cam\').click()" style="width:100%;padding:13px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>'+
           'Kamera'+
         '</button>'+
-        '<button onclick="document.getElementById(\'foto-wahl-dlg\').remove();document.getElementById(\'fph\').click()" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
+        '<button onclick="document.getElementById(\'fph\').click()" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'+
           'Aus Galerie'+
         '</button>'+
         '<button onclick="document.getElementById(\'foto-wahl-dlg\').remove()" style="width:100%;padding:11px;background:none;border:none;font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function onPh(ev){
+  // Dialog hier schließen (NACH Datei-Auswahl, nicht davor)
+  const dlg=document.getElementById('foto-wahl-dlg');
+  if(dlg)dlg.remove();
+  
   const file=ev.target.files[0];if(!file)return;
   ffn=Date.now()+'_'+file.name.replace(/[^a-zA-Z0-9._-]/g,'_');
   const rd=new FileReader();
@@ -3382,7 +3574,7 @@ function showAusgangConfirmDialog(a,packId,list){
   dlg.id='ausgang-confirm-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:20px 16px calc(20px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:20px 16px calc(20px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">'+esc(a.name)+'</div>'+
       '<div style="font-size:13px;color:var(--t2);margin-bottom:16px">'+esc(a.lager)+'</div>'+
       // Vorher / Nachher
@@ -3405,7 +3597,17 @@ function showAusgangConfirmDialog(a,packId,list){
         '<button onclick="document.getElementById(\'ausgang-confirm-dlg\').remove();ausgangPackAbbuchen(S.a.find(x=>x.id==='+a.id+'),'+packId+',1,document.getElementById(\'ausgang-list\'))" style="flex:2;padding:12px;background:var(--dg);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">−1 entnehmen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function showAusgangPackDialog(a,list){
@@ -3424,7 +3626,7 @@ function showAusgangPackDialog(a,list){
   dlg.id='pack-dialog';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
     '<div style="font-weight:600;font-size:15px;margin-bottom:4px">'+esc(a.name)+' — Welche Packung?</div>'+
     '<div style="font-size:12px;color:var(--t2);margin-bottom:14px">Sortiert nach frühestem MHD</div>'+
     sorted.map((p,i)=>{
@@ -3447,7 +3649,17 @@ function showAusgangPackDialog(a,list){
     }).join('')+
     '<button onclick="document.getElementById(\'pack-dialog\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function ausgangPackAbbuchen(a,packId,menge,list){
@@ -3546,7 +3758,7 @@ function showEtikettPackDialog(a){
   dlg.id='etikett-pack-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
     '<div style="font-weight:600;font-size:15px;margin-bottom:4px">'+esc(a.name)+' — Etikett für welche Packung?</div>'+
     '<div style="font-size:12px;color:var(--t2);margin-bottom:14px">Das gewählte MHD und Kaufdatum erscheinen auf dem Etikett</div>'+
     sorted.map((p,i)=>{
@@ -3565,7 +3777,17 @@ function showEtikettPackDialog(a){
     }).join('')+
     '<button onclick="document.getElementById(\'etikett-pack-dlg\').remove()" style="width:100%;margin-top:12px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function chooseEtikettPack(ablaufdatum,kaufdatum){
@@ -4034,11 +4256,299 @@ let aiMatchCache={};
 let aiMatchLoading=false;
 async function buildAiMatchCache(){}
 
+// ===== VORSCHAU-MODUS =====
+function showReceiptPreview(positions){
+  // FORCE: Zeige immer die neue Vorschau wenn Vorschau-Modus aktiv!
+  if(!opt.quittungPreview){
+    // Wenn Vorschau AUS: normale Buchung
+    doReceiptPositions(positions);
+    return;
+  }
+  
+  console.log('✅ Vorschau-Modus: '+positions.length+' Positionen');
+  
+  // VORSCHAU-MODUS: Nur anzeigen
+  const dlg=document.createElement('div');
+  dlg.id='receipt-preview-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8900;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)';
+  
+  const header=
+    '<div style="background:var(--wl);border-bottom:2px solid var(--wn);padding:12px 16px;display:flex;align-items:center;justify-content:space-between">'+
+      '<span style="font-size:14px;color:var(--wn);font-weight:700">🔍 VORSCHAU-MODUS — NICHTS WIRD GESPEICHERT</span>'+
+      '<span style="font-size:11px;color:var(--wn);opacity:0.7">v'+APP_VERSION+'</span>'+
+    '</div>';
+  
+  let gesamtPreis=0;
+  let gesamtRabatt=0;
+  
+  const positionsHtml=positions.map((p,i)=>{
+    const parsed=parseReceiptPosition(p);
+    gesamtPreis+=parsed.preis;
+    gesamtRabatt+=parsed.rabatt||0;
+    
+    const bruttoPreis=(parsed.preis||0)+(parsed.rabatt||0);
+    const typeLabel=parsed.type==='Lose-Ware (kg)'?'🥬 Lose-Ware':
+                    parsed.type==='Verpackt (Portion-Box)'?'📦 Portion-Box':
+                    parsed.type==='Standard'?'📍 Standard':'?';
+    
+    const details=[
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">'+
+        '<span style="font-size:11px;background:var(--ac);color:#fff;padding:2px 6px;border-radius:4px;font-weight:600">'+typeLabel+'</span>'+
+      '</div>',
+      '<div><strong>Rohtext:</strong> '+esc(p.text)+'</div>',
+      '<div style="margin-top:8px"><strong>📊 Details:</strong></div>',
+      '<div style="margin-left:8px;font-size:11px">'+
+        '• Menge: <strong>'+parsed.menge+' '+parsed.einheit+'</strong>'+
+        (parsed.mengeInPackungen?' (= <strong>'+parsed.mengeInPackungen+' Packungen</strong> à '+parsed.packSize+' Stk)':'')+
+      '</div>',
+      parsed.preisProEinheit?'<div style="margin-left:8px;font-size:11px">• Preis/Einheit: <strong>CHF '+parsed.preisProEinheit.toFixed(2)+'</strong></div>':'',
+      '<div style="margin-left:8px;font-size:11px;margin-top:4px">'+
+        '<div>• Brutto-Preis: <strong>CHF '+bruttoPreis.toFixed(2)+'</strong></div>'+
+        (parsed.rabatt?'<div style="color:var(--ok)">• Rabatt: <strong>−CHF '+parsed.rabatt.toFixed(2)+'</strong></div>':'')+
+        '<div style="background:var(--ol);color:var(--ok);padding:4px;border-radius:4px;margin-top:4px;font-weight:600">💰 Netto: CHF '+parsed.preis.toFixed(2)+'</div>'+
+      '</div>'
+    ].filter(x=>x).join('');
+    
+    // Lager-Status-Badge
+    const lagerBadge = parsed.lagerMatch ? 
+      '<div style="background:var(--ok);color:#fff;padding:3px 8px;border-radius:3px;margin-bottom:8px;font-size:10px;font-weight:600;display:inline-block">✓ Im Lager</div>' :
+      '<div style="background:var(--wn);color:#fff;padding:3px 8px;border-radius:3px;margin-bottom:8px;font-size:10px;font-weight:600;display:inline-block">⚠️ NICHT im Lager</div>';
+    
+    return '<div style="background:var(--bg);border:2px solid '+(parsed.rabatt?'var(--ok)':'var(--bd)')+';border-radius:var(--rs);padding:12px;margin-bottom:12px">'+
+      lagerBadge+
+      '<div style="font-weight:700;font-size:15px;margin-bottom:12px">'+esc(parsed.name)+'</div>'+
+      '<div style="font-size:12px;color:var(--t2)">'+details+'</div>'+
+      '<div style="display:flex;gap:6px;margin-top:10px">'+
+        '<button onclick="editPreviewPosition('+i+')" style="flex:1;padding:8px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:12px;cursor:pointer">✎ Korrigieren</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  
+  // Gesamtpreis-Zusammenfassung
+  const summaryHtml='<div style="background:var(--ol);border:2px solid var(--ok);border-radius:var(--rs);padding:12px;margin-bottom:12px">'+
+    '<div style="font-weight:700;font-size:14px;color:var(--ok);margin-bottom:8px">💳 GESAMTPREIS</div>'+
+    '<div style="font-size:12px;color:var(--ok)">'+
+      '<div>Brutto (ohne Rabatte): CHF '+(gesamtPreis+gesamtRabatt).toFixed(2)+'</div>'+
+      (gesamtRabatt?'<div style="margin-top:4px">Rabatte insgesamt: −CHF '+gesamtRabatt.toFixed(2)+'</div>':'')+
+      '<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--ok);font-weight:700">NETTO ZUM BUCHEN: CHF '+gesamtPreis.toFixed(2)+'</div>'+
+    '</div>'+
+  '</div>';
+  
+  const footer=
+    '<div style="padding:12px 16px;display:flex;gap:8px;border-top:1px solid var(--bd)">'+
+      '<button onclick="document.getElementById(\'receipt-preview-dlg\').remove()" style="flex:1;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer">✗ Abbrechen (ESC)</button>'+
+      '<button onclick="confirmPreviewBooking()" style="flex:1;padding:12px;background:var(--ol);border:none;border-radius:var(--rs);color:var(--ok);font-weight:600;font-size:14px;cursor:pointer">⚠️ Verstanden, normal buchen</button>'+
+    '</div>';
+  
+  dlg.innerHTML=header+'<div style="flex:1;overflow-y:auto;padding:12px 16px">'+summaryHtml+positionsHtml+'</div>'+footer;
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
+  document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
+}
+
+function showReceiptPreview_OLD(positions){
+  // Zeige Scan-Ergebnisse zur Vorschau - SPEICHERT NICHTS!
+  if(!opt.quittungPreview){
+    // Normal buchen wenn nicht im Vorschau-Modus
+    doReceiptPositions(positions);
+    return;
+  }
+  
+  // VORSCHAU-MODUS: Nur anzeigen
+  const dlg=document.createElement('div');
+  dlg.id='receipt-preview-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8900;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)';
+  
+  const header=
+    '<div style="background:var(--wl);border-bottom:2px solid var(--wn);padding:12px 16px;display:flex;align-items:center;justify-content:space-between">'+
+      '<span style="font-size:14px;color:var(--wn);font-weight:700">🔍 VORSCHAU-MODUS — NICHTS WIRD GESPEICHERT</span>'+
+      '<span style="font-size:11px;color:var(--wn);opacity:0.7">v'+APP_VERSION+'</span>'+
+    '</div>';
+  
+  const positionsHtml=positions.map((p,i)=>{
+    const parsed=parseReceiptPosition(p);
+    return '<div style="background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin-bottom:8px">'+
+      '<div style="font-weight:600;font-size:14px;margin-bottom:8px">Position '+(i+1)+': '+esc(parsed.name)+'</div>'+
+      '<div style="font-size:12px;color:var(--t2);background:var(--sf);padding:8px;border-radius:var(--rs);margin-bottom:8px;font-family:monospace">'+
+        '<div><strong>Rohtext:</strong> '+esc(p.text)+'</div>'+
+        '<div style="margin-top:4px"><strong>Interpretation:</strong></div>'+
+        '<div>• Typ: '+parsed.type+'</div>'+
+        '<div>• Menge: '+parsed.menge+'</div>'+
+        '<div>• Einheit: '+parsed.einheit+'</div>'+
+        '<div>• Preis: CHF '+parsed.preis.toFixed(2)+'</div>'+
+        '<div>• Kaufort: '+esc(parsed.kaufort||'—')+'</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:6px">'+
+        '<button onclick="editPreviewPosition('+i+')" style="flex:1;padding:8px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:12px;cursor:pointer">✎ Korrigieren</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  
+  const footer=
+    '<div style="padding:12px 16px;display:flex;gap:8px;border-top:1px solid var(--bd)">'+
+      '<button onclick="document.getElementById(\'receipt-preview-dlg\').remove()" style="flex:1;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer">✗ Abbrechen (ESC)</button>'+
+      '<button onclick="confirmPreviewBooking()" style="flex:1;padding:12px;background:var(--ol);border:none;border-radius:var(--rs);color:var(--ok);font-weight:600;font-size:14px;cursor:pointer">⚠️ Verstanden, normal buchen</button>'+
+    '</div>';
+  
+  dlg.innerHTML=header+'<div style="flex:1;overflow-y:auto;padding:12px 16px">'+summaryHtml+positionsHtml+'</div>'+footer;
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
+  document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
+}
+
+function parseReceiptPosition(p){
+  // Parse mit neuen Feldern: preis_brutto, rabatt, preis_netto, einheit, menge
+  const name = p.name || 'Unknown';
+  const menge = p.menge || 1;
+  const einheit = p.einheit || 'Stk';
+  let bruttoPreis = p.preis_brutto || p.preis || 0;
+  let rabatt = p.rabatt || 0;
+  let nettoPreis = p.preis_netto || (bruttoPreis - rabatt);
+  
+  // FIX: KI gibt manchmal bereits den Netto-Preis als "Brutto" zurück
+  // Wenn preis_netto < preis_brutto und menge > 1: Brutto war falsch
+  // In diesem Fall: Netto ist korrekt, Brutto = Netto + Rabatt
+  if(nettoPreis > 0 && bruttoPreis > 0 && nettoPreis < bruttoPreis - 0.01 && menge > 1) {
+    console.log('🔧 KI-Fehler korrigiert: Brutto war Netto, berechne richtig');
+    // Annahme: nettoPreis ist korrekt, Brutto = Netto + Rabatt
+    bruttoPreis = nettoPreis + rabatt;
+  }
+  
+  console.log('📝 Parse: '+name+' ('+menge+' '+einheit+', Brutto: CHF '+bruttoPreis.toFixed(2)+', Rabatt: CHF '+rabatt.toFixed(2)+')');
+  
+  // Erkenne Loose-Ware (kg/g)
+  if(einheit === 'kg' || einheit === 'g') {
+    console.log('🥬 Loose-Ware: '+name+' '+menge+' '+einheit);
+    return {
+      name: name,
+      type: 'Lose-Ware ('+einheit+')',
+      menge: menge,
+      einheit: einheit,
+      preisProEinheit: menge > 0 ? nettoPreis / menge : nettoPreis,
+      preis: nettoPreis,
+      rabatt: rabatt
+    };
+  }
+  
+  // Erkenne Portion-Box: >5 Stück wahrscheinlich eine Box
+  if(menge >= 5 && einheit === 'Stk') {
+    const lagerArtikel = S.a.find(a => 
+      a.name.toLowerCase().includes(name.toLowerCase()) ||
+      name.toLowerCase().includes(a.name.toLowerCase())
+    );
+    
+    if(lagerArtikel) {
+      const packSize = 10;
+      const anzahlPackungen = Math.ceil(menge / packSize);
+      console.log('📦 Portion-Box: '+name+' → '+anzahlPackungen+' Boxen');
+      
+      return {
+        name: name,
+        type: 'Verpackt (Portion-Box)',
+        menge: menge,
+        mengeInPackungen: anzahlPackungen,
+        packSize: packSize,
+        einheit: 'Stk',
+        preisProEinheit: menge > 0 ? nettoPreis / menge : nettoPreis,
+        preis: nettoPreis,
+        rabatt: rabatt
+      };
+    }
+  }
+  
+  // Standard-Artikel
+  console.log('📍 Standard: '+name);
+  
+  // Check ob Artikel im Lager existiert
+  // S.a = Lager-Artikel Array, suche nach Namen-Match
+  let lagerMatch = null;
+  if(S && S.a && S.a.length > 0) {
+    // Normalisiere Namen für Vergleich
+    const searchName = name.toLowerCase().trim();
+    
+    // Exakter Match
+    lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().trim() === searchName);
+    
+    // Teilstring-Match (erstes Wort)
+    if(!lagerMatch) {
+      const firstWord = searchName.split(/\s+/)[0];
+      lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().includes(firstWord));
+    }
+    
+    console.log('🔍 Lager-Match für "'+name+'": ' + (lagerMatch ? '✓ GEFUNDEN ('+lagerMatch.name+')' : '❌ nicht gefunden'));
+  } else {
+    console.log('⚠️ Lager nicht verfügbar (S.a leer oder undefined)');
+  }
+  
+  return {
+    name: name,
+    type: 'Standard',
+    menge: menge,
+    einheit: einheit,
+    preisProEinheit: nettoPreis,
+    preis: nettoPreis,
+    rabatt: rabatt,
+    lagerMatch: lagerMatch ? true : false,
+    lagerArtikelId: lagerMatch ? lagerMatch.id : null
+  };
+}
+
+function editPreviewPosition(idx){
+  toast('✎ Position-Editing im Vorschau-Modus wird in nächster Version implementiert');
+}
+
+function confirmPreviewBooking(){
+  toast('ℹ️ Vorschau-Modus beendet. Starte normalen Scan für echter Buchung.');
+  const dlg=document.getElementById('receipt-preview-dlg');
+  if(dlg)dlg.remove();
+}
+
+
 // Grundzutaten: immer als vorhanden gewertet (Selbstverständlichkeiten, nicht im Lager getrackt)
 const GRUNDZUTATEN=['wasser','salz','pfeffer','öl','olivenöl','rapsöl','sonnenblumenöl','pflanzenöl','zucker','mehl','essig'];
 function istGrundzutat(z){
   const w=z.toLowerCase().trim();
   return GRUNDZUTATEN.some(g=>w===g||w.includes(g)||g.includes(w)&&w.length>=3);
+}
+
+function checkZutatenVorhanden(zutaten){
+  // Gibt Zutaten zurück die im Lager vorhanden sind (NICHT Grundzutaten)
+  // Für die "Haben"-Liste der Übersicht
+  const names=S.a.filter(a=>a.menge>0).map(a=>a.name.toLowerCase());
+  const result=zutaten.filter(zutat=>{
+    const z=zutat.toLowerCase().trim();
+    // Grundzutaten: nicht in die Liste
+    if(istGrundzutat(z))return false;
+    // 1. Exaktes Match
+    if(names.some(n=>n===z))return true;
+    // 2. Alias-Match
+    const mitAlias=S.a.find(a=>(a.quittungAliase||[]).some(al=>al.toLowerCase()===z)&&a.menge>0);
+    if(mitAlias)return true;
+    // 3. Levenshtein (max 2 Fehler)
+    const levenMatches=S.a.filter(a=>a.menge>0&&levenshteinDistance(a.name,zutat)<=2);
+    if(levenMatches.length>0)return true;
+    // 4. Fuzzy Fallback (nur exakte Wort-Matches am Anfang)
+    const words=z.split(/[\s,\-]+/).filter(w=>w.length>3);
+    return words.some(w=>names.some(n=>n===w||n.startsWith(w)));
+  });
+  if(zutaten.length>0)console.log('checkZutatenVorhanden:',zutaten,'->',result);
+  return result;
 }
 
 function aiMatch(zutat,lagerNamen){
@@ -4188,11 +4698,28 @@ function showRezeptDetail(el,fromArtikelId){
   const imgUrl=rzImgUrl(r.img||'');
   const imgHtml=imgUrl?'<img src="'+esc(imgUrl)+'" style="width:100%;max-height:220px;object-fit:cover;border-radius:var(--r);margin-bottom:14px" onerror="this.style.display=\'none\'"/>':'';
 
-  // Zutaten mit Lager-Status
+  // Zutaten mit Lager-Status - nutze EXAKT die gleiche Logik wie die Übersicht
+  const zt=(r.zt||(r.zutaten||[])).map(z=>typeof z==='string'?z:(z.n||z.zutat||z.name||''));
   const names=S.a.filter(a=>a.menge>0).map(a=>a.name.toLowerCase());
-  const ztHtml=(r.zt||[]).map(z=>{
+  
+  // EXAKTE Kopie der Übersicht-Matching-Logik
+  const have=zt.filter(zutat=>{
+    // 1. Exaktes Match
+    if(names.some(n=>n===zutat.toLowerCase()))return true;
+    // 2. Alias-Match
+    const mitAlias=S.a.find(a=>(a.quittungAliase||[]).some(al=>al.toLowerCase()===zutat.toLowerCase())&&a.menge>0);
+    if(mitAlias)return true;
+    // 3. Levenshtein (max 2 Fehler)
+    const levenMatches=S.a.filter(a=>a.menge>0&&levenshteinDistance(a.name,zutat)<=2);
+    if(levenMatches.length>0)return true;
+    // 4. Fuzzy Fallback (nur exakte Wort-Matches am Anfang)
+    const words=zutat.toLowerCase().split(/[\s,\-]+/).filter(w=>w.length>3);
+    return words.some(w=>names.some(n=>n===w||n.startsWith(w)));
+  });
+  
+  const ztHtml=zt.map(z=>{
     const grund=istGrundzutat(z);
-    const ok=grund||aiMatch(z,names);
+    const ok=grund||have.includes(z);
     const label=grund?'<span style="font-size:11px;color:var(--t3)">immer da</span>':(ok?'<span style="font-size:11px;color:var(--ok)">vorhanden</span>':'<span style="font-size:11px;color:var(--dg)">fehlt</span>');
     return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd)">'+
       '<span style="font-size:16px">'+(grund?'∞':ok?'✓':'✗')+'</span>'+
@@ -4208,8 +4735,8 @@ function showRezeptDetail(el,fromArtikelId){
       '<span style="font-size:14px;color:var(--t2);white-space:nowrap;margin-left:8px">'+esc((i.q||'')+' '+(i.u||'')).trim()+'</span>'+
     '</div>').join(''):ztHtml;
 
-  const missCount=(r.zt||[]).filter(z=>!aiMatch(z,names)).length;
-  const missZt=(r.zt||[]).filter(z=>!aiMatch(z,names)).map(z=>{
+  const missCount=zt.length-have.length;
+  const missZt=zt.filter(z=>!have.includes(z)).map(z=>{
     const ing=(r.ings||[]).find(i=>(i.n||'')===z);
     return{n:z,q:ing?(ing.q||''):'',u:ing?(ing.u||''):''};
   });
@@ -4218,7 +4745,7 @@ function showRezeptDetail(el,fromArtikelId){
   document.getElementById('rezept-detail-body').innerHTML=
     imgHtml+
     '<div style="display:flex;gap:12px;margin-bottom:16px">'+
-      '<div style="flex:1;background:var(--bg);border-radius:var(--rs);padding:10px;text-align:center"><div style="font-size:20px">👥</div><div style="font-size:12px;color:var(--t2);margin-top:2px">'+r.port+' Port.</div></div>'+
+      '<div onclick="showPortionDialog('+r.port+')" style="flex:1;background:var(--bg);border-radius:var(--rs);padding:10px;text-align:center;cursor:pointer" title="Klick zum Anpassen"><div style="font-size:20px">👥</div><div style="font-size:12px;color:var(--t2);margin-top:2px">'+r.port+' Port.</div></div>'+
       '<div style="flex:1;background:var(--bg);border-radius:var(--rs);padding:10px;text-align:center"><div style="font-size:20px">⏱️</div><div style="font-size:12px;color:var(--t2);margin-top:2px">'+r.min+' min</div></div>'+
       (r.kat?'<div style="flex:1;background:var(--bg);border-radius:var(--rs);padding:10px;text-align:center"><div style="font-size:20px">🏷️</div><div style="font-size:12px;color:var(--t2);margin-top:2px">'+esc(r.kat)+'</div></div>':'')+
     '</div>'+
@@ -4263,6 +4790,12 @@ function showZutatZuordnung(zutat,context){
   
   dlg.innerHTML=h;
   dlg.dataset.zutat=zutat;
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
   // Initial rendern
@@ -4393,7 +4926,17 @@ function showRezeptGekocht(rezeptId){
   '</div>';
   
   dlg.innerHTML=h;
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function verbrauchZutaten(rezeptName){
@@ -4505,12 +5048,26 @@ function addMissingFromDetail(){
   const btn=event.currentTarget;
   let miss=[];
   try{miss=JSON.parse(btn.dataset.miss);}catch(e){return;}
+  
+  // Berücksichtige Portions-Faktor wenn angepasst
+  const faktor=window._rezeptPortionFactor||1;
+  if(faktor!==1){
+    miss=miss.map(z=>({
+      n:z.n,
+      q:z.q?(parseDecimal(z.q)*faktor).toString():'',
+      u:z.u||''
+    }));
+  }
+  
   if(!S.ek)S.ek=[];
   const existing=new Set(S.ek.map(e=>e.text.toLowerCase()));
   const added=[];
   miss.forEach(z=>{const n=ekAddZutat(z,existing);if(n)added.push(n);});
-  if(added.length){saveL();toast(added.length+' Zutat'+(added.length===1?'':'en')+' auf Einkaufsliste (mit Menge)');}
+  if(added.length){saveL();toast(added.length+' Zutat'+(added.length===1?'':'en')+' auf Einkaufsliste (mit Menge'+(faktor!==1?' · '+faktor.toFixed(2)+'x':'')+')');}
   else toast('Alle schon auf der Einkaufsliste');
+  
+  // Reset Portions-Faktor
+  window._rezeptPortionFactor=1;
 }
 function addMissingToEinkauf(btn){
   let miss=[];
@@ -4938,7 +5495,7 @@ function showLadenKaufDialog(id){
   dlg.id='laden-kauf-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px">'+esc(a.name)+'</div>'+
       '<div class="tc" style="margin-bottom:10px">'+
         '<div class="fd"><label>Anzahl / Menge'+(isDecUnit(a.einheit)?' ('+esc(a.einheit)+')':'')+'</label><input type="text" inputmode="decimal" id="lk-mg" value="'+esc(vorMenge)+'" style="width:100%;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/></div>'+
@@ -4953,7 +5510,17 @@ function showLadenKaufDialog(id){
         '<button onclick="confirmLadenKauf('+a.id+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Gekauft</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function confirmLadenKauf(id){
@@ -5043,7 +5610,7 @@ function showEkEinbuchungBekannt(ekEntry,artikel){
   dlg.id='ek-einbuch-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">'+esc(artikel.name)+' einbuchen</div>'+
       '<div style="font-size:12px;color:var(--ok);margin-bottom:12px">✓ Artikel bekannt · Bestand: '+fmtMenge(artikel.menge)+' '+esc(artikel.einheit||'Stk')+'</div>'+
       '<div class="tc" style="margin-bottom:14px">'+
@@ -5053,7 +5620,7 @@ function showEkEinbuchungBekannt(ekEntry,artikel){
             '<input type="text" inputmode="decimal" id="ekb-kgpreis" placeholder="z.B. 3.90" value="'+(artikel.preisProKg||artikel.preis||'')+'" oninput="ekbKalkulieren('+artikel.id+')" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/>'+
           '</div>'+
           '<div class="fd"><label>Kaufpreis (CHF)</label>'+
-            '<input type="text" inputmode="decimal" id="ekb-pr-kg" placeholder="wird berechnet" value="" style="width:100%;padding:11px;border:1px solid var(--ok);border-radius:var(--rs);background:var(--bg);color:var(--ok);font-size:17px;text-align:right;font-weight:700"/>'+
+            '<input type="text" inputmode="decimal" id="ekb-pr" placeholder="wird berechnet" value="" style="width:100%;padding:11px;border:1px solid var(--ok);border-radius:var(--rs);background:var(--bg);color:var(--ok);font-size:17px;text-align:right;font-weight:700"/>'+
           '</div>'
         :
           '<div class="fd"><label>Kaufpreis (CHF, optional)</label>'+
@@ -5067,6 +5634,12 @@ function showEkEinbuchungBekannt(ekEntry,artikel){
         '<button onclick="doEkEinbuchungBekannt('+ekEntry.id+','+artikel.id+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Einbuchen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   setTimeout(()=>suppressAutofill(dlg),0);
 }
@@ -5074,7 +5647,7 @@ function showEkEinbuchungBekannt(ekEntry,artikel){
 function ekbKalkulieren(artikelId){
   const a=S.a.find(x=>x.id===artikelId);if(!a)return;
   const kgEl=document.getElementById('ekb-kgpreis');
-  const prEl=document.getElementById('ekb-pr-kg');
+  const prEl=document.getElementById('ekb-pr');
   const mgEl=document.getElementById('ekb-mg');
   if(!kgEl||!prEl||!mgEl)return;
   const kgPreis=parseDecimal(kgEl.value)||0;
@@ -5095,7 +5668,7 @@ function doEkEinbuchungBekannt(ekId,artikelId){
   if(!decOk)menge=Math.max(1,Math.round(menge));
   const mhd=document.getElementById('ekb-mhd').value||'';
   // Preis auslesen
-  const prEl=document.getElementById('ekb-pr-kg')||document.getElementById('ekb-pr');
+  const prEl=document.getElementById('ekb-pr');
   const kgEl=document.getElementById('ekb-kgpreis');
   let preis=prEl&&prEl.value?parseDecimal(prEl.value)||0:a.preis||0;
   if(kgEl&&kgEl.value){
@@ -5108,9 +5681,9 @@ function doEkEinbuchungBekannt(ekId,artikelId){
   if(!a.preisHistorie)a.preisHistorie=[];
   a.preisHistorie.push({datum:todayISO(),preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:a.kaufort||''});
   addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,a.einheit,preis,false,true);
-  // Einkaufslisteneintrag abhaken
-  const e=S.ek.find(x=>x.id===ekId);
-  if(e)e.checked=true;
+  // Einkaufslisteneintrag löschen (nicht nur abhaken)
+  const eIdx=S.ek.findIndex(x=>x.id===ekId);
+  if(eIdx>=0)S.ek.splice(eIdx,1);  // Komplett aus Liste löschen
   saveL();
   const dlg=document.getElementById('ek-einbuch-dlg');if(dlg)dlg.remove();
   const preisInfo=preis>0?' · CHF '+preis.toFixed(2):'';
@@ -5124,7 +5697,7 @@ function showEkEinbuchungNeu(ekEntry){
   dlg.id='ek-einbuch-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">«'+esc(ekEntry.text)+'» — neuer Artikel</div>'+
       '<div style="font-size:12px;color:var(--t2);margin-bottom:14px">Dieser Artikel ist noch nicht im Lager. Scanne den Barcode oder lege ihn manuell an.</div>'+
       '<div style="display:flex;flex-direction:column;gap:8px">'+
@@ -5133,7 +5706,17 @@ function showEkEinbuchungNeu(ekEntry){
         '<button onclick="document.getElementById(\'ek-einbuch-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Abbrechen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function doEkNeuMitScan(ekId){
@@ -5211,6 +5794,12 @@ function showEkArtikelInfo(artikelId){
         '<button onclick="document.getElementById(\'ek-info-dlg\').remove()" style="width:100%;margin-top:14px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Schliessen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   dlg.addEventListener('click',ev=>{if(ev.target===dlg)dlg.remove();});
 }
@@ -5226,7 +5815,280 @@ function ekEinheitOptions(sel){
   return base.map(u=>'<option value="'+esc(u)+'"'+(u===sel?' selected':'')+'>'+esc(u)+'</option>').join('');
 }
 function delM(id){S.ek=S.ek.filter(x=>x.id!==id);saveL();renderEk();}
-function clearCk(){S.ek=S.ek.filter(x=>!x.checked);saveL();renderEk();toast('Erledigte entfernt');}
+function clearCk(){
+  // Button oben rechts: Abhaken + einbuchen der gehakten Artikel
+  // Sammle gehakte Artikel aus BEIDEN Listen (Automatisch + Manuell)
+  
+  // Automatisch-Liste: finde alle gehakten (class="ck")
+  const autoChecked=[];
+  document.querySelectorAll('#ek-body .ei.ck').forEach(el=>{
+    const id=el.id.replace('eia-','');
+    const a=S.a.find(x=>x.id===parseInt(id));
+    if(a)autoChecked.push({type:'auto',artikel:a,ekId:parseInt(id)});
+  });
+  
+  // Manuell-Liste: gehakte aus S.ek
+  const manuelChecked=S.ek.filter(x=>x.checked).map(e=>({type:'manual',ekEntry:e}));
+  
+  const allChecked=[...autoChecked,...manuelChecked];
+  if(!allChecked.length){toast('Keine Artikel abhackt');return;}
+  
+  // Prozessiere alle gehakten Artikel nacheinander
+  processCheckedItems(0,allChecked);
+}
+
+function addNewKaufort(selectId){
+  // Neuen Kaufort hinzufügen
+  const n=prompt('Neuer Kaufort:');
+  if(!n||!n.trim())return;
+  const nm=n.trim();
+  if(!S.ge.includes(nm)){
+    S.ge.push(nm);
+    saveL();
+  }
+  // Setze Select auf neuen Wert
+  const select=document.getElementById(selectId);
+  if(select){
+    select.innerHTML='<option value="">— wählen oder neu erfassen —</option>'+
+      S.ge.map(g=>'<option value="'+esc(g)+'" '+(g===nm?'selected':'')+'>'+esc(g)+'</option>').join('');
+    select.value=nm;
+  }
+}
+
+function showPortionDialog(originalPort){
+  // Dialog um Portionen anzupassen für den Export
+  const dlg=document.createElement('div');
+  dlg.id='portion-adjust-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
+  
+  let currentPort=originalPort;
+  
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">Portionen anpassen</div>'+
+      '<div style="font-size:12px;color:var(--t2);margin-bottom:16px">Original: '+originalPort+' Personen</div>'+
+      '<div style="display:flex;gap:8px;align-items:center;margin-bottom:16px">'+
+        '<button onclick="document.getElementById(\'pcount\').value=Math.max(1,parseInt(document.getElementById(\'pcount\').value)-1);updatePortText()" style="padding:10px 16px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:16px;cursor:pointer;font-weight:600">−</button>'+
+        '<input type="text" id="pcount" value="'+originalPort+'" style="flex:1;padding:12px;text-align:center;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:18px;font-weight:700" readonly/>'+
+        '<button onclick="document.getElementById(\'pcount\').value=parseInt(document.getElementById(\'pcount\').value)+1;updatePortText()" style="padding:10px 16px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:16px;cursor:pointer;font-weight:600">+</button>'+
+      '</div>'+
+      '<div style="background:var(--bg);border-radius:var(--rs);padding:12px;margin-bottom:14px;font-size:12px;color:var(--t2)">'+
+        '<div id="portion-text" style="text-align:center">Faktor: 1x (gleich wie Original)</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:8px">'+
+        '<button onclick="document.getElementById(\'portion-adjust-dlg\').remove()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+        '<button onclick="applyPortionFactor('+originalPort+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Übernehmen</button>'+
+      '</div>'+
+    '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
+  document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
+}
+
+function updatePortText(){
+  const orig=parseInt(document.querySelector('[onclick*="showPortionDialog"]')?.[0] || 1) || 1;
+  const current=parseInt(document.getElementById('pcount').value) || 1;
+  const faktor=(current/orig).toFixed(2);
+  const text='Faktor: '+faktor+'x '+current+' statt '+orig+' Personen';
+  const portText=document.getElementById('portion-text');
+  if(portText)portText.textContent=text;
+}
+
+function applyPortionFactor(originalPort){
+  const newPort=parseInt(document.getElementById('pcount').value) || originalPort;
+  window._rezeptPortionFactor=newPort/originalPort;  // Speichere Faktor global
+  
+  // Schließe Dialog
+  const dlg=document.getElementById('portion-adjust-dlg');
+  if(dlg)dlg.remove();
+  
+  // Zeige Toast
+  const faktor=window._rezeptPortionFactor.toFixed(2);
+  toast('✓ Portionen angepasst: '+faktor+'x');
+}
+
+function processCheckedItems(idx,allChecked){
+  // Rekursive Verarbeitung aller gehakten Artikel (Auto + Manuell)
+  if(idx>=allChecked.length){
+    // Alle fertig - entferne gehakte Artikel aus S.ek
+    S.ek=S.ek.filter(x=>!x.checked);
+    saveL();
+    renderEk();
+    toast('✓ Alle Artikel eingebucht');
+    return;
+  }
+  
+  const item=allChecked[idx];
+  
+  if(item.type==='auto'){
+    // Automatisch-Artikel (aus Lager-Array)
+    const artikel=item.artikel;
+    processCheckedItemsShowDialogAuto(artikel,idx,allChecked);
+  }else{
+    // Manuell-Artikel (aus S.ek)
+    const ekEntry=item.ekEntry;
+    const name=ekEntry.text||'';
+    const bekannt=S.a.find(a=>a.name.toLowerCase()===name.toLowerCase());
+    
+    if(bekannt){
+      processCheckedItemsShowDialog(ekEntry,bekannt,idx,allChecked);
+    }else{
+      // Unbekannt - überspringe
+      processCheckedItems(idx+1,allChecked);
+    }
+  }
+}
+
+function processCheckedItemsShowDialogAuto(artikel,idx,allChecked){
+  // Dialog für Automatisch-Artikel (aus S.eko)
+  const ov=(S.eko||{})[artikel.id]||{};
+  const menge=ov.menge!==undefined?ov.menge:String(Math.max(1,(artikel.mindest||0)-artikel.menge));
+  const istGewicht=['kg','g'].includes(artikel.einheit);
+  
+  const dlg=document.createElement('div');
+  dlg.id='process-einbuch-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">'+esc(artikel.name)+' einbuchen</div>'+
+      '<div style="font-size:12px;color:var(--ok);margin-bottom:12px">✓ Artikel bekannt · Bestand: '+fmtMenge(artikel.menge)+' '+esc(artikel.einheit||'Stk')+'</div>'+
+      '<div class="tc" style="margin-bottom:14px">'+
+        '<div class="fd"><label>Menge ('+esc(artikel.einheit||'Stk')+')</label><input type="text" inputmode="decimal" id="pei-mg" value="'+fmtMenge(menge)+'" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:17px;text-align:right;font-weight:600"/></div>'+
+        '<div class="fd"><label>Kaufpreis (CHF, optional)</label><input type="text" inputmode="decimal" id="pei-pr" placeholder="'+(artikel.preis?'CHF '+artikel.preis.toFixed(2)+' (letzter)':'')+'\'" value="" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/></div>'+
+        '<div class="fd"><label>Wo gekauft</label>'+
+        '<div style="display:flex;gap:6px">'+
+          '<select id="pei-kaufort" style="flex:1;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px">'+
+            '<option value="">— wählen oder neu erfassen —</option>'+
+            S.ge.map(g=>'<option value="'+esc(g)+'" '+(g===artikel.kaufort?'selected':'')+'>'+esc(g)+'</option>').join('')+
+          '</select>'+
+          '<button onclick="addNewKaufort(\'pei-kaufort\')" style="padding:11px 14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:14px;cursor:pointer;font-weight:600">+</button>'+
+        '</div>'+
+        '</div>'+
+        '<div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('pei-mhd','')+'</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:8px">'+
+        '<button onclick="document.getElementById(\'process-einbuch-dlg\').remove();processCheckedItems('+idx+'+1,window._allChecked)" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Überspringen</button>'+
+        '<button onclick="processCheckedItemsSaveAuto('+artikel.id+','+idx+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Einbuchen</button>'+
+      '</div>'+
+    '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
+  document.body.appendChild(dlg);
+  
+  // Speichere allChecked global für Callback
+  window._allChecked=allChecked;
+}
+
+function processCheckedItemsSaveAuto(artikelId,idx){
+  const a=S.a.find(x=>x.id===artikelId);if(!a)return;
+  let menge=parseDecimal(document.getElementById('pei-mg').value)||1;
+  const mhd=document.getElementById('pei-mhd').value||'';
+  const preis=parseDecimal(document.getElementById('pei-pr').value)||a.preis||0;
+  const kaufort=document.getElementById('pei-kaufort').value.trim()||a.kaufort||'';
+  
+  // Aktualisiere Artikel-Daten
+  if(kaufort)a.kaufort=kaufort;
+  
+  // Einbuchen
+  ensurePackungen(a);
+  a.packungen.push({id:newPackId(),menge,kaufdatum:todayISO(),ablaufdatum:mhd});
+  syncMenge(a);
+  if(!a.preisHistorie)a.preisHistorie=[];
+  a.preisHistorie.push({datum:todayISO(),preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort});
+  addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,a.einheit,preis,false,true);
+  
+  // Entferne aus S.eko
+  if(S.eko&&S.eko[artikelId])delete S.eko[artikelId];
+  
+  saveL();
+  
+  // Dialog schließen
+  const dlg=document.getElementById('process-einbuch-dlg');if(dlg)dlg.remove();
+  
+  // Nächster
+  processCheckedItems(idx+1,window._allChecked);
+}
+
+function processCheckedItemsShowDialog(ekEntry,artikel,idx,allChecked){
+  // Zeige Dialog für einen Artikel aus Liste
+  const menge=parseDecimal(ekEntry.menge)||1;
+  const istGewicht=['kg','g'].includes(artikel.einheit);
+  const dlg=document.createElement('div');
+  dlg.id='process-einbuch-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">'+esc(artikel.name)+' einbuchen</div>'+
+      '<div style="font-size:12px;color:var(--ok);margin-bottom:12px">✓ Artikel bekannt · Bestand: '+fmtMenge(artikel.menge)+' '+esc(artikel.einheit||'Stk')+'</div>'+
+      '<div class="tc" style="margin-bottom:14px">'+
+        '<div class="fd"><label>Menge ('+esc(artikel.einheit||'Stk')+')</label><input type="text" inputmode="decimal" id="pei-mg" value="'+fmtMenge(menge)+'" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:17px;text-align:right;font-weight:600"/></div>'+
+        '<div class="fd"><label>Kaufpreis (CHF, optional)</label><input type="text" inputmode="decimal" id="pei-pr" placeholder="'+(artikel.preis?'CHF '+artikel.preis.toFixed(2)+' (letzter)':'')+'\'" value="" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/></div>'+
+        '<div class="fd"><label>Wo gekauft</label>'+
+        '<div style="display:flex;gap:6px">'+
+          '<select id="pei-kaufort" style="flex:1;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px">'+
+            '<option value="">— wählen oder neu erfassen —</option>'+
+            S.ge.map(g=>'<option value="'+esc(g)+'" '+(g===artikel.kaufort?'selected':'')+'>'+esc(g)+'</option>').join('')+
+          '</select>'+
+          '<button onclick="addNewKaufort(\'pei-kaufort\')" style="padding:11px 14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:14px;cursor:pointer;font-weight:600">+</button>'+
+        '</div>'+
+        '</div>'+
+        '<div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('pei-mhd','')+'</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:8px">'+
+        '<button onclick="document.getElementById(\'process-einbuch-dlg\').remove();processCheckedItems('+idx+'+1,allChecked)" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Überspringen</button>'+
+        '<button onclick="processCheckedItemsSave('+ekEntry.id+','+artikel.id+','+idx+',allChecked)" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Einbuchen</button>'+
+      '</div>'+
+    '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
+  document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
+}
+
+function processCheckedItemsSave(ekId,artikelId,idx,allChecked){
+  const a=S.a.find(x=>x.id===artikelId);if(!a)return;
+  let menge=parseDecimal(document.getElementById('pei-mg').value)||1;
+  const mhd=document.getElementById('pei-mhd').value||'';
+  const preis=parseDecimal(document.getElementById('pei-pr').value)||a.preis||0;
+  const kaufort=document.getElementById('pei-kaufort').value.trim()||a.kaufort||'';
+  
+  // Aktualisiere Artikel-Daten
+  if(kaufort)a.kaufort=kaufort;
+  
+  // Einbuchen
+  ensurePackungen(a);
+  a.packungen.push({id:newPackId(),menge,kaufdatum:todayISO(),ablaufdatum:mhd});
+  syncMenge(a);
+  if(!a.preisHistorie)a.preisHistorie=[];
+  a.preisHistorie.push({datum:todayISO(),preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort});
+  addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,a.einheit,preis,false,true);
+  saveL();
+  
+  // Dialog schließen
+  const dlg=document.getElementById('process-einbuch-dlg');if(dlg)dlg.remove();
+  
+  // Nächster Artikel
+  processCheckedItems(idx+1,allChecked);
+}
 
 
 /* ── Inventur-Modus (Bestände systematisch prüfen) ───────────────── */
@@ -5417,7 +6279,7 @@ function askInvMengeMhd(barcode,editIndex){
   dlg.id='invcap-mhd-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">'+
         (displayFoto?'<img src="'+esc(displayFoto)+'" style="width:52px;height:52px;object-fit:cover;border-radius:var(--rs);flex-shrink:0"/>':'<div style="width:52px;height:52px;border-radius:var(--rs);background:var(--bg);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:24px">📦</div>')+
         '<div><div style="font-weight:700;font-size:16px">'+(displayName||'<span style="font-family:monospace">'+esc(barcode)+'</span>')+'</div>'+
@@ -5437,6 +6299,12 @@ function askInvMengeMhd(barcode,editIndex){
         '<button onclick="saveInvBufferEntry(\''+esc(barcode)+'\','+(editIndex!==undefined?editIndex:-1)+')" style="flex:2;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">'+(editIndex!==undefined?'Speichern':'✓ Weiter')+'</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   // Autofill unterdrücken VOR focus() — verhindert Passwort-Bestätigen-Dialog
   suppressAutofill(dlg);
@@ -5530,7 +6398,7 @@ function showInvMissingDataDialog(idx){
   dlg.id='inv-missing-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">⚠️ Daten unvollständig</div>'+
       '<div style="font-size:13px;color:var(--t2);margin-bottom:16px">Barcode <code>'+esc(entry.barcode)+'</code> wurde nicht automatisch erkannt. Bitte ergänze die Angaben.</div>'+
       '<div style="display:flex;flex-direction:column;gap:8px">'+
@@ -5540,7 +6408,17 @@ function showInvMissingDataDialog(idx){
         '<button onclick="document.getElementById(\'inv-missing-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Später ergänzen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 // KI-Fotoanalyse direkt im Artikel-Formular — verwendet das bereits hochgeladene Foto
@@ -5605,7 +6483,7 @@ function lagerKiScan(){
   dlg.id='kiscan-info-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:20px 16px calc(20px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:20px 16px calc(20px + env(safe-area-inset-bottom))">'+
       '<input type="file" id="ki-file-cam" accept="image/*" capture="environment" style="display:none" onchange="kiScanAddFoto(this)"/>'+
       '<input type="file" id="ki-file-gal" accept="image/*" style="display:none" onchange="kiScanAddFoto(this)"/>'+
       '<div style="font-size:22px;text-align:center;margin-bottom:8px">📷</div>'+
@@ -5631,7 +6509,17 @@ function lagerKiScan(){
         '<button onclick="document.getElementById(\'kiscan-info-dlg\').remove()" style="width:100%;padding:11px;background:none;border:none;font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function kiScanAddFoto(input){
@@ -5791,7 +6679,7 @@ function invFotoAnalyse(idx){
       const bestDlg=document.createElement('div');
       bestDlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
       bestDlg.innerHTML=
-        '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+        '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
           '<div style="font-weight:700;font-size:16px;margin-bottom:12px">🤖 KI-Ergebnis</div>'+
           '<img src="'+fotoDataUrl+'" style="width:100%;max-height:160px;object-fit:cover;border-radius:var(--rs);margin-bottom:12px"/>'+
           '<div style="display:flex;flex-direction:column;gap:6px;font-size:14px;margin-bottom:16px">'+
@@ -6012,7 +6900,7 @@ function renderMindestManager(){
   dlg.id='mindest-mgr-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:flex-end';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;max-height:85vh;display:flex;flex-direction:column">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);max-height:85vh;display:flex;flex-direction:column">'+
       '<div style="padding:14px 16px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-shrink:0">'+
         '<div>'+
           '<div style="font-weight:700;font-size:16px">Mindestbestand verwalten</div>'+
@@ -6043,7 +6931,17 @@ function renderMindestManager(){
         ).join(''))+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 function mindestSetzen(id,val){
   const a=S.a.find(x=>x.id===id);
@@ -6070,6 +6968,147 @@ function mindestSpeichernUndSchliessen(){
   renderLager();
 }
 let sgOpen={};
+function openAliasManager(){
+  // Dialog zur Verwaltung von Quittungs-Aliase
+  const dlg=document.createElement('div');
+  dlg.id='alias-manager-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)';
+  
+  dlg.innerHTML=
+    '<div style="background:var(--sf);padding:16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--bd)">'+
+      '<span style="font-weight:700;font-size:16px">Quittungs-Aliase</span>'+
+      '<button onclick="document.getElementById(\'alias-manager-dlg\').remove()" style="background:none;border:none;cursor:pointer;color:var(--t2);font-size:20px;line-height:1">×</button>'+
+    '</div>'+
+    '<div style="flex:1;overflow-y:auto;padding:12px">'+
+      '<div style="margin-bottom:12px">'+
+        '<label style="font-size:13px;color:var(--t2);display:block;margin-bottom:6px">Artikel wählen</label>'+
+        '<input type="text" id="alias-such" placeholder="Artikel suchen..." oninput="filterAliasArtikel()" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:14px;box-sizing:border-box"/>'+
+      '</div>'+
+      '<div id="alias-artikel-list" style="display:flex;flex-direction:column;gap:8px;max-height:240px;overflow-y:auto"></div>'+
+    '</div>';
+  
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
+  document.body.appendChild(dlg);
+  filterAliasArtikel();
+}
+
+function filterAliasArtikel(){
+  const q=(document.getElementById('alias-such').value||'').toLowerCase();
+  const liste=document.getElementById('alias-artikel-list');
+  if(!liste)return;
+  
+  const treffer=S.a.filter(a=>!q||a.name.toLowerCase().includes(q)).slice(0,50);
+  
+  liste.innerHTML=treffer.map(a=>'<div style="padding:10px;background:var(--bg);border-radius:var(--rs);cursor:pointer" onclick="editArtikelAlias('+a.id+')" data-aid="'+a.id+'">'+
+    '<div style="font-weight:600;font-size:14px">'+esc(a.name)+'</div>'+
+    '<div style="font-size:12px;color:var(--t3);margin-top:2px">'+
+      ((a.quittungAliase||[]).length?'Aliase: '+esc((a.quittungAliase||[]).join(', ')):'Keine Aliase')+
+    '</div>'+
+  '</div>').join('');
+}
+
+function editDetailAliase(artikelId){
+  // Bearbeite Aliase direkt aus der Detail-Ansicht
+  const a=S.a.find(x=>x.id===parseInt(artikelId));
+  if(!a)return;
+  
+  const dlg=document.createElement('div');
+  dlg.id='edit-alias-detail-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9100;display:flex;align-items:flex-end;justify-content:center';
+  
+  const aliasText=(a.quittungAliase||[]).join('\n');
+  
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">'+esc(a.name)+' — Aliase bearbeiten</div>'+
+      '<div style="font-size:12px;color:var(--t2);margin-bottom:12px">Ein Alias pro Zeile. Diese Quittungstexte werden diesem Artikel zugeordnet.</div>'+
+      '<textarea id="alias-input-detail" placeholder="TN Vollmilch 3.5% UHT\nVollmilch 3.5%\nVMilch" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:14px;box-sizing:border-box;font-family:monospace;height:120px;resize:vertical">'+esc(aliasText)+'</textarea>'+
+      '<div style="display:flex;gap:8px;margin-top:12px">'+
+        '<button onclick="document.getElementById(\'edit-alias-detail-dlg\').remove()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+        '<button onclick="saveDetailAliase('+artikelId+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Speichern</button>'+
+      '</div>'+
+    '</div>';
+  
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
+  document.body.appendChild(dlg);
+  document.getElementById('alias-input-detail').focus();
+}
+
+function saveDetailAliase(artikelId){
+  const a=S.a.find(x=>x.id===parseInt(artikelId));
+  if(!a)return;
+  
+  const text=document.getElementById('alias-input-detail').value.trim();
+  const aliase=text.split('\n').map(l=>l.trim()).filter(l=>l.length>0);
+  
+  a.quittungAliase=aliase;
+  saveL();
+  
+  // Schließe Dialog
+  const dlg=document.getElementById('edit-alias-detail-dlg');
+  if(dlg)dlg.remove();
+  
+  // Reload Detail-Ansicht
+  showDet(artikelId);
+  
+  toast('✓ '+aliase.length+' Alias'+(aliase.length===1?'':'e')+' gespeichert');
+}
+
+function editArtikelAlias(artikelId){
+  const a=S.a.find(x=>x.id===parseInt(artikelId));
+  if(!a)return;
+  
+  const dlg2=document.createElement('div');
+  dlg2.id='edit-alias-dlg';
+  dlg2.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9100;display:flex;align-items:flex-end;justify-content:center';
+  
+  const aliasText=(a.quittungAliase||[]).join('\n');
+  
+  dlg2.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">'+esc(a.name)+' — Aliase bearbeiten</div>'+
+      '<div style="font-size:12px;color:var(--t2);margin-bottom:12px">Ein Alias pro Zeile. Diese Quittungstexte werden diesem Artikel zugeordnet.</div>'+
+      '<textarea id="alias-input" placeholder="TN Vollmilch 3.5% UHT\nVollmilch 3.5%\nVMilch" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:14px;box-sizing:border-box;font-family:monospace;height:120px;resize:vertical">'+esc(aliasText)+'</textarea>'+
+      '<div style="display:flex;gap:8px;margin-top:12px">'+
+        '<button onclick="document.getElementById(\'edit-alias-dlg\').remove();document.getElementById(\'alias-manager-dlg\').focus()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+        '<button onclick="saveArtikelAlias('+artikelId+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Speichern</button>'+
+      '</div>'+
+    '</div>';
+  
+  document.body.appendChild(dlg2);
+  document.getElementById('alias-input').focus();
+}
+
+function saveArtikelAlias(artikelId){
+  const a=S.a.find(x=>x.id===parseInt(artikelId));
+  if(!a)return;
+  
+  const text=document.getElementById('alias-input').value.trim();
+  const aliase=text.split('\n').map(l=>l.trim()).filter(l=>l.length>0);
+  
+  a.quittungAliase=aliase;
+  saveL();
+  
+  // Schließe Dialoge
+  const dlg2=document.getElementById('edit-alias-dlg');
+  if(dlg2)dlg2.remove();
+  
+  // Update Artikel-Liste
+  filterAliasArtikel();
+  
+  toast('✓ Aliase für '+a.name+' gespeichert ('+(aliase.length)+' Aliase)');
+}
+
 function settingsGroup(id,icon,title,contentHtml,defaultOpen){
   if(sgOpen[id]===undefined)sgOpen[id]=!!defaultOpen;
   const open=sgOpen[id];
@@ -6159,7 +7198,8 @@ function renderSt(){
   settingsGroup('sg-stamm','📋','Stammdaten',
     '<div class="ss"><div class="ssl">Lagerorte</div><div>'+S.lo.map((l,i)=>'<div class="lmi">'+licon(l).replace('20px;height:20px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(l)+'</span><button onclick="editLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=LD.length?'<button onclick="delLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addLo()">+ Neuer Lagerort</button></div>'+
     '<div class="ss"><div class="ssl">Kategorien</div><div>'+S.ka.map((k,i)=>'<div class="lmi">'+KICON.replace('13px;height:13px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(k)+'</span><button onclick="editKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=KD.length?'<button onclick="delKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addKat()">+ Neue Kategorie</button></div>'+
-    '<div class="ss"><div class="ssl">Einheiten</div><div>'+S.ei.map((u,i)=>'<div class="lmi"><span style="flex:1">'+esc(u)+'</span>'+(i>=ED.length?'<button onclick="delEinheit(\''+esc(u)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addEinheitSettings()">+ Neue Einheit</button></div>'
+    '<div class="ss"><div class="ssl">Einheiten</div><div>'+S.ei.map((u,i)=>'<div class="lmi"><span style="flex:1">'+esc(u)+'</span>'+(i>=ED.length?'<button onclick="delEinheit(\''+esc(u)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addEinheitSettings()">+ Neue Einheit</button></div>'+
+    '<div class="ss"><div class="ssl">Quittungs-Aliase</div><button class="db-btn" onclick="openAliasManager()" style="width:100%">✎ Alias verwalten</button><p style="font-size:12px;color:var(--t3);margin-top:8px">Erstelle oder bearbeite Aliase für Quittungstext-Matching. Beispiel: «TN Vollmilch 3.5%» → «Vollmilch»</p></div>'
   )+
   settingsGroup('sg-erfassung','📥','Erfassung & Inventur',
     '<div class="lmi" style="align-items:center"><span style="flex:1">Foto-Pflicht bei neuen Artikeln</span>'+
@@ -6175,9 +7215,11 @@ function renderSt(){
     '<button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="openMindestManager()">⚠ Mindestbestände verwalten</button>'+
     '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Alle Mindestbestände auf einmal prüfen und anpassen — oder alle auf 0 zurücksetzen.</p>'
   )+
-  settingsGroup('sg-training','🎓','Quittungsscan Trainingsmodus',
-    '<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Im Trainingsmodus werden beim Quittungsscan nur Aliase erfasst — <strong>kein Warenbestand</strong> wird verändert.</p>'+
-    optToggle('quittungTraining','🎓 Trainingsmodus aktiv','Quittungsscan bucht nichts ein, speichert aber Aliase für unbekannte Artikel.')+
+  settingsGroup('sg-training','🎓','Quittungsscan',
+    '<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Quittungsscan Modi:</p>'+
+    optToggle('quittungPreview','🔍 Vorschau-Modus','Zeigt Scan-Ergebnisse VOR dem Buchen. NICHTS wird gespeichert — perfekt zum Testen und Trainieren.')+
+    '<div style="font-size:11px;color:var(--wn);background:var(--wl);padding:8px;border-radius:var(--rs);margin:8px 0;border-left:3px solid var(--wn)">⚠️ Im Vorschau-Modus werden <strong>KEINE Daten</strong> gespeichert. Ideal zum Lernen der KI-Interpretation.</div>'+
+    optToggle('quittungTraining','🎓 Trainingsmodus (deprecated)','Alte Funktion — verwende stattdessen Vorschau-Modus.')+
     renderAliasUebersicht()
   )+
   settingsGroup('sg-foodwaste','♻️','Anti-Foodwaste & Haltbarkeit',
@@ -6269,7 +7311,7 @@ function openQuittung(){
   dlg.id='quittung-info-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:480px;padding:20px 16px calc(20px + env(safe-area-inset-bottom))">'+
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:20px 16px calc(20px + env(safe-area-inset-bottom))">'+
       '<input type="file" id="qi-file-cam" accept="image/*" capture="environment" style="display:none" onchange="document.getElementById(\'quittung-info-dlg\').remove();_openQuittungDo(this)"/>'+
       '<input type="file" id="qi-file-gal" accept="image/*" style="display:none" onchange="document.getElementById(\'quittung-info-dlg\').remove();_openQuittungDo(this)"/>'+
       '<div style="font-size:22px;text-align:center;margin-bottom:10px">🧾</div>'+
@@ -6290,7 +7332,17 @@ function openQuittung(){
         '<button onclick="document.getElementById(\'quittung-info-dlg\').remove()" style="width:100%;padding:11px;background:none;border:none;font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
       '</div>'+
     '</div>';
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // ESC-Key zum Schließen
+  const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
+  document.addEventListener('keydown',escHandler);
 }
 
 function _openQuittungDo(preselectedInput){
@@ -6324,6 +7376,8 @@ async function handleQuittungFile(input){
   const file=input.files[0];if(!file)return;
   const body=document.getElementById('quittung-body');
   body.innerHTML='<div style="text-align:center;padding:24px;color:var(--t2)"><div class="spn" style="margin:0 auto 12px"></div>Claude analysiert die Quittung…</div>';
+  
+  // WICHTIG: Wenn Vorschau aktiv ist, wird der body gleich geleert
 
   // Bild als Base64 lesen
   const b64=await new Promise((res,rej)=>{
@@ -6343,25 +7397,30 @@ async function handleQuittungFile(input){
   // Claude Vision API
   try{
     const prompt=
-      'Analysiere diese Quittung/Kassenbon und extrahiere alle gekauften Artikel.\n'+
+      'Analysiere diese Quittung/Kassenbon und extrahiere alle gekauften Artikel mit Rabatten.\n'+
       'Antworte NUR mit einem JSON-Objekt, keine andere Ausgabe:\n'+
       '{\n'+
-      '  "geschaeft": "Migros",\n'+
-      '  "datum": "2026-06-23",\n'+
+      '  "geschaeft": "Lidl",\n'+
+      '  "datum": "2026-08-13",\n'+
       '  "artikel": [\n'+
-      '    {"name":"Vollmilch","menge":2,"preis":1.85,"einheit":"Stk","kat":"Milchprodukte"},\n'+
+      '    {"name":"Goldfield Gold Box","menge":20,"preis_brutto":115.00,"rabatt":9.00,"preis_netto":106.00,"einheit":"Stk","kat":"Süsswaren"},\n'+
+      '    {"name":"Chinakohl","menge":0.952,"preis_brutto":2.37,"rabatt":0,"preis_netto":2.37,"einheit":"kg","kat":"Gemüse & Früchte"},\n'+
       '    ...\n'+
       '  ]\n'+
       '}\n\n'+
       'Regeln:\n'+
       '- name: Produktname von der Quittung\n'+
-      '- menge: Anzahl (Standard 1)\n'+
-      '- preis: Preis PRO EINHEIT in CHF (Zahl, kein Währungssymbol)\n'+
-      '- einheit: Stk/kg/g/l/dl/Pkg/Flasche/Dose etc.\n'+
+      '- menge: Anzahl/Gewicht (Standard 1)\n'+
+      '- preis_brutto: GESAMT-PREIS DES ARTIKELS VOR RABATT in CHF\n'+
+      '- rabatt: Rabatt-Betrag für diesen Artikel in CHF (z.B. Stangenrabatt, Aktion) - Standard 0\n'+
+      '- preis_netto: preis_brutto - rabatt = Finaler Preis in CHF\n'+
+      '- einheit: Stk/kg/g/l/ml/Pkg/Flasche/Dose etc. (WICHTIG: bei Lose-Ware kg/g, bei Verpackung Stk)\n'+
       '- kat: eine von: Milchprodukte, Fleisch & Fisch, Gemüse & Früchte, Tiefkühl, Getränke, Konserven & Trockenware, Backwaren & Brot, Gewürze & Saucen, Süsswaren, Reinigung & Pflege, Diverses\n'+
       '- geschaeft: Geschäftsname (Migros/Coop/Lidl/Aldi/Denner/Volg/Online oder erkannter Name)\n'+
       '- datum: Datum im Format JJJJ-MM-TT (oder heutiges Datum falls nicht lesbar)\n'+
-      '- Nur echte Produkte, keine Rabatte/Steuern/Totals als eigene Artikel';
+      '- WICHTIG: Rabatte ZUORDNEN zu Artikeln (z.B. Stangenrabatt zur Goldfield-Box, NICHT als eigener Artikel)\n'+
+      '- Loose-Ware (kg) mit GESAMT-PREIS, nicht Preis pro kg\n'+
+      '- Nur echte Produkte, keine Steuern/Totals als eigene Artikel';
 
     const aiKey=localStorage.getItem('hb_ai_key')||'';
     if(!aiKey){
@@ -6406,13 +7465,40 @@ async function handleQuittungFile(input){
     }
     const text=data.content&&data.content[0]&&data.content[0].text||'';
     const clean=text.replace(/```json|```/g,'').trim();
+    console.log('📥 KI-Response (raw):', text.slice(0,500));
+    console.log('📥 KI-Response (clean):', clean.slice(0,500));
     let parsed;
-    try{parsed=JSON.parse(clean);}catch(pe){
+    try{parsed=JSON.parse(clean);console.log('✓ JSON geparst:', parsed);}catch(pe){
       body.innerHTML='<div style="text-align:center;padding:24px;color:var(--dg)"><div style="font-size:36px;margin-bottom:8px">⚠️</div>Antwort konnte nicht verarbeitet werden.<br><br><div style="font-size:11px;color:var(--t3);margin-top:8px;text-align:left;max-height:120px;overflow:auto;background:var(--bg);padding:8px;border-radius:var(--rs)">'+esc(text.slice(0,500))+'</div></div>';
       return;
     }
 
     quittungItems=parsed.artikel||[];
+    
+    // PREIS-VALIDIERUNGS-PASS: Erkenne KI-Fehler bei Brutto-Preisen
+    console.log('🔍 VALIDIERUNG STARTET für '+quittungItems.length+' Artikel');
+    quittungItems.forEach((it,idx) => {
+      console.log('  ['+idx+'] '+it.name+': menge='+it.menge+', brutto='+it.preis_brutto+', rabatt='+it.rabatt+', netto='+it.preis_netto);
+      
+      // Problem: Wenn menge > 1 und preis_netto < menge * 5
+      // → KI hat wahrscheinlich Einzelpreis gegeben
+      if(it.menge > 1 && it.preis_netto) {
+        const preisProEinheit = it.preis_netto / it.menge;
+        
+        // Wenn Preis pro Einheit < 10 CHF und menge ist große Zahl
+        // → Wahrscheinlich Einzelpreis-Fehler
+        if(preisProEinheit > 0.5 && preisProEinheit < 10 && it.menge > 5) {
+          console.log('  🔧 KORREKTUR erkannt: Einzelpreis '+preisProEinheit.toFixed(2)+' × '+it.menge+' Stk');
+          
+          // ABER: Was ist der KORREKTE Gesamtpreis?
+          // Wenn rabatt vorhanden: netto + rabatt = brutto
+          const bruttoKorrekt = (it.preis_netto || 0) + (it.rabatt || 0);
+          console.log('    Brutto korrigiert: '+bruttoKorrekt);
+          
+          it.preis_brutto = bruttoKorrekt;
+        }
+      }
+    });
     quittungGeschaeft=parsed.geschaeft||'';
     quittungIdx=0;
 
@@ -6443,14 +7529,24 @@ function renderQuittungUebersicht(datum){
       qbody.parentElement.insertBefore(b,qbody);
     }
   }
+  // VORSCHAU-MODUS CHECK
+  if(opt.quittungPreview){
+    const body=document.getElementById('quittung-body');
+    if(body){body.innerHTML='';body.style.display='none';} // VERSTECKE body komplett // Lösche Spinner
+    const parsed_positions=quittungItems.map(it=>({name:it.name||'Unknown',text:it.name+'\n'+it.menge+' '+it.einheit+' CHF '+(it.preis_brutto||it.preis_netto||it.preis||0).toFixed(2),preis_brutto:it.preis_brutto||it.preis_netto||it.preis||0,preis_netto:it.preis_netto||it.preis||0,preis:it.preis_netto||it.preis||0,rabatt:it.rabatt||0,einheit:it.einheit||'Stk',menge:it.menge||1,kat:it.kat||'Diverses'}));
+    showReceiptPreview(parsed_positions);
+    return;
+  }
+  
   const body=document.getElementById('quittung-body');
+  if(!body)return; // Sicherheit falls körper weg ist
   const ge=quittungGeschaeft;
   let h='<div style="background:var(--ol);border-radius:var(--rs);padding:10px 14px;margin-bottom:14px;font-size:13px">'+
     '✓ <strong>'+quittungItems.length+' Artikel</strong> erkannt'+
     (ge?' · '+esc(ge):'')+
     (datum?' · '+fmtDateCH(datum):'')+
   '</div>';
-  h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">Jeden Artikel einzeln bestätigen:</div>';
+  h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">🔍 VORSCHAU-MODUS AKTIV — Alle Positionen überprüfen:</div>';
   h+=quittungItems.map((it,i)=>{
     const existing=findQuittungMatch(it.name);
     const badge=existing?'<span style="font-size:10px;background:var(--al);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px">im Lager</span>':'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:6px">neu</span>';
@@ -6496,17 +7592,25 @@ function findQuittungMatch(name){
   // 2. Exakter Name-Match (case-insensitiv)
   m=S.a.find(a=>a.name.toLowerCase().trim()===nl);
   if(m)return m;
-  // 3. Alias enthält Quittungsname oder umgekehrt
+  // 3. Alias enthält Quittungsname oder umgekehrt (nur bei mind. 4 Zeichen)
   m=S.a.find(a=>(a.quittungAliase||[]).some(al=>{
     const al2=al.toLowerCase().trim();
+    if(al2.length<4||nl.length<4)return false;  // Nicht bei sehr kurzen Wörtern
     return al2.includes(nl)||nl.includes(al2);
   }));
   if(m)return m;
-  // 4. Fuzzy Name (min 5 Zeichen)
-  if(nl.length>=5){
-    m=S.a.find(a=>
-      a.name.toLowerCase().includes(nl)||nl.includes(a.name.toLowerCase())
-    );
+  // 4. Levenshtein-Matching (max 3 Fehler, nur bei längeren Namen)
+  if(nl.length>=8){
+    const matches=S.a.filter(a=>levenshteinDistance(a.name,name)<=3);
+    if(matches.length>0)m=matches[0];
+  }
+  // 5. Wort-Anfang-Matching: Quittungsname muss mit Artikel-Namen-Wort ANFANGEN
+  if(!m&&nl.length>=5){
+    const words=nl.split(/\s+/);
+    m=S.a.find(a=>{
+      const aname=a.name.toLowerCase();
+      return words.some(w=>w.length>=4&&aname.startsWith(w));  // Nur Wort-Anfänge, mind. 4 Zeichen
+    });
   }
   return m||null;
 }
@@ -6613,6 +7717,79 @@ function zuordnungBestaetigen(idx,artikelId){
   startQuittungArtikel(idx);
 }
 
+function openFullArtikelDialog(name,marke,preis,kat){
+  // Speichere Original-Quittungs-Namen für spätere Alias-Erstellung
+  globalThis._quittungsOriginalName=name;
+  // Öffnet den vollständigen Artikel-Dialog mit Quittungs-Daten vorausgefüllt
+  // (für unbekannte Artikel aus Quittungs-Scan)
+  
+  // Leider können wir den bestehenden Dialog nicht direkt mit Daten vorausfüllen
+  // Besser: Neuen Dialog mit allen Feldern bauen
+  
+  const dlg=document.createElement('div');
+  dlg.id='full-artikel-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);max-height:90vh;overflow-y:auto;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:12px">Artikel erfassen</div>'+
+      '<div class="fd"><label>Produktname *</label><input type="text" id="fa-name" value="'+esc(name||'')+'"/></div>'+
+      '<div class="fd"><label>Marke</label><input type="text" id="fa-marke" value="'+esc(marke||'')+'"/></div>'+
+      '<div class="fd"><label>Kategorie</label><input type="text" id="fa-kat" value="'+esc(kat||'Diverses')+'"/></div>'+
+      '<div class="fd"><label>Einheit</label><input type="text" id="fa-ei" value="Stk"/></div>'+
+      '<div class="fd"><label>Preis pro Einheit (CHF)</label><input type="text" inputmode="decimal" id="fa-pr" value="'+(preis||0).toFixed(2)+'"/></div>'+
+      '<div class="fd"><label>Lagerort</label>'+
+        '<div class="lcw">'+S.lo.map(l=>'<button class="chip'+(l===S.lo[0]?' on':'')+'" data-lo="'+esc(l)+'" onclick="document.querySelectorAll(\'#fa-lo .chip[data-lo]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\');this.dataset.lo">'+esc(l)+'</button>').join('')+'</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:8px;margin-top:14px">'+
+        '<button onclick="document.getElementById(\'full-artikel-dlg\').remove()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+        '<button onclick="saveFullArtikelDialog()" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Speichern</button>'+
+      '</div>'+
+    '</div>';
+  dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.remove();});
+  // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
+  document.body.appendChild(dlg);
+  
+  // Setze Lagerort ID
+  dlg.querySelector('#fa-lo').id='fa-lo';
+}
+
+function saveFullArtikelDialog(){
+  const name=document.getElementById('fa-name').value.trim();
+  if(!name){alert('Produktname erforderlich');return;}
+  
+  const marke=document.getElementById('fa-marke').value.trim();
+  const kat=document.getElementById('fa-kat').value.trim()||'Diverses';
+  const einheit=document.getElementById('fa-ei').value.trim()||'Stk';
+  const preis=parseDecimal(document.getElementById('fa-pr').value)||0;
+  const lager=document.querySelector('#fa-lo .chip.on')?.getAttribute('data-lo')||S.lo[0];
+  
+  // Neuer Artikel
+  const newId=S.nid++;
+  
+  // Quittungs-Original-Name als Alias speichern (für besseres Matching)
+  const quittungsName=(globalThis._quittungsOriginalName||'').trim();
+  const aliases=quittungsName&&quittungsName!==name?[quittungsName]:[];
+  
+  S.a.push({
+    id:newId,name,marke,kat,lager,kaufort:'',
+    menge:0,einheit,mindest:0,barcode:'',preis,
+    packMenge:0,packEinheit:'',kaufdatum:'',ablaufdatum:'',
+    notiz:'',foto:'',fotoPath:'',packungen:[],preisHistorie:[],
+    quittungAliase:aliases
+  });
+  saveL();
+  
+  document.getElementById('full-artikel-dlg').remove();
+  toast('✓ '+name+' erstellt');
+  // Zurück zur Quittung
+  renderQuittungUebersicht(todayISO());
+}
+
 function startQuittungArtikel(idx){
   const it=quittungItems[idx];
   const body=document.getElementById('quittung-body');
@@ -6674,7 +7851,8 @@ function startQuittungArtikel(idx){
   const buttonLabel=duplikatWarnung?'Duplikat ignorieren':'Überspringen';
   h+='<div style="display:flex;gap:8px;margin-top:14px">'+
     '<button onclick="renderQuittungUebersicht(\''+esc(datum)+'\')" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">'+buttonLabel+'</button>'+
-    '<button onclick="confirmQuittungArtikel('+idx+','+!!existing+(existing?','+existing.id:',null')+')" style="flex:2;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">Eingang buchen</button>'+
+    (!existing?'<button onclick="openFullArtikelDialog(\''+esc(it.name)+'\',,'+it.preis+',\'' +esc(it.kat||'Diverses')+'\')" style="flex:1;padding:12px;border:1px solid var(--am);background:var(--al);border-radius:var(--rs);font-size:13px;cursor:pointer;color:var(--ac)">⚙ Erweitert</button>':'')+ 
+    '<button onclick="confirmQuittungArtikel('+idx+','+!!existing+(existing?','+existing.id:',null')+')" style="flex:'+(existing?'2':'1')+';padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">Eingang buchen</button>'+
   '</div>';
 
   h=h.replace('class="lcw">','class="lcw" id="qq-ge">');
@@ -6760,20 +7938,21 @@ function dateField(id,value,extraStyle){
   if(!isMobile()){
     // Desktop/PC: natives date-Input direkt sichtbar anzeigen
     return '<input type="date" id="'+id+'" value="'+esc(v)+'" '+
-      'style="width:100%;padding:11px 14px;border:2px solid var(--ac);border-radius:var(--rs);background:#fff;color:#000;font-size:15px;cursor:pointer" '+
+      'style="width:100%;padding:11px 14px;border:2px solid var(--ac);border-radius:var(--rs);background:var(--sf);color:var(--tx);font-size:15px;cursor:pointer" '+
       'onchange="nativeDateChanged(\''+id+'\')" />';
   }
 
-  // Mobile: transparentes Input über sichtbarem Display-Div (öffnet nativen Kalender)
+  // Mobile: Display-Div + transparentes Input-Overlay
   const disp=v?fmtDateCH(v):'Datum wählen';
   const hasVal=!!v;
-  return '<div style="position:relative;height:46px">'+
-    '<div id="'+id+'-display" style="position:absolute;inset:0;display:flex;align-items:center;gap:8px;padding:0 14px;border:2px solid var(--ac);border-radius:var(--rs);background:#fff;color:'+(hasVal?'#000':'var(--t3)')+';font-size:15px;pointer-events:none;z-index:0">'+
-      I.cal.replace('20px;height:20px','16px;height:16px')+'<span id="'+id+'-lbl">'+esc(disp)+'</span>'+
+  return '<div style="position:relative;display:flex;align-items:center;width:100%">'+
+    '<div id="'+id+'-display" style="flex:1;display:flex;align-items:center;gap:8px;padding:11px 14px;border:2px solid var(--ac);border-radius:var(--rs);background:var(--sf);color:'+(hasVal?'var(--tx)':'var(--t3)')+';font-size:15px;pointer-events:none">'+
+      I.cal.replace('20px;height:20px','16px;height:16px')+'<span id="'+id+'-lbl" style="flex:1;overflow:hidden;text-overflow:ellipsis">'+esc(disp)+'</span>'+
     '</div>'+
     '<input type="date" id="'+id+'" value="'+esc(v)+'" '+
-    'style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:1;font-size:16px" '+
-    'onchange="nativeDateChanged(\''+id+'\')" />'+
+    'style="position:absolute;width:100%;height:100%;opacity:0;cursor:pointer;font-size:16px" '+
+    'onchange="nativeDateChanged(\''+id+'\')" '+
+    'onblur="setTimeout(()=>nativeDateChanged(\''+id+'\'),100)" />'+
   '</div>';
 }
 function nativeDateChanged(id){
@@ -6782,7 +7961,18 @@ function nativeDateChanged(id){
   const display=document.getElementById(id+'-display');
   if(!inp)return;
   const val=inp.value;
-  if(lbl)lbl.textContent=val?fmtDateCH(val):'Datum wählen';
+  if(lbl){
+    lbl.textContent=val?fmtDateCH(val):'Datum wählen';
+  }
+  if(display&&val){
+    // Aktualisiere auch Display-Farbe wenn Datum gesetzt
+    display.style.color='#000';
+  }
+  // Workaround: Trigger input event damit das Datum auch gespeichert wird
+  if(inp){
+    const event=new Event('change',{bubbles:true});
+    inp.dispatchEvent(event);
+  }
   if(display)display.style.color=val?'var(--tx)':'var(--t3)';
 }
 // Datumsfeld programmatisch setzen: Wert UND sichtbares Label aktualisieren
@@ -6855,7 +8045,13 @@ function confirmDialog(msg,jaTxt,neinTxt){
         '</div>'+
       '</div>';
     window._confirmRes=res;
-    document.body.appendChild(dlg);
+    // Wrap innerhtml in max-width container
+  const wrapper=document.createElement('div');
+  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
+  wrapper.innerHTML=dlg.innerHTML;
+  dlg.innerHTML='';
+  dlg.appendChild(wrapper);
+  document.body.appendChild(dlg);
   });
 }
 
@@ -7322,6 +8518,10 @@ async function installApp(){
   const choice=await deferredInstallPrompt.userChoice;
   if(choice.outcome==='accepted')toast('Wird installiert…');
   deferredInstallPrompt=null;
+}
+function showAppInfo(){
+  // Show app version, stats, links
+  goScreen('s-settings');
 }
 </script>
 </body>
