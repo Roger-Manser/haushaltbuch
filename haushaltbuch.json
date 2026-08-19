@@ -9552,7 +9552,7 @@
       "kat": "Fertiggerichte",
       "lager": "Kühlschrank oben",
       "kaufort": "Migros",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "2614414849186",
@@ -9574,13 +9574,22 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-08-19",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Migros"
         }
       ],
       "letzteEingangHeute": "16:50",
       "packungen": [
         {
-          "id": 4,
-          "menge": 1,
+          "id": 1,
+          "menge": 0,
           "kaufdatum": "2026-08-19",
           "ablaufdatum": "2026-03-31"
         }
@@ -18890,7 +18899,20 @@
       "k": "Diverses",
       "aktion": false,
       "kaufort": "Landi"
+    },
+    {
+      "t": "aus",
+      "aid": 257,
+      "name": "Lasagne Bolognese",
+      "lager": "Kühlschrank oben",
+      "kat": "Fertiggerichte",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-19",
+      "zeit": 1787157437273
     }
   ],
-  "aktualisiert": "2026-08-19T16:36:35.509Z"
+  "aktualisiert": "2026-08-19T16:37:26.493Z"
 }
