@@ -538,11 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.23';
+const APP_VERSION='21.24';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'21.23',d:'08.2026',items:['🎉 THE FIX!!! lagerMatch wird auch gesetzt wenn lagerArtikelId vorhanden','Badge prüft auf lagerMatch (nicht nur lagerArtikelId)','Wenn ID vom Auto-Matching: lagerMatch = true','BANANEN SOLLTE JETZT GRÜN SEIN!!!']},
+  {v:'21.24',d:'08.2026',items:['🔧 NEW: Debug-Interface mit Step-by-Step Buttons','Schritt 1: Parse Positionen','Schritt 2: Auto-Matching','Schritt 3: Vorschau anzeigen','Schritt 4: Demo-Buchen (nichts speichern)','Jeder Schritt kann mehrfach ausgeführt werden','Status-Anzeigen für jeden Schritt','Debug-Logs in eigenem Log-Panel']},
   {v:'21.21',d:'08.2026',items:['DEBUG: Massive Logs für Auto-Matching','Zeigt quittungItems BEFORE/AFTER','Mit 🤖🤖🤖 Markierung','Aufbau für Fehlersuche']},
   {v:'21.19',d:'08.2026',items:['DEBUG: Umfangreiche Logs für Matching-Problem','Zeigt quittungItems nach Matching','Zeigt lagerArtikelId in renderQuittungUebersicht','Hilft zu finden warum Artikel nicht grün angezeigt wird']},
   {v:'21.18',d:'08.2026',items:['CRITICAL FIX: Validierung blockierte Auto-Matching','Validierung nun in separatem try/catch','Auto-Matching läuft IMMER (auch wenn Validierung fehlschlägt','lagerArtikelId wird jetzt korrekt gesetzt']},
@@ -811,6 +811,7 @@ let gh={tok:'',own:'',repo:'',br:'main'};
 let opt={fotoZwang:false,
   fwDashboard:true,      // Ablauf-Dashboard auf Lager-Screen
   quittungTraining:false, // Trainingsmodus: nur Aliase lernen, kein Warenbestand
+  quittungDebug:false,    // Debug-Modus: Step-by-step Interface
   fwAuswertung:true,     // Foodwaste-Muster in Statistik
   fwMengenWarnung:true,  // Warnung beim Einkauf bei oft verworfenen Artikeln
   fwAnbruch:true,        // Anbruch-/Geöffnet-Verwaltung
@@ -7472,6 +7473,8 @@ function renderSt(){
     optToggle('quittungPreview','🔍 Vorschau-Modus','Zeigt Scan-Ergebnisse VOR dem Buchen. NICHTS wird gespeichert — perfekt zum Testen und Trainieren.')+
     '<div style="font-size:11px;color:var(--wn);background:var(--wl);padding:8px;border-radius:var(--rs);margin:8px 0;border-left:3px solid var(--wn)">⚠️ Im Vorschau-Modus werden <strong>KEINE Daten</strong> gespeichert. Ideal zum Lernen der KI-Interpretation.</div>'+
     optToggle('quittungTraining','🎓 Trainingsmodus (deprecated)','Alte Funktion — verwende stattdessen Vorschau-Modus.')+
+    optToggle('quittungDebug','🔧 Debug-Modus (Step-by-Step)','Öffnet ein Step-by-Step Interface zum Debuggen des Quittungs-Scans. Jeder Schritt kann einzeln ausgeführt werden.')+
+    '<div style="font-size:11px;color:var(--ac);background:var(--ol);padding:8px;border-radius:var(--rs);margin:8px 0;border-left:3px solid var(--ac)">🔧 Debug-Modus: Parse → Matching → Vorschau → Buchen — jeder Schritt isoliert.</div>'+
     renderAliasUebersicht()
   )+
   settingsGroup('sg-foodwaste','♻️','Anti-Foodwaste & Haltbarkeit',
@@ -7554,6 +7557,14 @@ let tT;
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('on'),2300);}
 /* ── Quittung scannen (Claude Vision) ────────────────────────────── */
 let quittungItems=[]; // erkannte Artikel von der Quittung
+let debugState = {
+  mode: false,           // Debug-Modus aktiv?
+  rawResponse: null,     // KI-Response roh
+  quittungItems: null,   // Geparste Positionen
+  matchingDone: false,   // Auto-Matching durchgeführt?
+  previewRendered: false,// Vorschau angezeigt?
+  lastError: null        // Letzter Fehler
+};
 let quittungIdx=0;    // aktueller Artikel im Einzelbestätigungs-Flow
 let quittungGeschaeft=''; // erkanntes Geschäft
 
@@ -7794,8 +7805,12 @@ async function handleQuittungFile(input){
 
     console.log('📞 JETZT renderQuittungUebersicht aufrufen mit', quittungItems.length, 'items');
 
-    // Übersicht zeigen
-    renderQuittungUebersicht(parsed.datum||todayISO());
+    // NEUER DEBUG-MODUS: Öffne Debug-Interface statt Übersicht
+    if(opt.quittungDebug){
+      openDebugInterface(text);
+    }else{
+      renderQuittungUebersicht(parsed.datum||todayISO());
+    }
 
   }catch(e){
     const body=document.getElementById('quittung-body');
@@ -9006,6 +9021,211 @@ if(!document.getElementById('toast-styles')) {
   style.innerHTML = `@keyframes slideInUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 @keyframes slideOutDown { from { transform: translateY(0); opacity: 1; } to { transform: translateY(100%); opacity: 0; } }`;
   document.head.appendChild(style);
+}
+
+// ===== DEBUG-INTERFACE v21.24 =====
+function openDebugInterface(rawResponse){
+  debugState.rawResponse = rawResponse;
+  debugState.mode = true;
+  debugState.quittungItems = null;
+  debugState.matchingDone = false;
+  debugState.previewRendered = false;
+  
+  const dlg = document.createElement('div');
+  dlg.id = 'debug-interface';
+  dlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9500;display:flex;flex-direction:column;padding:20px;overflow-y:auto';
+  
+  dlg.innerHTML = `
+    <div style="background:var(--bg);border-radius:var(--rs);padding:20px;max-width:100%;color:var(--tx)">
+      <div style="font-size:18px;font-weight:700;margin-bottom:20px;display:flex;align-items:center;gap:10px">
+        🔧 Quittungs-Debug-Interface v21.24
+        <button onclick="document.getElementById('debug-interface').remove();debugState.mode=false" style="margin-left:auto;background:var(--wn);color:#fff;border:none;padding:6px 12px;border-radius:4px;cursor:pointer">✕ Close</button>
+      </div>
+      
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <!-- Schritt 1: Parse -->
+        <div style="background:var(--sf);padding:12px;border-radius:6px;border:1px solid var(--bd)">
+          <div style="font-weight:600;margin-bottom:8px">📋 Schritt 1: Parse</div>
+          <button onclick="debugParse()" style="width:100%;padding:10px;background:var(--ac);color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:600;margin-bottom:8px">Parse Positionen</button>
+          <div id="debug-parse-status" style="font-size:12px;color:var(--t2)">-</div>
+        </div>
+        
+        <!-- Schritt 2: Matching -->
+        <div style="background:var(--sf);padding:12px;border-radius:6px;border:1px solid var(--bd)">
+          <div style="font-weight:600;margin-bottom:8px">🤖 Schritt 2: Auto-Matching</div>
+          <button onclick="debugMatching()" style="width:100%;padding:10px;background:var(--ac);color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:600;margin-bottom:8px">Matching starten</button>
+          <div id="debug-matching-status" style="font-size:12px;color:var(--t2)">-</div>
+        </div>
+        
+        <!-- Schritt 3: Vorschau -->
+        <div style="background:var(--sf);padding:12px;border-radius:6px;border:1px solid var(--bd)">
+          <div style="font-weight:600;margin-bottom:8px">🎨 Schritt 3: Vorschau</div>
+          <button onclick="debugPreview()" style="width:100%;padding:10px;background:var(--ac);color:#fff;border:none;border-radius:4px;cursor:pointer;font-weight:600;margin-bottom:8px">Vorschau anzeigen</button>
+          <div id="debug-preview-status" style="font-size:12px;color:var(--t2)">-</div>
+        </div>
+        
+        <!-- Schritt 4: Buchen -->
+        <div style="background:var(--sf);padding:12px;border-radius:6px;border:1px solid var(--bd)">
+          <div style="font-weight:600;margin-bottom:8px">💾 Schritt 4: Buchen (DEMO)</div>
+          <button onclick="debugBook()" style="width:100%;padding:10px;background:var(--ol);color:var(--ok);border:none;border-radius:4px;cursor:pointer;font-weight:600;margin-bottom:8px">⚠️ Buchen (nur Demo)</button>
+          <div id="debug-book-status" style="font-size:12px;color:var(--t2)">-</div>
+        </div>
+      </div>
+      
+      <div style="margin-top:16px;padding:12px;background:var(--bg);border-radius:6px;border:1px solid var(--bd)">
+        <div style="font-size:12px;color:var(--t3);font-weight:600;margin-bottom:8px">📊 Status:</div>
+        <div id="debug-log" style="font-size:11px;color:var(--t2);font-family:monospace;max-height:200px;overflow-y:auto;background:var(--bg);padding:8px;border-radius:4px">Bereit...</div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(dlg);
+  debugLog('🔧 Debug-Interface geöffnet');
+}
+
+function debugLog(msg){
+  console.log('DEBUG:', msg);
+  const logEl = document.getElementById('debug-log');
+  if(logEl){
+    logEl.innerHTML += msg + '<br>';
+    logEl.scrollTop = logEl.scrollHeight;
+  }
+}
+
+function debugSetStatus(step, msg, isError=false){
+  const statusEl = document.getElementById('debug-'+step+'-status');
+  if(statusEl){
+    statusEl.innerHTML = (isError ? '❌ ' : '✅ ') + msg;
+    statusEl.style.color = isError ? 'var(--wn)' : 'var(--ok)';
+  }
+}
+
+function debugParse(){
+  try{
+    debugLog('🔄 Parse: Verarbeite rawResponse...');
+    
+    if(!debugState.rawResponse){
+      debugSetStatus('parse', 'Keine rawResponse vorhanden', true);
+      debugLog('❌ rawResponse ist null');
+      return;
+    }
+    
+    const clean = debugState.rawResponse.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+    
+    debugState.quittungItems = parsed.artikel || [];
+    debugLog('✓ Parse erfolgreich: ' + debugState.quittungItems.length + ' Artikel');
+    debugSetStatus('parse', debugState.quittungItems.length + ' Artikel geparst');
+    
+    // Zeige Details
+    debugState.quittungItems.forEach((it, i) => {
+      debugLog('  ['+i+'] ' + it.name + ' - ' + it.menge + '× CHF ' + (it.preis||0).toFixed(2));
+    });
+    
+  }catch(e){
+    debugSetStatus('parse', 'Parse-Fehler: ' + e.message, true);
+    debugLog('❌ Fehler: ' + e.message);
+    debugState.lastError = e;
+  }
+}
+
+function debugMatching(){
+  try{
+    debugLog('🔄 Matching: Starte Auto-Matching...');
+    
+    if(!debugState.quittungItems || !debugState.quittungItems.length){
+      debugSetStatus('matching', 'Keine Positionen zum Matchen', true);
+      debugLog('❌ Erst Schritt 1 (Parse) durchführen!');
+      return;
+    }
+    
+    let matched = 0;
+    debugState.quittungItems.forEach((it, idx) => {
+      const found = findQuittungMatch(it.name);
+      if(found){
+        it.lagerArtikelId = found.id;
+        it.lagerMatch = true;
+        matched++;
+        debugLog('  ✅ ['+idx+'] ' + it.name + ' → ID ' + found.id);
+      }else{
+        debugLog('  ❌ ['+idx+'] ' + it.name + ' → Keine Zuordnung');
+      }
+    });
+    
+    debugState.matchingDone = true;
+    debugSetStatus('matching', matched + '/' + debugState.quittungItems.length + ' Artikel zugeordnet');
+    
+  }catch(e){
+    debugSetStatus('matching', 'Matching-Fehler: ' + e.message, true);
+    debugLog('❌ Fehler: ' + e.message);
+    debugState.lastError = e;
+  }
+}
+
+function debugPreview(){
+  try{
+    debugLog('🔄 Vorschau: Rendern...');
+    
+    if(!debugState.quittungItems || !debugState.quittungItems.length){
+      debugSetStatus('preview', 'Keine Positionen', true);
+      debugLog('❌ Erst Schritt 1 (Parse) durchführen!');
+      return;
+    }
+    
+    // Erstelle parsed_positions mit lagerArtikelId
+    const parsed_positions = debugState.quittungItems.map(it => ({
+      name: it.name || 'Unknown',
+      text: it.name + '\n' + it.menge + ' ' + it.einheit + ' CHF ' + (it.preis_brutto || it.preis_netto || it.preis || 0).toFixed(2),
+      preis_brutto: it.preis_brutto || it.preis_netto || it.preis || 0,
+      preis_netto: it.preis_netto || it.preis || 0,
+      preis: it.preis_netto || it.preis || 0,
+      rabatt: it.rabatt || 0,
+      einheit: it.einheit || 'Stk',
+      menge: it.menge || 1,
+      kat: it.kat || 'Diverses',
+      lagerArtikelId: it.lagerArtikelId  // ← WICHTIG!
+    }));
+    
+    // Setze opt.quittungPreview auf true
+    opt.quittungPreview = true;
+    
+    // Zeige Vorschau
+    showReceiptPreview(parsed_positions);
+    
+    debugState.previewRendered = true;
+    debugSetStatus('preview', 'Vorschau angezeigt');
+    debugLog('✅ Vorschau gerendert');
+    
+  }catch(e){
+    debugSetStatus('preview', 'Preview-Fehler: ' + e.message, true);
+    debugLog('❌ Fehler: ' + e.message);
+    debugState.lastError = e;
+  }
+}
+
+function debugBook(){
+  try{
+    debugLog('🔄 Buchen: Demo-Buchung...');
+    
+    if(!debugState.quittungItems || !debugState.quittungItems.length){
+      debugSetStatus('book', 'Keine Positionen', true);
+      debugLog('❌ Erst Schritt 1 (Parse) durchführen!');
+      return;
+    }
+    
+    debugLog('⚠️  VORSCHAU-MODUS: Nichts wird wirklich gespeichert!');
+    debugLog('✅ Würde buchen: ' + debugState.quittungItems.length + ' Positionen');
+    debugState.quittungItems.forEach((it, i) => {
+      debugLog('  ['+i+'] ' + it.name + ' (lagerArtikelId: ' + (it.lagerArtikelId || 'null') + ')');
+    });
+    
+    debugSetStatus('book', 'Demo durchgeführt (nichts gespeichert)');
+    
+  }catch(e){
+    debugSetStatus('book', 'Fehler: ' + e.message, true);
+    debugLog('❌ Fehler: ' + e.message);
+    debugState.lastError = e;
+  }
 }
 </script>
 </body>
