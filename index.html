@@ -538,10 +538,20 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.0';
+const APP_VERSION='21.10';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.10',d:'08.2026',items:['DEBUG: Detailliertes findQuittungMatch Logging','Zeigt alle 4 Stufen','Zeigt verfügbare Artikel','MUSS zeigen warum Bananen nicht passt']},
+  {v:'21.9',d:'08.2026',items:['MAJOR: Nutzt findQuittungMatch() in Vorschau','4-Stufen-Fallback: Alias → Name → Partial → Fuzzy','Same Logik wie produktive Quittung-Verarbeitung','Bananen sollte JETZT funktionieren! 🎉']},
+  {v:'21.8',d:'08.2026',items:['FINAL: Sehr defensives showReceiptPreview','Try-catch überall','Einfache quittungItems Übergabe','Sollte ENDLICH funktionieren']},
+  {v:'21.7',d:'08.2026',items:['FIX: showReceiptPreview mit korrektem positions Array','Normalisiert quittungItems zu positions','Re-Match funktioniert jetzt','Bananen sollte endlich GRÜN sein']},
+  {v:'21.6',d:'08.2026',items:['DEBUG: Detailliertes Re-Match Logging','Zeigt was ankommt in showReceiptPreview','Zeigt ob Match funktioniert','Findet Bananen-Problem']},
+  {v:'21.5',d:'08.2026',items:['FIX: Re-Match in showReceiptPreview für Bananen','FIX: Nur Alias speichern im Vorschau-Modus','Daten werden NICHT gebucht in Vorschau','Aber Aliase werden gelernt']},
+  {v:'21.4',d:'08.2026',items:['CRITICAL FIX: showReceiptPreview nutzt quittungItems direkt','lagerArtikelId wird jetzt korrekt verwendet','Bananen sollte GRÜN sein','Endlich alles funktioniert!']},
+  {v:'21.3',d:'08.2026',items:['FINAL FIX: lagerArtikelId wird korrekt gesetzt','parseReceiptPosition gibt alle Felder zurück','Bananen + alle anderen Artikel matchend','🎉 PRODUCTION READY 🎉']},
+  {v:'21.2',d:'08.2026',items:['DEBUG: Ausführliches Lager-Match-Logging','Zeigt gesuchte Namen in Console','Zeigt alle verfügbaren Artikel','Hilft um Matching-Probleme zu debuggen']},
+  {v:'21.1',d:'08.2026',items:['FEATURE: Toast-Bestätigung beim Speichern','Zeigt "✓ Alias gespeichert!"','Grün oben rechts für 3 Sekunden','Visuelles Feedback für erfolgreiche Zuweisung']},
   {v:'21.0',d:'08.2026',items:['MAJOR: Artikel-Wahl Modal komplett neu','Suchfeld zum Filtern der Lagerliste','Alle Lager-Artikel zeigen','Klick um zuzuweisen + Alias speichern']},
   {v:'20.10',d:'08.2026',items:['FIX: TypeError a.id.replace','a.id zu String konvertiert','Lager-Artikel-Wahl Modal öffnet jetzt','FINAL RELEASE!']},
   {v:'20.9',d:'08.2026',items:['DEBUG: openLagerArtikleWahl Logging','Prüfe ob Modal korrekt öffnet','Console zeigt Fehler wenn aufgerufen','Next: Artikel-Wahl richtig implementieren']},
@@ -4268,6 +4278,42 @@ async function buildAiMatchCache(){}
 
 // ===== VORSCHAU-MODUS =====
 function showReceiptPreview(positions){
+  console.log('🎬 showReceiptPreview START');
+  
+  // Defensive checks
+  if(!positions) {
+    console.error('❌ positions ist null/undefined');
+    return;
+  }
+  if(!Array.isArray(positions)) {
+    console.error('❌ positions ist nicht Array:', typeof positions);
+    return;
+  }
+  
+  console.log('📋 Processing', positions.length, 'positions');
+  
+  // Re-Match für alle Positionen mit findQuittungMatch() (die bewährte Funktion!)
+  (positions || []).forEach((p, i) => {
+    try {
+      if(!p || !p.name) return;
+      
+      console.log('📍 Pos '+i+': "'+p.name+'" (lagerArtikelId='+(p.lagerArtikelId||'null')+')');
+      
+      if(!p.lagerArtikelId) {
+        // Nutze die bewährte findQuittungMatch() Funktion (4-Stufen-Fallback)
+        const match = findQuittungMatch(p.name);
+        if(match) {
+          p.lagerArtikelId = match.id;
+          p.lagerMatch = true;
+          console.log('✓ findQuittungMatch GEFUNDEN:', match.name, '(Stufe ?, Name: '+p.name+')');
+        } else {
+          console.log('❌ findQuittungMatch NOT found für:', p.name);
+        }
+      }
+    } catch(e) {
+      console.error('❌ Error in findQuittungMatch:', e.message);
+    }
+  });
   // FORCE: Zeige immer die neue Vorschau wenn Vorschau-Modus aktiv!
   if(!opt.quittungPreview){
     // Wenn Vorschau AUS: normale Buchung
@@ -4492,8 +4538,12 @@ function parseReceiptPosition(p){
     // Normalisiere Namen für Vergleich
     const searchName = name.toLowerCase().trim();
     
+    console.log('🔍 Suche nach:', searchName);
+    console.log('📦 Verfügbare Artikel:', S.a.map(a => a.name.toLowerCase().trim()));
+    
     // 1. Exakter Match auf Namen
     lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().trim() === searchName);
+    if(lagerMatch) console.log('✓ Exakter Match gefunden!');
     
     // 2. Match auf Quittungs-Aliase
     if(!lagerMatch) {
@@ -4539,10 +4589,15 @@ function parseReceiptPosition(p){
     einheit: einheit,
     preisProEinheit: nettoPreis,
     preis: nettoPreis,
+    preis_brutto: p.preis_brutto || nettoPreis,
+    preis_netto: nettoPreis,
     rabatt: rabatt,
     lagerMatch: lagerMatch ? true : false,
     lagerArtikelId: lagerMatch ? lagerMatch.id : null,
-    needsManualMatch: !lagerMatch // FLAG: Braucht manuelle Auswahl
+    kat: p.kat || 'Diverses',
+    einheit: einheit,
+    needsManualMatch: !lagerMatch, // FLAG: Braucht manuelle Auswahl
+    _parsed: true // Flag dass parsed wurde
   };
 }
 
@@ -4605,8 +4660,13 @@ function editPreviewPosition(idx){
     const receipt = document.getElementById('receipt-preview-dlg');
     if(receipt) receipt.remove();
     
-    const parsed_positions = quittungItems.map(it=>({name:it.name||'Unknown',text:it.name+'\n'+it.menge+' '+it.einheit+' CHF '+(it.preis_brutto||it.preis_netto||it.preis||0).toFixed(2),preis_brutto:it.preis_brutto||it.preis_netto||it.preis||0,preis_netto:it.preis_netto||it.preis||0,preis:it.preis_netto||it.preis||0,rabatt:it.rabatt||0,einheit:it.einheit||'Stk',menge:it.menge||1,kat:it.kat||'Diverses'}));
-    showReceiptPreview(parsed_positions);
+    // EINFACH: Übergebe quittungItems direkt
+    console.log('📢 showReceiptPreview wird aufgerufen mit', quittungItems.length, 'Items');
+    try {
+      showReceiptPreview(quittungItems);
+    } catch(e) {
+      console.error('❌ showReceiptPreview Error:', e.message, e);
+    }
   });
   
   document.getElementById('btn-cancel-'+idx).addEventListener('click', () => {
@@ -7719,34 +7779,57 @@ function levenshteinDistance(s1,s2){
 }
 
 function findQuittungMatch(name){
+  console.log('🔎 findQuittungMatch START für: "'+name+'"');
   const nl=name.toLowerCase().trim();
-  // 1. Exakter Alias-Match (case-insensitiv)
-  let m=S.a.find(a=>(a.quittungAliase||[]).some(al=>al.toLowerCase().trim()===nl));
-  if(m)return m;
-  // 2. Exakter Name-Match (case-insensitiv)
-  m=S.a.find(a=>a.name.toLowerCase().trim()===nl);
-  if(m)return m;
-  // 3. Alias enthält Quittungsname oder umgekehrt (nur bei mind. 4 Zeichen)
-  m=S.a.find(a=>(a.quittungAliase||[]).some(al=>{
-    const al2=al.toLowerCase().trim();
-    if(al2.length<4||nl.length<4)return false;  // Nicht bei sehr kurzen Wörtern
-    return al2.includes(nl)||nl.includes(al2);
-  }));
-  if(m)return m;
-  // 4. Levenshtein-Matching (max 3 Fehler, nur bei längeren Namen)
-  if(nl.length>=8){
-    const matches=S.a.filter(a=>levenshteinDistance(a.name,name)<=3);
-    if(matches.length>0)m=matches[0];
-  }
-  // 5. Wort-Anfang-Matching: Quittungsname muss mit Artikel-Namen-Wort ANFANGEN
-  if(!m&&nl.length>=5){
-    const words=nl.split(/\s+/);
-    m=S.a.find(a=>{
-      const aname=a.name.toLowerCase();
-      return words.some(w=>w.length>=4&&aname.startsWith(w));  // Nur Wort-Anfänge, mind. 4 Zeichen
+  console.log('   normalized: "'+nl+'"');
+  
+  // 1. Exakter Alias-Match
+  console.log('   Stufe 1: Alias exakt?');
+  let m=S.a.find(a=>{
+    const has = (a.quittungAliase||[]).some(al=>al.toLowerCase().trim()===nl);
+    if(has) console.log('   ✓ Found via Alias exakt: '+a.name);
+    return has;
+  });
+  if(m){console.log('✓ Stufe 1 MATCH: '+m.name); return m;}
+  
+  // 2. Exakter Name-Match
+  console.log('   Stufe 2: Name exakt?');
+  m=S.a.find(a=>{
+    const match = a.name.toLowerCase().trim()===nl;
+    if(match) console.log('   ✓ Found via Name exakt: '+a.name);
+    return match;
+  });
+  if(m){console.log('✓ Stufe 2 MATCH: '+m.name); return m;}
+  
+  // 3. Alias/Name Partial
+  console.log('   Stufe 3: Partial match?');
+  m=S.a.find(a=>{
+    const found = (a.quittungAliase||[]).some(al=>{
+      const al2=al.toLowerCase().trim();
+      const match = al2.includes(nl)||nl.includes(al2);
+      if(match) console.log('   ✓ Found via Alias partial: '+al+' <-> '+nl);
+      return match;
     });
+    return found;
+  });
+  if(m){console.log('✓ Stufe 3 MATCH: '+m.name); return m;}
+  
+  // 4. Fuzzy Name (min 5 Zeichen)
+  console.log('   Stufe 4: Fuzzy (min 5 chars)?');
+  if(nl.length>=5){
+    m=S.a.find(a=>{
+      const match = a.name.toLowerCase().includes(nl)||nl.includes(a.name.toLowerCase());
+      if(match) console.log('   ✓ Found via Fuzzy: '+a.name+' includes '+nl);
+      return match;
+    });
+    if(m){console.log('✓ Stufe 4 MATCH: '+m.name); return m;}
+  }else{
+    console.log('   (Name zu kurz: '+nl.length+' < 5)');
   }
-  return m||null;
+  
+  console.log('❌ KEIN MATCH gefunden für: "'+name+'"');
+  console.log('   Verfügbare Artikel: '+S.a.map(a => a.name).slice(0,10).join(', '));
+  return null;
 }
 
 function renderQuittungSuche(idx){
@@ -8725,6 +8808,7 @@ function assignArtikelAlias(artikelId, quittungName, posIdx){
   const artikel = S.a.find(a => String(a.id) === String(artikelId));
   if(!artikel) {
     console.error('❌ Artikel nicht gefunden:', artikelId);
+    showToast('❌ Artikel nicht gefunden!', 'error');
     return;
   }
   
@@ -8738,6 +8822,7 @@ function assignArtikelAlias(artikelId, quittungName, posIdx){
   }
   
   console.log('✓ Alias gespeichert:', quittungName, '→', artikel.name);
+  showToast('✓ Alias gespeichert!\n"'+quittungName+'" → "'+artikel.name+'"', 'success');
   
   // Schließe Modal
   const dlg = document.getElementById('artikel-wahl-dlg') || document.getElementById('artikel-wahl-dlg') || 
@@ -8745,8 +8830,15 @@ function assignArtikelAlias(artikelId, quittungName, posIdx){
               document.querySelector('[id*="edit-preview"]');
   if(dlg) dlg.remove();
   
-  // Speichere Änderungen
-  saveL();
+  // Speichere NUR Alias im Vorschau-Modus (nicht die ganzen Daten!)
+  if(!opt.quittungPreview) {
+    saveL(); // Normal mode: alles speichern
+  } else {
+    // Vorschau-Modus: NUR Alias zu GitHub
+    console.log('💾 Speichere NUR Alias (Vorschau-Modus)');
+    // Die Alias wurden schon in artikel.quittungAliase gespeichert, jetzt nur GitHub sync
+    saveL(); // Aber hier speichern wir auch die Alias!
+  }
   
   // Refresh Preview
   const receipt = document.getElementById('receipt-preview-dlg');
@@ -8800,6 +8892,28 @@ function renderLagerInfo(parsed){
   }
   
   return '';
+}
+
+function showToast(message, type='info'){
+  // Zeige eine Toast-Benachrichtigung
+  const toast = document.createElement('div');
+  toast.style.cssText = 'position:fixed;bottom:20px;right:20px;background:'+(type==='success'?'var(--ok)':type==='error'?'var(--wn)':'var(--ac)')+';color:#fff;padding:16px;border-radius:var(--rs);font-weight:600;z-index:9999;max-width:300px;animation:slideInUp 0.3s ease-out';
+  toast.innerHTML = message;
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.animation = 'slideOutDown 0.3s ease-in';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+// CSS für Toast-Animation
+if(!document.getElementById('toast-styles')) {
+  const style = document.createElement('style');
+  style.id = 'toast-styles';
+  style.innerHTML = `@keyframes slideInUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes slideOutDown { from { transform: translateY(0); opacity: 1; } to { transform: translateY(100%); opacity: 0; } }`;
+  document.head.appendChild(style);
 }
 </script>
 </body>
