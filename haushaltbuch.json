@@ -9460,7 +9460,8 @@
           "kaufdatum": "2026-08-19",
           "ablaufdatum": "2026-09-08"
         }
-      ]
+      ],
+      "quittungAliase": "MBud Landjäger"
     },
     {
       "id": 255,
@@ -18891,5 +18892,5 @@
       "kaufort": "Landi"
     }
   ],
-  "aktualisiert": "2026-08-19T16:35:26.704Z"
+  "aktualisiert": "2026-08-19T16:36:35.509Z"
 }
