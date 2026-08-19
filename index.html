@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.10';
+const APP_VERSION='21.11';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.11',d:'08.2026',items:['CRITICAL FIX: quittungAliase normalisiert','String und Array beide unterstützt','Keine .map() Fehler mehr','Bananen sollte JETZT funktionieren!!!']},
   {v:'21.10',d:'08.2026',items:['DEBUG: Detailliertes findQuittungMatch Logging','Zeigt alle 4 Stufen','Zeigt verfügbare Artikel','MUSS zeigen warum Bananen nicht passt']},
   {v:'21.9',d:'08.2026',items:['MAJOR: Nutzt findQuittungMatch() in Vorschau','4-Stufen-Fallback: Alias → Name → Partial → Fuzzy','Same Logik wie produktive Quittung-Verarbeitung','Bananen sollte JETZT funktionieren! 🎉']},
   {v:'21.8',d:'08.2026',items:['FINAL: Sehr defensives showReceiptPreview','Try-catch überall','Einfache quittungItems Übergabe','Sollte ENDLICH funktionieren']},
@@ -4718,7 +4719,7 @@ function checkZutatenVorhanden(zutaten){
     // 1. Exaktes Match
     if(names.some(n=>n===z))return true;
     // 2. Alias-Match
-    const mitAlias=S.a.find(a=>(a.quittungAliase||[]).some(al=>al.toLowerCase()===z)&&a.menge>0);
+    const mitAlias=S.a.find(a=>((a.quittungAliase||[]).length ? (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) : []).some(al=>al.toLowerCase()===z)&&a.menge>0);
     if(mitAlias)return true;
     // 3. Levenshtein (max 2 Fehler)
     const levenMatches=S.a.filter(a=>a.menge>0&&levenshteinDistance(a.name,zutat)<=2);
@@ -4775,7 +4776,7 @@ function renderRezepte(){
       // 1. Exaktes Match
       if(names.some(n=>n===zutat.toLowerCase()))return true;
       // 2. Alias-Match
-      const mitAlias=S.a.find(a=>(a.quittungAliase||[]).some(al=>al.toLowerCase()===zutat.toLowerCase())&&a.menge>0);
+      const mitAlias=S.a.find(a=>((a.quittungAliase||[]).length ? (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) : []).some(al=>al.toLowerCase()===zutat.toLowerCase())&&a.menge>0);
       if(mitAlias)return true;
       // 3. Levenshtein (max 2 Fehler)
       const levenMatches=S.a.filter(a=>a.menge>0&&levenshteinDistance(a.name,zutat)<=2);
@@ -4887,7 +4888,7 @@ function showRezeptDetail(el,fromArtikelId){
     // 1. Exaktes Match
     if(names.some(n=>n===zutat.toLowerCase()))return true;
     // 2. Alias-Match
-    const mitAlias=S.a.find(a=>(a.quittungAliase||[]).some(al=>al.toLowerCase()===zutat.toLowerCase())&&a.menge>0);
+    const mitAlias=S.a.find(a=>((a.quittungAliase||[]).length ? (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) : []).some(al=>al.toLowerCase()===zutat.toLowerCase())&&a.menge>0);
     if(mitAlias)return true;
     // 3. Levenshtein (max 2 Fehler)
     const levenMatches=S.a.filter(a=>a.menge>0&&levenshteinDistance(a.name,zutat)<=2);
@@ -5070,7 +5071,7 @@ function showRezeptGekocht(rezeptId){
     lagerArtikel=S.a.filter(a=>a.menge>0).find(a=>a.name.toLowerCase()===zutat.toLowerCase());
     // 2. Alias-Match
     if(!lagerArtikel){
-      lagerArtikel=S.a.filter(a=>a.menge>0).find(a=>(a.quittungAliase||[]).some(al=>al.toLowerCase()===zutat.toLowerCase()));
+      lagerArtikel=S.a.filter(a=>a.menge>0).find(a=>((a.quittungAliase||[]).length ? (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) : []).some(al=>al.toLowerCase()===zutat.toLowerCase()));
     }
     // 3. Levenshtein (max 2 Fehler für Schreibvarianten)
     if(!lagerArtikel){
@@ -7786,7 +7787,7 @@ function findQuittungMatch(name){
   // 1. Exakter Alias-Match
   console.log('   Stufe 1: Alias exakt?');
   let m=S.a.find(a=>{
-    const has = (a.quittungAliase||[]).some(al=>al.toLowerCase().trim()===nl);
+    const has = ((a.quittungAliase||[]).length ? (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) : []).some(al=>al.toLowerCase().trim()===nl);
     if(has) console.log('   ✓ Found via Alias exakt: '+a.name);
     return has;
   });
@@ -7804,7 +7805,7 @@ function findQuittungMatch(name){
   // 3. Alias/Name Partial
   console.log('   Stufe 3: Partial match?');
   m=S.a.find(a=>{
-    const found = (a.quittungAliase||[]).some(al=>{
+    const found = ((a.quittungAliase||[]).length ? (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) : []).some(al=>{
       const al2=al.toLowerCase().trim();
       const match = al2.includes(nl)||nl.includes(al2);
       if(match) console.log('   ✓ Found via Alias partial: '+al+' <-> '+nl);
@@ -7856,7 +7857,7 @@ function filterQuittungSuche(idx){
   const treffer=S.a.filter(a=>{
     if(!q)return true;
     if(a.name.toLowerCase().includes(q))return true;
-    if((a.quittungAliase||[]).some(al=>al.toLowerCase().includes(q)))return true;
+    if(((a.quittungAliase||[]).length ? (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) : []).some(al=>al.toLowerCase().includes(q)))return true;
     return false;
   }).slice(0,30);
   if(!treffer.length){
@@ -7881,7 +7882,7 @@ function renderAliasUebersicht(){
     '<div style="margin-bottom:12px">'+
       '<div style="font-size:13px;font-weight:600;color:var(--tx);margin-bottom:6px">'+esc(a.name)+'</div>'+
       '<div style="display:flex;flex-wrap:wrap;gap:6px">'+
-        a.quittungAliase.map((al,i)=>
+        ((typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) || []).map((al,i)=>
           '<span style="display:inline-flex;align-items:center;gap:4px;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:3px 10px;font-size:12px;color:var(--tx)">'+
             esc(al)+
             '<button onclick="delAliasFromSettings('+a.id+','+i+',this)" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:15px;line-height:1;padding:0 0 0 4px">×</button>'+
