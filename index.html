@@ -538,11 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.22';
+const APP_VERSION='21.23';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'21.22',d:'08.2026',items:['🔍 STEP-BY-STEP DEBUG-Logs','Nach quittungItems Zuweisung','Nach Validierung','Vor/Nach Auto-Matching','Findet wo der Code stoppt']},
+  {v:'21.23',d:'08.2026',items:['🎉 THE FIX!!! lagerMatch wird auch gesetzt wenn lagerArtikelId vorhanden','Badge prüft auf lagerMatch (nicht nur lagerArtikelId)','Wenn ID vom Auto-Matching: lagerMatch = true','BANANEN SOLLTE JETZT GRÜN SEIN!!!']},
   {v:'21.21',d:'08.2026',items:['DEBUG: Massive Logs für Auto-Matching','Zeigt quittungItems BEFORE/AFTER','Mit 🤖🤖🤖 Markierung','Aufbau für Fehlersuche']},
   {v:'21.19',d:'08.2026',items:['DEBUG: Umfangreiche Logs für Matching-Problem','Zeigt quittungItems nach Matching','Zeigt lagerArtikelId in renderQuittungUebersicht','Hilft zu finden warum Artikel nicht grün angezeigt wird']},
   {v:'21.18',d:'08.2026',items:['CRITICAL FIX: Validierung blockierte Auto-Matching','Validierung nun in separatem try/catch','Auto-Matching läuft IMMER (auch wenn Validierung fehlschlägt','lagerArtikelId wird jetzt korrekt gesetzt']},
@@ -4377,6 +4377,10 @@ function showReceiptPreview(positions){
         } else {
           console.log('❌ findQuittungMatch NOT found für:', p.name);
         }
+      } else {
+        // WICHTIG: Wenn ID schon da ist (z.B. vom Auto-Matching), auch lagerMatch setzen!
+        p.lagerMatch = true;
+        console.log('✓ lagerArtikelId bereits vorhanden:', p.lagerArtikelId, '→ lagerMatch=true');
       }
     } catch(e) {
       console.error('❌ Error in findQuittungMatch:', e.message);
