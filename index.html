@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.3';
+const APP_VERSION='22.4';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.4',d:'19.08.2026',items:['🐛 MEGA-BUG FIX: parseReceiptPosition() Portion-Box gab falsche Werte zurück','menge: 20 → 2 (korrigiert)','einheit: Stk → Stange (korrigiert)','preisProEinheit: berechnet mit anzahlPackungen nicht alte menge','Dialog zeigt JETZT die korrekten Werte: 2 Stange à 53.00 = 106.00']},
   {v:'22.3',d:'19.08.2026',items:['🐛 BugFix: Korrigierte Werte von parseReceiptPosition() werden jetzt in quittungItems gespeichert','Portion-Box: 20 Stk → 2 Packungen (korrigiert)','Loose-Ware: Einzelpreise korrekt berechnet','Dialog zeigt jetzt die KORRIGIERTEN Werte, nicht die Rohwerte']},
   {v:'22.2',d:'19.08.2026',items:['✨ Neuer Dialog für Artikel-Bearbeitung','Menge + Einheit (Dropdown: Stk/Stange/Packung/kg/g/l/ml)','Einzelpreis Netto (CHF) statt Brutto/Rabatt','Gesamtpreis automatisch berechnet (Menge × Einzelpreis)']},
   {v:'22.1',d:'19.08.2026',items:['✅ Debug-Modus OPTIONAL: Einstellungen → 🔧 Debug-Modus aktivieren','Nach Scan: Normal läuft renderQuittungUebersicht() (KEINE Debug-Fenster)','Debug-Fenster nur wenn manuell aktiviert','Step-by-Step Interface bleibt erhalten für Fehlersuche']},
@@ -4596,11 +4597,11 @@ function parseReceiptPosition(p){
       return {
         name: name,
         type: 'Verpackt (Portion-Box)',
-        menge: menge,
+        menge: anzahlPackungen,  // ← KORRIGIERT! (nicht menge!)
         mengeInPackungen: anzahlPackungen,
         packSize: packSize,
-        einheit: 'Stk',
-        preisProEinheit: menge > 0 ? nettoPreis / menge : nettoPreis,
+        einheit: 'Stange',  // ← KORRIGIERT! (nicht 'Stk'!)
+        preisProEinheit: anzahlPackungen > 0 ? nettoPreis / anzahlPackungen : nettoPreis,  // ← KORRIGIERT!
         preis: nettoPreis,
         rabatt: rabatt,
         lagerArtikelId: p.lagerArtikelId,  // ← WICHTIG!
