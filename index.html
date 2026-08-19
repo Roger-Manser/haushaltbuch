@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.16';
+const APP_VERSION='21.17';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.17',d:'08.2026',items:['CRITICAL FIX: Auto-Matching zeitlich verschoben','Matching läuft SOFORT nach Parsing (nicht in renderQuittungUebersicht)','Vermeidet Early-Return im Vorschau-Modus','lagerArtikelId wird JETZT korrekt gesetzt']},
   {v:'21.16',d:'08.2026',items:['BUGFIX: Position wird jetzt mit Artikel-ID aktualisiert','Matching-Ergebnis wird in Position gespeichert','Grüne Anzeige (im Lager) funktioniert jetzt','Auto-Matching ist jetzt visuell sichtbar']},
   {v:'21.15',d:'08.2026',items:['IMPROVED: Robustere Text-Normalisierung','Lowercase + Trim + Single Whitespace','Case-insensitive Matching','Mehrfache Leerzeichen werden ignoriert']},
   {v:'21.14',d:'08.2026',items:['REFACTOR: Matching-Logik vereinfacht','Nur 2 Vergleiche: Name + Alias (100%)','Kein Partial/Fuzzy mehr','Basis für Optimierungen']},
@@ -7750,6 +7751,19 @@ async function handleQuittungFile(input){
       return;
     }
 
+    // AUTO-MATCHING: Versuche sofort Artikel zuzuordnen
+    console.log('🤖 AUTO-MATCHING startet für '+quittungItems.length+' Positionen');
+    quittungItems.forEach((it,idx)=>{
+      if(it.lagerArtikelId)return; // Schon zugeordnet
+      const found=findQuittungMatch(it.name);
+      if(found){
+        it.lagerArtikelId=found.id;
+        console.log('  ✅ ['+idx+'] "'+it.name+'" → Artikel ID '+found.id);
+      }else{
+        console.log('  ❌ ['+idx+'] "'+it.name+'" → Keine Zuordnung');
+      }
+    });
+
     // Übersicht zeigen
     renderQuittungUebersicht(parsed.datum||todayISO());
 
@@ -7805,13 +7819,8 @@ function renderQuittungUebersicht(datum){
   '</div>';
   h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">🔍 VORSCHAU-MODUS AKTIV — Alle Positionen überprüfen:</div>';
   h+=quittungItems.map((it,i)=>{
-    const existing=findQuittungMatch(it.name);
-    // WICHTIG: Position mit Artikel-ID aktualisieren wenn Match gefunden
-    if(existing && !it.lagerArtikelId){
-      it.lagerArtikelId=existing.id;
-      console.log('✅ Position automatisch zugeordnet: '+it.name+' → Artikel ID '+existing.id);
-    }
-    const badge=existing?'<span style="font-size:10px;background:var(--al);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px">im Lager</span>':'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:6px">neu</span>';
+    // Matching wurde bereits vorher gemacht - hier nur noch Badge setzen
+    const badge=it.lagerArtikelId?'<span style="font-size:10px;background:var(--al);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px">im Lager</span>':'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:6px">neu</span>';
     if(it._done){
       return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd);opacity:.5">'+
         '<div><div style="font-size:14px;font-weight:500;text-decoration:line-through">'+esc(it.name)+'</div>'+
