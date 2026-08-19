@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.12';
+const APP_VERSION='21.13';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.13',d:'08.2026',items:['IMPROVED: Auto-Sync mit Logeintrag-Timestamps','Nutzt neuestesten Eintrag aus S.log[].zeit','Vergleicht Max(hb_lastModified, Log-Zeit)','Debug-Info in Console für Troubleshooting']},
   {v:'21.12',d:'08.2026',items:['NEW: Auto-Sync beim App-Start','Prüft ob Lokal oder GitHub neuer ist','Lade automatisch vom neueren Stand','Timestamp-Tracking: hb_lastModified in localStorage']},
   {v:'21.11',d:'08.2026',items:['CRITICAL FIX: quittungAliase normalisiert','String und Array beide unterstützt','Keine .map() Fehler mehr','Bananen sollte JETZT funktionieren!!!']},
   {v:'21.10',d:'08.2026',items:['DEBUG: Detailliertes findQuittungMatch Logging','Zeigt alle 4 Stufen','Zeigt verfügbare Artikel','MUSS zeigen warum Bananen nicht passt']},
@@ -846,8 +847,10 @@ async function checkDataVersionOnStartup(){
   if(!gh.tok||!gh.own||!gh.repo)return; // GitHub nicht konfiguriert
   if(!navigator.onLine)return; // Offline: ignorieren
   try{
-    // 1. Lokal: letzter Log-Eintrag oder gespeicherter Timestamp
-    const localModified=parseInt(localStorage.getItem('hb_lastModified')||'0')||(S.log?.length?S.log[S.log.length-1].zeit:0);
+    // 1. Lokal: neuester Timestamp (Max von hb_lastModified + letztem Log-Eintrag)
+    const savedModified=parseInt(localStorage.getItem('hb_lastModified')||'0');
+    const logModified=S.log?.length?Math.max(...S.log.map(l=>l.zeit||0)):0;
+    const localModified=Math.max(savedModified,logModified);
     
     // 2. GitHub: haushaltbuch.json laden
     const ghFile=await ghGet('haushaltbuch.json');
@@ -860,6 +863,15 @@ async function checkDataVersionOnStartup(){
     
     // 3. Vergleichen
     const diff=ghModified-localModified;
+    
+    // Debug-Info
+    console.log('📊 Data Version Check:',{
+      lokalTimestamp: new Date(localModified).toLocaleString('de-CH'),
+      ghTimestamp: new Date(ghModified).toLocaleString('de-CH'),
+      diff_ms: diff,
+      lokalArtikel: lokalCount,
+      ghArtikel: ghCount
+    });
     
     // Wenn <2s Unterschied: ignorieren
     if(Math.abs(diff)<2000)return;
