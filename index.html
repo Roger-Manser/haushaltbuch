@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.17';
+const APP_VERSION='21.18';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.18',d:'08.2026',items:['CRITICAL FIX: Validierung blockierte Auto-Matching','Validierung nun in separatem try/catch','Auto-Matching läuft IMMER (auch wenn Validierung fehlschlägt','lagerArtikelId wird jetzt korrekt gesetzt']},
   {v:'21.17',d:'08.2026',items:['CRITICAL FIX: Auto-Matching zeitlich verschoben','Matching läuft SOFORT nach Parsing (nicht in renderQuittungUebersicht)','Vermeidet Early-Return im Vorschau-Modus','lagerArtikelId wird JETZT korrekt gesetzt']},
   {v:'21.16',d:'08.2026',items:['BUGFIX: Position wird jetzt mit Artikel-ID aktualisiert','Matching-Ergebnis wird in Position gespeichert','Grüne Anzeige (im Lager) funktioniert jetzt','Auto-Matching ist jetzt visuell sichtbar']},
   {v:'21.15',d:'08.2026',items:['IMPROVED: Robustere Text-Normalisierung','Lowercase + Trim + Single Whitespace','Case-insensitive Matching','Mehrfache Leerzeichen werden ignoriert']},
@@ -7721,28 +7722,32 @@ async function handleQuittungFile(input){
     
     // PREIS-VALIDIERUNGS-PASS: Erkenne KI-Fehler bei Brutto-Preisen
     console.log('🔍 VALIDIERUNG STARTET für '+quittungItems.length+' Artikel');
-    quittungItems.forEach((it,idx) => {
-      console.log('  ['+idx+'] '+it.name+': menge='+it.menge+', brutto='+it.preis_brutto+', rabatt='+it.rabatt+', netto='+it.preis_netto);
-      
-      // Problem: Wenn menge > 1 und preis_netto < menge * 5
-      // → KI hat wahrscheinlich Einzelpreis gegeben
-      if(it.menge > 1 && it.preis_netto) {
-        const preisProEinheit = it.preis_netto / it.menge;
+    try{
+      quittungItems.forEach((it,idx) => {
+        console.log('  ['+idx+'] '+it.name+': menge='+it.menge+', brutto='+it.preis_brutto+', rabatt='+it.rabatt+', netto='+it.preis_netto);
         
-        // Wenn Preis pro Einheit < 10 CHF und menge ist große Zahl
-        // → Wahrscheinlich Einzelpreis-Fehler
-        if(preisProEinheit > 0.5 && preisProEinheit < 10 && it.menge > 5) {
-          console.log('  🔧 KORREKTUR erkannt: Einzelpreis '+preisProEinheit.toFixed(2)+' × '+it.menge+' Stk');
+        // Problem: Wenn menge > 1 und preis_netto < menge * 5
+        // → KI hat wahrscheinlich Einzelpreis gegeben
+        if(it.menge > 1 && it.preis_netto) {
+          const preisProEinheit = it.preis_netto / it.menge;
           
-          // ABER: Was ist der KORREKTE Gesamtpreis?
-          // Wenn rabatt vorhanden: netto + rabatt = brutto
-          const bruttoKorrekt = (it.preis_netto || 0) + (it.rabatt || 0);
-          console.log('    Brutto korrigiert: '+bruttoKorrekt);
-          
-          it.preis_brutto = bruttoKorrekt;
+          // Wenn Preis pro Einheit < 10 CHF und menge ist große Zahl
+          // → Wahrscheinlich Einzelpreis-Fehler
+          if(preisProEinheit > 0.5 && preisProEinheit < 10 && it.menge > 5) {
+            console.log('  🔧 KORREKTUR erkannt: Einzelpreis '+preisProEinheit.toFixed(2)+' × '+it.menge+' Stk');
+            
+            // ABER: Was ist der KORREKTE Gesamtpreis?
+            // Wenn rabatt vorhanden: netto + rabatt = brutto
+            const bruttoKorrekt = (it.preis_netto || 0) + (it.rabatt || 0);
+            console.log('    Brutto korrigiert: '+bruttoKorrekt);
+            
+            it.preis_brutto = bruttoKorrekt;
+          }
         }
-      }
-    });
+      });
+    }catch(ve){
+      console.warn('⚠️ Validierungs-Fehler (ignoriert):', ve.message);
+    }
     quittungGeschaeft=parsed.geschaeft||'';
     quittungIdx=0;
 
