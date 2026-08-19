@@ -6,14 +6,14 @@
       "marke": "Landi",
       "kat": "Genussmittel",
       "lager": "Schlof",
-      "menge": 3,
+      "menge": 4,
       "einheit": "Kiste",
       "mindest": 2,
       "barcode": "7611703611962",
       "preis": 25.2,
       "packMenge": 6,
       "packEinheit": "Flasche",
-      "kaufdatum": "2026-08-10",
+      "kaufdatum": "2026-08-19",
       "ablaufdatum": "",
       "notiz": "DE - Nährwert und Zutatenverzeichnis Zutaten: Trauben, rektifiziertes Traubenmostkonzentrat, Saccharose, Säureregulatoren: Apfelsäure, Milchsäure, Weinsäure, Stabilisatoren: Citronensäure, Hefe-Mannoproteine zur Weinsteinstabilisierung, Kaliumpolyaspartat, Metaweinsäure, Antioxidantien: Kaliumsorbat, L-Ascorbinsäure, Sulfite, Gase und Packgase: unter Schutzatmosphäre abgefüllt\n 100 ml enthalten durchschnittlich Energie Fett ..davon gesättigte Fettsäuren Kohlenhydrate ..davon Zucker Eiweiss Salz 307 kJ (73 kcal) 0 g 0 g 1.3 g 0.5 g 0 g 0 g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781961271197_17819612557295906724604013972.jpg?t=1787150802249",
@@ -105,13 +105,40 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-08-19",
+          "preis": 25.2,
+          "menge": 4,
+          "einheit": "Kiste",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-08-19",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-08-19",
+          "preis": 0,
+          "menge": 2,
+          "einheit": "Kiste",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
       "packungen": [
         {
-          "id": 3,
-          "menge": 3,
-          "kaufdatum": "2026-08-10",
+          "id": 6,
+          "menge": 4,
+          "kaufdatum": "2026-08-19",
           "ablaufdatum": ""
         }
       ],
@@ -211,7 +238,7 @@
       "marke": "Schützengarten",
       "kat": "Genussmittel",
       "lager": "Kühlschrank unten",
-      "menge": 5,
+      "menge": 4,
       "einheit": "Pkg",
       "mindest": 1,
       "barcode": "76137099",
@@ -232,15 +259,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-08-19",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Coop"
         }
       ],
       "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-06-20",
-          "ablaufdatum": ""
-        },
         {
           "id": 3,
           "menge": 4,
@@ -485,7 +515,7 @@
       "marke": "Appenzeller Bier",
       "kat": "Getränke",
       "lager": "Schlof",
-      "menge": 4,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7611889130271",
@@ -497,7 +527,34 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782210180284_17822101694548964515925389319696.jpg?t=1787150802249",
       "fotoPath": "1782210180284_17822101694548964515925389319696.jpg",
-      "preisHistorie": []
+      "preisHistorie": [
+        {
+          "datum": "2026-08-19",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": ""
+        },
+        {
+          "datum": "2026-08-19",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": ""
+        }
+      ],
+      "packungen": [
+        {
+          "id": 7,
+          "menge": 2,
+          "kaufdatum": "2026-06-23",
+          "ablaufdatum": "2028-01-08"
+        }
+      ]
     },
     {
       "id": 14,
@@ -9581,6 +9638,56 @@
           "ablaufdatum": "2026-03-31"
         }
       ]
+    },
+    {
+      "id": 258,
+      "name": "Einmachglas 0.25cl",
+      "marke": "Rondo",
+      "kat": "Diverses",
+      "lager": "Schlof",
+      "kaufort": "Landi",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7611330663662",
+      "barcodes": [],
+      "preis": 6.95,
+      "packMenge": 4,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-08-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-19",
+          "preis": 6.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-08-19",
+          "preis": 6.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
+        }
+      ],
+      "letzteEingangHeute": "16:55",
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-08-19",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -18655,7 +18762,98 @@
       "aktion": false,
       "datum": "2026-08-19",
       "zeit": 1787151054452
+    },
+    {
+      "t": "ein",
+      "aid": 258,
+      "name": "Einmachglas 0.25cl",
+      "lager": "Schlof",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 6.95,
+      "aktion": false,
+      "datum": "2026-08-19",
+      "zeit": 1787151318324
+    },
+    {
+      "t": "ein",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 4,
+      "einheit": "Kiste",
+      "preis": 25.2,
+      "aktion": false,
+      "datum": "2026-08-19",
+      "zeit": 1787151342342
+    },
+    {
+      "t": "aus",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-19",
+      "zeit": 1787151353573
+    },
+    {
+      "t": "aus",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 2,
+      "einheit": "Kiste",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-19",
+      "zeit": 1787151384370
+    },
+    {
+      "t": "aus",
+      "aid": 13,
+      "name": "Bschorle",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-19",
+      "zeit": 1787151447391
+    },
+    {
+      "t": "aus",
+      "aid": 13,
+      "name": "Bschorle",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-19",
+      "zeit": 1787151449381
+    },
+    {
+      "t": "aus",
+      "aid": 6,
+      "name": "Schützengarten Lager Bier",
+      "lager": "Kühlschrank unten",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-19",
+      "zeit": 1787151466331
     }
   ],
-  "aktualisiert": "2026-08-19T14:53:17.977Z"
+  "aktualisiert": "2026-08-19T14:58:12.765Z"
 }
