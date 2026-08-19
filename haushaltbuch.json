@@ -7685,7 +7685,7 @@
       "kat": "Genussmittel",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stange",
       "mindest": 2,
       "barcode": "4006396071576",
@@ -7833,12 +7833,21 @@
           "einheit": "Stange",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-08-19",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
         {
-          "id": 2,
-          "menge": 1,
+          "id": 1,
+          "menge": 0,
           "kaufdatum": "2026-08-13",
           "ablaufdatum": ""
         }
@@ -18333,7 +18342,20 @@
       "aktion": false,
       "datum": "2026-08-19",
       "zeit": 1787128500797
+    },
+    {
+      "t": "aus",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-19",
+      "zeit": 1787128528641
     }
   ],
-  "aktualisiert": "2026-08-19T08:35:16.338Z"
+  "aktualisiert": "2026-08-19T08:35:35.392Z"
 }
