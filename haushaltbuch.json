@@ -9381,6 +9381,47 @@
           "ablaufdatum": "2029-01-01"
         }
       ]
+    },
+    {
+      "id": 254,
+      "name": "test",
+      "marke": "",
+      "kat": "Diverses",
+      "lager": "Küche",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-08-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-19",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "letzteEingangHeute": "10:59",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-08-19",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -18388,7 +18429,20 @@
       "k": "Konserven & Trockenware",
       "aktion": false,
       "kaufort": "Coop"
+    },
+    {
+      "t": "ein",
+      "aid": 254,
+      "name": "test",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-19",
+      "zeit": 1787129940584
     }
   ],
-  "aktualisiert": "2026-08-19T08:58:22.196Z"
+  "aktualisiert": "2026-08-19T08:59:20.875Z"
 }
