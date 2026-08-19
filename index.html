@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.18';
+const APP_VERSION='21.19';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.19',d:'08.2026',items:['DEBUG: Umfangreiche Logs für Matching-Problem','Zeigt quittungItems nach Matching','Zeigt lagerArtikelId in renderQuittungUebersicht','Hilft zu finden warum Artikel nicht grün angezeigt wird']},
   {v:'21.18',d:'08.2026',items:['CRITICAL FIX: Validierung blockierte Auto-Matching','Validierung nun in separatem try/catch','Auto-Matching läuft IMMER (auch wenn Validierung fehlschlägt','lagerArtikelId wird jetzt korrekt gesetzt']},
   {v:'21.17',d:'08.2026',items:['CRITICAL FIX: Auto-Matching zeitlich verschoben','Matching läuft SOFORT nach Parsing (nicht in renderQuittungUebersicht)','Vermeidet Early-Return im Vorschau-Modus','lagerArtikelId wird JETZT korrekt gesetzt']},
   {v:'21.16',d:'08.2026',items:['BUGFIX: Position wird jetzt mit Artikel-ID aktualisiert','Matching-Ergebnis wird in Position gespeichert','Grüne Anzeige (im Lager) funktioniert jetzt','Auto-Matching ist jetzt visuell sichtbar']},
@@ -7768,6 +7769,12 @@ async function handleQuittungFile(input){
         console.log('  ❌ ['+idx+'] "'+it.name+'" → Keine Zuordnung');
       }
     });
+    
+    // DEBUG: Show alle quittungItems nach Matching
+    console.log('📋 quittungItems nach AUTO-MATCHING:');
+    quittungItems.forEach((it,i)=>{
+      console.log('  ['+i+'] '+it.name+' - lagerArtikelId: '+it.lagerArtikelId+' (type: '+(typeof it.lagerArtikelId)+')');
+    });
 
     // Übersicht zeigen
     renderQuittungUebersicht(parsed.datum||todayISO());
@@ -7823,9 +7830,11 @@ function renderQuittungUebersicht(datum){
     (datum?' · '+fmtDateCH(datum):'')+
   '</div>';
   h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">🔍 VORSCHAU-MODUS AKTIV — Alle Positionen überprüfen:</div>';
+  console.log('🎨 renderQuittungUebersicht: quittungItems=', quittungItems);
   h+=quittungItems.map((it,i)=>{
     // Matching wurde bereits vorher gemacht - hier nur noch Badge setzen
     const badge=it.lagerArtikelId?'<span style="font-size:10px;background:var(--al);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px">im Lager</span>':'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:6px">neu</span>';
+    console.log('  ['+i+'] '+it.name+' → lagerArtikelId='+it.lagerArtikelId+' → badge='+(it.lagerArtikelId?'grün':'rot'));
     if(it._done){
       return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd);opacity:.5">'+
         '<div><div style="font-size:14px;font-weight:500;text-decoration:line-through">'+esc(it.name)+'</div>'+
