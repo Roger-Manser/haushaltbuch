@@ -9431,6 +9431,106 @@
           "ablaufdatum": "2026-09-08"
         }
       ]
+    },
+    {
+      "id": 255,
+      "name": "Pinienkerne",
+      "marke": "Migros Bio",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 1,
+      "barcode": "7613312289532",
+      "barcodes": [],
+      "preis": 5.6,
+      "packMenge": 75,
+      "packEinheit": "g",
+      "kaufdatum": "2026-08-19",
+      "ablaufdatum": "2026-12-12",
+      "notiz": "Bio\nNutri-Score B\nPro 100g/ml: 713 kcal, Fett 68g, KH 9.4g, Eiweiss 14g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787150872090_off.jpg?t=1787150918459",
+      "fotoPath": "1787150872090_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-19",
+          "preis": 5.6,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-08-19",
+          "preis": 5.6,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "letzteEingangHeute": "16:48",
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-08-19",
+          "ablaufdatum": "2026-12-12"
+        }
+      ]
+    },
+    {
+      "id": 256,
+      "name": "Wienerli Migros",
+      "marke": "Migros",
+      "kat": "Fleisch & Fisch",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7613269054269",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 4,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-08-19",
+      "ablaufdatum": "2026-08-26",
+      "notiz": "Pro 100g/ml: 257 kcal, Fett 22g, KH 0.7g, Eiweiss 14g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787150928801_off.jpg?t=1787150962896",
+      "fotoPath": "1787150928801_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-19",
+          "preis": 2.8,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-08-19",
+          "preis": 2.8,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Migros"
+        }
+      ],
+      "letzteEingangHeute": "16:49",
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-08-19",
+          "ablaufdatum": "2026-08-26"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -9459,7 +9559,8 @@
     "Reinigung & Pflege",
     "Diverses",
     "Genussmittel",
-    "Medikament"
+    "Medikament",
+    "Fertiggerichte"
   ],
   "einheiten": [
     "Stk",
@@ -18465,7 +18566,33 @@
       "aktion": false,
       "datum": "2026-08-19",
       "zeit": 1787150854870
+    },
+    {
+      "t": "ein",
+      "aid": 255,
+      "name": "Pinienkerne",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 5.6,
+      "aktion": false,
+      "datum": "2026-08-19",
+      "zeit": 1787150918460
+    },
+    {
+      "t": "ein",
+      "aid": 256,
+      "name": "Wienerli Migros",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 2.8,
+      "aktion": true,
+      "datum": "2026-08-19",
+      "zeit": 1787150962896
     }
   ],
-  "aktualisiert": "2026-08-19T14:48:19.100Z"
+  "aktualisiert": "2026-08-19T14:50:34.200Z"
 }
