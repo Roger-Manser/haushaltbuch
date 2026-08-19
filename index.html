@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.15';
+const APP_VERSION='21.16';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.16',d:'08.2026',items:['BUGFIX: Position wird jetzt mit Artikel-ID aktualisiert','Matching-Ergebnis wird in Position gespeichert','Grüne Anzeige (im Lager) funktioniert jetzt','Auto-Matching ist jetzt visuell sichtbar']},
   {v:'21.15',d:'08.2026',items:['IMPROVED: Robustere Text-Normalisierung','Lowercase + Trim + Single Whitespace','Case-insensitive Matching','Mehrfache Leerzeichen werden ignoriert']},
   {v:'21.14',d:'08.2026',items:['REFACTOR: Matching-Logik vereinfacht','Nur 2 Vergleiche: Name + Alias (100%)','Kein Partial/Fuzzy mehr','Basis für Optimierungen']},
   {v:'21.13',d:'08.2026',items:['IMPROVED: Auto-Sync mit Logeintrag-Timestamps','Nutzt neuestesten Eintrag aus S.log[].zeit','Vergleicht Max(hb_lastModified, Log-Zeit)','Debug-Info in Console für Troubleshooting']},
@@ -7805,6 +7806,11 @@ function renderQuittungUebersicht(datum){
   h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">🔍 VORSCHAU-MODUS AKTIV — Alle Positionen überprüfen:</div>';
   h+=quittungItems.map((it,i)=>{
     const existing=findQuittungMatch(it.name);
+    // WICHTIG: Position mit Artikel-ID aktualisieren wenn Match gefunden
+    if(existing && !it.lagerArtikelId){
+      it.lagerArtikelId=existing.id;
+      console.log('✅ Position automatisch zugeordnet: '+it.name+' → Artikel ID '+existing.id);
+    }
     const badge=existing?'<span style="font-size:10px;background:var(--al);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px">im Lager</span>':'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:6px">neu</span>';
     if(it._done){
       return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd);opacity:.5">'+
