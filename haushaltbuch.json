@@ -9531,6 +9531,56 @@
           "ablaufdatum": "2026-08-26"
         }
       ]
+    },
+    {
+      "id": 257,
+      "name": "Lasagne Bolognese",
+      "marke": "Anna's best",
+      "kat": "Fertiggerichte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "2614414849186",
+      "barcodes": [],
+      "preis": 7.95,
+      "packMenge": 900,
+      "packEinheit": "g",
+      "kaufdatum": "2026-08-19",
+      "ablaufdatum": "2026-03-31",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787150990684_17871509832506360106706507115313.jpg?t=1787151054451",
+      "fotoPath": "1787150990684_17871509832506360106706507115313.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-19",
+          "preis": 7.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-08-19",
+          "preis": 7.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "letzteEingangHeute": "16:50",
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-08-19",
+          "ablaufdatum": "2026-03-31"
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -18592,7 +18642,20 @@
       "aktion": true,
       "datum": "2026-08-19",
       "zeit": 1787150962896
+    },
+    {
+      "t": "ein",
+      "aid": 257,
+      "name": "Lasagne Bolognese",
+      "lager": "Kühlschrank oben",
+      "kat": "Fertiggerichte",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 7.95,
+      "aktion": false,
+      "datum": "2026-08-19",
+      "zeit": 1787151054452
     }
   ],
-  "aktualisiert": "2026-08-19T14:50:34.200Z"
+  "aktualisiert": "2026-08-19T14:53:17.977Z"
 }
