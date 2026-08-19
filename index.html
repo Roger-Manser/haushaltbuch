@@ -4683,58 +4683,59 @@ function editPreviewPosition(idx){
   if(!p) return;
   
   const dlg = document.createElement('div');
-  dlg.id = 'edit-preview-dlg-'+idx;
-  dlg.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:9600;display:flex;align-items:center;justify-content:center;padding:8px';
+  dlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.8);z-index:9999;display:flex;align-items:center;justify-content:center';
   
-  const html = '<div style="background:var(--sf);border-radius:var(--r);padding:16px;max-width:90vw;max-width:min(90vw,400px);max-height:80vh;overflow-y:auto">'+
-    '<h3 style="margin:0 0 12px;color:var(--tx)">Artikel bearbeiten: '+esc(p.name)+'</h3>'+
-    '<div style="margin-bottom:12px">'+
-      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Menge:</label>'+
-      '<input id="em'+idx+'" type="number" value="'+(p.menge||1)+'" step="0.001" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
-    '</div>'+
-    '<div style="margin-bottom:12px">'+
-      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Einheit:</label>'+
-      '<select id="ee'+idx+'" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
-        '<option value="Stk" '+(p.einheit==='Stk'?'selected':'')+'>Stk</option>'+
-        '<option value="Stangen" '+(p.einheit==='Stangen'?'selected':'')+'>Stangen</option>'+
-        '<option value="Packungen" '+(p.einheit==='Packungen'?'selected':'')+'>Packungen</option>'+
-        '<option value="kg" '+(p.einheit==='kg'?'selected':'')+'>kg</option>'+
-        '<option value="g" '+(p.einheit==='g'?'selected':'')+'>g</option>'+
-        '<option value="l" '+(p.einheit==='l'?'selected':'')+'>l</option>'+
-      '</select>'+
-    '</div>'+
-    '<div style="margin-bottom:12px">'+
-      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Preis Brutto (CHF):</label>'+
-      '<input id="ep'+idx+'" type="number" value="'+(p.preis_brutto||p.preis||0).toFixed(2)+'" step="0.01" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
-    '</div>'+
-    '<div style="margin-bottom:12px">'+
-      '<label style="display:block;color:var(--t2);font-size:12px;margin-bottom:4px">Rabatt (CHF):</label>'+
-      '<input id="er'+idx+'" type="number" value="'+(p.rabatt||0).toFixed(2)+'" step="0.01" style="width:100%;padding:8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx)">'+
-    '</div>'+
-    '<div style="display:flex;gap:8px">'+
-      '<button id="es'+idx+'" style="flex:1;padding:10px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-weight:600">✓ Speichern</button>'+
-      '<button id="ec'+idx+'" style="flex:1;padding:10px;background:var(--wn);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-weight:600">✗ Abbrechen</button>'+
-    '</div>'+
-  '</div>';
+  dlg.innerHTML = `
+    <div style="background:#222;color:#fff;padding:20px;border-radius:8px;width:90%;max-width:400px">
+      <h2 style="margin:0 0 15px">${p.name}</h2>
+      
+      <div style="margin-bottom:10px">
+        <label>Menge:</label>
+        <input type="number" id="menge_${idx}" value="${p.menge||1}" step="0.01" style="width:100%;padding:8px;margin-top:5px">
+      </div>
+      
+      <div style="margin-bottom:10px">
+        <label>Einheit:</label>
+        <select id="einheit_${idx}" style="width:100%;padding:8px;margin-top:5px">
+          <option value="Stk" ${p.einheit==='Stk'?'selected':''}>Stk</option>
+          <option value="Stangen" ${p.einheit==='Stangen'?'selected':''}>Stangen</option>
+          <option value="kg" ${p.einheit==='kg'?'selected':''}>kg</option>
+          <option value="g" ${p.einheit==='g'?'selected':''}>g</option>
+          <option value="l" ${p.einheit==='l'?'selected':''}>l</option>
+        </select>
+      </div>
+      
+      <div style="margin-bottom:15px">
+        <label>Preis (CHF):</label>
+        <input type="number" id="preis_${idx}" value="${(p.preis_brutto||p.preis||0).toFixed(2)}" step="0.01" style="width:100%;padding:8px;margin-top:5px">
+      </div>
+      
+      <div style="display:flex;gap:10px">
+        <button onclick="saveEdit(${idx})" style="flex:1;padding:10px;background:#4CAF50;color:#fff;border:none;cursor:pointer;border-radius:4px">Speichern</button>
+        <button onclick="this.closest('div').parentElement.remove()" style="flex:1;padding:10px;background:#f44336;color:#fff;border:none;cursor:pointer;border-radius:4px">Abbrechen</button>
+      </div>
+    </div>
+  `;
   
-  dlg.innerHTML = html;
   document.body.appendChild(dlg);
+}
+
+function saveEdit(idx){
+  const p = quittungItems[idx];
+  p.menge = parseFloat(document.getElementById('menge_'+idx).value) || 1;
+  p.einheit = document.getElementById('einheit_'+idx).value || 'Stk';
+  p.preis_brutto = parseFloat(document.getElementById('preis_'+idx).value) || 0;
+  p.preis = p.preis_brutto;
+  p.preis_netto = p.preis_brutto;
+  p.rabatt = 0;
   
-  document.getElementById('es'+idx).onclick = function(){
-    p.menge = parseFloat(document.getElementById('em'+idx).value) || 1;
-    p.einheit = document.getElementById('ee'+idx).value || 'Stk';
-    p.preis_brutto = parseFloat(document.getElementById('ep'+idx).value) || 0;
-    p.rabatt = parseFloat(document.getElementById('er'+idx).value) || 0;
-    p.preis_netto = p.preis_brutto - p.rabatt;
-    dlg.remove();
-    const receipt = document.getElementById('receipt-preview-dlg');
-    if(receipt) receipt.remove();
-    showReceiptPreview(quittungItems);
-  };
+  // Schließe Dialog
+  document.querySelectorAll('[style*="position:fixed"][style*="z-index:9999"]').forEach(d=>d.remove());
   
-  document.getElementById('ec'+idx).onclick = function(){
-    dlg.remove();
-  };
+  // Neu rendern
+  const receipt = document.getElementById('receipt-preview-dlg');
+  if(receipt) receipt.remove();
+  showReceiptPreview(quittungItems);
 }
   });
 }
