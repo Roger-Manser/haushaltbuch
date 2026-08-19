@@ -4571,7 +4571,9 @@ function parseReceiptPosition(p){
       einheit: einheit,
       preisProEinheit: menge > 0 ? nettoPreis / menge : nettoPreis,
       preis: nettoPreis,
-      rabatt: rabatt
+      rabatt: rabatt,
+      lagerArtikelId: p.lagerArtikelId,  // ← WICHTIG!
+      lagerMatch: p.lagerMatch || !!p.lagerArtikelId  // ← WICHTIG!
     };
   }
   
@@ -4596,7 +4598,9 @@ function parseReceiptPosition(p){
         einheit: 'Stk',
         preisProEinheit: menge > 0 ? nettoPreis / menge : nettoPreis,
         preis: nettoPreis,
-        rabatt: rabatt
+        rabatt: rabatt,
+        lagerArtikelId: p.lagerArtikelId,  // ← WICHTIG!
+        lagerMatch: p.lagerMatch || !!p.lagerArtikelId  // ← WICHTIG!
       };
     }
   }
