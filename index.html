@@ -7559,7 +7559,7 @@ function toast(m){const t=document.getElementById('toast');t.textContent=m;t.cla
 let quittungItems=[]; // erkannte Artikel von der Quittung
 let debugState = {
   mode: false,           // Debug-Modus aktiv?
-  rawResponse: null,     // KI-Response roh
+  rawResponse: null,     // KI-Response roh (GESPEICHERT für Debug!)
   quittungItems: null,   // Geparste Positionen
   matchingDone: false,   // Auto-Matching durchgeführt?
   previewRendered: false,// Vorschau angezeigt?
@@ -7730,6 +7730,10 @@ async function handleQuittungFile(input){
     const clean=text.replace(/```json|```/g,'').trim();
     console.log('📥 KI-Response (raw):', text.slice(0,500));
     console.log('📥 KI-Response (clean):', clean.slice(0,500));
+    
+    // SPEICHERE rawResponse für Debug-Interface
+    debugState.rawResponse = text;
+    
     let parsed;
     try{parsed=JSON.parse(clean);console.log('✓ JSON geparst:', parsed);}catch(pe){
       body.innerHTML='<div style="text-align:center;padding:24px;color:var(--dg)"><div style="font-size:36px;margin-bottom:8px">⚠️</div>Antwort konnte nicht verarbeitet werden.<br><br><div style="font-size:11px;color:var(--t3);margin-top:8px;text-align:left;max-height:120px;overflow:auto;background:var(--bg);padding:8px;border-radius:var(--rs)">'+esc(text.slice(0,500))+'</div></div>';
@@ -7857,10 +7861,13 @@ function renderQuittungUebersicht(datum){
   const body=document.getElementById('quittung-body');
   if(!body)return; // Sicherheit falls körper weg ist
   const ge=quittungGeschaeft;
-  let h='<div style="background:var(--ol);border-radius:var(--rs);padding:10px 14px;margin-bottom:14px;font-size:13px">'+
-    '✓ <strong>'+quittungItems.length+' Artikel</strong> erkannt'+
-    (ge?' · '+esc(ge):'')+
-    (datum?' · '+fmtDateCH(datum):'')+
+  let h='<div style="display:flex;gap:10px;margin-bottom:14px">'+
+    '<div style="background:var(--ol);border-radius:var(--rs);padding:10px 14px;font-size:13px;flex:1">'+
+      '✓ <strong>'+quittungItems.length+' Artikel</strong> erkannt'+
+      (ge?' · '+esc(ge):'')+
+      (datum?' · '+fmtDateCH(datum):'')+
+    '</div>'+
+    '<button onclick="openDebugInterface(debugState.rawResponse)" style="background:var(--ac);color:#fff;border:none;padding:10px 14px;border-radius:var(--rs);cursor:pointer;font-weight:600;font-size:13px;white-space:nowrap">🔧 Debug</button>'+
   '</div>';
   h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">🔍 VORSCHAU-MODUS AKTIV — Alle Positionen überprüfen:</div>';
   console.log('🎨 renderQuittungUebersicht: quittungItems=', quittungItems);
