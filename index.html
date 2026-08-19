@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='21.13';
+const APP_VERSION='21.14';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'21.14',d:'08.2026',items:['REFACTOR: Matching-Logik vereinfacht','Nur 2 Vergleiche: Name + Alias (100%)','Kein Partial/Fuzzy mehr','Basis für Optimierungen']},
   {v:'21.13',d:'08.2026',items:['IMPROVED: Auto-Sync mit Logeintrag-Timestamps','Nutzt neuestesten Eintrag aus S.log[].zeit','Vergleicht Max(hb_lastModified, Log-Zeit)','Debug-Info in Console für Troubleshooting']},
   {v:'21.12',d:'08.2026',items:['NEW: Auto-Sync beim App-Start','Prüft ob Lokal oder GitHub neuer ist','Lade automatisch vom neueren Stand','Timestamp-Tracking: hb_lastModified in localStorage']},
   {v:'21.11',d:'08.2026',items:['CRITICAL FIX: quittungAliase normalisiert','String und Array beide unterstützt','Keine .map() Fehler mehr','Bananen sollte JETZT funktionieren!!!']},
@@ -7841,54 +7842,35 @@ function levenshteinDistance(s1,s2){
 function findQuittungMatch(name){
   console.log('🔎 findQuittungMatch START für: "'+name+'"');
   const nl=name.toLowerCase().trim();
-  console.log('   normalized: "'+nl+'"');
+  console.log('   Quittungstext (normalisiert): "'+nl+'"');
   
-  // 1. Exakter Alias-Match
-  console.log('   Stufe 1: Alias exakt?');
+  // 1. 100% Match mit Lagertext (Name)
+  console.log('   → Vergleiche mit Lagertexten...');
   let m=S.a.find(a=>{
-    const has = ((a.quittungAliase||[]).length ? (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) : []).some(al=>al.toLowerCase().trim()===nl);
-    if(has) console.log('   ✓ Found via Alias exakt: '+a.name);
-    return has;
-  });
-  if(m){console.log('✓ Stufe 1 MATCH: '+m.name); return m;}
-  
-  // 2. Exakter Name-Match
-  console.log('   Stufe 2: Name exakt?');
-  m=S.a.find(a=>{
     const match = a.name.toLowerCase().trim()===nl;
-    if(match) console.log('   ✓ Found via Name exakt: '+a.name);
+    if(match) console.log('   ✓ 100% Match via Lagertext: "'+a.name+'" = "'+nl+'"');
     return match;
   });
-  if(m){console.log('✓ Stufe 2 MATCH: '+m.name); return m;}
+  if(m){console.log('✅ ARTIKEL GEFUNDEN: '+m.name); return m;}
   
-  // 3. Alias/Name Partial
-  console.log('   Stufe 3: Partial match?');
+  // 2. 100% Match mit Alias
+  console.log('   → Vergleiche mit Alias...');
   m=S.a.find(a=>{
-    const found = ((a.quittungAliase||[]).length ? (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) : []).some(al=>{
-      const al2=al.toLowerCase().trim();
-      const match = al2.includes(nl)||nl.includes(al2);
-      if(match) console.log('   ✓ Found via Alias partial: '+al+' <-> '+nl);
+    const aliases = (a.quittungAliase||[]).length ? 
+      (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) 
+      : [];
+    const has = aliases.some(al=>{
+      const al_norm = al.toLowerCase().trim();
+      const match = al_norm===nl;
+      if(match) console.log('   ✓ 100% Match via Alias: "'+al+'" = "'+nl+'"');
       return match;
     });
-    return found;
+    return has;
   });
-  if(m){console.log('✓ Stufe 3 MATCH: '+m.name); return m;}
+  if(m){console.log('✅ ARTIKEL GEFUNDEN (via Alias): '+m.name); return m;}
   
-  // 4. Fuzzy Name (min 5 Zeichen)
-  console.log('   Stufe 4: Fuzzy (min 5 chars)?');
-  if(nl.length>=5){
-    m=S.a.find(a=>{
-      const match = a.name.toLowerCase().includes(nl)||nl.includes(a.name.toLowerCase());
-      if(match) console.log('   ✓ Found via Fuzzy: '+a.name+' includes '+nl);
-      return match;
-    });
-    if(m){console.log('✓ Stufe 4 MATCH: '+m.name); return m;}
-  }else{
-    console.log('   (Name zu kurz: '+nl.length+' < 5)');
-  }
-  
-  console.log('❌ KEIN MATCH gefunden für: "'+name+'"');
-  console.log('   Verfügbare Artikel: '+S.a.map(a => a.name).slice(0,10).join(', '));
+  console.log('❌ KEIN 100%-MATCH gefunden für: "'+name+'"');
+  console.log('   → Benötigt manuelle Zuordnung oder Alias-Eintrag');
   return null;
 }
 
