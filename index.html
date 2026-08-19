@@ -7809,12 +7809,8 @@ async function handleQuittungFile(input){
 
     console.log('📞 JETZT renderQuittungUebersicht aufrufen mit', quittungItems.length, 'items');
 
-    // NEUER DEBUG-MODUS: Öffne Debug-Interface statt Übersicht
-    if(opt.quittungDebug){
-      openDebugInterface(text);
-    }else{
-      renderQuittungUebersicht(parsed.datum||todayISO());
-    }
+    // NEUER DEBUG-MODUS: Öffne IMMER Debug-Interface
+    openDebugInterface(text);
 
   }catch(e){
     const body=document.getElementById('quittung-body');
