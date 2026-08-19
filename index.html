@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.0';
+const APP_VERSION='22.1';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.1',d:'19.08.2026',items:['✅ Debug-Modus OPTIONAL: Einstellungen → 🔧 Debug-Modus aktivieren','Nach Scan: Normal läuft renderQuittungUebersicht() (KEINE Debug-Fenster)','Debug-Fenster nur wenn manuell aktiviert','Step-by-Step Interface bleibt erhalten für Fehlersuche']},
   {v:'22.0',d:'19.08.2026',items:['🎯 BASELINE v22.0: Stabil mit Debug-Interface','Banana-Bug gefixt: lagerArtikelId in Loose-Ware/Portion-Box','Quittungs-Vorschau zeigt grüne Badges korrekt','Jede Änderung erhöht Index: 22.1, 22.2, 22.3...']},
   {v:'21.25',d:'19.08.2026',items:['Stabil: v21.24 mit Debug-Interface als Baseline','Banana-Bug gefixt: lagerArtikelId in Loose-Ware/Portion-Box','Quittungs-Vorschau zeigt grüne Badges korrekt']},
   {v:'21.21',d:'08.2026',items:['DEBUG: Massive Logs für Auto-Matching','Zeigt quittungItems BEFORE/AFTER','Mit 🤖🤖🤖 Markierung','Aufbau für Fehlersuche']},
@@ -7812,10 +7813,16 @@ async function handleQuittungFile(input){
       console.log('  ['+i+'] '+it.name+' - lagerArtikelId: '+it.lagerArtikelId+' (type: '+(typeof it.lagerArtikelId)+')');
     });
 
-    console.log('📞 JETZT renderQuittungUebersicht aufrufen mit', quittungItems.length, 'items');
+    console.log('📞 Quittung verarbeitet mit', quittungItems.length, 'items');
 
-    // NEUER DEBUG-MODUS: Öffne IMMER Debug-Interface
-    openDebugInterface(text);
+    // Wenn Debug-Modus aktiviert: Debug-Interface öffnen
+    if(opt.quittungDebug) {
+      console.log('🐛 Debug-Modus aktiviert → openDebugInterface()');
+      openDebugInterface(text);
+    } else {
+      // Normal: Zeige Quittungs-Übersicht
+      renderQuittungUebersicht();
+    }
 
   }catch(e){
     const body=document.getElementById('quittung-body');
