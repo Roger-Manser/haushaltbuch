@@ -136,7 +136,8 @@
       "kaufort": "Landi",
       "barcodes": [
         "7611703211964"
-      ]
+      ],
+      "quittungAliase": "green Mückenspirale"
     },
     {
       "id": 4,
@@ -9695,7 +9696,8 @@
           "kaufdatum": "2026-08-20",
           "ablaufdatum": ""
         }
-      ]
+      ],
+      "quittungAliase": "green Mückenspirale"
     },
     {
       "id": 260,
@@ -9725,7 +9727,8 @@
           "kaufdatum": "2026-08-20",
           "ablaufdatum": ""
         }
-      ]
+      ],
+      "quittungAliase": "YAOS Jogurt nature"
     },
     {
       "id": 261,
@@ -9766,7 +9769,8 @@
           "kaufdatum": "2026-08-20",
           "ablaufdatum": ""
         }
-      ]
+      ],
+      "quittungAliase": "Primagusto Knoblauc"
     },
     {
       "id": 262,
@@ -9867,7 +9871,8 @@
           "kaufdatum": "2026-08-20",
           "ablaufdatum": ""
         }
-      ]
+      ],
+      "quittungAliase": "AL BRONZO Penne Rig"
     },
     {
       "id": 265,
@@ -19416,5 +19421,5 @@
       "kaufort": "Coop"
     }
   ],
-  "aktualisiert": "2026-08-20T10:44:01.598Z"
+  "aktualisiert": "2026-08-20T10:46:32.882Z"
 }
