@@ -8016,7 +8016,8 @@
       ],
       "barcodes": [
         "20631321"
-      ]
+      ],
+      "quittungAliase": "Mozzarella Stange"
     },
     {
       "id": 223,
@@ -9395,7 +9396,8 @@
         }
       ],
       "letzteEingangHeute": "10:29",
-      "packungen": []
+      "packungen": [],
+      "quittungAliase": "Deospray Extra Dry"
     },
     {
       "id": 253,
@@ -18991,5 +18993,5 @@
       "kaufort": "Migros"
     }
   ],
-  "aktualisiert": "2026-08-20T07:54:37.750Z"
+  "aktualisiert": "2026-08-20T08:04:41.276Z"
 }
