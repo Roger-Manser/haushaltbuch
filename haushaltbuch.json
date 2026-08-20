@@ -9645,15 +9645,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Landi"
-        },
-        {
-          "datum": "2026-08-19",
-          "preis": 6.95,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Landi"
         }
       ],
       "letzteEingangHeute": "16:55",
@@ -19227,17 +19218,6 @@
       "kaufort": "Migros"
     },
     {
-      "aid": 258,
-      "d": "2026-08-19",
-      "m": 1,
-      "p": 6.95,
-      "t": "ein",
-      "e": "Pkg",
-      "k": "Diverses",
-      "aktion": false,
-      "kaufort": "Landi"
-    },
-    {
       "t": "aus",
       "aid": 257,
       "name": "Lasagne Bolognese",
@@ -19428,7 +19408,18 @@
       "k": "Süsswaren",
       "aktion": false,
       "kaufort": "Coop"
+    },
+    {
+      "aid": 258,
+      "d": "2026-08-19",
+      "m": 1,
+      "p": 6.95,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Landi"
     }
   ],
-  "aktualisiert": "2026-08-20T12:11:38.929Z"
+  "aktualisiert": "2026-08-20T12:18:16.580Z"
 }
