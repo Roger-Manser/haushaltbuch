@@ -539,10 +539,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.15';
+const APP_VERSION='22.16';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.16',d:'20.08.2026',items:['⏱ Toast Dauer verdoppelt: 4s → 8s','🔍 DEBUG-LOGS hinzugefügt um zu sehen was nach Scan passiert','Console zeigt jetzt: quittungItems, renderQuittungUebersicht() Aufrufe','Hilft zu finden warum keine Artikel erscheinen wenn Vorschau aus ist']},
   {v:'22.15',d:'20.08.2026',items:['🎯 FLOW VEREINFACHT: Direkt handleQuittungFile!','openQuittung() → Wahl → handleQuittungFile() → Toast','Keine Extra-Dialoge mehr zwischen den Schritten','File-Handler jetzt direkt auf handleQuittungFile (kein _openQuittungDo)']},
   {v:'22.14',d:'20.08.2026',items:['✅ GELÖST: Großen Loading-Dialog entfernt!','1. Scan zeigt jetzt denselben Toast wie 2. Scan','Toast "Quittung wird gescannt..." bleibt 4 Sekunden sichtbar','Konsistent & subtil - nicht aufdringlich!']},
   {v:'22.13',d:'20.08.2026',items:['⏱ Toast-Dauer erhöht: 2.3s → 4.0s','Toast bleibt länger sichtbar während KI arbeitet','Debug-Logs: Zeigt warum 1. Scan anders ist als 2. Scan','🎬 handleQuittungFile START + ✓ Toast-Aufruf abgeschlossen']},
@@ -7589,8 +7590,8 @@ function toast(m){
     console.log('  ✓ Klasse hinzugefügt');
     tT=setTimeout(()=>{
       t.classList.remove('on');
-      console.log('  ✓ Toast verschwindet nach 4000ms');
-    },4000);  // 4 Sekunden statt 2.3
+      console.log('  ✓ Toast verschwindet nach 8000ms');
+    },8000);  // 8 Sekunden (doppelt so lange)
   },50);
 }
 /* ── Quittung scannen (Claude Vision) ────────────────────────────── */
@@ -7774,6 +7775,7 @@ async function handleQuittungFile(input){
     }
 
     quittungItems=parsed.artikel||[];
+    console.log('✓ quittungItems gesetzt:', quittungItems.length, 'Artikel');
     
     // PREIS-VALIDIERUNGS-PASS: Erkenne KI-Fehler bei Brutto-Preisen
     try{
@@ -7843,7 +7845,9 @@ async function handleQuittungFile(input){
       openDebugInterface(text);
     } else {
       // Normal: Zeige Quittungs-Übersicht
+      console.log('🎯 VOR renderQuittungUebersicht() - wird aufgerufen');
       renderQuittungUebersicht();
+      console.log('✓ NACH renderQuittungUebersicht()');
     }
 
   }catch(e){
@@ -7853,6 +7857,7 @@ async function handleQuittungFile(input){
 }
 
 function renderQuittungUebersicht(datum){
+  console.log('🎯 renderQuittungUebersicht() START - quittungItems:', quittungItems.length, 'Preview:', opt.quittungPreview);
   // Trainingsmodus-Banner oben einfügen
   const qbody=document.getElementById('quittung-body');
   if(qbody&&opt.quittungTraining){
@@ -7899,7 +7904,7 @@ function renderQuittungUebersicht(datum){
     '</div>'+
     '<button onclick="openDebugInterface(debugState.rawResponse)" style="background:var(--ac);color:#fff;border:none;padding:10px 14px;border-radius:var(--rs);cursor:pointer;font-weight:600;font-size:13px;white-space:nowrap">🔧 Debug</button>'+
   '</div>';
-  h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">🔍 VORSCHAU-MODUS AKTIV — Alle Positionen überprüfen:</div>';
+  h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">📋 Erkannte Artikel — Jetzt buchen:</div>';
   h+=quittungItems.map((it,i)=>{
     // Matching wurde bereits vorher gemacht - hier nur noch Badge setzen
     const badge=it.lagerArtikelId?'<span style="font-size:10px;background:var(--al);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px">im Lager</span>':'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:6px">neu</span>';
