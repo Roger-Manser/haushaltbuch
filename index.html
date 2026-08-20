@@ -539,10 +539,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.16';
+const APP_VERSION='22.17';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.17',d:'20.08.2026',items:['✅ GELÖST: quittung-overlay wird geöffnet!','handleQuittungFile() zeigt jetzt den Overlay','DARUM waren die Artikel unsichtbar obwohl gerendert!','Jetzt werden erkannte Artikel UND "Buchen"-Buttons sichtbar!']},
   {v:'22.16',d:'20.08.2026',items:['⏱ Toast Dauer verdoppelt: 4s → 8s','🔍 DEBUG-LOGS hinzugefügt um zu sehen was nach Scan passiert','Console zeigt jetzt: quittungItems, renderQuittungUebersicht() Aufrufe','Hilft zu finden warum keine Artikel erscheinen wenn Vorschau aus ist']},
   {v:'22.15',d:'20.08.2026',items:['🎯 FLOW VEREINFACHT: Direkt handleQuittungFile!','openQuittung() → Wahl → handleQuittungFile() → Toast','Keine Extra-Dialoge mehr zwischen den Schritten','File-Handler jetzt direkt auf handleQuittungFile (kein _openQuittungDo)']},
   {v:'22.14',d:'20.08.2026',items:['✅ GELÖST: Großen Loading-Dialog entfernt!','1. Scan zeigt jetzt denselben Toast wie 2. Scan','Toast "Quittung wird gescannt..." bleibt 4 Sekunden sichtbar','Konsistent & subtil - nicht aufdringlich!']},
@@ -7669,6 +7670,9 @@ async function handleQuittungFile(input){
   // Dialog schließen (falls offen)
   const dlg=document.getElementById('quittung-info-dlg');
   if(dlg)dlg.remove();
+  
+  // Overlay ÖFFNEN (damit quittung-body sichtbar ist!)
+  document.getElementById('quittung-overlay').style.display='flex';
   
   // Toast sofort zeigen!
   console.log('🎬 handleQuittungFile START - Toast wird sofort gezeigt');
