@@ -539,10 +539,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.11';
+const APP_VERSION='22.12';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.12',d:'20.08.2026',items:['🎯 Toast SOFORT beim Scan-Start zeigen!','Toast wird jetzt in handleQuittungFile() aufgerufen','NICHT nach der KI-Verarbeitung!','Toast erscheint sofort + sichtbar BEVOR die Liste gerendert wird']},
   {v:'22.11',d:'20.08.2026',items:['🎯 ECHTER Toast-Fix: setTimeout(50ms) statt nur Reflow!','Klasse entfernen → 50ms warten → Klasse neu hinzufügen','Erzwingt echten Browser-Re-Render','Toast funktioniert JETZT beim 1., 2., 3... Scan sichtbar!']},
   {v:'22.10',d:'20.08.2026',items:['🧹 BRUTAL aufgeräumt: 40+ Logs entfernt!','Nur noch Toast + KI-Response Logs übrig','Console jetzt 95% sauberer','Kann man die komplette Ausgabe kopieren!']},
   {v:'22.9',d:'20.08.2026',items:['🧹 Aufgeräumt: Viel zu viele Logs entfernt','Nur noch wichtige Logs übrig: toast() Aufrufe und JSON-Parsing','Console viel lesbarer - kann man jetzt kopieren!','Hilft zu sehen ob toast() beim 2. Scan aufgerufen wird']},
@@ -7671,6 +7672,10 @@ function closeQuittung(){
 
 async function handleQuittungFile(input){
   const file=input.files[0];if(!file)return;
+  
+  // Toast sofort zeigen!
+  toast('📄 Quittung wird gescannt...');
+  
   const body=document.getElementById('quittung-body');
   body.innerHTML='<div style="text-align:center;padding:24px;color:var(--t2)"><div class="spn" style="margin:0 auto 12px"></div>Claude analysiert die Quittung…</div>';
   
@@ -7764,11 +7769,6 @@ async function handleQuittungFile(input){
     const clean=text.replace(/```json|```/g,'').trim();
     console.log('📥 KI-Response (raw):', text.slice(0,500));
     console.log('📥 KI-Response (clean):', clean.slice(0,500));
-    
-    // Toast anzeigen (JEDES Mal!)
-    console.log('🎯 VOR toast() Aufruf');
-    toast('📄 Quittung wird gescannt...');
-    console.log('✓ NACH toast() Aufruf');
     
     // SPEICHERE rawResponse für Debug-Interface
     debugState.rawResponse = text;
