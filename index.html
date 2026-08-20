@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.5';
+const APP_VERSION='22.6';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.6',d:'19.08.2026',items:['✨ Einkaufslisten-Abgleich nach Quittungs-Scan','Nach Scan: quittungItems mit S.ek abgleichen','Vorschau-Modus: Zeige "Diese Items würden gelöscht"','Normal-Modus: Markiere Items automatisch als erledigt (checked=true)','Abgleich speichert automatisch']},
   {v:'22.5',d:'19.08.2026',items:['🐛 BugFix: preis_brutto und preis_netto in Portion-Box/Loose-Ware','Preis wird JETZT korrekt durchgereicht','Goldfield: 2 Stange à 53.00 CHF netto = 106.00 CHF brutto (gespeichert!)','Dialog zeigt vollständige und korrekte Werte']},
   {v:'22.4',d:'19.08.2026',items:['🐛 MEGA-BUG FIX: parseReceiptPosition() Portion-Box gab falsche Werte zurück','menge: 20 → 2 (korrigiert)','einheit: Stk → Stange (korrigiert)','preisProEinheit: berechnet mit anzahlPackungen nicht alte menge','Dialog zeigt JETZT die korrekten Werte: 2 Stange à 53.00 = 106.00']},
   {v:'22.3',d:'19.08.2026',items:['🐛 BugFix: Korrigierte Werte von parseReceiptPosition() werden jetzt in quittungItems gespeichert','Portion-Box: 20 Stk → 2 Packungen (korrigiert)','Loose-Ware: Einzelpreise korrekt berechnet','Dialog zeigt jetzt die KORRIGIERTEN Werte, nicht die Rohwerte']},
@@ -7850,7 +7851,56 @@ async function handleQuittungFile(input){
       console.log('  ['+idx+'] Korrigiert: menge='+parsed.menge+' '+parsed.einheit+', type='+parsed.type+', brutto='+parsed.preis_brutto);
     });
     
-    console.log('🤖🤖🤖 AUTO-MATCHING FERTIG 🤖🤖🤖');
+    // EINKAUFSLISTEN-ABGLEICH: Gleiche quittungItems mit S.ek ab
+    console.log('📋 EINKAUFSLISTEN-ABGLEICH: Suche Matches...');
+    const matchedEinkaufsItems = [];
+    quittungItems.forEach((qItem, idx) => {
+      // Suche in S.ek nach Match
+      const ekMatch = S.ek.find(ek => {
+        if(!ek || ek.checked) return false; // Überspringe bereits abgehakte Items
+        
+        const qName = qItem.name.toLowerCase().trim();
+        const ekText = ek.text.toLowerCase().trim();
+        
+        // 1. Exakter Match
+        if(qName === ekText) return true;
+        
+        // 2. Teilstring-Match (beide Richtungen)
+        if(ekText.includes(qName) || qName.includes(ekText)) return true;
+        
+        return false;
+      });
+      
+      if(ekMatch) {
+        matchedEinkaufsItems.push({
+          quittungItem: qItem.name,
+          einkaufsItem: ekMatch.text,
+          menge: ekMatch.menge,
+          einheit: ekMatch.einheit,
+          ekId: ekMatch.id
+        });
+        console.log('  ✅ ['+idx+'] "'+qItem.name+'" → Einkaufsliste: "'+ekMatch.text+'"');
+        
+        // Wenn NICHT Preview: Markiere als erledigt
+        if(!opt.quittungPreview) {
+          ekMatch.checked = true;
+          console.log('     ✓ Markiert als erledigt');
+        }
+      } else {
+        console.log('  ❌ ['+idx+'] "'+qItem.name+'" → Kein Match in Einkaufsliste');
+      }
+    });
+    
+    // Speichern wenn nicht Preview
+    if(!opt.quittungPreview && matchedEinkaufsItems.length > 0) {
+      saveL();
+      console.log('💾 Einkaufsliste gespeichert');
+    }
+    
+    // Speichere für Anzeige
+    debugState.matchedEinkaufsItems = matchedEinkaufsItems;
+    
+
     console.log('quittungItems AFTER matching:', quittungItems.map(x=>({name:x.name, id:x.lagerArtikelId})));
     
     // DEBUG: Show alle quittungItems nach Matching
