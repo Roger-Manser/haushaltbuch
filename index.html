@@ -539,10 +539,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.18';
+const APP_VERSION='22.20';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.20',d:'20.08.2026',items:['🔧 BugFix: Doppelte const body Definitionen entfernt!','Scope-Problem: body wurde überschrieben in Vorschau-Check','Normalmodus nutzt jetzt die gleiche body Variable','🎯 DEBUG-LOGS: Zeigen ob HTML wirklich gesetzt wird']},
+  {v:'22.19',d:'20.08.2026',items:['🐛 MEGA-BugFix: quittungAliase normalisiert (String vs. Array)!','delAliasFromSettings() + delAlias() + zuordnungBestaetigen() gefixt','findQuittungMatch() fixed: return m statt immer null','Fehler "Cannot read properties of undefined" WEG!']},
   {v:'22.18',d:'20.08.2026',items:['🐛 BugFix: it.preis wird jetzt in Korrektur-Pass gesetzt!','Fehler "Cannot read properties of undefined" GELÖST','it.preis = preis_brutto || preis_netto || 0','Artikel können jetzt in renderQuittungUebersicht() angezeigt werden']},
   {v:'22.17',d:'20.08.2026',items:['✅ GELÖST: quittung-overlay wird geöffnet!','handleQuittungFile() zeigt jetzt den Overlay','DARUM waren die Artikel unsichtbar obwohl gerendert!','Jetzt werden erkannte Artikel UND "Buchen"-Buttons sichtbar!']},
   {v:'22.16',d:'20.08.2026',items:['⏱ Toast Dauer verdoppelt: 4s → 8s','🔍 DEBUG-LOGS hinzugefügt um zu sehen was nach Scan passiert','Console zeigt jetzt: quittungItems, renderQuittungUebersicht() Aufrufe','Hilft zu finden warum keine Artikel erscheinen wenn Vorschau aus ist']},
@@ -7865,6 +7867,8 @@ async function handleQuittungFile(input){
 
 function renderQuittungUebersicht(datum){
   console.log('🎯 renderQuittungUebersicht() START - quittungItems:', quittungItems.length, 'Preview:', opt.quittungPreview);
+  const body=document.getElementById('quittung-body');
+  console.log('  body Element:', body, 'display:', body?.style?.display, 'innerHTML.length:', body?.innerHTML?.length);
   // Trainingsmodus-Banner oben einfügen
   const qbody=document.getElementById('quittung-body');
   if(qbody&&opt.quittungTraining){
@@ -7879,7 +7883,6 @@ function renderQuittungUebersicht(datum){
   }
   // VORSCHAU-MODUS CHECK
   if(opt.quittungPreview){
-    const body=document.getElementById('quittung-body');
     if(body){body.innerHTML='';body.style.display='none';body.style.height='0';}
     // Verstecke ALLES quittung-bezogene
     document.querySelectorAll('[id*="quittung"]').forEach(el => {
@@ -7900,7 +7903,8 @@ function renderQuittungUebersicht(datum){
     return;
   }
   
-  const body=document.getElementById('quittung-body');
+  // Normaler Modus: Zeige Artikel-Liste
+  console.log('🎯 Normalmodus: body wird mit Artikel gefüllt');
   if(!body)return; // Sicherheit falls körper weg ist
   const ge=quittungGeschaeft;
   let h='<div style="display:flex;gap:10px;margin-bottom:14px">'+
@@ -7929,7 +7933,10 @@ function renderQuittungUebersicht(datum){
     '</div>';
   }).join('');
   h+='<button onclick="closeQuittung()" style="width:100%;margin-top:14px;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Fertig</button>';
+  console.log('🎯 VOR body.innerHTML: body=', body, 'HTML-Länge:', h.length);
   body.innerHTML=h;
+  const ov=document.getElementById('quittung-overlay');
+  console.log('✓ NACH body.innerHTML gesetzt - overlay display:', ov?.style?.display);
   // Kaufdatum speichern für spätere Verwendung
   body.dataset.datum=datum;
 }
@@ -7959,12 +7966,19 @@ function findQuittungMatch(name){
     const match = an===nl;
     return match;
   });
+  if(m)return m;
   
   // 2. 100% Match mit Alias
   m=S.a.find(a=>{
-    const aliases = (a.quittungAliase||[]).length ? 
-      (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) 
-      : [];
+    // NORMALISIERUNG: quittungAliase kann String oder Array sein!
+    let aliases = [];
+    if(a.quittungAliase){
+      if(typeof a.quittungAliase==='string'){
+        aliases = [a.quittungAliase];
+      }else if(Array.isArray(a.quittungAliase)){
+        aliases = a.quittungAliase;
+      }
+    }
     const has = aliases.some(al=>{
       const al_norm = al.toLowerCase().trim().replace(/\s+/g,' ');
       const match = al_norm===nl;
@@ -7972,6 +7986,7 @@ function findQuittungMatch(name){
     });
     return has;
   });
+  if(m)return m;
   
   return null;
 }
@@ -8041,9 +8056,15 @@ function renderAliasUebersicht(){
 function delAliasFromSettings(artikelId,idx,btn){
   artikelId=parseInt(artikelId);idx=parseInt(idx);
   const a=S.a.find(x=>x.id===artikelId);
-  if(!a||!a.quittungAliase)return;
+  if(!a)return;
+  // WICHTIG: quittungAliase normalisieren (kann String oder Array sein!)
+  if(!a.quittungAliase)a.quittungAliase=[];
+  else if(typeof a.quittungAliase==='string')a.quittungAliase=[a.quittungAliase];
+  
+  if(!a.quittungAliase[idx])return;
   const alias=a.quittungAliase[idx];
   a.quittungAliase.splice(idx,1);
+  if(a.quittungAliase.length===0)delete a.quittungAliase; // Leer = löschen
   saveL();doSync();
   toast('📎 Alias «'+esc(alias)+'» gelöscht');
   renderSt(); // Settings neu rendern
@@ -8052,9 +8073,15 @@ function delAliasFromSettings(artikelId,idx,btn){
 function delAlias(artikelId,idx){
   artikelId=parseInt(artikelId);idx=parseInt(idx);
   const a=S.a.find(x=>x.id===artikelId);
-  if(!a||!a.quittungAliase)return;
+  if(!a)return;
+  // WICHTIG: quittungAliase normalisieren (kann String oder Array sein!)
+  if(!a.quittungAliase)a.quittungAliase=[];
+  else if(typeof a.quittungAliase==='string')a.quittungAliase=[a.quittungAliase];
+  
+  if(!a.quittungAliase[idx])return;
   const alias=a.quittungAliase[idx];
   a.quittungAliase.splice(idx,1);
+  if(a.quittungAliase.length===0)delete a.quittungAliase; // Leer = löschen
   saveL();
   toast('📎 Alias «'+esc(alias)+'» gelöscht');
   showDet(artikelId);
@@ -8066,7 +8093,10 @@ function zuordnungBestaetigen(idx,artikelId){
   const it=quittungItems[idx];
   const a=S.a.find(x=>x.id===artikelId);
   if(a){
+    // WICHTIG: quittungAliase normalisieren (kann String oder Array sein!)
     if(!a.quittungAliase)a.quittungAliase=[];
+    else if(typeof a.quittungAliase==='string')a.quittungAliase=[a.quittungAliase];
+    
     if(!a.quittungAliase.includes(it.name)){
       a.quittungAliase.push(it.name);
       saveL();
