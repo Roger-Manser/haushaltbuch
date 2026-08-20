@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.8';
+const APP_VERSION='22.9';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.9',d:'20.08.2026',items:['🐛 BugFix: Toast beim 2. Scan nicht sichtbar','toast()-Funktion: Klasse immer neu hinzufügen','Erst entfernen (50ms Delay) dann neu anzeigen','Toast kommt JETZT beim 1., 2., 3... Scan!']},
   {v:'22.8',d:'20.08.2026',items:['🐛 BugFix: Einkaufslisten-Abgleich "Goldfield Gold Box" vs "Goldfield Gold Box Zigaretten"','✨ Verbesserte Match-Logik: Längeres Text muss kürzeres enthalten','✨ Worte-basiert: Erste 2+ Worte müssen gleich sein','✨ Toast beim Scan: "Quittung wird verarbeitet..." und Erfolgsmeldung (JEDES MAL!)']},
   {v:'22.7',d:'20.08.2026',items:['🔧 DEBUG: Detaillierte Logs für Einkaufslisten-Abgleich','Zeigt S.ek Länge und Inhalte','Zeigt jeden Vergleich Quittung vs Einkaufsliste','Hilft zu finden warum Matches nicht funktionieren']},
   {v:'22.6',d:'19.08.2026',items:['✨ Einkaufslisten-Abgleich nach Quittungs-Scan','Nach Scan: quittungItems mit S.ek abgleichen','Vorschau-Modus: Zeige "Diese Items würden gelöscht"','Normal-Modus: Markiere Items automatisch als erledigt (checked=true)','Abgleich speichert automatisch']},
@@ -7594,7 +7595,7 @@ async function resetAll(){if(!await confirmDialog('Alle Daten wirklich löschen?
 
 /* ── Toast & Loader ───────────────────────────────────────────────── */
 let tT;
-function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('on'),2300);}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;clearTimeout(tT);t.classList.remove('on');setTimeout(()=>{t.classList.add('on');tT=setTimeout(()=>t.classList.remove('on'),2300);},50);}
 /* ── Quittung scannen (Claude Vision) ────────────────────────────── */
 let quittungItems=[]; // erkannte Artikel von der Quittung
 let debugState = {
