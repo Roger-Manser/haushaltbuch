@@ -9663,7 +9663,7 @@
       "kat": "Diverses",
       "lager": "Garten",
       "kaufort": "Coop",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "7610179983450",
@@ -9690,10 +9690,264 @@
       "letzteEingangHeute": "11:48",
       "packungen": [
         {
-          "id": 1,
-          "menge": 1,
+          "id": 13,
+          "menge": 0,
           "kaufdatum": "2026-08-20",
           "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 260,
+      "name": "JOGHURT NACH GRIECHISCHER ART NATURE gesüsst",
+      "marke": "Nestlé",
+      "kat": "Milchprodukte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7613196005150",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 150,
+      "packEinheit": "g",
+      "kaufdatum": "2026-08-20",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score C\nPro 100g/ml: 118 kcal, Fett 7g, KH 9.3g, Eiweiss 4.5g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219449815_17872194420706199314895206463602.jpg?t=1787219536827",
+      "fotoPath": "1787219449815_17872194420706199314895206463602.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 0,
+          "kaufdatum": "2026-08-20",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 261,
+      "name": "Ail fermenté Knolauch",
+      "marke": "Coop",
+      "kat": "Gemüse & Früchte",
+      "lager": "Vorratsschrank",
+      "kaufort": "Coop",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7627534428808",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 1,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-08-20",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score C\nPro 100g/ml: 256 kcal, Fett 0g, KH 53g, Eiweiss 9.5g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219556721_off.jpg?t=1787219622201",
+      "fotoPath": "1787219556721_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-20",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
+        }
+      ],
+      "letzteEingangHeute": "11:53",
+      "packungen": [
+        {
+          "id": 12,
+          "menge": 0,
+          "kaufdatum": "2026-08-20",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 262,
+      "name": "Zweifel Paprika Mayonnaise",
+      "marke": "Thomy",
+      "kat": "Gewürze & Saucen",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Coop",
+      "menge": 0,
+      "einheit": "Tube",
+      "mindest": 0,
+      "barcode": "8445291966321",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 170,
+      "packEinheit": "g",
+      "kaufdatum": "2026-08-20",
+      "ablaufdatum": "2026-12-21",
+      "notiz": "Nutri-Score E\nPro 100g/ml: 707 kcal, Fett 75.3g, KH 4.9g, Eiweiss 1.5g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219645164_off.jpg?t=1787219689098",
+      "fotoPath": "1787219645164_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-20",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Tube",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
+        }
+      ],
+      "letzteEingangHeute": "11:54",
+      "packungen": [
+        {
+          "id": 11,
+          "menge": 0,
+          "kaufdatum": "2026-08-20",
+          "ablaufdatum": "2026-12-21"
+        }
+      ]
+    },
+    {
+      "id": 263,
+      "name": "Ketchup & mayo",
+      "marke": "Thomy",
+      "kat": "Gewürze & Saucen",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Coop",
+      "menge": 0,
+      "einheit": "Tube",
+      "mindest": 0,
+      "barcode": "8445290686015",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 190,
+      "packEinheit": "g",
+      "kaufdatum": "2026-08-20",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score D\nPro 100g/ml: 401 kcal, Fett 36.8g, KH 15.3g, Eiweiss 1.1g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219710837_off.jpg?t=1787219755661",
+      "fotoPath": "1787219710837_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 0,
+          "kaufdatum": "2026-08-20",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 264,
+      "name": "Pâtes premium Penne Rigate Al Bronzo 500G",
+      "marke": "Barilla",
+      "kat": "Konserven & Trockenware",
+      "lager": "Vorratsschrank",
+      "kaufort": "Coop",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "8076809585200",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-08-20",
+      "ablaufdatum": "",
+      "notiz": "Vegetarisch\nNutri-Score A\nPro 100g/ml: 359 kcal, Fett 2g, KH 70g, Eiweiss 14g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219795419_off.jpg?t=1787219875398",
+      "fotoPath": "1787219795419_off.jpg",
+      "preisHistorie": [],
+      "packungen": [
+        {
+          "id": 6,
+          "menge": 0,
+          "kaufdatum": "2026-08-20",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 265,
+      "name": "Pistaches Milch",
+      "marke": "Halba",
+      "kat": "Süsswaren",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Coop",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7627534163709",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 100,
+      "packEinheit": "g",
+      "kaufdatum": "2026-08-20",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score E\nPro 100g/ml: 558 kcal, Fett 34g, KH 52g, Eiweiss 9.3g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219895676_off.jpg?t=1787219938043",
+      "fotoPath": "1787219895676_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-20",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
+        }
+      ],
+      "letzteEingangHeute": "11:58",
+      "packungen": [
+        {
+          "id": 10,
+          "menge": 0,
+          "kaufdatum": "2026-08-20",
+          "ablaufdatum": ""
+        }
+      ]
+    },
+    {
+      "id": 266,
+      "name": "Bretzeli",
+      "marke": "Kambly",
+      "kat": "Süsswaren",
+      "lager": "Vorratsschrank",
+      "kaufort": "Coop",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7614800120009",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 115,
+      "packEinheit": "g",
+      "kaufdatum": "2026-08-20",
+      "ablaufdatum": "2027-03-15",
+      "notiz": "Nutri-Score E\nPro 100g/ml: 483 kcal, Fett 20g, KH 65g, Eiweiss 9.3g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219988297_off.jpg?t=1787220024361",
+      "fotoPath": "1787219988297_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-20",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
+        }
+      ],
+      "letzteEingangHeute": "12:00",
+      "packungen": [
+        {
+          "id": 9,
+          "menge": 0,
+          "kaufdatum": "2026-08-20",
+          "ablaufdatum": "2027-03-15"
         }
       ]
     }
@@ -9760,7 +10014,15 @@
     "Rita Eisenring",
     "Getränkemarkt Zil"
   ],
-  "einkauf": [],
+  "einkauf": [
+    {
+      "id": 1787220067425,
+      "text": "Ketchup & mayo",
+      "menge": "1",
+      "einheit": "Tube",
+      "checked": false
+    }
+  ],
   "einkaufOverrides": {
     "221": {
       "menge": "2"
@@ -19045,7 +19307,59 @@
       "aktion": true,
       "datum": "2026-08-20",
       "zeit": 1787219326539
+    },
+    {
+      "t": "ein",
+      "aid": 261,
+      "name": "Ail fermenté Knolauch",
+      "lager": "Vorratsschrank",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-20",
+      "zeit": 1787219622202
+    },
+    {
+      "t": "ein",
+      "aid": 262,
+      "name": "Zweifel Paprika Mayonnaise",
+      "lager": "Kühlschrank oben",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Tube",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-20",
+      "zeit": 1787219689099
+    },
+    {
+      "t": "ein",
+      "aid": 265,
+      "name": "Pistaches Milch",
+      "lager": "Kühlschrank oben",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-20",
+      "zeit": 1787219938049
+    },
+    {
+      "t": "ein",
+      "aid": 266,
+      "name": "Bretzeli",
+      "lager": "Vorratsschrank",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-20",
+      "zeit": 1787220024362
     }
   ],
-  "aktualisiert": "2026-08-20T09:50:09.144Z"
+  "aktualisiert": "2026-08-20T10:09:01.329Z"
 }
