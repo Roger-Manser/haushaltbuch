@@ -539,10 +539,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.10';
+const APP_VERSION='22.11';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.11',d:'20.08.2026',items:['🎯 ECHTER Toast-Fix: setTimeout(50ms) statt nur Reflow!','Klasse entfernen → 50ms warten → Klasse neu hinzufügen','Erzwingt echten Browser-Re-Render','Toast funktioniert JETZT beim 1., 2., 3... Scan sichtbar!']},
   {v:'22.10',d:'20.08.2026',items:['🧹 BRUTAL aufgeräumt: 40+ Logs entfernt!','Nur noch Toast + KI-Response Logs übrig','Console jetzt 95% sauberer','Kann man die komplette Ausgabe kopieren!']},
   {v:'22.9',d:'20.08.2026',items:['🧹 Aufgeräumt: Viel zu viele Logs entfernt','Nur noch wichtige Logs übrig: toast() Aufrufe und JSON-Parsing','Console viel lesbarer - kann man jetzt kopieren!','Hilft zu sehen ob toast() beim 2. Scan aufgerufen wird']},
   {v:'22.8',d:'20.08.2026',items:['🔧 DETAIL-DEBUG: Logs an jedem Schritt des Scan-Prozesses','🎬 SCAN GESTARTET - 📡 API Response - 📊 JSON geparst','📝 Text extrahiert - ✓ Text bereinigt - 🎯 VOR JSON.parse','Zeigt genau wo der Prozess abbricht']},
@@ -7577,16 +7578,16 @@ function toast(m){
   t.textContent=m;
   t.classList.remove('on');
   console.log('  ✓ Klasse entfernt');
-  // Reflow erzwingen durch void-Zugriff
-  void t.offsetWidth;
-  console.log('  ✓ Reflow erzwungen');
-  t.classList.add('on');
-  console.log('  ✓ Klasse hinzugefügt');
   clearTimeout(tT);
-  tT=setTimeout(()=>{
-    t.classList.remove('on');
-    console.log('  ✓ Toast verschwindet nach 2300ms');
-  },2300);
+  // Nach 50ms die Klasse neu hinzufügen (erzwingt Re-Render)
+  setTimeout(()=>{
+    t.classList.add('on');
+    console.log('  ✓ Klasse hinzugefügt');
+    tT=setTimeout(()=>{
+      t.classList.remove('on');
+      console.log('  ✓ Toast verschwindet nach 2300ms');
+    },2300);
+  },50);
 }
 /* ── Quittung scannen (Claude Vision) ────────────────────────────── */
 let quittungItems=[]; // erkannte Artikel von der Quittung
