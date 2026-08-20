@@ -539,10 +539,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.9';
+const APP_VERSION='22.10';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.10',d:'20.08.2026',items:['🧹 BRUTAL aufgeräumt: 40+ Logs entfernt!','Nur noch Toast + KI-Response Logs übrig','Console jetzt 95% sauberer','Kann man die komplette Ausgabe kopieren!']},
   {v:'22.9',d:'20.08.2026',items:['🧹 Aufgeräumt: Viel zu viele Logs entfernt','Nur noch wichtige Logs übrig: toast() Aufrufe und JSON-Parsing','Console viel lesbarer - kann man jetzt kopieren!','Hilft zu sehen ob toast() beim 2. Scan aufgerufen wird']},
   {v:'22.8',d:'20.08.2026',items:['🔧 DETAIL-DEBUG: Logs an jedem Schritt des Scan-Prozesses','🎬 SCAN GESTARTET - 📡 API Response - 📊 JSON geparst','📝 Text extrahiert - ✓ Text bereinigt - 🎯 VOR JSON.parse','Zeigt genau wo der Prozess abbricht']},
   {v:'22.7',d:'20.08.2026',items:['🔧 DEBUG: Console-Logs für toast()-Funktion','Zeigt ob toast() aufgerufen wird','Zeigt ob Toast-Element existiert','Hilft zu debuggen warum Toast beim 2. Scan nicht kommt']},
@@ -889,7 +890,6 @@ async function checkDataVersionOnStartup(){
     const diff=ghModified-localModified;
     
     // Debug-Info
-    console.log('📊 Data Version Check:',{
       lokalTimestamp: new Date(localModified).toLocaleString('de-CH'),
       ghTimestamp: new Date(ghModified).toLocaleString('de-CH'),
       diff_ms: diff,
@@ -902,13 +902,11 @@ async function checkDataVersionOnStartup(){
     
     if(ghModified>localModified){
       // GitHub ist neuer → laden
-      console.log('📥 Auto-Sync: GitHub ist neuer ('+Math.floor(diff/1000)+'s). Lade Daten...');
       toast('📥 Lade neuere Daten von GitHub...');
       await loadFromGH();
     }else if(lokalCount>ghCount){
       // Lokal hat mehr Artikel → Warnung anzeigen
       const diff_articles=lokalCount-ghCount;
-      console.log('📤 Lokal ist neuer ('+diff_articles+' mehr Artikel). Zum Sync: GitHub-Button drücken');
       toast('📤 Lokal ist neuer ('+diff_articles+' Artikel mehr) — Sync empfohlen');
     }
   }catch(e){
@@ -1082,7 +1080,6 @@ async function deduplicatePreisHistorie(){
   // Findet doppelte Einträge, zeigt Dialog, dann löscht
   const dups=findDuplicates();
   if(!dups.length){
-    console.log('✓ Keine Duplikate gefunden');
     return;
   }
   
@@ -1092,7 +1089,6 @@ async function deduplicatePreisHistorie(){
     (dups.length>10?'\n... und '+(dups.length-10)+' weitere':'');
   
   if(!await confirmDialog(msg,'Ja, löschen','Nein, behalten')){
-    console.log('Deduplizierung abgebrochen');
     return;
   }
   
@@ -1122,7 +1118,6 @@ async function deduplicatePreisHistorie(){
   
   if(removed>0){
     saveL();
-    console.log('✓ Dedupliziert: '+removed+' Duplikate entfernt');
     toast('✓ '+removed+' doppelte Einträge gelöscht');
   }
 }
@@ -1148,7 +1143,6 @@ function repairLogFromPreisHistorie(){
       }
     });
   });
-  if(repaired>0){saveL();console.log('✓ Log: '+repaired+' Einträge repariert');}
 }
 
 async function doSync(){
@@ -4362,7 +4356,6 @@ async function buildAiMatchCache(){}
 
 // ===== VORSCHAU-MODUS =====
 function showReceiptPreview(positions){
-  console.log('🎬 showReceiptPreview START');
   
   // Defensive checks
   if(!positions) {
@@ -4374,14 +4367,12 @@ function showReceiptPreview(positions){
     return;
   }
   
-  console.log('📋 Processing', positions.length, 'positions');
   
   // Re-Match für alle Positionen mit findQuittungMatch() (die bewährte Funktion!)
   (positions || []).forEach((p, i) => {
     try {
       if(!p || !p.name) return;
       
-      console.log('📍 Pos '+i+': "'+p.name+'" (lagerArtikelId='+(p.lagerArtikelId||'null')+')');
       
       if(!p.lagerArtikelId) {
         // Nutze die bewährte findQuittungMatch() Funktion (4-Stufen-Fallback)
@@ -4389,14 +4380,11 @@ function showReceiptPreview(positions){
         if(match) {
           p.lagerArtikelId = match.id;
           p.lagerMatch = true;
-          console.log('✓ findQuittungMatch GEFUNDEN:', match.name, '(Stufe ?, Name: '+p.name+')');
         } else {
-          console.log('❌ findQuittungMatch NOT found für:', p.name);
         }
       } else {
         // WICHTIG: Wenn ID schon da ist (z.B. vom Auto-Matching), auch lagerMatch setzen!
         p.lagerMatch = true;
-        console.log('✓ lagerArtikelId bereits vorhanden:', p.lagerArtikelId, '→ lagerMatch=true');
       }
     } catch(e) {
       console.error('❌ Error in findQuittungMatch:', e.message);
@@ -4409,7 +4397,6 @@ function showReceiptPreview(positions){
     return;
   }
   
-  console.log('✅ Vorschau-Modus: '+positions.length+' Positionen');
   
   // VORSCHAU-MODUS: Nur anzeigen
   const dlg=document.createElement('div');
@@ -4569,16 +4556,13 @@ function parseReceiptPosition(p){
   // Wenn preis_netto < preis_brutto und menge > 1: Brutto war falsch
   // In diesem Fall: Netto ist korrekt, Brutto = Netto + Rabatt
   if(nettoPreis > 0 && bruttoPreis > 0 && nettoPreis < bruttoPreis - 0.01 && menge > 1) {
-    console.log('🔧 KI-Fehler korrigiert: Brutto war Netto, berechne richtig');
     // Annahme: nettoPreis ist korrekt, Brutto = Netto + Rabatt
     bruttoPreis = nettoPreis + rabatt;
   }
   
-  console.log('📝 Parse: '+name+' ('+menge+' '+einheit+', Brutto: CHF '+bruttoPreis.toFixed(2)+', Rabatt: CHF '+rabatt.toFixed(2)+')');
   
   // Erkenne Loose-Ware (kg/g)
   if(einheit === 'kg' || einheit === 'g') {
-    console.log('🥬 Loose-Ware: '+name+' '+menge+' '+einheit);
     return {
       name: name,
       type: 'Lose-Ware ('+einheit+')',
@@ -4604,7 +4588,6 @@ function parseReceiptPosition(p){
     if(lagerArtikel) {
       const packSize = 10;
       const anzahlPackungen = Math.ceil(menge / packSize);
-      console.log('📦 Portion-Box: '+name+' → '+anzahlPackungen+' Boxen');
       
       return {
         name: name,
@@ -4625,7 +4608,6 @@ function parseReceiptPosition(p){
   }
   
   // Standard-Artikel
-  console.log('📍 Standard: '+name);
   
   // Check ob Artikel im Lager existiert
   // S.a = Lager-Artikel Array, suche nach Namen-Match mit Aliase
@@ -4634,12 +4616,9 @@ function parseReceiptPosition(p){
     // Normalisiere Namen für Vergleich
     const searchName = name.toLowerCase().trim();
     
-    console.log('🔍 Suche nach:', searchName);
-    console.log('📦 Verfügbare Artikel:', S.a.map(a => a.name.toLowerCase().trim()));
     
     // 1. Exakter Match auf Namen
     lagerMatch = S.a.find(a => a.name && a.name.toLowerCase().trim() === searchName);
-    if(lagerMatch) console.log('✓ Exakter Match gefunden!');
     
     // 2. Match auf Quittungs-Aliase
     if(!lagerMatch) {
@@ -4673,9 +4652,7 @@ function parseReceiptPosition(p){
       }
     }
     
-    console.log('🔍 Lager-Match für "'+name+'": ' + (lagerMatch ? '✓ GEFUNDEN ('+lagerMatch.name+')' : '❌ nicht gefunden'));
   } else {
-    console.log('⚠️ Lager nicht verfügbar (S.a leer oder undefined)');
   }
   
   return {
@@ -4765,7 +4742,6 @@ function editPreviewPosition(idx){
     p.preis_netto = newGesamtpreis;
     p.rabatt = 0;
     
-    console.log('✓ Position '+idx+' geändert:', p);
     dlg.remove();
     
     const receipt = document.getElementById('receipt-preview-dlg');
@@ -4803,7 +4779,6 @@ function saveEditPosition(idx){
   p.rabatt = parseFloat(document.getElementById('edit-rabatt').value) || 0;
   p.preis_netto = p.preis_brutto - p.rabatt;
   
-  console.log('✓ Position '+idx+' geändert:', p);
   
   // Refresh Preview
   const receipt = document.getElementById('receipt-preview-dlg');
@@ -4846,7 +4821,6 @@ function checkZutatenVorhanden(zutaten){
     const words=z.split(/[\s,\-]+/).filter(w=>w.length>3);
     return words.some(w=>names.some(n=>n===w||n.startsWith(w)));
   });
-  if(zutaten.length>0)console.log('checkZutatenVorhanden:',zutaten,'->',result);
   return result;
 }
 
@@ -7814,13 +7788,10 @@ async function handleQuittungFile(input){
     }
 
     quittungItems=parsed.artikel||[];
-    console.log('📥 quittungItems zugewiesen:', quittungItems.length, 'Artikel');
     
     // PREIS-VALIDIERUNGS-PASS: Erkenne KI-Fehler bei Brutto-Preisen
-    console.log('🔍 VALIDIERUNG STARTET für '+quittungItems.length+' Artikel');
     try{
       quittungItems.forEach((it,idx) => {
-        console.log('  ['+idx+'] '+it.name+': menge='+it.menge+', brutto='+it.preis_brutto+', rabatt='+it.rabatt+', netto='+it.preis_netto);
         
         // Problem: Wenn menge > 1 und preis_netto < menge * 5
         // → KI hat wahrscheinlich Einzelpreis gegeben
@@ -7830,12 +7801,10 @@ async function handleQuittungFile(input){
           // Wenn Preis pro Einheit < 10 CHF und menge ist große Zahl
           // → Wahrscheinlich Einzelpreis-Fehler
           if(preisProEinheit > 0.5 && preisProEinheit < 10 && it.menge > 5) {
-            console.log('  🔧 KORREKTUR erkannt: Einzelpreis '+preisProEinheit.toFixed(2)+' × '+it.menge+' Stk');
             
             // ABER: Was ist der KORREKTE Gesamtpreis?
             // Wenn rabatt vorhanden: netto + rabatt = brutto
             const bruttoKorrekt = (it.preis_netto || 0) + (it.rabatt || 0);
-            console.log('    Brutto korrigiert: '+bruttoKorrekt);
             
             it.preis_brutto = bruttoKorrekt;
           }
@@ -7844,7 +7813,6 @@ async function handleQuittungFile(input){
     }catch(ve){
       console.warn('⚠️ Validierungs-Fehler (ignoriert):', ve.message);
     }
-    console.log('✅ Nach Validierung - ready für Auto-Matching');
     quittungGeschaeft=parsed.geschaeft||'';
     quittungIdx=0;
 
@@ -7853,26 +7821,18 @@ async function handleQuittungFile(input){
       return;
     }
 
-    console.log('✅ quittungItems vorhanden: '+quittungItems.length);
-    console.log('✅ Code erreicht VOR Auto-Matching!');
-    console.log('opt.quittungPreview=', opt.quittungPreview);
     
     // AUTO-MATCHING: Versuche sofort Artikel zuzuordnen
-    console.log('🤖🤖🤖 AUTO-MATCHING STARTET JETZT 🤖🤖🤖 für '+quittungItems.length+' Positionen');
-    console.log('quittungItems BEFORE matching:', quittungItems.map(x=>({name:x.name, id:x.lagerArtikelId})));
     quittungItems.forEach((it,idx)=>{
       if(it.lagerArtikelId)return; // Schon zugeordnet
       const found=findQuittungMatch(it.name);
       if(found){
         it.lagerArtikelId=found.id;
-        console.log('  ✅ ['+idx+'] "'+it.name+'" → Artikel ID '+found.id);
       }else{
-        console.log('  ❌ ['+idx+'] "'+it.name+'" → Keine Zuordnung');
       }
     });
 
     // KORREKTUR-PASS: Speichere korrigierte Werte von parseReceiptPosition() zurück in quittungItems
-    console.log('🔧 KORREKTUR-PASS: Berechne und speichere korrigierte Werte');
     quittungItems.forEach((it, idx) => {
       const parsed = parseReceiptPosition(it);
       // Speichere ALLE korrigierten Werte zurück
@@ -7883,23 +7843,17 @@ async function handleQuittungFile(input){
       it.preis_netto = parsed.preis_netto;
       it.rabatt = parsed.rabatt;
       // lagerArtikelId und lagerMatch NICHT überschreiben!
-      console.log('  ['+idx+'] Korrigiert: menge='+parsed.menge+' '+parsed.einheit+', type='+parsed.type+', brutto='+parsed.preis_brutto);
     });
     
     
-    console.log('quittungItems AFTER matching:', quittungItems.map(x=>({name:x.name, id:x.lagerArtikelId})));
     
     // DEBUG: Show alle quittungItems nach Matching
-    console.log('📋 quittungItems nach AUTO-MATCHING:');
     quittungItems.forEach((it,i)=>{
-      console.log('  ['+i+'] '+it.name+' - lagerArtikelId: '+it.lagerArtikelId+' (type: '+(typeof it.lagerArtikelId)+')');
     });
 
-    console.log('📞 Quittung verarbeitet mit', quittungItems.length, 'items');
 
     // Wenn Debug-Modus aktiviert: Debug-Interface öffnen
     if(opt.quittungDebug) {
-      console.log('🐛 Debug-Modus aktiviert → openDebugInterface()');
       openDebugInterface(text);
     } else {
       // Normal: Zeige Quittungs-Übersicht
@@ -7960,11 +7914,9 @@ function renderQuittungUebersicht(datum){
     '<button onclick="openDebugInterface(debugState.rawResponse)" style="background:var(--ac);color:#fff;border:none;padding:10px 14px;border-radius:var(--rs);cursor:pointer;font-weight:600;font-size:13px;white-space:nowrap">🔧 Debug</button>'+
   '</div>';
   h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">🔍 VORSCHAU-MODUS AKTIV — Alle Positionen überprüfen:</div>';
-  console.log('🎨 renderQuittungUebersicht: quittungItems=', quittungItems);
   h+=quittungItems.map((it,i)=>{
     // Matching wurde bereits vorher gemacht - hier nur noch Badge setzen
     const badge=it.lagerArtikelId?'<span style="font-size:10px;background:var(--al);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px">im Lager</span>':'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:6px">neu</span>';
-    console.log('  ['+i+'] '+it.name+' → lagerArtikelId='+it.lagerArtikelId+' → badge='+(it.lagerArtikelId?'grün':'rot'));
     if(it._done){
       return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd);opacity:.5">'+
         '<div><div style="font-size:14px;font-weight:500;text-decoration:line-through">'+esc(it.name)+'</div>'+
@@ -8000,23 +7952,17 @@ function levenshteinDistance(s1,s2){
 }
 
 function findQuittungMatch(name){
-  console.log('🔎 findQuittungMatch START für: "'+name+'"');
   // Normalisierung: lowercase + trim + mehrfaches whitespace zu single space
   const nl=name.toLowerCase().trim().replace(/\s+/g,' ');
-  console.log('   Quittungstext (normalisiert): "'+nl+'"');
   
   // 1. 100% Match mit Lagertext (Name)
-  console.log('   → Vergleiche mit Lagertexten...');
   let m=S.a.find(a=>{
     const an = a.name.toLowerCase().trim().replace(/\s+/g,' ');
     const match = an===nl;
-    if(match) console.log('   ✓ 100% Match via Lagertext: "'+an+'" = "'+nl+'"');
     return match;
   });
-  if(m){console.log('✅ ARTIKEL GEFUNDEN: '+m.name); return m;}
   
   // 2. 100% Match mit Alias
-  console.log('   → Vergleiche mit Alias...');
   m=S.a.find(a=>{
     const aliases = (a.quittungAliase||[]).length ? 
       (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) 
@@ -8024,15 +7970,11 @@ function findQuittungMatch(name){
     const has = aliases.some(al=>{
       const al_norm = al.toLowerCase().trim().replace(/\s+/g,' ');
       const match = al_norm===nl;
-      if(match) console.log('   ✓ 100% Match via Alias: "'+al_norm+'" = "'+nl+'"');
       return match;
     });
     return has;
   });
-  if(m){console.log('✅ ARTIKEL GEFUNDEN (via Alias): '+m.name); return m;}
   
-  console.log('❌ KEIN 100%-MATCH gefunden für: "'+name+'"');
-  console.log('   → Benötigt manuelle Zuordnung oder Alias-Eintrag');
   return null;
 }
 
@@ -8787,7 +8729,6 @@ window.addEventListener('offline',()=>{
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('./sw.js',{scope:'./'}).then(reg=>{
-      console.log('Service Worker registriert:',reg.scope);
       // Beim Laden direkt nach Updates fragen
       reg.update().catch(()=>{});
       reg.addEventListener('updatefound',()=>{
@@ -8946,7 +8887,6 @@ function showAppInfo(){
 }
 
 function openLagerArtikleWahl(quittungName, posIdx, isMatched){
-  console.log('🔍 Artikel-Wahl Modal öffnet für:', quittungName);
   
   const dlg = document.createElement('div');
   dlg.id = 'artikel-wahl-dlg';
@@ -9025,7 +8965,6 @@ function assignArtikelAlias(artikelId, quittungName, posIdx){
     artikel.quittungAliase = aliases.join('\n');
   }
   
-  console.log('✓ Alias gespeichert:', quittungName, '→', artikel.name);
   showToast('✓ Alias gespeichert!\n"'+quittungName+'" → "'+artikel.name+'"', 'success');
   
   // Schließe Modal
@@ -9039,7 +8978,6 @@ function assignArtikelAlias(artikelId, quittungName, posIdx){
     saveL(); // Normal mode: alles speichern
   } else {
     // Vorschau-Modus: NUR Alias zu GitHub
-    console.log('💾 Speichere NUR Alias (Vorschau-Modus)');
     // Die Alias wurden schon in artikel.quittungAliase gespeichert, jetzt nur GitHub sync
     saveL(); // Aber hier speichern wir auch die Alias!
   }
@@ -9064,7 +9002,6 @@ function selectLagerArtikleAlias(artikelId, quittungName){
   if(!aliases.includes(quittungName)) {
     aliases.push(quittungName);
     artikel.quittungAliase = aliases.join('\n');
-    console.log('✓ Alias gespeichert: "'+quittungName+'" → "'+artikel.name+'"');
   }
   
   // Speichere zu GitHub
@@ -9188,7 +9125,6 @@ function openDebugInterface(rawResponse){
 }
 
 function debugLog(msg){
-  console.log('DEBUG:', msg);
   const logEl = document.getElementById('debug-log');
   if(logEl){
     logEl.innerHTML += msg + '<br>';
