@@ -136,8 +136,7 @@
       "kaufort": "Landi",
       "barcodes": [
         "7611703211964"
-      ],
-      "quittungAliase": "green Mückenspirale"
+      ]
     },
     {
       "id": 4,
@@ -19421,5 +19420,5 @@
       "kaufort": "Landi"
     }
   ],
-  "aktualisiert": "2026-08-20T12:23:00.072Z"
+  "aktualisiert": "2026-08-20T12:23:10.790Z"
 }
