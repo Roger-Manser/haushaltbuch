@@ -9705,7 +9705,7 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Coop",
-      "menge": 12,
+      "menge": 4,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "7613196005150",
@@ -9732,12 +9732,6 @@
       "packungen": [
         {
           "id": 2,
-          "menge": 8,
-          "kaufdatum": "undefined",
-          "ablaufdatum": ""
-        },
-        {
-          "id": 3,
           "menge": 4,
           "kaufdatum": "undefined",
           "ablaufdatum": "2026-08-27"
@@ -19487,7 +19481,46 @@
       "aktion": false,
       "datum": "2026-08-20",
       "zeit": 1787233472494
+    },
+    {
+      "t": "ein",
+      "aid": 260,
+      "name": "JOGHURT NACH GRIECHISCHER ART NATURE gesüsst",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 4,
+      "einheit": "Stk",
+      "preis": 5.2,
+      "aktion": false,
+      "datum": "2026-08-20",
+      "zeit": 1787233814425
+    },
+    {
+      "t": "ein",
+      "aid": 260,
+      "name": "JOGHURT NACH GRIECHISCHER ART NATURE gesüsst",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 4,
+      "einheit": "Stk",
+      "preis": 5.2,
+      "aktion": false,
+      "datum": "2026-08-20",
+      "zeit": 1787236748819
+    },
+    {
+      "t": "ein",
+      "aid": 260,
+      "name": "JOGHURT NACH GRIECHISCHER ART NATURE gesüsst",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 4,
+      "einheit": "Stk",
+      "preis": 5.2,
+      "aktion": false,
+      "datum": "2026-08-20",
+      "zeit": 1787238141637
     }
   ],
-  "aktualisiert": "2026-08-20T13:48:33.720Z"
+  "aktualisiert": "2026-08-20T15:06:31.754Z"
 }
