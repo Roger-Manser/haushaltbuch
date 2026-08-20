@@ -9704,26 +9704,42 @@
       "marke": "Nestlé",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "kaufort": "",
-      "menge": 0,
+      "kaufort": "Coop",
+      "menge": 8,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "7613196005150",
       "barcodes": [],
-      "preis": 0,
+      "preis": 5.2,
       "packMenge": 150,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-20",
+      "kaufdatum": "undefined",
       "ablaufdatum": "",
       "notiz": "Nutri-Score C\nPro 100g/ml: 118 kcal, Fett 7g, KH 9.3g, Eiweiss 4.5g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219449815_17872194420706199314895206463602.jpg?t=1787221419167",
       "fotoPath": "1787219449815_17872194420706199314895206463602.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "undefined",
+          "preis": 5.2,
+          "menge": 4,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
+        }
+      ],
       "packungen": [
         {
+          "id": 1,
+          "menge": 4,
+          "kaufdatum": "undefined",
+          "ablaufdatum": ""
+        },
+        {
           "id": 2,
-          "menge": 0,
-          "kaufdatum": "2026-08-20",
+          "menge": 4,
+          "kaufdatum": "undefined",
           "ablaufdatum": ""
         }
       ],
@@ -19421,7 +19437,44 @@
       "k": "Diverses",
       "aktion": false,
       "kaufort": "Landi"
+    },
+    {
+      "t": "ein",
+      "aid": 260,
+      "name": "JOGHURT NACH GRIECHISCHER ART NATURE gesüsst",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 4,
+      "einheit": "Stk",
+      "preis": 5.2,
+      "aktion": false,
+      "datum": "2026-08-20",
+      "zeit": 1787230178532
+    },
+    {
+      "t": "ein",
+      "aid": 260,
+      "name": "JOGHURT NACH GRIECHISCHER ART NATURE gesüsst",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 4,
+      "einheit": "Stk",
+      "preis": 5.2,
+      "aktion": false,
+      "datum": "2026-08-20",
+      "zeit": 1787230611400
+    },
+    {
+      "aid": 260,
+      "d": "undefined",
+      "m": 4,
+      "p": 5.2,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Coop"
     }
   ],
-  "aktualisiert": "2026-08-20T12:48:08.079Z"
+  "aktualisiert": "2026-08-20T13:39:50.286Z"
 }
