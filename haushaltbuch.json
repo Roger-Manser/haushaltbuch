@@ -9634,9 +9634,18 @@
       "kaufdatum": "2026-08-19",
       "ablaufdatum": "",
       "notiz": "",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787227878887_66366_glas-rondo-4-25-cl_66366_1.webp?t=1787227884265",
+      "fotoPath": "1787227878887_66366_glas-rondo-4-25-cl_66366_1.webp",
       "preisHistorie": [
+        {
+          "datum": "2026-08-19",
+          "preis": 6.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
+        },
         {
           "datum": "2026-08-19",
           "preis": 6.95,
@@ -19421,5 +19430,5 @@
       "kaufort": "Coop"
     }
   ],
-  "aktualisiert": "2026-08-20T10:46:32.882Z"
+  "aktualisiert": "2026-08-20T12:11:38.929Z"
 }
