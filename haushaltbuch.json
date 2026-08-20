@@ -9912,6 +9912,9 @@
           "kaufdatum": "2026-08-20",
           "ablaufdatum": ""
         }
+      ],
+      "quittungAliase": [
+        "Tafel Pistache 100G"
       ]
     },
     {
@@ -19420,5 +19423,5 @@
       "kaufort": "Landi"
     }
   ],
-  "aktualisiert": "2026-08-20T12:46:49.418Z"
+  "aktualisiert": "2026-08-20T12:48:08.079Z"
 }
