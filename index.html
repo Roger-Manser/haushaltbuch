@@ -889,14 +889,6 @@ async function checkDataVersionOnStartup(){
     // 3. Vergleichen
     const diff=ghModified-localModified;
     
-    // Debug-Info
-      lokalTimestamp: new Date(localModified).toLocaleString('de-CH'),
-      ghTimestamp: new Date(ghModified).toLocaleString('de-CH'),
-      diff_ms: diff,
-      lokalArtikel: lokalCount,
-      ghArtikel: ghCount
-    });
-    
     // Wenn <2s Unterschied: ignorieren
     if(Math.abs(diff)<2000)return;
     
