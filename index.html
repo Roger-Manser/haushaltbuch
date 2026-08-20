@@ -539,10 +539,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.8';
+const APP_VERSION='22.9';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.9',d:'20.08.2026',items:['🧹 Aufgeräumt: Viel zu viele Logs entfernt','Nur noch wichtige Logs übrig: toast() Aufrufe und JSON-Parsing','Console viel lesbarer - kann man jetzt kopieren!','Hilft zu sehen ob toast() beim 2. Scan aufgerufen wird']},
   {v:'22.8',d:'20.08.2026',items:['🔧 DETAIL-DEBUG: Logs an jedem Schritt des Scan-Prozesses','🎬 SCAN GESTARTET - 📡 API Response - 📊 JSON geparst','📝 Text extrahiert - ✓ Text bereinigt - 🎯 VOR JSON.parse','Zeigt genau wo der Prozess abbricht']},
   {v:'22.7',d:'20.08.2026',items:['🔧 DEBUG: Console-Logs für toast()-Funktion','Zeigt ob toast() aufgerufen wird','Zeigt ob Toast-Element existiert','Hilft zu debuggen warum Toast beim 2. Scan nicht kommt']},
   {v:'22.10',d:'20.08.2026',items:['🚨 ROLLBACK: Einkaufslisten-Abgleich auskommentiert','Grund: Console war komplett leer (Syntax-Fehler)','Toast sollte JETZT wieder funktionieren','Einkaufslisten-Abgleich wird in v23.x neu geschrieben (sauberer Code)']},
@@ -7752,7 +7753,6 @@ async function handleQuittungFile(input){
       '- Nur echte Produkte, keine Steuern/Totals als eigene Artikel';
 
     const aiKey=localStorage.getItem('hb_ai_key')||'';
-    console.log('🎬 SCAN GESTARTET - aiKey vorhanden?', !!aiKey);
     if(!aiKey){
       body.innerHTML='<div style="text-align:center;padding:24px;color:var(--wn)"><div style="font-size:36px;margin-bottom:8px">🔑</div>Kein Anthropic API Key hinterlegt.<br><br><button onclick="closeQuittung();goScreen(\'s-settings\')" style="padding:10px 20px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-weight:600">Zu den Einstellungen</button></div>';
       return;
@@ -7769,7 +7769,6 @@ async function handleQuittungFile(input){
         ]}]
       })
     });
-    console.log('📡 API Response erhalten:', res.ok, res.status);
     if(!res.ok){
       const errText=await res.text().catch(()=>'');
       let errMsg='API-Fehler '+res.status;
@@ -7784,7 +7783,6 @@ async function handleQuittungFile(input){
       return;
     }
     const data=await res.json();
-    console.log('📊 JSON geparst, data vorhanden?', !!data);
     // Token-Verbrauch tracken
     if(data.usage){
       const u=data.usage;
@@ -7796,23 +7794,21 @@ async function handleQuittungFile(input){
       trackAiUsage(inTok,outTok,kostenChf);
     }
     const text=data.content&&data.content[0]&&data.content[0].text||'';
-    console.log('📝 Text extrahiert:', text.slice(0,100));
     const clean=text.replace(/```json|```/g,'').trim();
-    console.log('✓ Text bereinigt:', clean.slice(0,100));
     console.log('📥 KI-Response (raw):', text.slice(0,500));
     console.log('📥 KI-Response (clean):', clean.slice(0,500));
     
     // Toast anzeigen (JEDES Mal!)
-    console.log('🎯 Rufe toast() auf...');
+    console.log('🎯 VOR toast() Aufruf');
     toast('📄 Quittung wird gescannt...');
-    console.log('✓ toast() abgeschlossen');
+    console.log('✓ NACH toast() Aufruf');
     
     // SPEICHERE rawResponse für Debug-Interface
     debugState.rawResponse = text;
     
-    console.log('🎯 VOR JSON.parse - überprüfe clean...');
+    console.log('🎯 VOR JSON.parse');
     let parsed;
-    try{parsed=JSON.parse(clean);console.log('✓ JSON geparst:', parsed);}catch(pe){
+    try{parsed=JSON.parse(clean);console.log('✓ JSON geparst');}catch(pe){
       body.innerHTML='<div style="text-align:center;padding:24px;color:var(--dg)"><div style="font-size:36px;margin-bottom:8px">⚠️</div>Antwort konnte nicht verarbeitet werden.<br><br><div style="font-size:11px;color:var(--t3);margin-top:8px;text-align:left;max-height:120px;overflow:auto;background:var(--bg);padding:8px;border-radius:var(--rs)">'+esc(text.slice(0,500))+'</div></div>';
       return;
     }
