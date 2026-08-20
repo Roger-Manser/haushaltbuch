@@ -538,10 +538,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.9';
+const APP_VERSION='22.10';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.10',d:'20.08.2026',items:['🚨 ROLLBACK: Einkaufslisten-Abgleich auskommentiert','Grund: Console war komplett leer (Syntax-Fehler)','Toast sollte JETZT wieder funktionieren','Einkaufslisten-Abgleich wird in v23.x neu geschrieben (sauberer Code)']},
   {v:'22.9',d:'20.08.2026',items:['🐛 BugFix: Toast beim 2. Scan nicht sichtbar','toast()-Funktion: Klasse immer neu hinzufügen','Erst entfernen (50ms Delay) dann neu anzeigen','Toast kommt JETZT beim 1., 2., 3... Scan!']},
   {v:'22.8',d:'20.08.2026',items:['🐛 BugFix: Einkaufslisten-Abgleich "Goldfield Gold Box" vs "Goldfield Gold Box Zigaretten"','✨ Verbesserte Match-Logik: Längeres Text muss kürzeres enthalten','✨ Worte-basiert: Erste 2+ Worte müssen gleich sein','✨ Toast beim Scan: "Quittung wird verarbeitet..." und Erfolgsmeldung (JEDES MAL!)']},
   {v:'22.7',d:'20.08.2026',items:['🔧 DEBUG: Detaillierte Logs für Einkaufslisten-Abgleich','Zeigt S.ek Länge und Inhalte','Zeigt jeden Vergleich Quittung vs Einkaufsliste','Hilft zu finden warum Matches nicht funktionieren']},
@@ -7595,7 +7596,20 @@ async function resetAll(){if(!await confirmDialog('Alle Daten wirklich löschen?
 
 /* ── Toast & Loader ───────────────────────────────────────────────── */
 let tT;
-function toast(m){const t=document.getElementById('toast');t.textContent=m;clearTimeout(tT);t.classList.remove('on');setTimeout(()=>{t.classList.add('on');tT=setTimeout(()=>t.classList.remove('on'),2300);},50);}
+function toast(m){
+  const t=document.getElementById('toast');
+  if(!t) return;
+  t.textContent=m;
+  t.classList.remove('on');
+  clearTimeout(tT);
+  // Nach 10ms neu anzeigen
+  setTimeout(function(){
+    t.classList.add('on');
+    tT=setTimeout(function(){
+      t.classList.remove('on');
+    },2300);
+  },10);
+}
 /* ── Quittung scannen (Claude Vision) ────────────────────────────── */
 let quittungItems=[]; // erkannte Artikel von der Quittung
 let debugState = {
@@ -7857,105 +7871,9 @@ async function handleQuittungFile(input){
       console.log('  ['+idx+'] Korrigiert: menge='+parsed.menge+' '+parsed.einheit+', type='+parsed.type+', brutto='+parsed.preis_brutto);
     });
     
-    // EINKAUFSLISTEN-ABGLEICH: Gleiche quittungItems mit S.ek ab
-    console.log('📋 EINKAUFSLISTEN-ABGLEICH: Suche Matches...');
-    console.log('  S.ek vorhanden? ', S.ek ? 'JA' : 'NEIN');
-    console.log('  S.ek Länge: ', S.ek ? S.ek.length : 0);
-    if(S.ek && S.ek.length > 0) {
-      console.log('  S.ek Items:', S.ek.map(e => ({text: e.text, checked: e.checked})));
-    }
-    
+    // TODO: Einkaufslisten-Abgleich (auskommentiert für Debug)
+    console.log('📋 EINKAUFSLISTEN-ABGLEICH: TODO');
     const matchedEinkaufsItems = [];
-    quittungItems.forEach((qItem, idx) => {
-      console.log('  ['+idx+'] Quittungs-Item: "'+qItem.name+'"');
-      
-      if(!S.ek || S.ek.length === 0) {
-        console.log('     → S.ek ist leer oder nicht vorhanden');
-        return;
-      }
-      
-      // Suche in S.ek nach Match
-      const ekMatch = S.ek.find(ek => {
-        if(!ek) {
-          console.log('     ek ist null/undefined');
-          return false;
-        }
-        if(ek.checked) {
-          console.log('     ek.text="'+ek.text+'" ist bereits checked=true, übersprungen');
-          return false;
-        }
-        
-        const qName = qItem.name.toLowerCase().trim();
-        const ekText = ek.text.toLowerCase().trim();
-        
-        console.log('       Vergleich: "'+qName+'" vs "'+ekText+'"');
-        
-        // 1. Exakter Match
-        if(qName === ekText) {
-          console.log('       → MATCH (exakt)');
-          return true;
-        }
-        
-        // 2. Das längere Text sollte das kürzere enthalten
-        // (z.B. "Goldfield Gold Box" in "Goldfield Gold Box Zigaretten")
-        const longer = qName.length > ekText.length ? qName : ekText;
-        const shorter = qName.length > ekText.length ? ekText : qName;
-        
-        if(longer.includes(shorter)) {
-          console.log('       → MATCH (längerer enthält kürzeren)');
-          return true;
-        }
-        
-        // 3. Worte-basierter Match: Erste 2+ Worte gleich
-        const qWords = qName.split(/\s+/);
-        const ekWords = ekText.split(/\s+/);
-        if(qWords.length > 1 && ekWords.length > 1) {
-          // Vergleiche erste 2+ Worte
-          const minLen = Math.min(qWords.length, ekWords.length);
-          let matchCount = 0;
-          for(let i = 0; i < minLen; i++) {
-            if(qWords[i] === ekWords[i]) matchCount++;
-          }
-          if(matchCount >= 2) {
-            console.log('       → MATCH ('+matchCount+' Worte gleich)');
-            return true;
-          }
-        }
-        
-        console.log('       → KEIN MATCH');
-        return false;
-      });
-      
-      if(ekMatch) {
-        matchedEinkaufsItems.push({
-          quittungItem: qItem.name,
-          einkaufsItem: ekMatch.text,
-          menge: ekMatch.menge,
-          einheit: ekMatch.einheit,
-          ekId: ekMatch.id
-        });
-        console.log('  ✅ ['+idx+'] "'+qItem.name+'" → Einkaufsliste: "'+ekMatch.text+'"');
-        
-        // Wenn NICHT Preview: Markiere als erledigt
-        if(!opt.quittungPreview) {
-          ekMatch.checked = true;
-          console.log('     ✓ Markiert als erledigt');
-        }
-      } else {
-        console.log('  ❌ ['+idx+'] "'+qItem.name+'" → Kein Match in Einkaufsliste');
-      }
-    });
-    
-    console.log('📋 Einkaufslisten-Abgleich Ergebnis:', matchedEinkaufsItems.length, 'Matches gefunden');
-    
-    // Speichern wenn nicht Preview
-    if(!opt.quittungPreview && matchedEinkaufsItems.length > 0) {
-      saveL();
-      console.log('💾 Einkaufsliste gespeichert');
-    }
-    
-    // Speichere für Anzeige
-    debugState.matchedEinkaufsItems = matchedEinkaufsItems;
     
 
     console.log('quittungItems AFTER matching:', quittungItems.map(x=>({name:x.name, id:x.lagerArtikelId})));
