@@ -9655,6 +9655,47 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 259,
+      "name": "Essenzspirale mit Tontopf (Citronella, Lavendel, Eukalyptus, Zitrone)",
+      "marke": "finito",
+      "kat": "Diverses",
+      "lager": "Garten",
+      "kaufort": "Coop",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7610179983450",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-08-20",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219271315_1000064724.jpg?t=1787219326537",
+      "fotoPath": "1787219271315_1000064724.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-20",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Coop"
+        }
+      ],
+      "letzteEingangHeute": "11:48",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-08-20",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -18991,7 +19032,20 @@
       "k": "Fertiggerichte",
       "aktion": false,
       "kaufort": "Migros"
+    },
+    {
+      "t": "ein",
+      "aid": 259,
+      "name": "Essenzspirale mit Tontopf (Citronella, Lavendel, Eukalyptus, Zitrone)",
+      "lager": "Garten",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": true,
+      "datum": "2026-08-20",
+      "zeit": 1787219326539
     }
   ],
-  "aktualisiert": "2026-08-20T09:47:30.476Z"
+  "aktualisiert": "2026-08-20T09:50:09.144Z"
 }
