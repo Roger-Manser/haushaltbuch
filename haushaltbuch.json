@@ -9705,7 +9705,7 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Coop",
-      "menge": 8,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "7613196005150",
@@ -9719,20 +9719,7 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219449815_17872194420706199314895206463602.jpg?t=1787221419167",
       "fotoPath": "1787219449815_17872194420706199314895206463602.jpg",
       "preisHistorie": [],
-      "packungen": [
-        {
-          "id": 2,
-          "menge": 4,
-          "kaufdatum": "undefined",
-          "ablaufdatum": "2026-08-27"
-        },
-        {
-          "id": 1,
-          "menge": 4,
-          "kaufdatum": "2026-08-20",
-          "ablaufdatum": "2026-08-27"
-        }
-      ],
+      "packungen": [],
       "quittungAliase": "YAOS Jogurt nature"
     },
     {
@@ -19529,7 +19516,57 @@
       "aktion": false,
       "datum": "2026-08-20",
       "zeit": 1787238487805
+    },
+    {
+      "t": "ein",
+      "aid": 260,
+      "name": "JOGHURT NACH GRIECHISCHER ART NATURE gesüsst",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 4,
+      "einheit": "Stk",
+      "preis": 5.2,
+      "aktion": false,
+      "datum": "2026-08-20",
+      "zeit": 1787239584396
+    },
+    {
+      "aid": 260,
+      "d": "2026-08-20",
+      "m": 4,
+      "p": 5.2,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Coop"
+    },
+    {
+      "t": "ein",
+      "aid": 260,
+      "name": "JOGHURT NACH GRIECHISCHER ART NATURE gesüsst",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 4,
+      "einheit": "Stk",
+      "preis": 5.2,
+      "aktion": false,
+      "datum": "2026-08-20",
+      "zeit": 1787239963162
+    },
+    {
+      "t": "ein",
+      "aid": 260,
+      "name": "JOGHURT NACH GRIECHISCHER ART NATURE gesüsst",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 4,
+      "einheit": "Stk",
+      "preis": 5.2,
+      "aktion": false,
+      "datum": "2026-08-20",
+      "zeit": 1787241658254
     }
   ],
-  "aktualisiert": "2026-08-20T15:12:33.354Z"
+  "aktualisiert": "2026-08-20T16:22:14.877Z"
 }
