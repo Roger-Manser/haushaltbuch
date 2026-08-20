@@ -539,10 +539,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.45';
+const APP_VERSION='22.46';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.46',d:'20.08.2026',items:['🔍 FULL-DEBUG: Kompletter Preis-Flow tracen!','1️⃣ parseReceiptPosition(): INPUT/OUTPUT zeigen','2️⃣ KORREKTUR-PASS: Was wird in it.preis gespeichert?','3️⃣ startQuittungArtikel(): Welcher Preis kommt im Formular an?']},
   {v:'22.45',d:'20.08.2026',items:['🔍 MEGA-DEBUG: Warum funktioniert Preis-Korrektur nicht?','parseReceiptPosition() jetzt mit MASSIVEN Debug-Logs','Console zeigt GENAU: INPUT preis/menge, prüfe Bedingungen, korrigierter Preis','Logs zeigen wenn Korrektur nicht läuft und WARUM!']},
   {v:'22.44',d:'20.08.2026',items:['🎯 KRITISCH: quittungItems undefined - GEFIXT!','Bug: forEach() wurde vor quittungItems=parsed.artikel aufgerufen','Fix: quittungItems Initialisierung SOFORT nach JSON.parse hinzugefügt','Quittungsscan funktioniert JETZT wieder!']},
   {v:'22.43',d:'20.08.2026',items:['🔍 PREIS-DEBUG v2: Überprüfe ob Korrektur funktioniert!','Console "NACH parseReceiptPosition() - PREIS CHECK"','Zeigt: INPUT preis_brutto/preis/preis_netto','Zeigt: RESULT preis_brutto/preis_netto und Einzelpreis']},
@@ -7947,6 +7948,7 @@ async function handleQuittungFile(input){
       it.rabatt = parsed.rabatt;
       // WICHTIG: it.preis für UI-Rendering setzen (Fallback: preis_brutto)
       it.preis = parsed.preis_brutto || parsed.preis_netto || 0;
+      console.log('      → GESPEICHERT: it.preis='+it.preis.toFixed(2));
       // lagerArtikelId und lagerMatch NICHT überschreiben!
     });
     
@@ -8339,6 +8341,7 @@ function startQuittungArtikel(idx){
   }
 
   // Felder
+  console.log('📝 startQuittungArtikel(['+idx+']) '+it.name+': it.preis='+it.preis.toFixed(2)+', it.preis_brutto='+it.preis_brutto+', it.preis_netto='+it.preis_netto);
   h+='<div class="fd"><label>Bezeichnung</label><input type="text" id="qq-name" value="'+esc(existing?existing.name:it.name)+'"/></div>'+
     '<div class="tc"><div class="fd"><label>Menge</label><input type="number" id="qq-mg" min="1" value="'+it.menge+'"/></div>'+
     '<div class="fd"><label>Einheit</label><input type="text" id="qq-ei" value="'+esc(existing?existing.einheit||'Stk':it.einheit||'Stk')+'"/></div></div>'+
