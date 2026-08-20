@@ -4500,7 +4500,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Kühlschrank oben",
       "kaufort": "",
-      "menge": 2,
+      "menge": 4,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
@@ -4508,25 +4508,43 @@
       "preis": 0,
       "packMenge": 2,
       "packEinheit": "dl",
-      "kaufdatum": "2026-08-12",
-      "ablaufdatum": "2026-08-19",
+      "kaufdatum": "2026-08-19",
+      "ablaufdatum": "2026-09-19",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784392394723_17843923880276982037855487631665.jpg?t=1787156105373",
       "fotoPath": "1784392394723_17843923880276982037855487631665.jpg",
       "puffer": 10,
-      "preisHistorie": [],
-      "packungen": [
+      "preisHistorie": [
         {
-          "id": 1,
+          "datum": "2026-08-19",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-07-15",
-          "ablaufdatum": "2026-08-19"
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
         },
+        {
+          "datum": "2026-08-19",
+          "preis": 0,
+          "menge": 3,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        }
+      ],
+      "packungen": [
         {
           "id": 1,
           "menge": 1,
           "kaufdatum": "2026-08-12",
           "ablaufdatum": ""
+        },
+        {
+          "id": 2,
+          "menge": 3,
+          "kaufdatum": "2026-08-19",
+          "ablaufdatum": "2026-09-19"
         }
       ],
       "ownCode": "HB-000123"
@@ -18912,7 +18930,66 @@
       "aktion": false,
       "datum": "2026-08-19",
       "zeit": 1787157437273
+    },
+    {
+      "t": "aus",
+      "aid": 125,
+      "name": "Basilikum Pesto",
+      "lager": "Kühlschrank oben",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-19",
+      "zeit": 1787165386632
+    },
+    {
+      "t": "ein",
+      "aid": 125,
+      "name": "Basilikum Pesto",
+      "lager": "Kühlschrank oben",
+      "kat": "Gewürze & Saucen",
+      "menge": 3,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-19",
+      "zeit": 1787165442072
+    },
+    {
+      "aid": 125,
+      "d": "2026-08-19",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 125,
+      "d": "2026-08-19",
+      "m": 3,
+      "p": 0,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 257,
+      "d": "2026-08-19",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Fertiggerichte",
+      "aktion": false,
+      "kaufort": "Migros"
     }
   ],
-  "aktualisiert": "2026-08-19T16:37:26.493Z"
+  "aktualisiert": "2026-08-20T07:09:01.447Z"
 }
