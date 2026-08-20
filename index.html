@@ -538,7 +538,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.10';
+const APP_VERSION='22.5';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
@@ -7596,20 +7596,7 @@ async function resetAll(){if(!await confirmDialog('Alle Daten wirklich löschen?
 
 /* ── Toast & Loader ───────────────────────────────────────────────── */
 let tT;
-function toast(m){
-  const t=document.getElementById('toast');
-  if(!t) return;
-  t.textContent=m;
-  t.classList.remove('on');
-  clearTimeout(tT);
-  // Nach 10ms neu anzeigen
-  setTimeout(function(){
-    t.classList.add('on');
-    tT=setTimeout(function(){
-      t.classList.remove('on');
-    },2300);
-  },10);
-}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');clearTimeout(tT);tT=setTimeout(()=>t.classList.remove('on'),2300);}
 /* ── Quittung scannen (Claude Vision) ────────────────────────────── */
 let quittungItems=[]; // erkannte Artikel von der Quittung
 let debugState = {
@@ -7786,9 +7773,6 @@ async function handleQuittungFile(input){
     console.log('📥 KI-Response (raw):', text.slice(0,500));
     console.log('📥 KI-Response (clean):', clean.slice(0,500));
     
-    // Toast beim Scan anzeigen (jedes Mal!)
-    toast('📄 Quittung wird verarbeitet...');
-    
     // SPEICHERE rawResponse für Debug-Interface
     debugState.rawResponse = text;
     
@@ -7871,11 +7855,7 @@ async function handleQuittungFile(input){
       console.log('  ['+idx+'] Korrigiert: menge='+parsed.menge+' '+parsed.einheit+', type='+parsed.type+', brutto='+parsed.preis_brutto);
     });
     
-    // TODO: Einkaufslisten-Abgleich (auskommentiert für Debug)
-    console.log('📋 EINKAUFSLISTEN-ABGLEICH: TODO');
-    const matchedEinkaufsItems = [];
     
-
     console.log('quittungItems AFTER matching:', quittungItems.map(x=>({name:x.name, id:x.lagerArtikelId})));
     
     // DEBUG: Show alle quittungItems nach Matching
@@ -7885,12 +7865,6 @@ async function handleQuittungFile(input){
     });
 
     console.log('📞 Quittung verarbeitet mit', quittungItems.length, 'items');
-    
-    // Toast: Erfolgreich verarbeitet
-    toast('✅ Quittung verarbeitet: '+quittungItems.length+' Positionen');
-    if(matchedEinkaufsItems && matchedEinkaufsItems.length > 0) {
-      setTimeout(() => toast('📋 '+matchedEinkaufsItems.length+' Einkaufsitems aktualisiert'), 1500);
-    }
 
     // Wenn Debug-Modus aktiviert: Debug-Interface öffnen
     if(opt.quittungDebug) {
