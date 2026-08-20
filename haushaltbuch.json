@@ -9705,7 +9705,7 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Coop",
-      "menge": 8,
+      "menge": 12,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "7613196005150",
@@ -9714,7 +9714,7 @@
       "packMenge": 150,
       "packEinheit": "g",
       "kaufdatum": "undefined",
-      "ablaufdatum": "",
+      "ablaufdatum": "2026-08-27",
       "notiz": "Nutri-Score C\nPro 100g/ml: 118 kcal, Fett 7g, KH 9.3g, Eiweiss 4.5g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219449815_17872194420706199314895206463602.jpg?t=1787221419167",
       "fotoPath": "1787219449815_17872194420706199314895206463602.jpg",
@@ -9731,16 +9731,16 @@
       ],
       "packungen": [
         {
-          "id": 1,
-          "menge": 4,
+          "id": 2,
+          "menge": 8,
           "kaufdatum": "undefined",
           "ablaufdatum": ""
         },
         {
-          "id": 2,
+          "id": 3,
           "menge": 4,
           "kaufdatum": "undefined",
-          "ablaufdatum": ""
+          "ablaufdatum": "2026-08-27"
         }
       ],
       "quittungAliase": "YAOS Jogurt nature"
@@ -19474,7 +19474,20 @@
       "k": "Milchprodukte",
       "aktion": false,
       "kaufort": "Coop"
+    },
+    {
+      "t": "ein",
+      "aid": 260,
+      "name": "JOGHURT NACH GRIECHISCHER ART NATURE gesüsst",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 4,
+      "einheit": "Stk",
+      "preis": 5.2,
+      "aktion": false,
+      "datum": "2026-08-20",
+      "zeit": 1787233472494
     }
   ],
-  "aktualisiert": "2026-08-20T13:39:50.286Z"
+  "aktualisiert": "2026-08-20T13:48:33.720Z"
 }
