@@ -539,10 +539,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.34';
+const APP_VERSION='22.35';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.35',d:'20.08.2026',items:['🔍 DEBUG: Ist der KI-Preis Einzelpreis oder Gesamtpreis?','Console "KI-Response - RAW Artikel": menge, preis_brutto, preis_netto','Console "NACH parseReceiptPosition()": Was wird als Einzelpreis verwendet?','Hilft zu sehen: Gibt die KI 20.80 (Gesamt) statt 5.20 (Einzeln)?']},
   {v:'22.34',d:'20.08.2026',items:['🎯 MEGA-BUG GEFIXT: Kaufdatum war undefined!','Zeile 7894: renderQuittungUebersicht() wurde OHNE Parameter aufgerufen','Jetzt: renderQuittungUebersicht(todayISO()) - mit Kaufdatum!','Kaufdatum wird JETZT korrekt als body.dataset.datum gespeichert!']},
   {v:'22.33',d:'20.08.2026',items:['🔍 DEBUG: Kaufdatum + Preis-Berechnung überprüfen!','Console zeigt: INPUT (menge, preis, datum)','Console zeigt: WAS WIRD GESPEICHERT (packung, preisHistorie)','Console zeigt: Ist preis Einzelpreis oder Gesamtpreis?']},
   {v:'22.32',d:'20.08.2026',items:['🔍 DEBUG: Warum wird Kaufdatum nicht eingebucht?','MHD-Feld: Einfacher Datumpicker (type="date") statt dateField()','Console zeigt: Kaufort vor/nach, ob Chip gefunden wird, Final kaufort','Log beim Einbuchen: zeigt kaufort in preisHistorie']},
@@ -7806,6 +7807,13 @@ async function handleQuittungFile(input){
 
     quittungItems=parsed.artikel||[];
     console.log('✓ quittungItems gesetzt:', quittungItems.length, 'Artikel');
+    console.log('🎯 KI-Response - RAW Artikel:');
+    quittungItems.forEach((it, idx) => {
+      console.log('  ['+idx+']', it.name);
+      console.log('      menge:', it.menge, 'einheit:', it.einheit);
+      console.log('      preis_brutto:', it.preis_brutto, 'preis_netto:', it.preis_netto, 'preis:', it.preis);
+      console.log('      Erwartung: preis sollte EINZELPREIS sein (CHF/Stk), nicht Gesamtpreis!');
+    });
     
     // PREIS-VALIDIERUNGS-PASS: Erkenne KI-Fehler bei Brutto-Preisen
     try{
@@ -7865,8 +7873,13 @@ async function handleQuittungFile(input){
     console.log('✓ AUTO-MATCHING fertig');
 
     // KORREKTUR-PASS: Speichere korrigierte Werte von parseReceiptPosition() zurück in quittungItems
+    console.log('🎯 NACH parseReceiptPosition() - Einzelpreise:');
     quittungItems.forEach((it, idx) => {
       const parsed = parseReceiptPosition(it);
+      console.log('  ['+idx+']', it.name);
+      console.log('      menge:', parsed.menge, 'einheit:', parsed.einheit);
+      console.log('      preis_brutto:', parsed.preis_brutto, 'preis_netto:', parsed.preis_netto);
+      console.log('      → Wird als Einzelpreis verwendet: CHF', (parsed.preis_brutto || parsed.preis_netto || 0));
       // Speichere ALLE korrigierten Werte zurück
       it.menge = parsed.menge;
       it.einheit = parsed.einheit;
