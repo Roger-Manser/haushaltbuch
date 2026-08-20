@@ -539,10 +539,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.37';
+const APP_VERSION='22.38';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.38',d:'20.08.2026',items:['🔍 DEBUG: Warum bleibt Bestand bei 12 wenn man auf 0 setzen möchte?','Console zeigt: Input-Feldwert, geparster Wert, Differenz','Debug: "diff===0 - Abbruch!" = Problem erkannt','Hilft zu sehen: Wird 0 gelesen oder bleibt Input bei 12?']},
   {v:'22.37',d:'20.08.2026',items:['🎯 FINAL-FIX: Gesamtpreis-Korrektur VORHER machen!','Bug: nettoPreis wurde VOR der Gesamtpreis-Korrektur berechnet','Jetzt: Korrektur ZUERST, dann nettoPreis berechnen','4×CHF1.30=CHF5.20 wird JETZT zu CHF1.30 Einzelpreis!']},
   {v:'22.36',d:'20.08.2026',items:['🎯 MEGA-BUG GEFIXT: KI gibt GESAMTPREIS statt Einzelpreis!','Heuristik: Wenn menge=4 und preis=5.20 → 5.20/4=1.30 pro Stück','Erkenne Gesamtpreis automatisch (0.10-100 CHF Einzelpreis = plausibel)','4×CHF1.30=CHF5.20 wird JETZT korrekt als Einzelpreis CHF1.30 gespeichert!']},
   {v:'22.35',d:'20.08.2026',items:['🔍 DEBUG: Ist der KI-Preis Einzelpreis oder Gesamtpreis?','Console "KI-Response - RAW Artikel": menge, preis_brutto, preis_netto','Console "NACH parseReceiptPosition()": Was wird als Einzelpreis verwendet?','Hilft zu sehen: Gibt die KI 20.80 (Gesamt) statt 5.20 (Einzeln)?']},
@@ -2241,11 +2242,24 @@ function bestandManuellDialog(id){
 function bestandManuellSpeichern(id,typ){
   const a=S.a.find(x=>x.id===id);if(!a)return;
   const decOk=isDecUnit(a.einheit);
-  const neu=decOk?parseDecimal(document.getElementById('bestand-neu').value)||0:Math.max(0,Math.round(parseDecimal(document.getElementById('bestand-neu').value)||0));
+  const neuWert=document.getElementById('bestand-neu').value;
+  console.log('🔍 bestandManuellSpeichern DEBUG:');
+  console.log('  Artikel:', a.name);
+  console.log('  Alter Bestand:', a.menge);
+  console.log('  Input-Feld "bestand-neu" Wert:', neuWert);
+  const neu=decOk?parseDecimal(neuWert)||0:Math.max(0,Math.round(parseDecimal(neuWert)||0));
+  console.log('  Geparster neuer Wert:', neu);
   const diff=neu-a.menge;
+  console.log('  Differenz (diff):', diff);
+  console.log('  Typ:', typ);
   document.getElementById('bestand-dlg').remove();
 
-  if(diff===0){toast('Bestand unverändert');return;}
+  if(diff===0){
+    console.log('  ⚠️ diff===0 - Abbruch!');
+    toast('Bestand unverändert');
+    return;
+  }
+  console.log('  ✓ diff!==0 - Fortfahren!');
 
   if(typ==='korrektur'){
     // Stille Korrektur — kein Log, einfach Bestand setzen
