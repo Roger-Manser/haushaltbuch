@@ -539,10 +539,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.17';
+const APP_VERSION='22.18';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.18',d:'20.08.2026',items:['🐛 BugFix: it.preis wird jetzt in Korrektur-Pass gesetzt!','Fehler "Cannot read properties of undefined" GELÖST','it.preis = preis_brutto || preis_netto || 0','Artikel können jetzt in renderQuittungUebersicht() angezeigt werden']},
   {v:'22.17',d:'20.08.2026',items:['✅ GELÖST: quittung-overlay wird geöffnet!','handleQuittungFile() zeigt jetzt den Overlay','DARUM waren die Artikel unsichtbar obwohl gerendert!','Jetzt werden erkannte Artikel UND "Buchen"-Buttons sichtbar!']},
   {v:'22.16',d:'20.08.2026',items:['⏱ Toast Dauer verdoppelt: 4s → 8s','🔍 DEBUG-LOGS hinzugefügt um zu sehen was nach Scan passiert','Console zeigt jetzt: quittungItems, renderQuittungUebersicht() Aufrufe','Hilft zu finden warum keine Artikel erscheinen wenn Vorschau aus ist']},
   {v:'22.15',d:'20.08.2026',items:['🎯 FLOW VEREINFACHT: Direkt handleQuittungFile!','openQuittung() → Wahl → handleQuittungFile() → Toast','Keine Extra-Dialoge mehr zwischen den Schritten','File-Handler jetzt direkt auf handleQuittungFile (kein _openQuittungDo)']},
@@ -7834,6 +7835,8 @@ async function handleQuittungFile(input){
       it.preis_brutto = parsed.preis_brutto;
       it.preis_netto = parsed.preis_netto;
       it.rabatt = parsed.rabatt;
+      // WICHTIG: it.preis für UI-Rendering setzen (Fallback: preis_brutto)
+      it.preis = parsed.preis_brutto || parsed.preis_netto || 0;
       // lagerArtikelId und lagerMatch NICHT überschreiben!
     });
     
