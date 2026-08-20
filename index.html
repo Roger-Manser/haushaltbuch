@@ -539,10 +539,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.32';
+const APP_VERSION='22.33';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.33',d:'20.08.2026',items:['🔍 DEBUG: Kaufdatum + Preis-Berechnung überprüfen!','Console zeigt: INPUT (menge, preis, datum)','Console zeigt: WAS WIRD GESPEICHERT (packung, preisHistorie)','Console zeigt: Ist preis Einzelpreis oder Gesamtpreis?']},
   {v:'22.32',d:'20.08.2026',items:['🔍 DEBUG: Warum wird Kaufdatum nicht eingebucht?','MHD-Feld: Einfacher Datumpicker (type="date") statt dateField()','Console zeigt: Kaufort vor/nach, ob Chip gefunden wird, Final kaufort','Log beim Einbuchen: zeigt kaufort in preisHistorie']},
   {v:'22.31',d:'20.08.2026',items:['🎯 KRITISCHER BUG GEFIXT: Endlosschleife in nativeDateChanged()!','dispatchEvent verursachte Selbst-Aufruf → RangeError','Zeile 8410-8411 entfernt - nicht nötig!','MHD-Feld funktioniert JETZT sauber ohne Fehler!']},
   {v:'22.30',d:'20.08.2026',items:['🐛 BUG GEFIXT: quittungAliase normalisiert in showDet()!','Fehler: (a.quittungAliase || []).map() - String hat kein .map()','showDet() normalisiert JETZT String→Array vor .map()','Artikel bearbeiten funktioniert JETZT ohne Fehler!']},
@@ -8356,32 +8357,45 @@ function confirmQuittungArtikel(idx,hasExisting,existingId){
   }else{
     // NORMALMODUS: Warenbestand buchen
     console.log('📦 NORMALMODUS: Artikel einbuchen...');
+    console.log('  Eingabewerte: menge=', menge, 'preis=', preis, 'datum=', datum);
     if(hasExisting&&existingId){
       // Bestehenden Artikel im Lager aktualisieren
       const a=S.a.find(x=>x.id===existingId);
       if(a){
         console.log('  ✓ Artikel gefunden:', a.name);
         console.log('    kaufort vorher:', a.kaufort, '→ neu:', kaufort);
-        console.log('    ablaufdatum:', ablaufdatum);
+        console.log('    kaufdatum neu:', datum);
+        console.log('    ablaufdatum neu:', ablaufdatum);
+        console.log('    preis einzel:', preis, '(erwartung: CHF/Stk)');
         ensurePackungen(a);
-        a.packungen.push({id:newPackId(),menge,kaufdatum:datum,ablaufdatum:ablaufdatum||''});
+        const packung={id:newPackId(),menge,kaufdatum:datum,ablaufdatum:ablaufdatum||''};
+        console.log('    ✓ Packung wird hinzugefügt:', packung);
+        a.packungen.push(packung);
         syncMenge(a);
         a.kaufdatum=datum;
         a.kaufort=kaufort||a.kaufort;
         if(!a.preisHistorie)a.preisHistorie=[];
-        a.preisHistorie.push({datum,preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort||''});
+        const ph={datum,preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort||''};
+        console.log('    ✓ PreisHistorie wird hinzugefügt:', ph);
+        a.preisHistorie.push(ph);
         if(preis>0)a.preis=preis;
         console.log('    kaufort NACHHER:', a.kaufort);
+        console.log('    artikel.preis NACHHER:', a.preis);
         addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,einheit,preis,false,true);
       }
     }else{
       // Neuen Artikel anlegen
       console.log('  ✓ Neuer Artikel wird angelegt');
+      console.log('    name:', name);
       console.log('    kaufort:', kaufort);
       console.log('    ablaufdatum:', ablaufdatum);
+      console.log('    kaufdatum:', datum);
+      console.log('    preis (einzeln):', preis);
       const newId=S.nid++;
       const lager=S.lo[0]||'Vorratsschrank';
-      S.a.push({id:newId,name,marke:'',kat,lager,kaufort,menge,einheit,mindest:0,barcode:'',preis,packMenge:0,packEinheit:'',kaufdatum:datum,ablaufdatum,notiz:'',foto:'',fotoPath:'',packungen:[{id:newPackId(),menge,kaufdatum:datum,ablaufdatum:ablaufdatum||''}],preisHistorie:[{datum,preis,menge,einheit:einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort||''}]});
+      const newArt={id:newId,name,marke:'',kat,lager,kaufort,menge,einheit,mindest:0,barcode:'',preis,packMenge:0,packEinheit:'',kaufdatum:datum,ablaufdatum,notiz:'',foto:'',fotoPath:'',packungen:[{id:newPackId(),menge,kaufdatum:datum,ablaufdatum:ablaufdatum||''}],preisHistorie:[{datum,preis,menge,einheit:einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort||''}]};
+      console.log('    ✓ Neuer Artikel:', newArt);
+      S.a.push(newArt);
       addLogEntry('ein',newId,name,lager,kat,menge,einheit,preis,false);
     }
     saveL();
