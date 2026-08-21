@@ -304,7 +304,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   <div class="tb">
     <span class="tb-t" onclick="showAppInfo()" style="cursor:pointer">Haushaltbuch <span id="app-version-badge" style="font-size:10px;font-weight:500;color:var(--t3);vertical-align:middle;"></span> <span id="artikel-count-badge" style="font-size:10px;font-weight:500;color:var(--t3);vertical-align:middle;background:var(--al);color:var(--ac);border-radius:8px;padding:1px 6px;margin-left:2px"></span></span>
     <div class="tb-r">
-      <button class="ib" onclick="_openQuittungDo(null)" title="Quittung scannen" style="color:var(--ac)">
+      <button class="ib" onclick="openQuittung()" title="Quittung scannen" style="color:var(--ac)">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/><line x1="13" y1="13" x2="17" y2="13"/><line x1="13" y1="17" x2="17" y2="17"/></svg>
       </button>
       <button class="ib" onclick="lagerKiScan()" title="Produktfoto KI-Analyse" style="color:var(--ok)">
@@ -367,7 +367,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   <div class="ftp">
     <button class="bkb" onclick="closeEingang()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
     <span class="ftl">Wareneingang</span>
-    <button class="ib" onclick="_openQuittungDo(null)" title="Quittung scannen" style="color:var(--ac)">
+    <button class="ib" onclick="openQuittung()" title="Quittung scannen" style="color:var(--ac)">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/><line x1="13" y1="13" x2="17" y2="13"/><line x1="13" y1="17" x2="17" y2="17"/></svg>
     </button>
   </div>
@@ -497,13 +497,13 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 <div id="laden-overlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:6000;flex-direction:column">
   <div id="laden-content" style="display:flex;flex-direction:column;height:100%;overflow:hidden"></div>
 </div>
-<div id="quittung-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:5000;align-items:flex-end;justify-content:center;pointer-events:auto">
-  <div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);max-height:100vh;overflow-y:auto;padding:0 0 env(safe-area-inset-bottom);pointer-events:auto">
+<div id="quittung-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:5000;align-items:flex-end;justify-content:center">
+  <div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);max-height:100vh;overflow-y:auto;padding:0 0 env(safe-area-inset-bottom)">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd)">
       <span style="font-weight:600;font-size:16px">📄 Quittung scannen</span>
       <button onclick="closeQuittung()" style="background:none;border:none;cursor:pointer;color:var(--t2);font-size:22px;line-height:1">×</button>
     </div>
-    <div id="quittung-body" style="padding:16px;pointer-events:auto"></div>
+    <div id="quittung-body" style="padding:16px"></div>
   </div>
 </div>
 <div id="lightbox" onclick="closeLightbox()">
@@ -539,11 +539,10 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.79';
+const APP_VERSION='22.48';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'22.49',d:'20.08.2026',items:['🧹 AUFGERÄUMT: Alle Debug-Logs entfernt!','parseReceiptPosition(), KORREKTUR-PASS, AUTO-MATCHING, etc.','toast() Funktion gereinigt','Code ist jetzt sauber und Production-ready! ✨']},
   {v:'22.48',d:'20.08.2026',items:['🎯 FINAL-FIX: preis_brutto Return-Statement GEFIXT!','Problem: Return gab p.preis_brutto (Original 5.2) statt bruttoPreis (korrigiert 1.30)!','Fix: preis_brutto: bruttoPreis statt preis_brutto: p.preis_brutto || nettoPreis','JETZT: Preis wird KORREKT als CHF 1.30 gespeichert! ✅✅✅']},
   {v:'22.47',d:'20.08.2026',items:['🎯 MEGA-BUG GEFIXT: preis_netto wird ignoriert wenn Gesamtpreis korrigiert!','Problem: p.preis_netto=5.2 wurde verwendet obwohl bruttoPreis zu 1.30 korrigiert!','Fix: wurdKorrigiert Flag - wenn TRUE, nutze nur bruttoPreis, nicht p.preis_netto!','JETZT: Preis wird korrekt zu 1.30 CHF gespeichert! ✅']},
   {v:'22.46',d:'20.08.2026',items:['🔍 FULL-DEBUG: Kompletter Preis-Flow tracen!','1️⃣ parseReceiptPosition(): INPUT/OUTPUT zeigen','2️⃣ KORREKTUR-PASS: Was wird in it.preis gespeichert?','3️⃣ startQuittungArtikel(): Welcher Preis kommt im Formular an?']},
@@ -2052,7 +2051,7 @@ function editPreisHistorie(artikelId,idx){
   const existing=document.getElementById('vh-edit-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='vh-edit-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;opacity:0;pointer-events:auto;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px">Verlauf-Eintrag bearbeiten</div>'+
@@ -2359,10 +2358,6 @@ function chgBEingangGrund(a){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
-  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -2400,10 +2395,6 @@ function chgBAusgangGrund(a,aktive){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
-  
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -2580,10 +2571,6 @@ function showPackDialog(a,typ){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
-  
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -3034,7 +3021,7 @@ function showFotoWahl(){
   const existing=document.getElementById('foto-wahl-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='foto-wahl-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;opacity:0;pointer-events:auto;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px;text-align:center">Foto hinzufügen</div>'+
@@ -3057,10 +3044,6 @@ function showFotoWahl(){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
-  
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -3774,10 +3757,6 @@ function showAusgangConfirmDialog(a,packId,list){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
-  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -3829,10 +3808,6 @@ function showAusgangPackDialog(a,list){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
-  
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -3961,10 +3936,6 @@ function showEtikettPackDialog(a){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
-  
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -4563,10 +4534,6 @@ function showReceiptPreview(positions){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
-  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -4625,10 +4592,6 @@ function showReceiptPreview_OLD(positions){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
-  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -4642,23 +4605,36 @@ function parseReceiptPosition(p){
   let bruttoPreis = p.preis_brutto || p.preis || 0;
   let rabatt = p.rabatt || 0;
   
+  console.log('🔍 parseReceiptPosition('+name+'):');
+  console.log('    INPUT: preis_brutto='+p.preis_brutto+', preis='+p.preis+', menge='+menge);
+  console.log('    → bruttoPreis='+bruttoPreis);
+  
   let wurdKorrigiert = false;  // Flag ob Korrektur gemacht wurde!
   
   // 🎯 MEGA-FIX: Erkenne ob preis_brutto der GESAMTPREIS ist! (VOR nettoPreis-Berechnung!)
   // Heuristik: Wenn menge > 1 UND bruttoPreis/menge plausibel (0.10-100 CHF), dann ist es Gesamtpreis!
   if(menge > 1 && bruttoPreis > 0){
     const preisProStueck = bruttoPreis / menge;
+    console.log('    prüfe: menge('+menge+') > 1? JA, bruttoPreis('+bruttoPreis+') > 0? JA');
+    console.log('    → preisProStueck = '+bruttoPreis+'/'+menge+' = '+preisProStueck.toFixed(2));
     // Wenn der Durchschnittspreis zwischen 0.10 und 100 CHF liegt, ist es wahrscheinlich Gesamtpreis
     if(preisProStueck >= 0.10 && preisProStueck <= 100){
+      console.log('    ✓ ERKANNT: Gesamtpreis! '+preisProStueck.toFixed(2)+' CHF pro Stück ist plausibel');
       bruttoPreis = preisProStueck;  // ← KORRIGIERT!
       rabatt = rabatt / menge;  // ← Auch Rabatt pro Stück!
       wurdKorrigiert = true;  // ← FLAG setzen!
+      console.log('    → korrigiert zu: bruttoPreis='+bruttoPreis.toFixed(2));
+    } else {
+      console.log('    ✗ NICHT PLAUSIBEL: '+preisProStueck.toFixed(2)+' CHF ist außerhalb [0.10-100]');
     }
+  } else {
+    console.log('    ✗ KEINE KORREKTUR: menge('+menge+') > 1? '+(menge>1)+', bruttoPreis('+bruttoPreis+') > 0? '+(bruttoPreis>0));
   }
   
   // JETZT nettoPreis berechnen - nach der Gesamtpreis-Korrektur!
   // WICHTIG: Wenn korrigiert, p.preis_netto IGNORIEREN!
   let nettoPreis = wurdKorrigiert ? bruttoPreis : (p.preis_netto || (bruttoPreis - rabatt));
+  console.log('    nettoPreis='+nettoPreis.toFixed(2));
   
   // FIX: KI gibt manchmal bereits den Netto-Preis als "Brutto" zurück
   // Wenn preis_netto < preis_brutto und menge > 1: Brutto war falsch
@@ -5315,10 +5291,6 @@ function showRezeptGekocht(rezeptId){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
-  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -5903,10 +5875,6 @@ function showLadenKaufDialog(id){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
-  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -6103,10 +6071,6 @@ function showEkEinbuchungNeu(ekEntry){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
-  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -6281,10 +6245,6 @@ function showPortionDialog(originalPort){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
-  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -6455,10 +6415,6 @@ function processCheckedItemsShowDialog(ekEntry,artikel,idx,allChecked){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
-  
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -6817,10 +6773,6 @@ function showInvMissingDataDialog(idx){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
-  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -6886,7 +6838,7 @@ function lagerKiScan(){
   const existing=document.getElementById('kiscan-info-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='kiscan-info-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;opacity:0;pointer-events:auto;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:20px 16px calc(20px + env(safe-area-inset-bottom))">'+
       '<input type="file" id="ki-file-cam" accept="image/*" capture="environment" style="display:none" onchange="kiScanAddFoto(this)"/>'+
@@ -6921,10 +6873,6 @@ function lagerKiScan(){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
-  
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -7348,10 +7296,6 @@ function renderMindestManager(){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
-  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -7715,18 +7659,24 @@ async function resetAll(){if(!await confirmDialog('Alle Daten wirklich löschen?
 /* ── Toast & Loader ───────────────────────────────────────────────── */
 let tT;
 function toast(m){
+  console.log('📢 toast() aufgerufen:', m);
   const t=document.getElementById('toast');
-  if(!t) return;
-  // WICHTIG: z-index muss höher sein als Dialog (9000+1)
-  t.style.zIndex = '9001';
+  if(!t) {
+    console.log('  ❌ Toast-Element nicht gefunden!');
+    return;
+  }
+  console.log('  ✓ Toast-Element gefunden');
   t.textContent=m;
   t.classList.remove('on');
+  console.log('  ✓ Klasse entfernt');
   clearTimeout(tT);
   // Nach 50ms die Klasse neu hinzufügen (erzwingt Re-Render)
   setTimeout(()=>{
     t.classList.add('on');
+    console.log('  ✓ Klasse hinzugefügt');
     tT=setTimeout(()=>{
       t.classList.remove('on');
+      console.log('  ✓ Toast verschwindet nach 8000ms');
     },8000);  // 8 Sekunden (doppelt so lange)
   },50);
 }
@@ -7743,35 +7693,15 @@ let debugState = {
 let quittungIdx=0;    // aktueller Artikel im Einzelbestätigungs-Flow
 let quittungGeschaeft=''; // erkanntes Geschäft
 
-
-function openQuittungFile(isCam){
-  // _openQuittungDo aufrufen (erzeugt File-Inputs)
-  _openQuittungDo(null);
-  
-  // Mit Timeout warten bis File-Inputs erstellt sind, DANN klicken
-  setTimeout(() => {
-    const fileId = isCam ? 'quittung-file-cam' : 'quittung-file';
-    const input = document.getElementById(fileId);
-    if(input) {
-      input.click();
-      // Overlay sofort nach Click schließen
-      document.getElementById('quittung-overlay').style.display = 'none';
-    }
-  }, 50);
-}
-
-
 function openQuittung(){
-  // Dialog wird gar nicht mehr angezeigt - nur _openQuittungDo() aufrufen!
-  _openQuittungDo(null);
-  return;
   const existing=document.getElementById('quittung-info-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='quittung-info-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;opacity:0;pointer-events:auto;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:20px 16px calc(20px + env(safe-area-inset-bottom))">'+
-      
+      '<input type="file" id="qi-file-cam" accept="image/*" capture="environment" style="display:none" onchange="handleQuittungFile(this)"/>'+
+      '<input type="file" id="qi-file-gal" accept="image/*" style="display:none" onchange="handleQuittungFile(this)"/>'+
       '<div style="font-size:22px;text-align:center;margin-bottom:10px">🧾</div>'+
       '<div style="font-weight:700;font-size:17px;margin-bottom:10px;text-align:center">Quittung scannen</div>'+
       '<div style="font-size:14px;color:var(--t2);line-height:1.6;margin-bottom:16px">'+
@@ -7779,11 +7709,11 @@ function openQuittung(){
         '<span style="color:var(--t3);font-size:12px">⚠️ Benötigt API-Key (Einstellungen). Jede Analyse kostet ein paar Cent.</span>'+
       '</div>'+
       '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">'+
-        '<button onclick="openQuittungFile(true)" style="width:100%;padding:13px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;pointer-events:auto">'+
+        '<button onclick="document.getElementById(\'qi-file-cam\').click()" style="width:100%;padding:13px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>'+
           'Quittung fotografieren'+
         '</button>'+
-        '<button onclick="openQuittungFile(false)" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;pointer-events:auto">'+
+        '<button onclick="document.getElementById(\'qi-file-gal\').click()" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'+
           'Aus Galerie auswählen'+
         '</button>'+
@@ -7798,30 +7728,17 @@ function openQuittung(){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
-  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
-  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
-  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
-  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
 }
 
 function _openQuittungDo(preselectedInput){
-  toast('📸 Wähle ein Foto...');
-  quittungItems=[];quittungIdx=0;quittungGeschaeft='';'';
+  quittungItems=[];quittungIdx=0;quittungGeschaeft='';
   document.getElementById('quittung-body').innerHTML=
     '<input type="file" id="quittung-file" accept="image/*" style="display:none" onchange="handleQuittungFile(this)"/>'+
     '<input type="file" id="quittung-file-cam" accept="image/*" capture="environment" style="display:none" onchange="handleQuittungFile(this)"/>';
   document.getElementById('quittung-overlay').style.display='flex';
-  
-  // Zwei simple Buttons: Kamera oder Galerie
-  const body = document.getElementById('quittung-body');
-  body.innerHTML = '<div style="display:flex;flex-direction:column;gap:8px">'+
-    '<button onclick="openQuittungFile(true)" style="width:100%;padding:13px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">📷 Kamera</button>'+
-    '<button onclick="openQuittungFile(false)" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">🖼️ Galerie</button>'+
-  '</div>';
-  
   // Wenn direkt aus Info-Dialog ein Bild gewählt: sofort verarbeiten
   if(preselectedInput&&preselectedInput.files&&preselectedInput.files[0]){
     handleQuittungFile(preselectedInput);
@@ -7839,11 +7756,17 @@ async function handleQuittungFile(input){
   const body=document.getElementById('quittung-body');
   if(!body)return;
   
+  // Dialog schließen (falls offen)
+  const dlg=document.getElementById('quittung-info-dlg');
+  if(dlg)dlg.remove();
+  
   // Overlay ÖFFNEN (damit quittung-body sichtbar ist!)
   document.getElementById('quittung-overlay').style.display='flex';
   
   // Toast sofort zeigen!
+  console.log('🎬 handleQuittungFile START - Toast wird sofort gezeigt');
   toast('📄 Quittung wird gescannt...');
+  console.log('✓ Toast-Aufruf abgeschlossen');
   
   // Bild als Base64 lesen
   const b64=await new Promise((res,rej)=>{
@@ -7946,6 +7869,16 @@ async function handleQuittungFile(input){
 
     // 🎯 WICHTIG: quittungItems setzen SOFORT nach JSON.parse!
     quittungItems=parsed.artikel||[];
+    console.log('✓ quittungItems gesetzt:', quittungItems.length, 'Artikel');
+    
+    console.log('🎯 KI-Response - RAW Artikel:');
+    quittungItems.forEach((it, idx) => {
+      console.log('  ['+idx+']', it.name);
+      console.log('      menge:', it.menge, 'einheit:', it.einheit);
+      console.log('      preis:', it.preis, 'preis_brutto:', it.preis_brutto, 'preis_netto:', it.preis_netto);
+      console.log('      rabatt:', it.rabatt);
+      console.log('      type:', it.type);
+    });
     
     // PREIS-VALIDIERUNGS-PASS: Erkenne KI-Fehler bei Brutto-Preisen
     try{
@@ -7981,17 +7914,37 @@ async function handleQuittungFile(input){
 
     
     // AUTO-MATCHING: Versuche sofort Artikel zuzuordnen
+    console.log('🎯 AUTO-MATCHING START:');
+    console.log('📦 LAGER-ARTIKEL mit Aliased:');
+    S.a.forEach(a=>{
+      if(a.quittungAliase){
+        const aliases = typeof a.quittungAliase==='string' 
+          ? a.quittungAliase.split('\n').map(x=>x.trim()).filter(x=>x)
+          : (Array.isArray(a.quittungAliase) ? a.quittungAliase : []);
+        console.log('  '+a.name+' → Aliase:', aliases);
+      }
+    });
+    console.log('');
     quittungItems.forEach((it,idx)=>{
       if(it.lagerArtikelId)return; // Schon zugeordnet
       const found=findQuittungMatch(it.name);
       if(found){
         it.lagerArtikelId=found.id;
+        console.log('  ✓ MATCH:', it.name, '→', found.name);
+      }else{
+        console.log('  ❌ NO MATCH:', it.name);
       }
     });
+    console.log('✓ AUTO-MATCHING fertig');
 
     // KORREKTUR-PASS: Speichere korrigierte Werte von parseReceiptPosition() zurück in quittungItems
+    console.log('🎯 NACH parseReceiptPosition() - PREIS CHECK:');
     quittungItems.forEach((it, idx) => {
       const parsed = parseReceiptPosition(it);
+      console.log('  ['+idx+']', it.name);
+      console.log('      menge:', parsed.menge, 'einheit:', parsed.einheit);
+      console.log('      preis_brutto:', parsed.preis_brutto, 'preis_netto:', parsed.preis_netto);
+      console.log('      → Einzelpreis:', (parsed.preis_brutto || parsed.preis_netto || 0).toFixed(2), 'CHF');
       // Speichere ALLE korrigierten Werte zurück
       it.menge = parsed.menge;
       it.einheit = parsed.einheit;
@@ -8001,10 +7954,17 @@ async function handleQuittungFile(input){
       it.rabatt = parsed.rabatt;
       // WICHTIG: it.preis für UI-Rendering setzen (Fallback: preis_brutto)
       it.preis = parsed.preis_brutto || parsed.preis_netto || 0;
+      console.log('      → GESPEICHERT: it.preis='+it.preis.toFixed(2));
       // lagerArtikelId und lagerMatch NICHT überschreiben!
     });
     
     
+    
+    // DEBUG: Show alle quittungItems nach Matching
+    quittungItems.forEach((it,i)=>{
+    });
+
+
     // Wenn Debug-Modus aktiviert: Debug-Interface öffnen
     if(opt.quittungDebug) {
       openDebugInterface(text);
@@ -8022,6 +7982,7 @@ async function handleQuittungFile(input){
 }
 
 function renderQuittungUebersicht(datum){
+  console.log('🎯 renderQuittungUebersicht() - quittungItems:', quittungItems.length);
   const body=document.getElementById('quittung-body');
   // Trainingsmodus-Banner oben einfügen
   const qbody=document.getElementById('quittung-body');
@@ -8109,6 +8070,7 @@ function levenshteinDistance(s1,s2){
 function findQuittungMatch(name){
   // Normalisierung: lowercase + trim + mehrfaches whitespace zu single space
   const nl=name.toLowerCase().trim().replace(/\s+/g,' ');
+  console.log('  🔍 findQuittungMatch("'+name+'") → norm: "'+nl+'"');
   
   // 1. 100% Match mit Lagertext (Name)
   let m=S.a.find(a=>{
@@ -8283,7 +8245,7 @@ function openFullArtikelDialog(name,marke,preis,kat){
   
   const dlg=document.createElement('div');
   dlg.id='full-artikel-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;opacity:0;pointer-events:auto;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);max-height:90vh;overflow-y:auto;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px">Artikel erfassen</div>'+
@@ -8385,6 +8347,7 @@ function startQuittungArtikel(idx){
   }
 
   // Felder
+  console.log('📝 startQuittungArtikel(['+idx+']) '+it.name+': it.preis='+it.preis.toFixed(2)+', it.preis_brutto='+it.preis_brutto+', it.preis_netto='+it.preis_netto);
   h+='<div class="fd"><label>Bezeichnung</label><input type="text" id="qq-name" value="'+esc(existing?existing.name:it.name)+'"/></div>'+
     '<div class="tc"><div class="fd"><label>Menge</label><input type="number" id="qq-mg" min="1" value="'+it.menge+'"/></div>'+
     '<div class="fd"><label>Einheit</label><input type="text" id="qq-ei" value="'+esc(existing?existing.einheit||'Stk':it.einheit||'Stk')+'"/></div></div>'+
