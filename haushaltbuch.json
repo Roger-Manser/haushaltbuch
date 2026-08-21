@@ -19852,7 +19852,29 @@
       "aktion": false,
       "datum": "2026-08-21",
       "zeit": 1787267861022
+    },
+    {
+      "aid": 32,
+      "d": "2026-08-21",
+      "m": 1,
+      "p": 2.95,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 260,
+      "d": "2026-08-21",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Coop"
     }
   ],
-  "aktualisiert": "2026-08-21T04:39:58.681Z"
+  "aktualisiert": "2026-08-21T05:01:49.557Z"
 }
