@@ -304,7 +304,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   <div class="tb">
     <span class="tb-t" onclick="showAppInfo()" style="cursor:pointer">Haushaltbuch <span id="app-version-badge" style="font-size:10px;font-weight:500;color:var(--t3);vertical-align:middle;"></span> <span id="artikel-count-badge" style="font-size:10px;font-weight:500;color:var(--t3);vertical-align:middle;background:var(--al);color:var(--ac);border-radius:8px;padding:1px 6px;margin-left:2px"></span></span>
     <div class="tb-r">
-      <button class="ib" onclick="_openQuittungDo(null)" title="Quittung scannen" style="color:var(--ac)">
+      <button class="ib" onclick="openQuittung()" title="Quittung scannen" style="color:var(--ac)">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/><line x1="13" y1="13" x2="17" y2="13"/><line x1="13" y1="17" x2="17" y2="17"/></svg>
       </button>
       <button class="ib" onclick="lagerKiScan()" title="Produktfoto KI-Analyse" style="color:var(--ok)">
@@ -367,7 +367,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   <div class="ftp">
     <button class="bkb" onclick="closeEingang()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
     <span class="ftl">Wareneingang</span>
-    <button class="ib" onclick="_openQuittungDo(null)" title="Quittung scannen" style="color:var(--ac)">
+    <button class="ib" onclick="openQuittung()" title="Quittung scannen" style="color:var(--ac)">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/><line x1="13" y1="13" x2="17" y2="13"/><line x1="13" y1="17" x2="17" y2="17"/></svg>
     </button>
   </div>
@@ -539,7 +539,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.77';
+const APP_VERSION='22.74';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
@@ -7759,9 +7759,6 @@ function openQuittungFile(isCam){
 
 
 function openQuittung(){
-  // Dialog wird gar nicht mehr angezeigt - nur _openQuittungDo() aufrufen!
-  _openQuittungDo(null);
-  return;
   const existing=document.getElementById('quittung-info-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='quittung-info-dlg';
@@ -7805,20 +7802,11 @@ function openQuittung(){
 }
 
 function _openQuittungDo(preselectedInput){
-  toast('📸 Wähle ein Foto...');
-  quittungItems=[];quittungIdx=0;quittungGeschaeft='';'';
+  quittungItems=[];quittungIdx=0;quittungGeschaeft='';
   document.getElementById('quittung-body').innerHTML=
     '<input type="file" id="quittung-file" accept="image/*" style="display:none" onchange="handleQuittungFile(this)"/>'+
     '<input type="file" id="quittung-file-cam" accept="image/*" capture="environment" style="display:none" onchange="handleQuittungFile(this)"/>';
   document.getElementById('quittung-overlay').style.display='flex';
-  
-  // Zwei simple Buttons: Kamera oder Galerie
-  const body = document.getElementById('quittung-body');
-  body.innerHTML = '<div style="display:flex;flex-direction:column;gap:8px">'+
-    '<button onclick="document.getElementById(\'quittung-file-cam\').click();document.getElementById(\'quittung-overlay\').style.display=\'none\';" style="width:100%;padding:13px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">📷 Kamera</button>'+
-    '<button onclick="document.getElementById(\'quittung-file\').click();document.getElementById(\'quittung-overlay\').style.display=\'none\';" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">🖼️ Galerie</button>'+
-  '</div>';
-  
   // Wenn direkt aus Info-Dialog ein Bild gewählt: sofort verarbeiten
   if(preselectedInput&&preselectedInput.files&&preselectedInput.files[0]){
     handleQuittungFile(preselectedInput);
