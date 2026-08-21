@@ -539,11 +539,10 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.44';
+const APP_VERSION='22.43';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'22.44',d:'20.08.2026',items:['🎯 KRITISCH: quittungItems undefined - GEFIXT!','Bug: forEach() wurde vor quittungItems=parsed.artikel aufgerufen','Fix: quittungItems Initialisierung SOFORT nach JSON.parse hinzugefügt','Quittungsscan funktioniert JETZT wieder!']},
   {v:'22.43',d:'20.08.2026',items:['🔍 PREIS-DEBUG v2: Überprüfe ob Korrektur funktioniert!','Console "NACH parseReceiptPosition() - PREIS CHECK"','Zeigt: INPUT preis_brutto/preis/preis_netto','Zeigt: RESULT preis_brutto/preis_netto und Einzelpreis']},
   {v:'22.42',d:'20.08.2026',items:['🎯 MEGA-BUG GEFIXT: Bestand wird JETZT auf 0 gesetzt!','Problem: syncMenge() setzte menge nicht auf 0 wenn packungen leer!','Fix: else-if(a.packungen) → a.menge = 0 hinzugefügt','Bestand-Korrektur funktioniert JETZT perfekt!']},
   {v:'22.41',d:'20.08.2026',items:['🔍 DEBUG: Warum wird Bestand nicht wirklich auf 0 gesetzt?','Toast funktioniert ✓, aber Bestand bleibt bei 16!','Console zeigt: alte/neue packungen, abzug-Loop, syncMenge-Ergebnis','Logs zeigen genau wo die Packungen gelöscht werden (oder nicht!)']},
@@ -7847,10 +7846,6 @@ async function handleQuittungFile(input){
       return;
     }
 
-    // 🎯 WICHTIG: quittungItems setzen SOFORT nach JSON.parse!
-    quittungItems=parsed.artikel||[];
-    console.log('✓ quittungItems gesetzt:', quittungItems.length, 'Artikel');
-    
     console.log('🎯 KI-Response - RAW Artikel:');
     quittungItems.forEach((it, idx) => {
       console.log('  ['+idx+']', it.name);
