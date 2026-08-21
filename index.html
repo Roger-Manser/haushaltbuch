@@ -539,11 +539,10 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.21';
+const APP_VERSION='22.20';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'22.21',d:'20.08.2026',items:['🔍 DEBUG: map() zeigt welche Artikel verarbeitet werden','Console zeigt: "map Artikel X: name, preis, _done"','Hilft zu finden warum Normalmodus weniger Artikel zeigt als Vorschau','Überprüfe welche Artikel übersprungen oder versteckt sind']},
   {v:'22.20',d:'20.08.2026',items:['🔧 BugFix: Doppelte const body Definitionen entfernt!','Scope-Problem: body wurde überschrieben in Vorschau-Check','Normalmodus nutzt jetzt die gleiche body Variable','🎯 DEBUG-LOGS: Zeigen ob HTML wirklich gesetzt wird']},
   {v:'22.19',d:'20.08.2026',items:['🐛 MEGA-BugFix: quittungAliase normalisiert (String vs. Array)!','delAliasFromSettings() + delAlias() + zuordnungBestaetigen() gefixt','findQuittungMatch() fixed: return m statt immer null','Fehler "Cannot read properties of undefined" WEG!']},
   {v:'22.18',d:'20.08.2026',items:['🐛 BugFix: it.preis wird jetzt in Korrektur-Pass gesetzt!','Fehler "Cannot read properties of undefined" GELÖST','it.preis = preis_brutto || preis_netto || 0','Artikel können jetzt in renderQuittungUebersicht() angezeigt werden']},
@@ -7917,9 +7916,7 @@ function renderQuittungUebersicht(datum){
     '<button onclick="openDebugInterface(debugState.rawResponse)" style="background:var(--ac);color:#fff;border:none;padding:10px 14px;border-radius:var(--rs);cursor:pointer;font-weight:600;font-size:13px;white-space:nowrap">🔧 Debug</button>'+
   '</div>';
   h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">📋 Erkannte Artikel — Jetzt buchen:</div>';
-  console.log('🎯 VOR map() - quittungItems.length:', quittungItems.length);
   h+=quittungItems.map((it,i)=>{
-    console.log('  map Artikel', i, ':', it.name, 'preis:', it.preis, '_done:', it._done);
     // Matching wurde bereits vorher gemacht - hier nur noch Badge setzen
     const badge=it.lagerArtikelId?'<span style="font-size:10px;background:var(--al);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px">im Lager</span>':'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:6px">neu</span>';
     if(it._done){
@@ -7935,7 +7932,6 @@ function renderQuittungUebersicht(datum){
       '<button onclick="startQuittungArtikel('+i+')" style="background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:7px 14px;font-size:13px;cursor:pointer">Buchen</button>'+
     '</div>';
   }).join('');
-  console.log('✓ NACH map() - HTML gebaut');
   h+='<button onclick="closeQuittung()" style="width:100%;margin-top:14px;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Fertig</button>';
   console.log('🎯 VOR body.innerHTML: body=', body, 'HTML-Länge:', h.length);
   body.innerHTML=h;
