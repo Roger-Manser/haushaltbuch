@@ -539,7 +539,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.61';
+const APP_VERSION='22.62';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
@@ -2357,6 +2357,8 @@ function chgBEingangGrund(a){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -2395,6 +2397,8 @@ function chgBAusgangGrund(a,aktive){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -2571,6 +2575,8 @@ function showPackDialog(a,typ){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -3044,6 +3050,8 @@ function showFotoWahl(){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -3756,6 +3764,8 @@ function showAusgangConfirmDialog(a,packId,list){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -3808,6 +3818,8 @@ function showAusgangPackDialog(a,list){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -3936,6 +3948,8 @@ function showEtikettPackDialog(a){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -4533,6 +4547,8 @@ function showReceiptPreview(positions){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -4591,6 +4607,8 @@ function showReceiptPreview_OLD(positions){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -5277,6 +5295,8 @@ function showRezeptGekocht(rezeptId){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -5861,6 +5881,8 @@ function showLadenKaufDialog(id){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -6057,6 +6079,8 @@ function showEkEinbuchungNeu(ekEntry){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -6231,6 +6255,8 @@ function showPortionDialog(originalPort){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -6402,6 +6428,8 @@ function processCheckedItemsShowDialog(ekEntry,artikel,idx,allChecked){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -6759,6 +6787,8 @@ function showInvMissingDataDialog(idx){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -6860,6 +6890,8 @@ function lagerKiScan(){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -7282,6 +7314,8 @@ function renderMindestManager(){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
@@ -7706,6 +7740,8 @@ function openQuittung(){
   wrapper.innerHTML=dlg.innerHTML;
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
+  // FIX v22.62: Dialog NICHT anzeigen - nur Toast soll sichtbar sein!
+  dlg.style.display = 'none';
   document.body.appendChild(dlg);
   
   // ESC-Key zum Schließen
