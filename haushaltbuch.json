@@ -581,14 +581,14 @@
       "marke": "Barilla",
       "kat": "Getränke",
       "lager": "Schlof",
-      "menge": 1,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "8076809585194",
-      "preis": 1.95,
+      "preis": 2.8,
       "packMenge": 500,
       "packEinheit": "g",
-      "kaufdatum": "2026-06-30",
+      "kaufdatum": "2026-08-21",
       "ablaufdatum": "2028-12-11",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782210376286_off.jpg?t=1787242938612",
@@ -630,6 +630,15 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-08-20",
+          "preis": 1.65,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Coop"
         }
       ],
       "packungen": [
@@ -638,6 +647,12 @@
           "menge": 1,
           "kaufdatum": "2026-06-30",
           "ablaufdatum": "2028-12-11"
+        },
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-08-21",
+          "ablaufdatum": "2029-02-01"
         }
       ],
       "kaufort": "Coop"
@@ -1098,15 +1113,15 @@
       "marke": "Lidl",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "4056489147268",
       "preis": 2.95,
       "packMenge": 125,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-04",
-      "ablaufdatum": "2026-08-08",
+      "kaufdatum": "2026-08-21",
+      "ablaufdatum": "2026-08-30",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782551885501_off.jpg?t=1787242938612",
       "fotoPath": "1782551885501_off.jpg",
@@ -1137,15 +1152,24 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-21",
+          "preis": 2.95,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "kaufort": "Lidl",
       "packungen": [
         {
           "id": 1,
-          "menge": 0,
-          "kaufdatum": "2026-08-04",
-          "ablaufdatum": "2026-08-08"
+          "menge": 1,
+          "kaufdatum": "2026-08-21",
+          "ablaufdatum": "2026-08-30"
         }
       ]
     },
@@ -9663,16 +9687,16 @@
       "kat": "Diverses",
       "lager": "Garten",
       "kaufort": "Coop",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "7610179983450",
       "barcodes": [],
-      "preis": 0,
+      "preis": 9.95,
       "packMenge": 0,
       "packEinheit": "dl",
-      "kaufdatum": "2026-08-20",
-      "ablaufdatum": "",
+      "kaufdatum": "2026-08-21",
+      "ablaufdatum": "2030-01-21",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219271315_1000064724.jpg?t=1787242938612",
       "fotoPath": "1787219271315_1000064724.jpg",
@@ -9685,15 +9709,24 @@
           "typ": "ein",
           "aktion": true,
           "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-08-21",
+          "preis": 9.95,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
         }
       ],
       "letzteEingangHeute": "11:48",
       "packungen": [
         {
-          "id": 13,
-          "menge": 0,
-          "kaufdatum": "2026-08-20",
-          "ablaufdatum": ""
+          "id": 7,
+          "menge": 1,
+          "kaufdatum": "2026-08-21",
+          "ablaufdatum": "2030-01-21"
         }
       ],
       "quittungAliase": "green Mückenspirale"
@@ -9705,7 +9738,7 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Coop",
-      "menge": 4,
+      "menge": 3,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "7613196005150",
@@ -9727,12 +9760,21 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-08-21",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Coop"
         }
       ],
       "packungen": [
         {
           "id": 2,
-          "menge": 4,
+          "menge": 3,
           "kaufdatum": "2026-08-20",
           "ablaufdatum": "2026-08-27"
         }
@@ -9746,23 +9788,23 @@
       "kat": "Gemüse & Früchte",
       "lager": "Vorratsschrank",
       "kaufort": "Coop",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "7627534428808",
       "barcodes": [],
-      "preis": 0,
+      "preis": 9.95,
       "packMenge": 1,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-08-20",
-      "ablaufdatum": "",
+      "kaufdatum": "2026-08-21",
+      "ablaufdatum": "2027-05-31",
       "notiz": "Nutri-Score C\nPro 100g/ml: 256 kcal, Fett 0g, KH 53g, Eiweiss 9.5g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219556721_off.jpg?t=1787242938612",
       "fotoPath": "1787219556721_off.jpg",
       "preisHistorie": [
         {
           "datum": "2026-08-20",
-          "preis": 0,
+          "preis": 9.95,
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
@@ -9773,10 +9815,10 @@
       "letzteEingangHeute": "11:53",
       "packungen": [
         {
-          "id": 12,
-          "menge": 0,
-          "kaufdatum": "2026-08-20",
-          "ablaufdatum": ""
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-08-21",
+          "ablaufdatum": "2027-05-31"
         }
       ],
       "quittungAliase": "Primagusto Knoblauc"
@@ -9788,7 +9830,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Kühlschrank oben",
       "kaufort": "Coop",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Tube",
       "mindest": 0,
       "barcode": "8445291966321",
@@ -9796,7 +9838,7 @@
       "preis": 0,
       "packMenge": 170,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-20",
+      "kaufdatum": "2026-08-21",
       "ablaufdatum": "2026-12-21",
       "notiz": "Nutri-Score E\nPro 100g/ml: 707 kcal, Fett 75.3g, KH 4.9g, Eiweiss 1.5g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219645164_off.jpg?t=1787242938612",
@@ -9815,10 +9857,10 @@
       "letzteEingangHeute": "11:54",
       "packungen": [
         {
-          "id": 11,
-          "menge": 0,
-          "kaufdatum": "2026-08-20",
-          "ablaufdatum": "2026-12-21"
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-08-21",
+          "ablaufdatum": ""
         }
       ]
     },
@@ -9829,26 +9871,36 @@
       "kat": "Gewürze & Saucen",
       "lager": "Kühlschrank oben",
       "kaufort": "Coop",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Tube",
       "mindest": 0,
       "barcode": "8445290686015",
       "barcodes": [],
-      "preis": 0,
+      "preis": 2.8,
       "packMenge": 190,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-20",
-      "ablaufdatum": "",
+      "kaufdatum": "2026-08-21",
+      "ablaufdatum": "2027-06-08",
       "notiz": "Nutri-Score D\nPro 100g/ml: 401 kcal, Fett 36.8g, KH 15.3g, Eiweiss 1.1g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219710837_off.jpg?t=1787242938612",
       "fotoPath": "1787219710837_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-08-21",
+          "preis": 2.8,
+          "menge": 1,
+          "einheit": "Tube",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
+        }
+      ],
       "packungen": [
         {
-          "id": 5,
-          "menge": 0,
-          "kaufdatum": "2026-08-20",
-          "ablaufdatum": ""
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-08-21",
+          "ablaufdatum": "2027-06-08"
         }
       ]
     },
@@ -9859,26 +9911,36 @@
       "kat": "Konserven & Trockenware",
       "lager": "Vorratsschrank",
       "kaufort": "Coop",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "8076809585200",
       "barcodes": [],
-      "preis": 0,
+      "preis": 2.8,
       "packMenge": 500,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-20",
-      "ablaufdatum": "",
+      "kaufdatum": "2026-08-21",
+      "ablaufdatum": "2028-09-01",
       "notiz": "Vegetarisch\nNutri-Score A\nPro 100g/ml: 359 kcal, Fett 2g, KH 70g, Eiweiss 14g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219795419_off.jpg?t=1787242938612",
       "fotoPath": "1787219795419_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-08-20",
+          "preis": 1.65,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Coop"
+        }
+      ],
       "packungen": [
         {
-          "id": 6,
-          "menge": 0,
-          "kaufdatum": "2026-08-20",
-          "ablaufdatum": ""
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-08-21",
+          "ablaufdatum": "2028-09-01"
         }
       ],
       "quittungAliase": "AL BRONZO Penne Rig"
@@ -9890,23 +9952,23 @@
       "kat": "Süsswaren",
       "lager": "Kühlschrank oben",
       "kaufort": "Coop",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "7627534163709",
       "barcodes": [],
-      "preis": 0,
+      "preis": 2.8,
       "packMenge": 100,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-20",
-      "ablaufdatum": "",
+      "kaufdatum": "2026-08-21",
+      "ablaufdatum": "2027-05-07",
       "notiz": "Nutri-Score E\nPro 100g/ml: 558 kcal, Fett 34g, KH 52g, Eiweiss 9.3g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219895676_off.jpg?t=1787242938612",
       "fotoPath": "1787219895676_off.jpg",
       "preisHistorie": [
         {
           "datum": "2026-08-20",
-          "preis": 0,
+          "preis": 2.8,
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
@@ -9917,10 +9979,10 @@
       "letzteEingangHeute": "11:58",
       "packungen": [
         {
-          "id": 10,
-          "menge": 0,
-          "kaufdatum": "2026-08-20",
-          "ablaufdatum": ""
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-08-21",
+          "ablaufdatum": "2027-05-07"
         }
       ],
       "quittungAliase": [
@@ -9934,15 +9996,15 @@
       "kat": "Süsswaren",
       "lager": "Vorratsschrank",
       "kaufort": "Coop",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "7614800120009",
       "barcodes": [],
-      "preis": 0,
+      "preis": 3.55,
       "packMenge": 115,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-20",
+      "kaufdatum": "2026-08-21",
       "ablaufdatum": "2027-03-15",
       "notiz": "Nutri-Score E\nPro 100g/ml: 483 kcal, Fett 20g, KH 65g, Eiweiss 9.3g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787219988297_off.jpg?t=1787242938612",
@@ -9950,7 +10012,7 @@
       "preisHistorie": [
         {
           "datum": "2026-08-20",
-          "preis": 0,
+          "preis": 3.55,
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
@@ -9961,9 +10023,9 @@
       "letzteEingangHeute": "12:00",
       "packungen": [
         {
-          "id": 9,
-          "menge": 0,
-          "kaufdatum": "2026-08-20",
+          "id": 6,
+          "menge": 1,
+          "kaufdatum": "2026-08-21",
           "ablaufdatum": "2027-03-15"
         }
       ]
@@ -19596,7 +19658,201 @@
       "aktion": false,
       "datum": "2026-08-20",
       "zeit": 1787243279808
+    },
+    {
+      "t": "ein",
+      "aid": 261,
+      "name": "Ail fermenté Knolauch",
+      "lager": "Vorratsschrank",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 9.95,
+      "aktion": false,
+      "datum": "2026-08-21",
+      "zeit": 1787267253133
+    },
+    {
+      "t": "ein",
+      "aid": 263,
+      "name": "Ketchup & mayo",
+      "lager": "Kühlschrank oben",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Tube",
+      "preis": 2.8,
+      "aktion": false,
+      "datum": "2026-08-21",
+      "zeit": 1787267272031
+    },
+    {
+      "t": "ein",
+      "aid": 15,
+      "name": "Barilla Al Bronzo Spaghetti Al Bronzo 500g",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.8,
+      "aktion": false,
+      "datum": "2026-08-21",
+      "zeit": 1787267292273
+    },
+    {
+      "t": "ein",
+      "aid": 264,
+      "name": "Pâtes premium Penne Rigate Al Bronzo 500G",
+      "lager": "Vorratsschrank",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 2.8,
+      "aktion": false,
+      "datum": "2026-08-21",
+      "zeit": 1787267317180
+    },
+    {
+      "t": "ein",
+      "aid": 265,
+      "name": "Pistaches Milch",
+      "lager": "Kühlschrank oben",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 2.8,
+      "aktion": false,
+      "datum": "2026-08-21",
+      "zeit": 1787267331577
+    },
+    {
+      "t": "ein",
+      "aid": 266,
+      "name": "Bretzeli",
+      "lager": "Vorratsschrank",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 3.55,
+      "aktion": false,
+      "datum": "2026-08-21",
+      "zeit": 1787267360677
+    },
+    {
+      "t": "ein",
+      "aid": 259,
+      "name": "Essenzspirale mit Tontopf (Citronella, Lavendel, Eukalyptus, Zitrone)",
+      "lager": "Garten",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 9.95,
+      "aktion": false,
+      "datum": "2026-08-21",
+      "zeit": 1787267382572
+    },
+    {
+      "aid": 15,
+      "d": "2026-08-20",
+      "m": 1,
+      "p": 1.65,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Getränke",
+      "aktion": false,
+      "kaufort": "Coop"
+    },
+    {
+      "aid": 259,
+      "d": "2026-08-21",
+      "m": 1,
+      "p": 9.95,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Coop"
+    },
+    {
+      "aid": 261,
+      "d": "2026-08-20",
+      "m": 1,
+      "p": 9.95,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Coop"
+    },
+    {
+      "aid": 263,
+      "d": "2026-08-21",
+      "m": 1,
+      "p": 2.8,
+      "t": "ein",
+      "e": "Tube",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "Coop"
+    },
+    {
+      "aid": 264,
+      "d": "2026-08-20",
+      "m": 1,
+      "p": 1.65,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Konserven & Trockenware",
+      "aktion": false,
+      "kaufort": "Coop"
+    },
+    {
+      "aid": 265,
+      "d": "2026-08-20",
+      "m": 1,
+      "p": 2.8,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Süsswaren",
+      "aktion": false,
+      "kaufort": "Coop"
+    },
+    {
+      "aid": 266,
+      "d": "2026-08-20",
+      "m": 1,
+      "p": 3.55,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Süsswaren",
+      "aktion": false,
+      "kaufort": "Coop"
+    },
+    {
+      "t": "aus",
+      "aid": 260,
+      "name": "JOGHURT NACH GRIECHISCHER ART NATURE gesüsst",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-21",
+      "zeit": 1787267593965
+    },
+    {
+      "t": "ein",
+      "aid": 32,
+      "name": "Forellenfilets",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.95,
+      "aktion": false,
+      "datum": "2026-08-21",
+      "zeit": 1787267861022
     }
   ],
-  "aktualisiert": "2026-08-20T16:33:02.339Z"
+  "aktualisiert": "2026-08-21T04:39:58.681Z"
 }
