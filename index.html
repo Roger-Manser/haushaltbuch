@@ -7767,9 +7767,7 @@ async function handleQuittungFile(input){
   const body=document.getElementById('quittung-body');
   if(!body)return;
   
-  // Dialog SOFORT schließen (mit sofort, nicht Verzögerung!)
-  const dlg=document.getElementById('quittung-info-dlg');
-  if(dlg)dlg.remove();
+  // (Dialog wurde oben schon gelöscht)
   
   // Overlay ÖFFNEN (damit quittung-body sichtbar ist!)
   document.getElementById('quittung-overlay').style.display='flex';
