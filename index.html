@@ -539,11 +539,10 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.37';
+const APP_VERSION='22.36';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'22.37',d:'20.08.2026',items:['🎯 FINAL-FIX: Gesamtpreis-Korrektur VORHER machen!','Bug: nettoPreis wurde VOR der Gesamtpreis-Korrektur berechnet','Jetzt: Korrektur ZUERST, dann nettoPreis berechnen','4×CHF1.30=CHF5.20 wird JETZT zu CHF1.30 Einzelpreis!']},
   {v:'22.36',d:'20.08.2026',items:['🎯 MEGA-BUG GEFIXT: KI gibt GESAMTPREIS statt Einzelpreis!','Heuristik: Wenn menge=4 und preis=5.20 → 5.20/4=1.30 pro Stück','Erkenne Gesamtpreis automatisch (0.10-100 CHF Einzelpreis = plausibel)','4×CHF1.30=CHF5.20 wird JETZT korrekt als Einzelpreis CHF1.30 gespeichert!']},
   {v:'22.35',d:'20.08.2026',items:['🔍 DEBUG: Ist der KI-Preis Einzelpreis oder Gesamtpreis?','Console "KI-Response - RAW Artikel": menge, preis_brutto, preis_netto','Console "NACH parseReceiptPosition()": Was wird als Einzelpreis verwendet?','Hilft zu sehen: Gibt die KI 20.80 (Gesamt) statt 5.20 (Einzeln)?']},
   {v:'22.34',d:'20.08.2026',items:['🎯 MEGA-BUG GEFIXT: Kaufdatum war undefined!','Zeile 7894: renderQuittungUebersicht() wurde OHNE Parameter aufgerufen','Jetzt: renderQuittungUebersicht(todayISO()) - mit Kaufdatum!','Kaufdatum wird JETZT korrekt als body.dataset.datum gespeichert!']},
@@ -4578,21 +4577,19 @@ function parseReceiptPosition(p){
   const einheit = p.einheit || 'Stk';
   let bruttoPreis = p.preis_brutto || p.preis || 0;
   let rabatt = p.rabatt || 0;
+  let nettoPreis = p.preis_netto || (bruttoPreis - rabatt);
   
-  // 🎯 MEGA-FIX: Erkenne ob preis_brutto der GESAMTPREIS ist! (VOR nettoPreis-Berechnung!)
+  // 🎯 MEGA-FIX: Erkenne ob preis_brutto der GESAMTPREIS ist!
   // Heuristik: Wenn menge > 1 UND bruttoPreis/menge plausibel (0.10-100 CHF), dann ist es Gesamtpreis!
   if(menge > 1 && bruttoPreis > 0){
     const preisProStueck = bruttoPreis / menge;
     // Wenn der Durchschnittspreis zwischen 0.10 und 100 CHF liegt, ist es wahrscheinlich Gesamtpreis
     if(preisProStueck >= 0.10 && preisProStueck <= 100){
       console.log('  💡 ERKENNUNG: "'+name+'" - Gesamtpreis '+bruttoPreis+' / '+menge+' = '+preisProStueck.toFixed(2)+' pro Stück');
-      bruttoPreis = preisProStueck;  // ← KORRIGIERT!
-      rabatt = rabatt / menge;  // ← Auch Rabatt pro Stück!
+      bruttoPreis = preisProStueck;
+      nettoPreis = preisProStueck;
     }
   }
-  
-  // JETZT nettoPreis berechnen - nach der Gesamtpreis-Korrektur!
-  let nettoPreis = p.preis_netto || (bruttoPreis - rabatt);
   
   // FIX: KI gibt manchmal bereits den Netto-Preis als "Brutto" zurück
   // Wenn preis_netto < preis_brutto und menge > 1: Brutto war falsch
