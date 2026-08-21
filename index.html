@@ -539,11 +539,10 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.31';
+const APP_VERSION='22.30';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'22.31',d:'20.08.2026',items:['🎯 KRITISCHER BUG GEFIXT: Endlosschleife in nativeDateChanged()!','dispatchEvent verursachte Selbst-Aufruf → RangeError','Zeile 8410-8411 entfernt - nicht nötig!','MHD-Feld funktioniert JETZT sauber ohne Fehler!']},
   {v:'22.30',d:'20.08.2026',items:['🐛 BUG GEFIXT: quittungAliase normalisiert in showDet()!','Fehler: (a.quittungAliase || []).map() - String hat kein .map()','showDet() normalisiert JETZT String→Array vor .map()','Artikel bearbeiten funktioniert JETZT ohne Fehler!']},
   {v:'22.29',d:'20.08.2026',items:['🔍 DEBUG: Warum ist das MHD-Feld nicht sichtbar?','Console: "🎯 MHD-Check: showMHD=" zeigt ob Feld gebaut wird','dateField() returned: zeigt ob HTML generiert wird','✓ MHD HTML added zeigt wenn erfolgreich']},
   {v:'22.28',d:'20.08.2026',items:['🎯 MEGA-FIX: MHD wird IMMER gefragt beim Einbuchen!','showMHD=true: MHD-Feld wird bei jedem Quittungsscan gezeigt','Validierung: MHD ist IMMER Pflicht (nicht nur bei bestehenden Artikeln)','Benutzer MUSS MHD eingeben, sonst: "Bitte Ablaufdatum eingeben"']},
@@ -8406,7 +8405,11 @@ function nativeDateChanged(id){
     // Aktualisiere auch Display-Farbe wenn Datum gesetzt
     display.style.color='#000';
   }
-  // NICHT dispatchEvent! Das verursacht Endlosschleife!
+  // Workaround: Trigger input event damit das Datum auch gespeichert wird
+  if(inp){
+    const event=new Event('change',{bubbles:true});
+    inp.dispatchEvent(event);
+  }
   if(display)display.style.color=val?'var(--tx)':'var(--t3)';
 }
 // Datumsfeld programmatisch setzen: Wert UND sichtbares Label aktualisieren
