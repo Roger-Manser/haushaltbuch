@@ -539,11 +539,10 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.40';
+const APP_VERSION='22.39';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'22.40',d:'20.08.2026',items:['🎯 KRITISCH: body is not defined - GEFIXT!','handleQuittungFile() nutzte body ohne es zu definieren','Zeile 7723: const body=document.getElementById("quittung-body") hinzugefügt','Quittungsscan funktioniert JETZT wieder!']},
   {v:'22.39',d:'20.08.2026',items:['🎯 TRIPLE-FIX: Preis-Debug + Bestand 0 Fix + Toast Cleanup!','1️⃣ KI-Response Debug: Zeigt preis/preis_brutto/preis_netto RAW Werte','2️⃣ Bestand-Bug: Math.max(0, ...) entfernt - verhinderte 0 Eingabe!','3️⃣ Bestand Input wird jetzt markiert (select) - leicht zu überschreiben']},
   {v:'22.38',d:'20.08.2026',items:['🔍 DEBUG: Warum bleibt Bestand bei 12 wenn man auf 0 setzen möchte?','Console zeigt: Input-Feldwert, geparster Wert, Differenz','Debug: "diff===0 - Abbruch!" = Problem erkannt','Hilft zu sehen: Wird 0 gelesen oder bleibt Input bei 12?']},
   {v:'22.37',d:'20.08.2026',items:['🎯 FINAL-FIX: Gesamtpreis-Korrektur VORHER machen!','Bug: nettoPreis wurde VOR der Gesamtpreis-Korrektur berechnet','Jetzt: Korrektur ZUERST, dann nettoPreis berechnen','4×CHF1.30=CHF5.20 wird JETZT zu CHF1.30 Einzelpreis!']},
@@ -7723,10 +7722,6 @@ function closeQuittung(){
 
 async function handleQuittungFile(input){
   const file=input.files[0];if(!file)return;
-  
-  // WICHTIG: body definieren!
-  const body=document.getElementById('quittung-body');
-  if(!body)return;
   
   // Dialog schließen (falls offen)
   const dlg=document.getElementById('quittung-info-dlg');
