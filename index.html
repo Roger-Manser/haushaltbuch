@@ -2359,6 +2359,10 @@ function chgBEingangGrund(a){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -2396,6 +2400,10 @@ function chgBAusgangGrund(a,aktive){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -2572,6 +2580,10 @@ function showPackDialog(a,typ){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -3045,6 +3057,10 @@ function showFotoWahl(){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -3758,6 +3774,10 @@ function showAusgangConfirmDialog(a,packId,list){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -3809,6 +3829,10 @@ function showAusgangPackDialog(a,list){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -3937,6 +3961,10 @@ function showEtikettPackDialog(a){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -4535,6 +4563,10 @@ function showReceiptPreview(positions){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -4592,6 +4624,10 @@ function showReceiptPreview_OLD(positions){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -5279,6 +5315,10 @@ function showRezeptGekocht(rezeptId){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -5863,6 +5903,10 @@ function showLadenKaufDialog(id){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -6059,6 +6103,10 @@ function showEkEinbuchungNeu(ekEntry){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -6233,6 +6281,10 @@ function showPortionDialog(originalPort){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -6403,6 +6455,10 @@ function processCheckedItemsShowDialog(ekEntry,artikel,idx,allChecked){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -6761,6 +6817,10 @@ function showInvMissingDataDialog(idx){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -6861,6 +6921,10 @@ function lagerKiScan(){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -7284,6 +7348,10 @@ function renderMindestManager(){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -7676,6 +7744,16 @@ let quittungIdx=0;    // aktueller Artikel im Einzelbestätigungs-Flow
 let quittungGeschaeft=''; // erkanntes Geschäft
 
 
+function closeQuittungDialog(){
+  let d = document.getElementById('quittung-info-dlg');
+  if(d){
+    d.style.display = 'none';
+    d.style.visibility = 'hidden';
+    d.style.opacity = '0';
+    d.remove();
+  }
+}
+
 function openQuittungFile(isCam){
   // Dialog wurde bereits im onclick Handler gelöscht!
   // _openQuittungDo aufrufen (erzeugt File-Inputs)
@@ -7705,11 +7783,11 @@ function openQuittung(){
         '<span style="color:var(--t3);font-size:12px">⚠️ Benötigt API-Key (Einstellungen). Jede Analyse kostet ein paar Cent.</span>'+
       '</div>'+
       '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">'+
-        '<button onclick="let d=document.getElementById(\'quittung-info-dlg\');if(d)d.remove();openQuittungFile(true)" style="width:100%;padding:13px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
+        '<button onclick="closeQuittungDialog();openQuittungFile(true)" style="width:100%;padding:13px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>'+
           'Quittung fotografieren'+
         '</button>'+
-        '<button onclick="let d=document.getElementById(\'quittung-info-dlg\');if(d)d.remove();openQuittungFile(false)" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
+        '<button onclick="closeQuittungDialog();openQuittungFile(false)" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'+
           'Aus Galerie auswählen'+
         '</button>'+
@@ -7723,6 +7801,10 @@ function openQuittung(){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
