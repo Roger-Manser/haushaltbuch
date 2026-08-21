@@ -539,7 +539,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.69';
+const APP_VERSION='22.70';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
@@ -7677,17 +7677,19 @@ let quittungGeschaeft=''; // erkanntes Geschäft
 
 
 function openQuittungFile(isCam){
-  // 1. Dialog DEFINITIV löschen (mehrfach um sicherzugehen!)
+  // Dialog MEHRFACH löschen um sicherzustellen dass er weg ist
   let dlg = document.getElementById('quittung-info-dlg');
-  while(dlg){
-    dlg.remove();
+  let count = 0;
+  while(dlg && count < 10){
+    try { dlg.remove(); } catch(e) {}
     dlg = document.getElementById('quittung-info-dlg');
+    count++;
   }
   
-  // 2. _openQuittungDo aufrufen (erzeugt File-Inputs)
+  // _openQuittungDo aufrufen (erzeugt File-Inputs)
   _openQuittungDo(null);
   
-  // 3. File-Input klicken
+  // File-Input klicken
   const fileId = isCam ? 'quittung-file-cam' : 'quittung-file';
   const input = document.getElementById(fileId);
   if(input) {
@@ -7741,8 +7743,9 @@ function _openQuittungDo(preselectedInput){
     '<input type="file" id="quittung-file" accept="image/*" style="display:none" onchange="handleQuittungFile(this)"/>'+
     '<input type="file" id="quittung-file-cam" accept="image/*" capture="environment" style="display:none" onchange="handleQuittungFile(this)"/>';
   document.getElementById('quittung-overlay').style.display='flex';
-  // FIX v22.61: Dialog schließen BEVOR handleQuittungFile aufgerufen wird!
-  const dlg=document.getElementById('quittung-info-dlg');if(dlg)dlg.remove();
+  // Dialog MEHRFACH löschen
+  let dlg=document.getElementById('quittung-info-dlg');let c=0;
+  while(dlg&&c<10){try{dlg.remove();}catch(e){}dlg=document.getElementById('quittung-info-dlg');c++;}
   // Wenn direkt aus Info-Dialog ein Bild gewählt: sofort verarbeiten
   if(preselectedInput&&preselectedInput.files&&preselectedInput.files[0]){
     handleQuittungFile(preselectedInput);
@@ -7754,6 +7757,10 @@ function closeQuittung(){
 }
 
 async function handleQuittungFile(input){
+  // Dialog MEHRFACH löschen
+  let dlg=document.getElementById('quittung-info-dlg');let c=0;
+  while(dlg&&c<10){try{dlg.remove();}catch(e){}dlg=document.getElementById('quittung-info-dlg');c++;}
+  
   const file=input.files[0];if(!file)return;
   
   // WICHTIG: body definieren!
