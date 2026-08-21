@@ -539,11 +539,10 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.29';
+const APP_VERSION='22.28';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'22.29',d:'20.08.2026',items:['🔍 DEBUG: Warum ist das MHD-Feld nicht sichtbar?','Console: "🎯 MHD-Check: showMHD=" zeigt ob Feld gebaut wird','dateField() returned: zeigt ob HTML generiert wird','✓ MHD HTML added zeigt wenn erfolgreich']},
   {v:'22.28',d:'20.08.2026',items:['🎯 MEGA-FIX: MHD wird IMMER gefragt beim Einbuchen!','showMHD=true: MHD-Feld wird bei jedem Quittungsscan gezeigt','Validierung: MHD ist IMMER Pflicht (nicht nur bei bestehenden Artikeln)','Benutzer MUSS MHD eingeben, sonst: "Bitte Ablaufdatum eingeben"']},
   {v:'22.27',d:'20.08.2026',items:['🎯 MEGA-FIX: FUZZY-Matching wie in Vorschau!','3. Stufe in findQuittungMatch(): .includes() Matching','Ketchup & Mayo 190G matcht jetzt "Ketchup und Mayonnaise 190g"','JETZT sollten alle Artikel "im Lager" sein!']},
   {v:'22.26',d:'20.08.2026',items:['🔍 DEBUG: Zeige ALLE Lager-Artikel mit Aliased!','Console: "📦 LAGER-ARTIKEL mit Aliased: Artikel → Aliase"','Hilft zu sehen: Hat Ketchup, Spaghetti, Tafel, Kambly Aliase oder nicht?','Wenn KEINE: müssen Aliase manuell hinzugefügt werden!']},
@@ -8263,17 +8262,11 @@ function startQuittungArtikel(idx){
       S.ge.map(g=>'<button class="chip'+(quittungGeschaeft===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#qq-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+
     '</div></div>';
   // MHD-Feld IMMER anzeigen bei Quittungsscan
-  console.log('🎯 MHD-Check: showMHD=', showMHD);
   if(showMHD){
-    const mhdHtml = dateField('qq-ad','');
-    console.log('  dateField() returned:', mhdHtml ? 'HTML ('+mhdHtml.length+' chars)' : 'undefined/null');
     h+='<div class="fd"><label style="display:flex;align-items:center;gap:6px">'+
       'Ablaufdatum (MHD) <span style="color:var(--dg);font-weight:700">*</span>'+
       '<span style="font-size:11px;color:var(--dg);background:var(--dl);padding:1px 7px;border-radius:8px">Pflicht</span></label>'+
-      mhdHtml+'</div>';
-    console.log('  ✓ MHD HTML added to form');
-  }else{
-    console.log('  ❌ showMHD is false - no MHD field!');
+      dateField('qq-ad','')+'</div>';
   }
   const buttonLabel=duplikatWarnung?'Duplikat ignorieren':'Überspringen';
   h+='<div style="display:flex;gap:8px;margin-top:14px">'+
