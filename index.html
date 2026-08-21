@@ -539,11 +539,10 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.32';
+const APP_VERSION='22.31';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'22.32',d:'20.08.2026',items:['🔍 DEBUG: Warum wird Kaufdatum nicht eingebucht?','MHD-Feld: Einfacher Datumpicker (type="date") statt dateField()','Console zeigt: Kaufort vor/nach, ob Chip gefunden wird, Final kaufort','Log beim Einbuchen: zeigt kaufort in preisHistorie']},
   {v:'22.31',d:'20.08.2026',items:['🎯 KRITISCHER BUG GEFIXT: Endlosschleife in nativeDateChanged()!','dispatchEvent verursachte Selbst-Aufruf → RangeError','Zeile 8410-8411 entfernt - nicht nötig!','MHD-Feld funktioniert JETZT sauber ohne Fehler!']},
   {v:'22.30',d:'20.08.2026',items:['🐛 BUG GEFIXT: quittungAliase normalisiert in showDet()!','Fehler: (a.quittungAliase || []).map() - String hat kein .map()','showDet() normalisiert JETZT String→Array vor .map()','Artikel bearbeiten funktioniert JETZT ohne Fehler!']},
   {v:'22.29',d:'20.08.2026',items:['🔍 DEBUG: Warum ist das MHD-Feld nicht sichtbar?','Console: "🎯 MHD-Check: showMHD=" zeigt ob Feld gebaut wird','dateField() returned: zeigt ob HTML generiert wird','✓ MHD HTML added zeigt wenn erfolgreich']},
@@ -8277,15 +8276,13 @@ function startQuittungArtikel(idx){
   // MHD-Feld IMMER anzeigen bei Quittungsscan
   console.log('🎯 MHD-Check: showMHD=', showMHD);
   if(showMHD){
-    // Einfacher Datumpicker für Mobile + Desktop
-    const mhdPicker='<input type="date" id="qq-ad" '+
-      'style="width:100%;padding:11px 14px;border:2px solid var(--ac);border-radius:var(--rs);background:var(--sf);color:var(--tx);font-size:15px;cursor:pointer" '+
-      'required />';
-    console.log('  ✓ MHD Datumpicker added');
+    const mhdHtml = dateField('qq-ad','');
+    console.log('  dateField() returned:', mhdHtml ? 'HTML ('+mhdHtml.length+' chars)' : 'undefined/null');
     h+='<div class="fd"><label style="display:flex;align-items:center;gap:6px">'+
       'Ablaufdatum (MHD) <span style="color:var(--dg);font-weight:700">*</span>'+
       '<span style="font-size:11px;color:var(--dg);background:var(--dl);padding:1px 7px;border-radius:8px">Pflicht</span></label>'+
-      mhdPicker+'</div>';
+      mhdHtml+'</div>';
+    console.log('  ✓ MHD HTML added to form');
   }else{
     console.log('  ❌ showMHD is false - no MHD field!');
   }
@@ -8310,24 +8307,7 @@ function confirmQuittungArtikel(idx,hasExisting,existingId){
   const kat=document.getElementById('qq-kat').value.trim()||'Diverses';
   const geChip=document.querySelector('#qq-ge .chip.on[data-ge]');
   const kaufort=geChip?geChip.dataset.ge:quittungGeschaeft;
-  console.log('🎯 Kaufort-Debug:');
-  console.log('  Selector: #qq-ge .chip.on[data-ge]');
-  console.log('  geChip found:', !!geChip);
-  if(geChip){
-    console.log('    Chip data-ge:', geChip.dataset.ge);
-    console.log('    Chip classList:', geChip.className);
-  }else{
-    console.log('  Fallback zu quittungGeschaeft:', quittungGeschaeft);
-  }
-  console.log('  Final kaufort:', kaufort);
-  
-  // MHD: Versuche aus Date-Input zu lesen (ID: qq-ad)
-  let ablaufdatum='';
-  const qdInp=document.getElementById('qq-ad');
-  if(qdInp){
-    ablaufdatum=qdInp.value;
-    console.log('  MHD Input: value=', ablaufdatum);
-  }
+  const ablaufdatum=document.getElementById('qq-ad')?document.getElementById('qq-ad').value:'';
 
   // MHD-Validierung: IMMER erforderlich bei Quittungsscan
   if(!ablaufdatum){
@@ -8355,14 +8335,10 @@ function confirmQuittungArtikel(idx,hasExisting,existingId){
     }
   }else{
     // NORMALMODUS: Warenbestand buchen
-    console.log('📦 NORMALMODUS: Artikel einbuchen...');
     if(hasExisting&&existingId){
       // Bestehenden Artikel im Lager aktualisieren
       const a=S.a.find(x=>x.id===existingId);
       if(a){
-        console.log('  ✓ Artikel gefunden:', a.name);
-        console.log('    kaufort vorher:', a.kaufort, '→ neu:', kaufort);
-        console.log('    ablaufdatum:', ablaufdatum);
         ensurePackungen(a);
         a.packungen.push({id:newPackId(),menge,kaufdatum:datum,ablaufdatum:ablaufdatum||''});
         syncMenge(a);
@@ -8371,14 +8347,10 @@ function confirmQuittungArtikel(idx,hasExisting,existingId){
         if(!a.preisHistorie)a.preisHistorie=[];
         a.preisHistorie.push({datum,preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort||''});
         if(preis>0)a.preis=preis;
-        console.log('    kaufort NACHHER:', a.kaufort);
         addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,einheit,preis,false,true);
       }
     }else{
       // Neuen Artikel anlegen
-      console.log('  ✓ Neuer Artikel wird angelegt');
-      console.log('    kaufort:', kaufort);
-      console.log('    ablaufdatum:', ablaufdatum);
       const newId=S.nid++;
       const lager=S.lo[0]||'Vorratsschrank';
       S.a.push({id:newId,name,marke:'',kat,lager,kaufort,menge,einheit,mindest:0,barcode:'',preis,packMenge:0,packEinheit:'',kaufdatum:datum,ablaufdatum,notiz:'',foto:'',fotoPath:'',packungen:[{id:newPackId(),menge,kaufdatum:datum,ablaufdatum:ablaufdatum||''}],preisHistorie:[{datum,preis,menge,einheit:einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort||''}]});
