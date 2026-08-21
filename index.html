@@ -539,11 +539,10 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.47';
+const APP_VERSION='22.46';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'22.47',d:'20.08.2026',items:['🎯 MEGA-BUG GEFIXT: preis_netto wird ignoriert wenn Gesamtpreis korrigiert!','Problem: p.preis_netto=5.2 wurde verwendet obwohl bruttoPreis zu 1.30 korrigiert!','Fix: wurdKorrigiert Flag - wenn TRUE, nutze nur bruttoPreis, nicht p.preis_netto!','JETZT: Preis wird korrekt zu 1.30 CHF gespeichert! ✅']},
   {v:'22.46',d:'20.08.2026',items:['🔍 FULL-DEBUG: Kompletter Preis-Flow tracen!','1️⃣ parseReceiptPosition(): INPUT/OUTPUT zeigen','2️⃣ KORREKTUR-PASS: Was wird in it.preis gespeichert?','3️⃣ startQuittungArtikel(): Welcher Preis kommt im Formular an?']},
   {v:'22.45',d:'20.08.2026',items:['🔍 MEGA-DEBUG: Warum funktioniert Preis-Korrektur nicht?','parseReceiptPosition() jetzt mit MASSIVEN Debug-Logs','Console zeigt GENAU: INPUT preis/menge, prüfe Bedingungen, korrigierter Preis','Logs zeigen wenn Korrektur nicht läuft und WARUM!']},
   {v:'22.44',d:'20.08.2026',items:['🎯 KRITISCH: quittungItems undefined - GEFIXT!','Bug: forEach() wurde vor quittungItems=parsed.artikel aufgerufen','Fix: quittungItems Initialisierung SOFORT nach JSON.parse hinzugefügt','Quittungsscan funktioniert JETZT wieder!']},
@@ -4608,8 +4607,6 @@ function parseReceiptPosition(p){
   console.log('    INPUT: preis_brutto='+p.preis_brutto+', preis='+p.preis+', menge='+menge);
   console.log('    → bruttoPreis='+bruttoPreis);
   
-  let wurdKorrigiert = false;  // Flag ob Korrektur gemacht wurde!
-  
   // 🎯 MEGA-FIX: Erkenne ob preis_brutto der GESAMTPREIS ist! (VOR nettoPreis-Berechnung!)
   // Heuristik: Wenn menge > 1 UND bruttoPreis/menge plausibel (0.10-100 CHF), dann ist es Gesamtpreis!
   if(menge > 1 && bruttoPreis > 0){
@@ -4621,7 +4618,6 @@ function parseReceiptPosition(p){
       console.log('    ✓ ERKANNT: Gesamtpreis! '+preisProStueck.toFixed(2)+' CHF pro Stück ist plausibel');
       bruttoPreis = preisProStueck;  // ← KORRIGIERT!
       rabatt = rabatt / menge;  // ← Auch Rabatt pro Stück!
-      wurdKorrigiert = true;  // ← FLAG setzen!
       console.log('    → korrigiert zu: bruttoPreis='+bruttoPreis.toFixed(2));
     } else {
       console.log('    ✗ NICHT PLAUSIBEL: '+preisProStueck.toFixed(2)+' CHF ist außerhalb [0.10-100]');
@@ -4631,8 +4627,7 @@ function parseReceiptPosition(p){
   }
   
   // JETZT nettoPreis berechnen - nach der Gesamtpreis-Korrektur!
-  // WICHTIG: Wenn korrigiert, p.preis_netto IGNORIEREN!
-  let nettoPreis = wurdKorrigiert ? bruttoPreis : (p.preis_netto || (bruttoPreis - rabatt));
+  let nettoPreis = p.preis_netto || (bruttoPreis - rabatt);
   console.log('    nettoPreis='+nettoPreis.toFixed(2));
   
   // FIX: KI gibt manchmal bereits den Netto-Preis als "Brutto" zurück
