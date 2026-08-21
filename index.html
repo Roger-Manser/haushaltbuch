@@ -539,12 +539,10 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.24';
+const APP_VERSION='22.22';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'22.24',d:'20.08.2026',items:['🔍 DEBUG: Warum werden manche Artikel nicht gematcht?','AUTO-MATCHING Logs: ✓ MATCH / ❌ NO MATCH','findQuittungMatch() Logs: NAME MATCH vs. ALIAS MATCH','Zeigt: Artikel-Name, Normalisierung, gefundene Matches']},
-  {v:'22.23',d:'20.08.2026',items:['🧹 CLEANUP: Debug-Logs aus der map() entfernt!','Console ist jetzt wieder sauber + lesbar','Nur kritische Logs bleiben: Toast, KI-Response, Fehler','Artikel-Liste funktioniert stabil & performant!']},
   {v:'22.22',d:'20.08.2026',items:['🎯 GELÖST: max-height:90vh → 100vh!','Das Quittungs-Fenster war zu klein - schnitt Artikel ab!','Auf Mobil war 90vh SEHR eng - nur wenige Artikel visible','Jetzt: 100vh gibt volle Bildschirmhöhe + overflow-y:auto zum Scrollen']},
   {v:'22.21',d:'20.08.2026',items:['🔍 DEBUG: map() zeigt welche Artikel verarbeitet werden','Console zeigt: "map Artikel X: name, preis, _done"','Hilft zu finden warum Normalmodus weniger Artikel zeigt als Vorschau','Überprüfe welche Artikel übersprungen oder versteckt sind']},
   {v:'22.20',d:'20.08.2026',items:['🔧 BugFix: Doppelte const body Definitionen entfernt!','Scope-Problem: body wurde überschrieben in Vorschau-Check','Normalmodus nutzt jetzt die gleiche body Variable','🎯 DEBUG-LOGS: Zeigen ob HTML wirklich gesetzt wird']},
@@ -7822,18 +7820,14 @@ async function handleQuittungFile(input){
 
     
     // AUTO-MATCHING: Versuche sofort Artikel zuzuordnen
-    console.log('🎯 AUTO-MATCHING START:');
     quittungItems.forEach((it,idx)=>{
       if(it.lagerArtikelId)return; // Schon zugeordnet
       const found=findQuittungMatch(it.name);
       if(found){
         it.lagerArtikelId=found.id;
-        console.log('  ✓ MATCH:', it.name, '→', found.name);
       }else{
-        console.log('  ❌ NO MATCH:', it.name);
       }
     });
-    console.log('✓ AUTO-MATCHING fertig');
 
     // KORREKTUR-PASS: Speichere korrigierte Werte von parseReceiptPosition() zurück in quittungItems
     quittungItems.forEach((it, idx) => {
@@ -7874,8 +7868,9 @@ async function handleQuittungFile(input){
 }
 
 function renderQuittungUebersicht(datum){
-  console.log('🎯 renderQuittungUebersicht() - quittungItems:', quittungItems.length);
+  console.log('🎯 renderQuittungUebersicht() START - quittungItems:', quittungItems.length, 'Preview:', opt.quittungPreview);
   const body=document.getElementById('quittung-body');
+  console.log('  body Element:', body, 'display:', body?.style?.display, 'innerHTML.length:', body?.innerHTML?.length);
   // Trainingsmodus-Banner oben einfügen
   const qbody=document.getElementById('quittung-body');
   if(qbody&&opt.quittungTraining){
@@ -7911,6 +7906,7 @@ function renderQuittungUebersicht(datum){
   }
   
   // Normaler Modus: Zeige Artikel-Liste
+  console.log('🎯 Normalmodus: body wird mit Artikel gefüllt');
   if(!body)return; // Sicherheit falls körper weg ist
   const ge=quittungGeschaeft;
   let h='<div style="display:flex;gap:10px;margin-bottom:14px">'+
@@ -7922,7 +7918,9 @@ function renderQuittungUebersicht(datum){
     '<button onclick="openDebugInterface(debugState.rawResponse)" style="background:var(--ac);color:#fff;border:none;padding:10px 14px;border-radius:var(--rs);cursor:pointer;font-weight:600;font-size:13px;white-space:nowrap">🔧 Debug</button>'+
   '</div>';
   h+='<div style="font-size:13px;color:var(--t2);margin-bottom:10px">📋 Erkannte Artikel — Jetzt buchen:</div>';
+  console.log('🎯 VOR map() - quittungItems.length:', quittungItems.length);
   h+=quittungItems.map((it,i)=>{
+    console.log('  map Artikel', i, ':', it.name, 'preis:', it.preis, '_done:', it._done);
     // Matching wurde bereits vorher gemacht - hier nur noch Badge setzen
     const badge=it.lagerArtikelId?'<span style="font-size:10px;background:var(--al);color:var(--ac);border-radius:6px;padding:1px 6px;margin-left:6px">im Lager</span>':'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:6px">neu</span>';
     if(it._done){
@@ -7938,8 +7936,12 @@ function renderQuittungUebersicht(datum){
       '<button onclick="startQuittungArtikel('+i+')" style="background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:7px 14px;font-size:13px;cursor:pointer">Buchen</button>'+
     '</div>';
   }).join('');
+  console.log('✓ NACH map() - HTML gebaut');
   h+='<button onclick="closeQuittung()" style="width:100%;margin-top:14px;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Fertig</button>';
+  console.log('🎯 VOR body.innerHTML: body=', body, 'HTML-Länge:', h.length);
   body.innerHTML=h;
+  const ov=document.getElementById('quittung-overlay');
+  console.log('✓ NACH body.innerHTML gesetzt - overlay display:', ov?.style?.display);
   // Kaufdatum speichern für spätere Verwendung
   body.dataset.datum=datum;
 }
@@ -7962,16 +7964,14 @@ function levenshteinDistance(s1,s2){
 function findQuittungMatch(name){
   // Normalisierung: lowercase + trim + mehrfaches whitespace zu single space
   const nl=name.toLowerCase().trim().replace(/\s+/g,' ');
-  console.log('  🔍 findQuittungMatch("'+name+'") → norm: "'+nl+'"');
   
   // 1. 100% Match mit Lagertext (Name)
   let m=S.a.find(a=>{
     const an = a.name.toLowerCase().trim().replace(/\s+/g,' ');
     const match = an===nl;
-    if(match)console.log('    ✓ NAME MATCH: '+a.name);
     return match;
   });
-  if(m){console.log('    → Found via NAME'); return m;}
+  if(m)return m;
   
   // 2. 100% Match mit Alias
   m=S.a.find(a=>{
@@ -7987,14 +7987,12 @@ function findQuittungMatch(name){
     const has = aliases.some(al=>{
       const al_norm = al.toLowerCase().trim().replace(/\s+/g,' ');
       const match = al_norm===nl;
-      if(match)console.log('    ✓ ALIAS MATCH: '+a.name+' (alias: '+al+')');
       return match;
     });
     return has;
   });
-  if(m){console.log('    → Found via ALIAS'); return m;}
+  if(m)return m;
   
-  console.log('    → NO MATCH found');
   return null;
 }
 
