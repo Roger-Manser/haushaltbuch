@@ -539,7 +539,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.72';
+const APP_VERSION='22.73';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
@@ -2052,7 +2052,7 @@ function editPreisHistorie(artikelId,idx){
   const existing=document.getElementById('vh-edit-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='vh-edit-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:none;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px">Verlauf-Eintrag bearbeiten</div>'+
@@ -3034,7 +3034,7 @@ function showFotoWahl(){
   const existing=document.getElementById('foto-wahl-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='foto-wahl-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:none;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px;text-align:center">Foto hinzufügen</div>'+
@@ -6886,7 +6886,7 @@ function lagerKiScan(){
   const existing=document.getElementById('kiscan-info-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='kiscan-info-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:none;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:20px 16px calc(20px + env(safe-area-inset-bottom))">'+
       '<input type="file" id="ki-file-cam" accept="image/*" capture="environment" style="display:none" onchange="kiScanAddFoto(this)"/>'+
@@ -7744,16 +7744,6 @@ let quittungIdx=0;    // aktueller Artikel im Einzelbestätigungs-Flow
 let quittungGeschaeft=''; // erkanntes Geschäft
 
 
-function closeQuittungDialog(){
-  let d = document.getElementById('quittung-info-dlg');
-  if(d){
-    d.style.display = 'none';
-    d.style.visibility = 'hidden';
-    d.style.opacity = '0';
-    d.remove();
-  }
-}
-
 function openQuittungFile(isCam){
   // Dialog wurde bereits im onclick Handler gelöscht!
   // _openQuittungDo aufrufen (erzeugt File-Inputs)
@@ -7772,7 +7762,7 @@ function openQuittung(){
   const existing=document.getElementById('quittung-info-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='quittung-info-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:none;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:20px 16px calc(20px + env(safe-area-inset-bottom))">'+
       
@@ -7783,11 +7773,11 @@ function openQuittung(){
         '<span style="color:var(--t3);font-size:12px">⚠️ Benötigt API-Key (Einstellungen). Jede Analyse kostet ein paar Cent.</span>'+
       '</div>'+
       '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">'+
-        '<button onclick="closeQuittungDialog();openQuittungFile(true)" style="width:100%;padding:13px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
+        '<button onclick="openQuittungFile(true)" style="width:100%;padding:13px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>'+
           'Quittung fotografieren'+
         '</button>'+
-        '<button onclick="closeQuittungDialog();openQuittungFile(false)" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
+        '<button onclick="openQuittungFile(false)" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'+
           'Aus Galerie auswählen'+
         '</button>'+
@@ -8278,7 +8268,7 @@ function openFullArtikelDialog(name,marke,preis,kat){
   
   const dlg=document.createElement('div');
   dlg.id='full-artikel-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:none;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);max-height:90vh;overflow-y:auto;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px">Artikel erfassen</div>'+
