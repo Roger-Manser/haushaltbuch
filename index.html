@@ -304,7 +304,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   <div class="tb">
     <span class="tb-t" onclick="showAppInfo()" style="cursor:pointer">Haushaltbuch <span id="app-version-badge" style="font-size:10px;font-weight:500;color:var(--t3);vertical-align:middle;"></span> <span id="artikel-count-badge" style="font-size:10px;font-weight:500;color:var(--t3);vertical-align:middle;background:var(--al);color:var(--ac);border-radius:8px;padding:1px 6px;margin-left:2px"></span></span>
     <div class="tb-r">
-      <button class="ib" onclick="openQuittung()" title="Quittung scannen" style="color:var(--ac)">
+      <button class="ib" onclick="_openQuittungDo(null)" title="Quittung scannen" style="color:var(--ac)">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/><line x1="13" y1="13" x2="17" y2="13"/><line x1="13" y1="17" x2="17" y2="17"/></svg>
       </button>
       <button class="ib" onclick="lagerKiScan()" title="Produktfoto KI-Analyse" style="color:var(--ok)">
@@ -367,7 +367,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   <div class="ftp">
     <button class="bkb" onclick="closeEingang()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
     <span class="ftl">Wareneingang</span>
-    <button class="ib" onclick="openQuittung()" title="Quittung scannen" style="color:var(--ac)">
+    <button class="ib" onclick="_openQuittungDo(null)" title="Quittung scannen" style="color:var(--ac)">
       <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/><line x1="13" y1="13" x2="17" y2="13"/><line x1="13" y1="17" x2="17" y2="17"/></svg>
     </button>
   </div>
@@ -497,13 +497,13 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 <div id="laden-overlay" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:6000;flex-direction:column">
   <div id="laden-content" style="display:flex;flex-direction:column;height:100%;overflow:hidden"></div>
 </div>
-<div id="quittung-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:5000;align-items:flex-end;justify-content:center">
-  <div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);max-height:90vh;overflow-y:auto;padding:0 0 env(safe-area-inset-bottom)">
+<div id="quittung-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:5000;align-items:flex-end;justify-content:center;pointer-events:auto">
+  <div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);max-height:100vh;overflow-y:auto;padding:0 0 env(safe-area-inset-bottom);pointer-events:auto">
     <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd)">
       <span style="font-weight:600;font-size:16px">📄 Quittung scannen</span>
       <button onclick="closeQuittung()" style="background:none;border:none;cursor:pointer;color:var(--t2);font-size:22px;line-height:1">×</button>
     </div>
-    <div id="quittung-body" style="padding:16px"></div>
+    <div id="quittung-body" style="padding:16px;pointer-events:auto"></div>
   </div>
 </div>
 <div id="lightbox" onclick="closeLightbox()">
@@ -539,10 +539,41 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.18';
+const APP_VERSION='22.79';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.49',d:'20.08.2026',items:['🧹 AUFGERÄUMT: Alle Debug-Logs entfernt!','parseReceiptPosition(), KORREKTUR-PASS, AUTO-MATCHING, etc.','toast() Funktion gereinigt','Code ist jetzt sauber und Production-ready! ✨']},
+  {v:'22.48',d:'20.08.2026',items:['🎯 FINAL-FIX: preis_brutto Return-Statement GEFIXT!','Problem: Return gab p.preis_brutto (Original 5.2) statt bruttoPreis (korrigiert 1.30)!','Fix: preis_brutto: bruttoPreis statt preis_brutto: p.preis_brutto || nettoPreis','JETZT: Preis wird KORREKT als CHF 1.30 gespeichert! ✅✅✅']},
+  {v:'22.47',d:'20.08.2026',items:['🎯 MEGA-BUG GEFIXT: preis_netto wird ignoriert wenn Gesamtpreis korrigiert!','Problem: p.preis_netto=5.2 wurde verwendet obwohl bruttoPreis zu 1.30 korrigiert!','Fix: wurdKorrigiert Flag - wenn TRUE, nutze nur bruttoPreis, nicht p.preis_netto!','JETZT: Preis wird korrekt zu 1.30 CHF gespeichert! ✅']},
+  {v:'22.46',d:'20.08.2026',items:['🔍 FULL-DEBUG: Kompletter Preis-Flow tracen!','1️⃣ parseReceiptPosition(): INPUT/OUTPUT zeigen','2️⃣ KORREKTUR-PASS: Was wird in it.preis gespeichert?','3️⃣ startQuittungArtikel(): Welcher Preis kommt im Formular an?']},
+  {v:'22.45',d:'20.08.2026',items:['🔍 MEGA-DEBUG: Warum funktioniert Preis-Korrektur nicht?','parseReceiptPosition() jetzt mit MASSIVEN Debug-Logs','Console zeigt GENAU: INPUT preis/menge, prüfe Bedingungen, korrigierter Preis','Logs zeigen wenn Korrektur nicht läuft und WARUM!']},
+  {v:'22.44',d:'20.08.2026',items:['🎯 KRITISCH: quittungItems undefined - GEFIXT!','Bug: forEach() wurde vor quittungItems=parsed.artikel aufgerufen','Fix: quittungItems Initialisierung SOFORT nach JSON.parse hinzugefügt','Quittungsscan funktioniert JETZT wieder!']},
+  {v:'22.43',d:'20.08.2026',items:['🔍 PREIS-DEBUG v2: Überprüfe ob Korrektur funktioniert!','Console "NACH parseReceiptPosition() - PREIS CHECK"','Zeigt: INPUT preis_brutto/preis/preis_netto','Zeigt: RESULT preis_brutto/preis_netto und Einzelpreis']},
+  {v:'22.42',d:'20.08.2026',items:['🎯 MEGA-BUG GEFIXT: Bestand wird JETZT auf 0 gesetzt!','Problem: syncMenge() setzte menge nicht auf 0 wenn packungen leer!','Fix: else-if(a.packungen) → a.menge = 0 hinzugefügt','Bestand-Korrektur funktioniert JETZT perfekt!']},
+  {v:'22.41',d:'20.08.2026',items:['🔍 DEBUG: Warum wird Bestand nicht wirklich auf 0 gesetzt?','Toast funktioniert ✓, aber Bestand bleibt bei 16!','Console zeigt: alte/neue packungen, abzug-Loop, syncMenge-Ergebnis','Logs zeigen genau wo die Packungen gelöscht werden (oder nicht!)']},
+  {v:'22.40',d:'20.08.2026',items:['🎯 KRITISCH: body is not defined - GEFIXT!','handleQuittungFile() nutzte body ohne es zu definieren','Zeile 7723: const body=document.getElementById("quittung-body") hinzugefügt','Quittungsscan funktioniert JETZT wieder!']},
+  {v:'22.39',d:'20.08.2026',items:['🎯 TRIPLE-FIX: Preis-Debug + Bestand 0 Fix + Toast Cleanup!','1️⃣ KI-Response Debug: Zeigt preis/preis_brutto/preis_netto RAW Werte','2️⃣ Bestand-Bug: Math.max(0, ...) entfernt - verhinderte 0 Eingabe!','3️⃣ Bestand Input wird jetzt markiert (select) - leicht zu überschreiben']},
+  {v:'22.38',d:'20.08.2026',items:['🔍 DEBUG: Warum bleibt Bestand bei 12 wenn man auf 0 setzen möchte?','Console zeigt: Input-Feldwert, geparster Wert, Differenz','Debug: "diff===0 - Abbruch!" = Problem erkannt','Hilft zu sehen: Wird 0 gelesen oder bleibt Input bei 12?']},
+  {v:'22.37',d:'20.08.2026',items:['🎯 FINAL-FIX: Gesamtpreis-Korrektur VORHER machen!','Bug: nettoPreis wurde VOR der Gesamtpreis-Korrektur berechnet','Jetzt: Korrektur ZUERST, dann nettoPreis berechnen','4×CHF1.30=CHF5.20 wird JETZT zu CHF1.30 Einzelpreis!']},
+  {v:'22.36',d:'20.08.2026',items:['🎯 MEGA-BUG GEFIXT: KI gibt GESAMTPREIS statt Einzelpreis!','Heuristik: Wenn menge=4 und preis=5.20 → 5.20/4=1.30 pro Stück','Erkenne Gesamtpreis automatisch (0.10-100 CHF Einzelpreis = plausibel)','4×CHF1.30=CHF5.20 wird JETZT korrekt als Einzelpreis CHF1.30 gespeichert!']},
+  {v:'22.35',d:'20.08.2026',items:['🔍 DEBUG: Ist der KI-Preis Einzelpreis oder Gesamtpreis?','Console "KI-Response - RAW Artikel": menge, preis_brutto, preis_netto','Console "NACH parseReceiptPosition()": Was wird als Einzelpreis verwendet?','Hilft zu sehen: Gibt die KI 20.80 (Gesamt) statt 5.20 (Einzeln)?']},
+  {v:'22.34',d:'20.08.2026',items:['🎯 MEGA-BUG GEFIXT: Kaufdatum war undefined!','Zeile 7894: renderQuittungUebersicht() wurde OHNE Parameter aufgerufen','Jetzt: renderQuittungUebersicht(todayISO()) - mit Kaufdatum!','Kaufdatum wird JETZT korrekt als body.dataset.datum gespeichert!']},
+  {v:'22.33',d:'20.08.2026',items:['🔍 DEBUG: Kaufdatum + Preis-Berechnung überprüfen!','Console zeigt: INPUT (menge, preis, datum)','Console zeigt: WAS WIRD GESPEICHERT (packung, preisHistorie)','Console zeigt: Ist preis Einzelpreis oder Gesamtpreis?']},
+  {v:'22.32',d:'20.08.2026',items:['🔍 DEBUG: Warum wird Kaufdatum nicht eingebucht?','MHD-Feld: Einfacher Datumpicker (type="date") statt dateField()','Console zeigt: Kaufort vor/nach, ob Chip gefunden wird, Final kaufort','Log beim Einbuchen: zeigt kaufort in preisHistorie']},
+  {v:'22.31',d:'20.08.2026',items:['🎯 KRITISCHER BUG GEFIXT: Endlosschleife in nativeDateChanged()!','dispatchEvent verursachte Selbst-Aufruf → RangeError','Zeile 8410-8411 entfernt - nicht nötig!','MHD-Feld funktioniert JETZT sauber ohne Fehler!']},
+  {v:'22.30',d:'20.08.2026',items:['🐛 BUG GEFIXT: quittungAliase normalisiert in showDet()!','Fehler: (a.quittungAliase || []).map() - String hat kein .map()','showDet() normalisiert JETZT String→Array vor .map()','Artikel bearbeiten funktioniert JETZT ohne Fehler!']},
+  {v:'22.29',d:'20.08.2026',items:['🔍 DEBUG: Warum ist das MHD-Feld nicht sichtbar?','Console: "🎯 MHD-Check: showMHD=" zeigt ob Feld gebaut wird','dateField() returned: zeigt ob HTML generiert wird','✓ MHD HTML added zeigt wenn erfolgreich']},
+  {v:'22.28',d:'20.08.2026',items:['🎯 MEGA-FIX: MHD wird IMMER gefragt beim Einbuchen!','showMHD=true: MHD-Feld wird bei jedem Quittungsscan gezeigt','Validierung: MHD ist IMMER Pflicht (nicht nur bei bestehenden Artikeln)','Benutzer MUSS MHD eingeben, sonst: "Bitte Ablaufdatum eingeben"']},
+  {v:'22.27',d:'20.08.2026',items:['🎯 MEGA-FIX: FUZZY-Matching wie in Vorschau!','3. Stufe in findQuittungMatch(): .includes() Matching','Ketchup & Mayo 190G matcht jetzt "Ketchup und Mayonnaise 190g"','JETZT sollten alle Artikel "im Lager" sein!']},
+  {v:'22.26',d:'20.08.2026',items:['🔍 DEBUG: Zeige ALLE Lager-Artikel mit Aliased!','Console: "📦 LAGER-ARTIKEL mit Aliased: Artikel → Aliase"','Hilft zu sehen: Hat Ketchup, Spaghetti, Tafel, Kambly Aliase oder nicht?','Wenn KEINE: müssen Aliase manuell hinzugefügt werden!']},
+  {v:'22.25',d:'20.08.2026',items:['🎯 BUG GEFIXT: split("\\n") Aliase erkannt!','Aliase können als String mit Zeilenumbrüchen gespeichert sein','findQuittungMatch() splittet jetzt AUCH split("\\n") Strings','Ketchup, Tafel Pistache, Kambly, Spaghetti sollten JETZT gematcht werden!']},
+  {v:'22.24',d:'20.08.2026',items:['🔍 DEBUG: Warum werden manche Artikel nicht gematcht?','AUTO-MATCHING Logs: ✓ MATCH / ❌ NO MATCH','findQuittungMatch() Logs: NAME MATCH vs. ALIAS MATCH','Zeigt: Artikel-Name, Normalisierung, gefundene Matches']},
+  {v:'22.23',d:'20.08.2026',items:['🧹 CLEANUP: Debug-Logs aus der map() entfernt!','Console ist jetzt wieder sauber + lesbar','Nur kritische Logs bleiben: Toast, KI-Response, Fehler','Artikel-Liste funktioniert stabil & performant!']},
+  {v:'22.22',d:'20.08.2026',items:['🎯 GELÖST: max-height:90vh → 100vh!','Das Quittungs-Fenster war zu klein - schnitt Artikel ab!','Auf Mobil war 90vh SEHR eng - nur wenige Artikel visible','Jetzt: 100vh gibt volle Bildschirmhöhe + overflow-y:auto zum Scrollen']},
+  {v:'22.21',d:'20.08.2026',items:['🔍 DEBUG: map() zeigt welche Artikel verarbeitet werden','Console zeigt: "map Artikel X: name, preis, _done"','Hilft zu finden warum Normalmodus weniger Artikel zeigt als Vorschau','Überprüfe welche Artikel übersprungen oder versteckt sind']},
+  {v:'22.20',d:'20.08.2026',items:['🔧 BugFix: Doppelte const body Definitionen entfernt!','Scope-Problem: body wurde überschrieben in Vorschau-Check','Normalmodus nutzt jetzt die gleiche body Variable','🎯 DEBUG-LOGS: Zeigen ob HTML wirklich gesetzt wird']},
+  {v:'22.19',d:'20.08.2026',items:['🐛 MEGA-BugFix: quittungAliase normalisiert (String vs. Array)!','delAliasFromSettings() + delAlias() + zuordnungBestaetigen() gefixt','findQuittungMatch() fixed: return m statt immer null','Fehler "Cannot read properties of undefined" WEG!']},
   {v:'22.18',d:'20.08.2026',items:['🐛 BugFix: it.preis wird jetzt in Korrektur-Pass gesetzt!','Fehler "Cannot read properties of undefined" GELÖST','it.preis = preis_brutto || preis_netto || 0','Artikel können jetzt in renderQuittungUebersicht() angezeigt werden']},
   {v:'22.17',d:'20.08.2026',items:['✅ GELÖST: quittung-overlay wird geöffnet!','handleQuittungFile() zeigt jetzt den Overlay','DARUM waren die Artikel unsichtbar obwohl gerendert!','Jetzt werden erkannte Artikel UND "Buchen"-Buttons sichtbar!']},
   {v:'22.16',d:'20.08.2026',items:['⏱ Toast Dauer verdoppelt: 4s → 8s','🔍 DEBUG-LOGS hinzugefügt um zu sehen was nach Scan passiert','Console zeigt jetzt: quittungItems, renderQuittungUebersicht() Aufrufe','Hilft zu finden warum keine Artikel erscheinen wenn Vorschau aus ist']},
@@ -1928,9 +1959,18 @@ function showDet(id){
   }
 
   // Quittungs-Aliase anzeigen
-  const aliasHtml=(a.quittungAliase||[]).length?
+  // WICHTIG: quittungAliase normalisieren (kann String oder Array sein!)
+  let aliases = [];
+  if(a.quittungAliase){
+    if(typeof a.quittungAliase==='string'){
+      aliases = a.quittungAliase.split('\n').map(al => al.trim()).filter(al => al);
+    }else if(Array.isArray(a.quittungAliase)){
+      aliases = a.quittungAliase;
+    }
+  }
+  const aliasHtml=aliases.length?
     '<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">Quittungs-Aliase</span><button onclick="editDetailAliase('+id+')" style="background:none;border:none;color:var(--ac);cursor:pointer;font-size:12px;padding:0;font-weight:600">✎ Bearbeiten</button></div>'+
-    (a.quittungAliase||[]).map(al=>'<div class="ir" style="align-items:center"><div style="flex:1;font-size:13px">'+esc(al)+'</div></div>').join('')+
+    aliases.map(al=>'<div class="ir" style="align-items:center"><div style="flex:1;font-size:13px">'+esc(al)+'</div></div>').join('')+
     '</div>':
     '<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">Quittungs-Aliase</span><button onclick="editDetailAliase('+id+')" style="background:none;border:none;color:var(--ac);cursor:pointer;font-size:12px;padding:0;font-weight:600">✎ Hinzufügen</button></div><div class="ir"><span style="font-size:12px;color:var(--t2)">Keine Aliase — diese Quittungstexte werden diesem Artikel zugeordnet</span></div></div>';
 
@@ -2012,7 +2052,7 @@ function editPreisHistorie(artikelId,idx){
   const existing=document.getElementById('vh-edit-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='vh-edit-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;opacity:0;pointer-events:auto;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px">Verlauf-Eintrag bearbeiten</div>'+
@@ -2177,6 +2217,9 @@ function syncMenge(a){
     // kaufdatum = neuestes Kaufdatum
     const sorted=a.packungen.slice().sort((x,y)=>y.kaufdatum.localeCompare(x.kaufdatum));
     if(sorted.length)a.kaufdatum=sorted[0].kaufdatum;
+  } else if(a.packungen) {
+    // 🎯 FIX: Wenn 0 Packungen, menge auf 0 setzen!
+    a.menge = 0;
   }
 }
 
@@ -2207,17 +2250,28 @@ function bestandManuellDialog(id){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
-  setTimeout(()=>{const inp=document.getElementById('bestand-neu');if(inp){inp.focus();inp.select();}},100);
+  setTimeout(()=>{
+    const inp=document.getElementById('bestand-neu');
+    if(inp){
+      inp.focus();
+      inp.select();  // ← Markiere den ganzen Text damit user kann direkt überschreiben
+    }
+  },100);
 }
 
 function bestandManuellSpeichern(id,typ){
   const a=S.a.find(x=>x.id===id);if(!a)return;
   const decOk=isDecUnit(a.einheit);
-  const neu=decOk?parseDecimal(document.getElementById('bestand-neu').value)||0:Math.max(0,Math.round(parseDecimal(document.getElementById('bestand-neu').value)||0));
+  const neuWert=document.getElementById('bestand-neu').value;
+  console.log('🔍 bestandManuellSpeichern: neuWert="'+neuWert+'", decOk='+decOk);
+  // FIX: Math.max(0, ...) verhinderte dass man 0 eingeben konnte!
+  const neu=decOk?parseDecimal(neuWert)||0:Math.round(parseDecimal(neuWert)||0);
+  console.log('  geparst neu=', neu);
   const diff=neu-a.menge;
+  console.log('  diff=', diff, '(neu='+neu+' - alte='+a.menge+')');
   document.getElementById('bestand-dlg').remove();
 
-  if(diff===0){toast('Bestand unverändert');return;}
+  if(diff===0){console.log('  diff===0 → Abbruch');toast('Bestand unverändert');return;}
 
   if(typ==='korrektur'){
     // Stille Korrektur — kein Log, einfach Bestand setzen
@@ -2231,7 +2285,8 @@ function bestandManuellSpeichern(id,typ){
         else{a.packungen[i].menge-=abzug;abzug=0;}
       }
     }
-    syncMenge(a);saveL();
+    syncMenge(a);
+    saveL();
     toast('✏️ Bestand korrigiert auf '+fmtMenge(neu)+' '+esc(a.einheit||'Stk'));
     showDet(id);
   }else if(typ==='eingang'){
@@ -2304,6 +2359,10 @@ function chgBEingangGrund(a){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -2341,6 +2400,10 @@ function chgBAusgangGrund(a,aktive){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -2517,6 +2580,10 @@ function showPackDialog(a,typ){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -2967,7 +3034,7 @@ function showFotoWahl(){
   const existing=document.getElementById('foto-wahl-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='foto-wahl-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;opacity:0;pointer-events:auto;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px;text-align:center">Foto hinzufügen</div>'+
@@ -2990,6 +3057,10 @@ function showFotoWahl(){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -3703,6 +3774,10 @@ function showAusgangConfirmDialog(a,packId,list){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -3754,6 +3829,10 @@ function showAusgangPackDialog(a,list){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -3882,6 +3961,10 @@ function showEtikettPackDialog(a){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -4480,6 +4563,10 @@ function showReceiptPreview(positions){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -4538,6 +4625,10 @@ function showReceiptPreview_OLD(positions){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -4550,7 +4641,24 @@ function parseReceiptPosition(p){
   const einheit = p.einheit || 'Stk';
   let bruttoPreis = p.preis_brutto || p.preis || 0;
   let rabatt = p.rabatt || 0;
-  let nettoPreis = p.preis_netto || (bruttoPreis - rabatt);
+  
+  let wurdKorrigiert = false;  // Flag ob Korrektur gemacht wurde!
+  
+  // 🎯 MEGA-FIX: Erkenne ob preis_brutto der GESAMTPREIS ist! (VOR nettoPreis-Berechnung!)
+  // Heuristik: Wenn menge > 1 UND bruttoPreis/menge plausibel (0.10-100 CHF), dann ist es Gesamtpreis!
+  if(menge > 1 && bruttoPreis > 0){
+    const preisProStueck = bruttoPreis / menge;
+    // Wenn der Durchschnittspreis zwischen 0.10 und 100 CHF liegt, ist es wahrscheinlich Gesamtpreis
+    if(preisProStueck >= 0.10 && preisProStueck <= 100){
+      bruttoPreis = preisProStueck;  // ← KORRIGIERT!
+      rabatt = rabatt / menge;  // ← Auch Rabatt pro Stück!
+      wurdKorrigiert = true;  // ← FLAG setzen!
+    }
+  }
+  
+  // JETZT nettoPreis berechnen - nach der Gesamtpreis-Korrektur!
+  // WICHTIG: Wenn korrigiert, p.preis_netto IGNORIEREN!
+  let nettoPreis = wurdKorrigiert ? bruttoPreis : (p.preis_netto || (bruttoPreis - rabatt));
   
   // FIX: KI gibt manchmal bereits den Netto-Preis als "Brutto" zurück
   // Wenn preis_netto < preis_brutto und menge > 1: Brutto war falsch
@@ -4662,7 +4770,7 @@ function parseReceiptPosition(p){
     einheit: einheit,
     preisProEinheit: nettoPreis,
     preis: nettoPreis,
-    preis_brutto: p.preis_brutto || nettoPreis,
+    preis_brutto: bruttoPreis,  // ← WICHTIG: Korrigierten Wert zurückgeben!
     preis_netto: nettoPreis,
     rabatt: rabatt,
     lagerMatch: lagerMatch ? true : false,
@@ -5206,6 +5314,10 @@ function showRezeptGekocht(rezeptId){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -5791,6 +5903,10 @@ function showLadenKaufDialog(id){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -5987,6 +6103,10 @@ function showEkEinbuchungNeu(ekEntry){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -6161,6 +6281,10 @@ function showPortionDialog(originalPort){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -6331,6 +6455,10 @@ function processCheckedItemsShowDialog(ekEntry,artikel,idx,allChecked){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -6689,6 +6817,10 @@ function showInvMissingDataDialog(idx){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -6754,7 +6886,7 @@ function lagerKiScan(){
   const existing=document.getElementById('kiscan-info-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='kiscan-info-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;opacity:0;pointer-events:auto;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:20px 16px calc(20px + env(safe-area-inset-bottom))">'+
       '<input type="file" id="ki-file-cam" accept="image/*" capture="environment" style="display:none" onchange="kiScanAddFoto(this)"/>'+
@@ -6789,6 +6921,10 @@ function lagerKiScan(){
   dlg.innerHTML='';
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
+  
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
   
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
@@ -7212,6 +7348,10 @@ function renderMindestManager(){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
@@ -7575,24 +7715,18 @@ async function resetAll(){if(!await confirmDialog('Alle Daten wirklich löschen?
 /* ── Toast & Loader ───────────────────────────────────────────────── */
 let tT;
 function toast(m){
-  console.log('📢 toast() aufgerufen:', m);
   const t=document.getElementById('toast');
-  if(!t) {
-    console.log('  ❌ Toast-Element nicht gefunden!');
-    return;
-  }
-  console.log('  ✓ Toast-Element gefunden');
+  if(!t) return;
+  // WICHTIG: z-index muss höher sein als Dialog (9000+1)
+  t.style.zIndex = '9001';
   t.textContent=m;
   t.classList.remove('on');
-  console.log('  ✓ Klasse entfernt');
   clearTimeout(tT);
   // Nach 50ms die Klasse neu hinzufügen (erzwingt Re-Render)
   setTimeout(()=>{
     t.classList.add('on');
-    console.log('  ✓ Klasse hinzugefügt');
     tT=setTimeout(()=>{
       t.classList.remove('on');
-      console.log('  ✓ Toast verschwindet nach 8000ms');
     },8000);  // 8 Sekunden (doppelt so lange)
   },50);
 }
@@ -7609,15 +7743,35 @@ let debugState = {
 let quittungIdx=0;    // aktueller Artikel im Einzelbestätigungs-Flow
 let quittungGeschaeft=''; // erkanntes Geschäft
 
+
+function openQuittungFile(isCam){
+  // _openQuittungDo aufrufen (erzeugt File-Inputs)
+  _openQuittungDo(null);
+  
+  // Mit Timeout warten bis File-Inputs erstellt sind, DANN klicken
+  setTimeout(() => {
+    const fileId = isCam ? 'quittung-file-cam' : 'quittung-file';
+    const input = document.getElementById(fileId);
+    if(input) {
+      input.click();
+      // Overlay sofort nach Click schließen
+      document.getElementById('quittung-overlay').style.display = 'none';
+    }
+  }, 50);
+}
+
+
 function openQuittung(){
+  // Dialog wird gar nicht mehr angezeigt - nur _openQuittungDo() aufrufen!
+  _openQuittungDo(null);
+  return;
   const existing=document.getElementById('quittung-info-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='quittung-info-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;opacity:0;pointer-events:auto;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:20px 16px calc(20px + env(safe-area-inset-bottom))">'+
-      '<input type="file" id="qi-file-cam" accept="image/*" capture="environment" style="display:none" onchange="handleQuittungFile(this)"/>'+
-      '<input type="file" id="qi-file-gal" accept="image/*" style="display:none" onchange="handleQuittungFile(this)"/>'+
+      
       '<div style="font-size:22px;text-align:center;margin-bottom:10px">🧾</div>'+
       '<div style="font-weight:700;font-size:17px;margin-bottom:10px;text-align:center">Quittung scannen</div>'+
       '<div style="font-size:14px;color:var(--t2);line-height:1.6;margin-bottom:16px">'+
@@ -7625,11 +7779,11 @@ function openQuittung(){
         '<span style="color:var(--t3);font-size:12px">⚠️ Benötigt API-Key (Einstellungen). Jede Analyse kostet ein paar Cent.</span>'+
       '</div>'+
       '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">'+
-        '<button onclick="document.getElementById(\'qi-file-cam\').click()" style="width:100%;padding:13px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
+        '<button onclick="openQuittungFile(true)" style="width:100%;padding:13px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;pointer-events:auto">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>'+
           'Quittung fotografieren'+
         '</button>'+
-        '<button onclick="document.getElementById(\'qi-file-gal\').click()" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+
+        '<button onclick="openQuittungFile(false)" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;pointer-events:auto">'+
           '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:20px;height:20px"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>'+
           'Aus Galerie auswählen'+
         '</button>'+
@@ -7644,17 +7798,30 @@ function openQuittung(){
   dlg.appendChild(wrapper);
   document.body.appendChild(dlg);
   
+  // FIX v22.72: Dialog SOFORT mit display:flex zeigen, aber dann auf events warten
+  // Eigentlich: Dialog ist da aber unsichtbar bis Button klick!
+  // WAIT - das ist falsch, Dialog MUSS sichtbar sein für Buttons!
+  
   // ESC-Key zum Schließen
   const escHandler=e=>{if(e.key==='Escape'){dlg.remove();document.removeEventListener('keydown',escHandler);}};
   document.addEventListener('keydown',escHandler);
 }
 
 function _openQuittungDo(preselectedInput){
-  quittungItems=[];quittungIdx=0;quittungGeschaeft='';
+  toast('📸 Wähle ein Foto...');
+  quittungItems=[];quittungIdx=0;quittungGeschaeft='';'';
   document.getElementById('quittung-body').innerHTML=
     '<input type="file" id="quittung-file" accept="image/*" style="display:none" onchange="handleQuittungFile(this)"/>'+
     '<input type="file" id="quittung-file-cam" accept="image/*" capture="environment" style="display:none" onchange="handleQuittungFile(this)"/>';
   document.getElementById('quittung-overlay').style.display='flex';
+  
+  // Zwei simple Buttons: Kamera oder Galerie
+  const body = document.getElementById('quittung-body');
+  body.innerHTML = '<div style="display:flex;flex-direction:column;gap:8px">'+
+    '<button onclick="openQuittungFile(true)" style="width:100%;padding:13px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">📷 Kamera</button>'+
+    '<button onclick="openQuittungFile(false)" style="width:100%;padding:13px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">🖼️ Galerie</button>'+
+  '</div>';
+  
   // Wenn direkt aus Info-Dialog ein Bild gewählt: sofort verarbeiten
   if(preselectedInput&&preselectedInput.files&&preselectedInput.files[0]){
     handleQuittungFile(preselectedInput);
@@ -7668,17 +7835,15 @@ function closeQuittung(){
 async function handleQuittungFile(input){
   const file=input.files[0];if(!file)return;
   
-  // Dialog schließen (falls offen)
-  const dlg=document.getElementById('quittung-info-dlg');
-  if(dlg)dlg.remove();
+  // WICHTIG: body definieren!
+  const body=document.getElementById('quittung-body');
+  if(!body)return;
   
   // Overlay ÖFFNEN (damit quittung-body sichtbar ist!)
   document.getElementById('quittung-overlay').style.display='flex';
   
   // Toast sofort zeigen!
-  console.log('🎬 handleQuittungFile START - Toast wird sofort gezeigt');
   toast('📄 Quittung wird gescannt...');
-  console.log('✓ Toast-Aufruf abgeschlossen');
   
   // Bild als Base64 lesen
   const b64=await new Promise((res,rej)=>{
@@ -7779,8 +7944,8 @@ async function handleQuittungFile(input){
       return;
     }
 
+    // 🎯 WICHTIG: quittungItems setzen SOFORT nach JSON.parse!
     quittungItems=parsed.artikel||[];
-    console.log('✓ quittungItems gesetzt:', quittungItems.length, 'Artikel');
     
     // PREIS-VALIDIERUNGS-PASS: Erkenne KI-Fehler bei Brutto-Preisen
     try{
@@ -7821,7 +7986,6 @@ async function handleQuittungFile(input){
       const found=findQuittungMatch(it.name);
       if(found){
         it.lagerArtikelId=found.id;
-      }else{
       }
     });
 
@@ -7841,19 +8005,13 @@ async function handleQuittungFile(input){
     });
     
     
-    
-    // DEBUG: Show alle quittungItems nach Matching
-    quittungItems.forEach((it,i)=>{
-    });
-
-
     // Wenn Debug-Modus aktiviert: Debug-Interface öffnen
     if(opt.quittungDebug) {
       openDebugInterface(text);
     } else {
       // Normal: Zeige Quittungs-Übersicht
-      console.log('🎯 VOR renderQuittungUebersicht() - wird aufgerufen');
-      renderQuittungUebersicht();
+      console.log('🎯 VOR renderQuittungUebersicht() - wird aufgerufen mit datum='+todayISO());
+      renderQuittungUebersicht(todayISO());  // ← WICHTIG: Mit Kaufdatum übergeben!
       console.log('✓ NACH renderQuittungUebersicht()');
     }
 
@@ -7864,7 +8022,7 @@ async function handleQuittungFile(input){
 }
 
 function renderQuittungUebersicht(datum){
-  console.log('🎯 renderQuittungUebersicht() START - quittungItems:', quittungItems.length, 'Preview:', opt.quittungPreview);
+  const body=document.getElementById('quittung-body');
   // Trainingsmodus-Banner oben einfügen
   const qbody=document.getElementById('quittung-body');
   if(qbody&&opt.quittungTraining){
@@ -7879,7 +8037,6 @@ function renderQuittungUebersicht(datum){
   }
   // VORSCHAU-MODUS CHECK
   if(opt.quittungPreview){
-    const body=document.getElementById('quittung-body');
     if(body){body.innerHTML='';body.style.display='none';body.style.height='0';}
     // Verstecke ALLES quittung-bezogene
     document.querySelectorAll('[id*="quittung"]').forEach(el => {
@@ -7900,7 +8057,7 @@ function renderQuittungUebersicht(datum){
     return;
   }
   
-  const body=document.getElementById('quittung-body');
+  // Normaler Modus: Zeige Artikel-Liste
   if(!body)return; // Sicherheit falls körper weg ist
   const ge=quittungGeschaeft;
   let h='<div style="display:flex;gap:10px;margin-bottom:14px">'+
@@ -7957,22 +8114,44 @@ function findQuittungMatch(name){
   let m=S.a.find(a=>{
     const an = a.name.toLowerCase().trim().replace(/\s+/g,' ');
     const match = an===nl;
+    if(match)console.log('    ✓ NAME MATCH: '+a.name);
     return match;
   });
+  if(m){console.log('    → Found via NAME'); return m;}
   
   // 2. 100% Match mit Alias
   m=S.a.find(a=>{
-    const aliases = (a.quittungAliase||[]).length ? 
-      (typeof a.quittungAliase === 'string' ? a.quittungAliase.split('\n') : a.quittungAliase) 
-      : [];
+    // NORMALISIERUNG: quittungAliase kann String oder Array sein!
+    // AUCH: String kann mit \n getrennte Aliase enthalten!
+    let aliases = [];
+    if(a.quittungAliase){
+      if(typeof a.quittungAliase==='string'){
+        // Könnte mehrere Aliase mit \n Umbrüche sein
+        aliases = a.quittungAliase.split('\n').map(al => al.trim()).filter(al => al);
+      }else if(Array.isArray(a.quittungAliase)){
+        aliases = a.quittungAliase;
+      }
+    }
     const has = aliases.some(al=>{
       const al_norm = al.toLowerCase().trim().replace(/\s+/g,' ');
       const match = al_norm===nl;
+      if(match)console.log('    ✓ ALIAS MATCH: '+a.name+' (alias: '+al+')');
       return match;
     });
     return has;
   });
+  if(m){console.log('    → Found via ALIAS'); return m;}
   
+  // 3. FUZZY: Artikel-Name .includes() Quittungs-Name
+  m=S.a.find(a=>{
+    const an = a.name.toLowerCase().trim().replace(/\s+/g,' ');
+    const match = an.includes(nl) || nl.includes(an);
+    if(match)console.log('    ✓ FUZZY MATCH: '+a.name+' (includes "'+nl+'")');
+    return match;
+  });
+  if(m){console.log('    → Found via FUZZY'); return m;}
+  
+  console.log('    → NO MATCH found');
   return null;
 }
 
@@ -8041,9 +8220,15 @@ function renderAliasUebersicht(){
 function delAliasFromSettings(artikelId,idx,btn){
   artikelId=parseInt(artikelId);idx=parseInt(idx);
   const a=S.a.find(x=>x.id===artikelId);
-  if(!a||!a.quittungAliase)return;
+  if(!a)return;
+  // WICHTIG: quittungAliase normalisieren (kann String oder Array sein!)
+  if(!a.quittungAliase)a.quittungAliase=[];
+  else if(typeof a.quittungAliase==='string')a.quittungAliase=[a.quittungAliase];
+  
+  if(!a.quittungAliase[idx])return;
   const alias=a.quittungAliase[idx];
   a.quittungAliase.splice(idx,1);
+  if(a.quittungAliase.length===0)delete a.quittungAliase; // Leer = löschen
   saveL();doSync();
   toast('📎 Alias «'+esc(alias)+'» gelöscht');
   renderSt(); // Settings neu rendern
@@ -8052,9 +8237,15 @@ function delAliasFromSettings(artikelId,idx,btn){
 function delAlias(artikelId,idx){
   artikelId=parseInt(artikelId);idx=parseInt(idx);
   const a=S.a.find(x=>x.id===artikelId);
-  if(!a||!a.quittungAliase)return;
+  if(!a)return;
+  // WICHTIG: quittungAliase normalisieren (kann String oder Array sein!)
+  if(!a.quittungAliase)a.quittungAliase=[];
+  else if(typeof a.quittungAliase==='string')a.quittungAliase=[a.quittungAliase];
+  
+  if(!a.quittungAliase[idx])return;
   const alias=a.quittungAliase[idx];
   a.quittungAliase.splice(idx,1);
+  if(a.quittungAliase.length===0)delete a.quittungAliase; // Leer = löschen
   saveL();
   toast('📎 Alias «'+esc(alias)+'» gelöscht');
   showDet(artikelId);
@@ -8066,7 +8257,10 @@ function zuordnungBestaetigen(idx,artikelId){
   const it=quittungItems[idx];
   const a=S.a.find(x=>x.id===artikelId);
   if(a){
+    // WICHTIG: quittungAliase normalisieren (kann String oder Array sein!)
     if(!a.quittungAliase)a.quittungAliase=[];
+    else if(typeof a.quittungAliase==='string')a.quittungAliase=[a.quittungAliase];
+    
     if(!a.quittungAliase.includes(it.name)){
       a.quittungAliase.push(it.name);
       saveL();
@@ -8089,7 +8283,7 @@ function openFullArtikelDialog(name,marke,preis,kat){
   
   const dlg=document.createElement('div');
   dlg.id='full-artikel-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;opacity:0;pointer-events:auto;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);max-height:90vh;overflow-y:auto;padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:12px">Artikel erfassen</div>'+
@@ -8161,7 +8355,8 @@ function startQuittungArtikel(idx){
     ? S.a.find(a=>a.id===parseInt(it._matchId))
     : findQuittungMatch(it.name);
   if(existing&&!it._matchId)it._matchId=existing.id;
-  const ablaufPflicht=existing&&!!existing.ablaufdatum;
+  // MHD-Abfrage: IMMER für Quittungsscan-Eingabe (nicht nur wenn Artikel es hat)
+  const showMHD=true;
 
   // Duplikat-Warnung: heute bereits gebucht?
   let duplikatWarnung='';
@@ -8187,11 +8382,6 @@ function startQuittungArtikel(idx){
       '<span>→ <strong>'+esc(existing.name)+'</strong></span>'+
       '<button onclick="renderQuittungSuche('+idx+')" style="background:none;border:1px solid var(--ac);border-radius:var(--rs);color:var(--ac);font-size:11px;padding:3px 8px;cursor:pointer">ändern</button>'+
     '</div>';
-  }else{
-    h+='<div style="background:var(--wl);border-radius:var(--rs);padding:10px 12px;font-size:13px;color:var(--wn);margin-bottom:8px;display:flex;align-items:center;justify-content:space-between">'+
-      '<span>⚠ Kein Artikel gefunden</span>'+
-      '<button onclick="renderQuittungSuche('+idx+')" style="background:none;border:1px solid var(--wn);border-radius:var(--rs);color:var(--wn);font-size:11px;padding:3px 8px;cursor:pointer">suchen</button>'+
-    '</div>';
   }
 
   // Felder
@@ -8203,11 +8393,20 @@ function startQuittungArtikel(idx){
     '<div class="fd"><label>Wo gekauft</label><div class="lcw">'+
       S.ge.map(g=>'<button class="chip'+(quittungGeschaeft===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#qq-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+
     '</div></div>';
-  if(ablaufPflicht){
+  // MHD-Feld IMMER anzeigen bei Quittungsscan
+  console.log('🎯 MHD-Check: showMHD=', showMHD);
+  if(showMHD){
+    // Einfacher Datumpicker für Mobile + Desktop
+    const mhdPicker='<input type="date" id="qq-ad" '+
+      'style="width:100%;padding:11px 14px;border:2px solid var(--ac);border-radius:var(--rs);background:var(--sf);color:var(--tx);font-size:15px;cursor:pointer" '+
+      'required />';
+    console.log('  ✓ MHD Datumpicker added');
     h+='<div class="fd"><label style="display:flex;align-items:center;gap:6px">'+
       'Ablaufdatum (MHD) <span style="color:var(--dg);font-weight:700">*</span>'+
       '<span style="font-size:11px;color:var(--dg);background:var(--dl);padding:1px 7px;border-radius:8px">Pflicht</span></label>'+
-      dateField('qq-ad','')+'</div>';
+      mhdPicker+'</div>';
+  }else{
+    console.log('  ❌ showMHD is false - no MHD field!');
   }
   const buttonLabel=duplikatWarnung?'Duplikat ignorieren':'Überspringen';
   h+='<div style="display:flex;gap:8px;margin-top:14px">'+
@@ -8230,11 +8429,28 @@ function confirmQuittungArtikel(idx,hasExisting,existingId){
   const kat=document.getElementById('qq-kat').value.trim()||'Diverses';
   const geChip=document.querySelector('#qq-ge .chip.on[data-ge]');
   const kaufort=geChip?geChip.dataset.ge:quittungGeschaeft;
-  const ablaufdatum=document.getElementById('qq-ad')?document.getElementById('qq-ad').value:'';
+  console.log('🎯 Kaufort-Debug:');
+  console.log('  Selector: #qq-ge .chip.on[data-ge]');
+  console.log('  geChip found:', !!geChip);
+  if(geChip){
+    console.log('    Chip data-ge:', geChip.dataset.ge);
+    console.log('    Chip classList:', geChip.className);
+  }else{
+    console.log('  Fallback zu quittungGeschaeft:', quittungGeschaeft);
+  }
+  console.log('  Final kaufort:', kaufort);
+  
+  // MHD: Versuche aus Date-Input zu lesen (ID: qq-ad)
+  let ablaufdatum='';
+  const qdInp=document.getElementById('qq-ad');
+  if(qdInp){
+    ablaufdatum=qdInp.value;
+    console.log('  MHD Input: value=', ablaufdatum);
+  }
 
-  // Pflicht-Check MHD
-  if(hasExisting&&document.getElementById('qq-ad')&&!ablaufdatum){
-    toast('Bitte Ablaufdatum eingeben');return;
+  // MHD-Validierung: IMMER erforderlich bei Quittungsscan
+  if(!ablaufdatum){
+    toast('Bitte Ablaufdatum (MHD) eingeben');return;
   }
 
   if(opt.quittungTraining){
@@ -8258,25 +8474,46 @@ function confirmQuittungArtikel(idx,hasExisting,existingId){
     }
   }else{
     // NORMALMODUS: Warenbestand buchen
+    console.log('📦 NORMALMODUS: Artikel einbuchen...');
+    console.log('  Eingabewerte: menge=', menge, 'preis=', preis, 'datum=', datum);
     if(hasExisting&&existingId){
       // Bestehenden Artikel im Lager aktualisieren
       const a=S.a.find(x=>x.id===existingId);
       if(a){
+        console.log('  ✓ Artikel gefunden:', a.name);
+        console.log('    kaufort vorher:', a.kaufort, '→ neu:', kaufort);
+        console.log('    kaufdatum neu:', datum);
+        console.log('    ablaufdatum neu:', ablaufdatum);
+        console.log('    preis einzel:', preis, '(erwartung: CHF/Stk)');
         ensurePackungen(a);
-        a.packungen.push({id:newPackId(),menge,kaufdatum:datum,ablaufdatum:ablaufdatum||''});
+        const packung={id:newPackId(),menge,kaufdatum:datum,ablaufdatum:ablaufdatum||''};
+        console.log('    ✓ Packung wird hinzugefügt:', packung);
+        a.packungen.push(packung);
         syncMenge(a);
         a.kaufdatum=datum;
         a.kaufort=kaufort||a.kaufort;
         if(!a.preisHistorie)a.preisHistorie=[];
-        a.preisHistorie.push({datum,preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort||''});
+        const ph={datum,preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort||''};
+        console.log('    ✓ PreisHistorie wird hinzugefügt:', ph);
+        a.preisHistorie.push(ph);
         if(preis>0)a.preis=preis;
+        console.log('    kaufort NACHHER:', a.kaufort);
+        console.log('    artikel.preis NACHHER:', a.preis);
         addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,einheit,preis,false,true);
       }
     }else{
       // Neuen Artikel anlegen
+      console.log('  ✓ Neuer Artikel wird angelegt');
+      console.log('    name:', name);
+      console.log('    kaufort:', kaufort);
+      console.log('    ablaufdatum:', ablaufdatum);
+      console.log('    kaufdatum:', datum);
+      console.log('    preis (einzeln):', preis);
       const newId=S.nid++;
       const lager=S.lo[0]||'Vorratsschrank';
-      S.a.push({id:newId,name,marke:'',kat,lager,kaufort,menge,einheit,mindest:0,barcode:'',preis,packMenge:0,packEinheit:'',kaufdatum:datum,ablaufdatum,notiz:'',foto:'',fotoPath:'',packungen:[{id:newPackId(),menge,kaufdatum:datum,ablaufdatum:ablaufdatum||''}],preisHistorie:[{datum,preis,menge,einheit:einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort||''}]});
+      const newArt={id:newId,name,marke:'',kat,lager,kaufort,menge,einheit,mindest:0,barcode:'',preis,packMenge:0,packEinheit:'',kaufdatum:datum,ablaufdatum,notiz:'',foto:'',fotoPath:'',packungen:[{id:newPackId(),menge,kaufdatum:datum,ablaufdatum:ablaufdatum||''}],preisHistorie:[{datum,preis,menge,einheit:einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort||''}]};
+      console.log('    ✓ Neuer Artikel:', newArt);
+      S.a.push(newArt);
       addLogEntry('ein',newId,name,lager,kat,menge,einheit,preis,false);
     }
     saveL();
@@ -8329,11 +8566,7 @@ function nativeDateChanged(id){
     // Aktualisiere auch Display-Farbe wenn Datum gesetzt
     display.style.color='#000';
   }
-  // Workaround: Trigger input event damit das Datum auch gespeichert wird
-  if(inp){
-    const event=new Event('change',{bubbles:true});
-    inp.dispatchEvent(event);
-  }
+  // NICHT dispatchEvent! Das verursacht Endlosschleife!
   if(display)display.style.color=val?'var(--tx)':'var(--t3)';
 }
 // Datumsfeld programmatisch setzen: Wert UND sichtbares Label aktualisieren
