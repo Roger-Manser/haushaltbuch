@@ -539,11 +539,10 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.30';
+const APP_VERSION='22.29';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'22.30',d:'20.08.2026',items:['🐛 BUG GEFIXT: quittungAliase normalisiert in showDet()!','Fehler: (a.quittungAliase || []).map() - String hat kein .map()','showDet() normalisiert JETZT String→Array vor .map()','Artikel bearbeiten funktioniert JETZT ohne Fehler!']},
   {v:'22.29',d:'20.08.2026',items:['🔍 DEBUG: Warum ist das MHD-Feld nicht sichtbar?','Console: "🎯 MHD-Check: showMHD=" zeigt ob Feld gebaut wird','dateField() returned: zeigt ob HTML generiert wird','✓ MHD HTML added zeigt wenn erfolgreich']},
   {v:'22.28',d:'20.08.2026',items:['🎯 MEGA-FIX: MHD wird IMMER gefragt beim Einbuchen!','showMHD=true: MHD-Feld wird bei jedem Quittungsscan gezeigt','Validierung: MHD ist IMMER Pflicht (nicht nur bei bestehenden Artikeln)','Benutzer MUSS MHD eingeben, sonst: "Bitte Ablaufdatum eingeben"']},
   {v:'22.27',d:'20.08.2026',items:['🎯 MEGA-FIX: FUZZY-Matching wie in Vorschau!','3. Stufe in findQuittungMatch(): .includes() Matching','Ketchup & Mayo 190G matcht jetzt "Ketchup und Mayonnaise 190g"','JETZT sollten alle Artikel "im Lager" sein!']},
@@ -1940,18 +1939,9 @@ function showDet(id){
   }
 
   // Quittungs-Aliase anzeigen
-  // WICHTIG: quittungAliase normalisieren (kann String oder Array sein!)
-  let aliases = [];
-  if(a.quittungAliase){
-    if(typeof a.quittungAliase==='string'){
-      aliases = a.quittungAliase.split('\n').map(al => al.trim()).filter(al => al);
-    }else if(Array.isArray(a.quittungAliase)){
-      aliases = a.quittungAliase;
-    }
-  }
-  const aliasHtml=aliases.length?
+  const aliasHtml=(a.quittungAliase||[]).length?
     '<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">Quittungs-Aliase</span><button onclick="editDetailAliase('+id+')" style="background:none;border:none;color:var(--ac);cursor:pointer;font-size:12px;padding:0;font-weight:600">✎ Bearbeiten</button></div>'+
-    aliases.map(al=>'<div class="ir" style="align-items:center"><div style="flex:1;font-size:13px">'+esc(al)+'</div></div>').join('')+
+    (a.quittungAliase||[]).map(al=>'<div class="ir" style="align-items:center"><div style="flex:1;font-size:13px">'+esc(al)+'</div></div>').join('')+
     '</div>':
     '<div class="il" style="margin-top:14px"><div class="ir" style="border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center"><span style="font-weight:600">Quittungs-Aliase</span><button onclick="editDetailAliase('+id+')" style="background:none;border:none;color:var(--ac);cursor:pointer;font-size:12px;padding:0;font-weight:600">✎ Hinzufügen</button></div><div class="ir"><span style="font-size:12px;color:var(--t2)">Keine Aliase — diese Quittungstexte werden diesem Artikel zugeordnet</span></div></div>';
 
