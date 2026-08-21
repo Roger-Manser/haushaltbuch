@@ -539,11 +539,10 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.42';
+const APP_VERSION='22.41';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
-  {v:'22.42',d:'20.08.2026',items:['🎯 MEGA-BUG GEFIXT: Bestand wird JETZT auf 0 gesetzt!','Problem: syncMenge() setzte menge nicht auf 0 wenn packungen leer!','Fix: else-if(a.packungen) → a.menge = 0 hinzugefügt','Bestand-Korrektur funktioniert JETZT perfekt!']},
   {v:'22.41',d:'20.08.2026',items:['🔍 DEBUG: Warum wird Bestand nicht wirklich auf 0 gesetzt?','Toast funktioniert ✓, aber Bestand bleibt bei 16!','Console zeigt: alte/neue packungen, abzug-Loop, syncMenge-Ergebnis','Logs zeigen genau wo die Packungen gelöscht werden (oder nicht!)']},
   {v:'22.40',d:'20.08.2026',items:['🎯 KRITISCH: body is not defined - GEFIXT!','handleQuittungFile() nutzte body ohne es zu definieren','Zeile 7723: const body=document.getElementById("quittung-body") hinzugefügt','Quittungsscan funktioniert JETZT wieder!']},
   {v:'22.39',d:'20.08.2026',items:['🎯 TRIPLE-FIX: Preis-Debug + Bestand 0 Fix + Toast Cleanup!','1️⃣ KI-Response Debug: Zeigt preis/preis_brutto/preis_netto RAW Werte','2️⃣ Bestand-Bug: Math.max(0, ...) entfernt - verhinderte 0 Eingabe!','3️⃣ Bestand Input wird jetzt markiert (select) - leicht zu überschreiben']},
@@ -2210,9 +2209,6 @@ function syncMenge(a){
     // kaufdatum = neuestes Kaufdatum
     const sorted=a.packungen.slice().sort((x,y)=>y.kaufdatum.localeCompare(x.kaufdatum));
     if(sorted.length)a.kaufdatum=sorted[0].kaufdatum;
-  } else if(a.packungen) {
-    // 🎯 FIX: Wenn 0 Packungen, menge auf 0 setzen!
-    a.menge = 0;
   }
 }
 
@@ -2268,17 +2264,39 @@ function bestandManuellSpeichern(id,typ){
 
   if(typ==='korrektur'){
     // Stille Korrektur — kein Log, einfach Bestand setzen
+    console.log('  📝 KORREKTUR-MODUS: diff='+diff);
+    console.log('    Alte packungen:', a.packungen.length, 'Stk');
+    a.packungen.forEach((p,i)=>console.log('      ['+i+']', p.menge, p.einheit||'Stk'));
+    
     ensurePackungen(a);
+    console.log('    Nach ensurePackungen:', a.packungen.length, 'Stk');
+    
     if(diff>0){
+      console.log('    + ZUFÜGEN: +'+diff+' Stk');
       a.packungen.push({id:newPackId(),menge:diff,kaufdatum:todayISO(),ablaufdatum:''});
     }else{
+      console.log('    - REDUZIEREN: -'+Math.abs(diff)+' Stk');
       let abzug=Math.abs(diff);
+      console.log('      abzug=', abzug);
       for(let i=a.packungen.length-1;i>=0&&abzug>0;i--){
-        if(a.packungen[i].menge<=abzug){abzug-=a.packungen[i].menge;a.packungen.splice(i,1);}
-        else{a.packungen[i].menge-=abzug;abzug=0;}
+        console.log('      ['+i+'] prüfe packung:', a.packungen[i].menge, 'vs abzug:', abzug);
+        if(a.packungen[i].menge<=abzug){
+          console.log('        → Lösche komplett, abzug-='+a.packungen[i].menge);
+          abzug-=a.packungen[i].menge;
+          a.packungen.splice(i,1);
+        }else{
+          console.log('        → Reduziere um '+abzug);
+          a.packungen[i].menge-=abzug;
+          abzug=0;
+        }
       }
+      console.log('      abzug nach loop:', abzug);
     }
+    console.log('    Nach Änderung:', a.packungen.length, 'Packungen');
+    a.packungen.forEach((p,i)=>console.log('      ['+i+']', p.menge, p.einheit||'Stk'));
+    
     syncMenge(a);
+    console.log('    Nach syncMenge: a.menge=', a.menge);
     saveL();
     toast('✏️ Bestand korrigiert auf '+fmtMenge(neu)+' '+esc(a.einheit||'Stk'));
     showDet(id);
