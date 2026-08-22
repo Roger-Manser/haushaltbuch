@@ -8249,15 +8249,6 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-22",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "barcodes": [
@@ -8814,15 +8805,6 @@
           "menge": 1,
           "einheit": "Stk",
           "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-22",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
         },
@@ -9914,15 +9896,6 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Coop"
-        },
-        {
-          "datum": "2026-08-22",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Coop"
         }
       ],
       "packungen": [
@@ -10229,24 +10202,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-22",
-          "preis": 5.75,
-          "menge": 20,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-22",
-          "preis": 53,
-          "menge": 2,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "12:03",
@@ -10280,24 +10235,6 @@
         }
       ],
       "preisHistorie": [
-        {
-          "datum": "2026-08-22",
-          "preis": 3.79,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-08-22",
-          "preis": 3.79,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
         {
           "datum": "2026-08-22",
           "preis": 3.79,
@@ -20435,5 +20372,5 @@
       "zeit": 1787393757751
     }
   ],
-  "aktualisiert": "2026-08-22T10:17:58.340Z"
+  "aktualisiert": "2026-08-22T10:19:11.963Z"
 }
