@@ -10313,17 +10313,10 @@
   ],
   "einkauf": [
     {
-      "id": 1787220067425,
-      "text": "Ketchup & mayo",
+      "id": 1787422546168,
+      "text": "Anzündwolle",
       "menge": "1",
-      "einheit": "Tube",
-      "checked": false
-    },
-    {
-      "id": 1787393209117,
-      "text": "Tomaten San Marzano",
-      "menge": "1",
-      "einheit": "kg",
+      "einheit": "Stk",
       "checked": false
     }
   ],
@@ -20372,5 +20365,5 @@
       "zeit": 1787393757751
     }
   ],
-  "aktualisiert": "2026-08-22T10:19:11.963Z"
+  "aktualisiert": "2026-08-22T18:15:52.265Z"
 }
