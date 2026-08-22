@@ -19896,7 +19896,18 @@
       "aktion": false,
       "datum": "2026-08-22",
       "zeit": 1787392858491
+    },
+    {
+      "aid": 265,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Süsswaren",
+      "aktion": false,
+      "kaufort": "Coop"
     }
   ],
-  "aktualisiert": "2026-08-22T10:01:05.799Z"
+  "aktualisiert": "2026-08-22T10:03:05.066Z"
 }
