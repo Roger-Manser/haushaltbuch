@@ -581,14 +581,14 @@
       "marke": "Barilla",
       "kat": "Getränke",
       "lager": "Schlof",
-      "menge": 2,
+      "menge": 5,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "8076809585194",
       "preis": 2.8,
       "packMenge": 500,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-21",
+      "kaufdatum": "2026-08-22",
       "ablaufdatum": "2028-12-11",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782210376286_off.jpg?t=1787315219582",
@@ -639,6 +639,15 @@
           "typ": "ein",
           "aktion": true,
           "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-08-22",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Coop"
         }
       ],
       "packungen": [
@@ -653,6 +662,12 @@
           "menge": 1,
           "kaufdatum": "2026-08-21",
           "ablaufdatum": "2029-02-01"
+        },
+        {
+          "id": 13,
+          "menge": 3,
+          "kaufdatum": "2026-08-22",
+          "ablaufdatum": ""
         }
       ],
       "kaufort": "Coop"
@@ -20405,7 +20420,20 @@
       "aktion": false,
       "datum": "2026-08-22",
       "zeit": 1787393440871
+    },
+    {
+      "t": "aus",
+      "aid": 15,
+      "name": "Barilla Al Bronzo Spaghetti Al Bronzo 500g",
+      "lager": "Schlof",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-22",
+      "zeit": 1787393757751
     }
   ],
-  "aktualisiert": "2026-08-22T10:13:47.577Z"
+  "aktualisiert": "2026-08-22T10:17:34.721Z"
 }
