@@ -9423,14 +9423,14 @@
       "preis": 10,
       "packMenge": 25,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-08-13",
+      "kaufdatum": "2026-08-23",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786621797188_1000063968.jpg?t=1787315219582",
       "fotoPath": "1786621797188_1000063968.jpg",
       "preisHistorie": [
         {
-          "datum": "2026-08-13",
+          "datum": "2026-08-23",
           "preis": 10,
           "menge": 0,
           "einheit": "Pkg",
@@ -9441,9 +9441,9 @@
       ],
       "packungen": [
         {
-          "id": 4,
+          "id": 2,
           "menge": 0,
-          "kaufdatum": "2026-08-13",
+          "kaufdatum": "2026-08-23",
           "ablaufdatum": ""
         }
       ]
@@ -10173,7 +10173,7 @@
       "kat": "Genussmittel",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 20,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "4006396071545",
@@ -10188,7 +10188,7 @@
       "packungen": [
         {
           "id": 1,
-          "menge": 20,
+          "menge": 1,
           "kaufdatum": "2026-08-22",
           "ablaufdatum": "2030-08-22"
         }
@@ -10196,12 +10196,20 @@
       "preisHistorie": [
         {
           "datum": "2026-08-22",
-          "preis": 5.75,
-          "menge": 20,
+          "preis": 53,
+          "menge": 2,
           "einheit": "Stk",
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-23",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false
         }
       ],
       "letzteEingangHeute": "12:03",
@@ -20363,7 +20371,196 @@
       "aktion": false,
       "datum": "2026-08-22",
       "zeit": 1787393757751
+    },
+    {
+      "aid": 15,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Getränke",
+      "aktion": false,
+      "kaufort": "Coop"
+    },
+    {
+      "aid": 32,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 2.95,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 128,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 1.45,
+      "t": "ein",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 128,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 221,
+      "d": "2026-08-22",
+      "m": 2,
+      "p": 5.75,
+      "t": "ein",
+      "e": "Stange",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 222,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 2.85,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 223,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 6.89,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 223,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 233,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 234,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 2.79,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 234,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 235,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 252,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 1.65,
+      "t": "ein",
+      "e": "Dose",
+      "k": "Reinigung & Pflege",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 260,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Coop"
+    },
+    {
+      "aid": 267,
+      "d": "2026-08-22",
+      "m": 2,
+      "p": 53,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 268,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 3.79,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "t": "aus",
+      "aid": 267,
+      "name": "Goldfield Red Box",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-23",
+      "zeit": 1787462820611
     }
   ],
-  "aktualisiert": "2026-08-22T18:15:52.265Z"
+  "aktualisiert": "2026-08-23T05:27:10.055Z"
 }
