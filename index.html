@@ -907,7 +907,8 @@ function loadL(){
   try{const r=localStorage.getItem('hbgh');if(r)gh=JSON.parse(r);}catch(e){}
   try{const c=localStorage.getItem('hb_ai_cache');if(c)aiMatchCache=JSON.parse(c);}catch(e){}
   // Nach dem Laden: prüfen ob Daten auf GitHub neuer sind
-  checkDataVersionOnStartup().catch(e=>console.error('Data version check fehlgeschlagen:',e));
+  // 🎯 DEAKTIVIERT v22.85: Zu riskant! Kann alte Daten von GitHub nachladen!
+  // checkDataVersionOnStartup().catch(e=>console.error('Data version check fehlgeschlagen:',e));
 }
 // Beim App-Start: Auto-Check welcher Datenstamm neuer ist (Lokal vs GitHub)
 async function checkDataVersionOnStartup(){
