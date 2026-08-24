@@ -20162,7 +20162,18 @@
       "aktion": false,
       "datum": "2026-08-24",
       "zeit": 1787558957743
+    },
+    {
+      "aid": 231,
+      "d": "2026-08-24",
+      "m": 1,
+      "p": 0,
+      "t": "weg",
+      "e": "Pkg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": ""
     }
   ],
-  "aktualisiert": "2026-08-24T08:15:00.011Z"
+  "aktualisiert": "2026-08-24T08:15:12.236Z"
 }
