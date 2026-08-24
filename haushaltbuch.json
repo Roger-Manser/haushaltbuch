@@ -2372,7 +2372,7 @@
       "kat": "Gemüse & Früchte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20892623",
@@ -2403,14 +2403,7 @@
           "aktion": false
         }
       ],
-      "packungen": [
-        {
-          "id": 2,
-          "menge": 1,
-          "kaufdatum": "2026-07-04",
-          "ablaufdatum": "2026-07-11"
-        }
-      ]
+      "packungen": []
     },
     {
       "id": 65,
@@ -8642,7 +8635,7 @@
       "kat": "Gemüse & Früchte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "kg",
       "mindest": 0,
       "barcode": "",
@@ -8654,14 +8647,7 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786778806950_1000064052.webp?t=1787559581360",
       "fotoPath": "1786778806950_1000064052.webp",
-      "packungen": [
-        {
-          "id": 9,
-          "menge": 1,
-          "kaufdatum": "2026-08-13",
-          "ablaufdatum": "2026-08-21"
-        }
-      ],
+      "packungen": [],
       "preisHistorie": [
         {
           "datum": "2026-08-13",
@@ -8671,6 +8657,14 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-24",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "kg",
+          "typ": "weg",
+          "aktion": false
         }
       ],
       "letzteEingangHeute": "09:43",
@@ -20188,7 +20182,20 @@
       "aktion": false,
       "datum": "2026-08-24",
       "zeit": 1787559595675
+    },
+    {
+      "t": "weg",
+      "aid": 242,
+      "name": "Chinakohl",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 2.49,
+      "aktion": false,
+      "datum": "2026-08-24",
+      "zeit": 1787559687541
     }
   ],
-  "aktualisiert": "2026-08-24T08:20:02.426Z"
+  "aktualisiert": "2026-08-24T08:21:33.289Z"
 }
