@@ -4467,7 +4467,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Kühlschrank oben",
       "kaufort": "",
-      "menge": 3,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
@@ -4493,7 +4493,7 @@
         {
           "datum": "2026-08-19",
           "preis": 0,
-          "menge": 3,
+          "menge": 2,
           "einheit": "Stk",
           "typ": "ein",
           "aktion": false,
@@ -4512,7 +4512,7 @@
       "packungen": [
         {
           "id": 2,
-          "menge": 3,
+          "menge": 2,
           "kaufdatum": "2026-08-19",
           "ablaufdatum": "2026-09-19"
         }
@@ -19105,7 +19105,7 @@
     {
       "aid": 125,
       "d": "2026-08-19",
-      "m": 3,
+      "m": 2,
       "p": 0,
       "t": "ein",
       "e": "Stk",
@@ -20204,7 +20204,29 @@
       "aktion": false,
       "datum": "2026-08-24",
       "zeit": 1787560025528
+    },
+    {
+      "aid": 125,
+      "d": "2026-08-24",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 236,
+      "d": "2026-08-24",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-24T08:27:14.715Z"
+  "aktualisiert": "2026-08-24T08:27:58.085Z"
 }
