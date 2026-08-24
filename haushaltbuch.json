@@ -8324,7 +8324,7 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "7610900298938",
@@ -8338,8 +8338,8 @@
       "fotoPath": "1785416576774_off.jpg",
       "packungen": [
         {
-          "id": 14,
-          "menge": 1,
+          "id": 2,
+          "menge": 0,
           "kaufdatum": "2026-07-30",
           "ablaufdatum": "2026-08-03"
         }
@@ -8353,6 +8353,14 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-24",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "weg",
+          "aktion": false
         }
       ],
       "barcodes": [],
@@ -20602,7 +20610,20 @@
       "aktion": false,
       "datum": "2026-08-24",
       "zeit": 1787557449075
+    },
+    {
+      "t": "weg",
+      "aid": 225,
+      "name": "Der scharfe Maxx",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 4.79,
+      "aktion": false,
+      "datum": "2026-08-24",
+      "zeit": 1787557561407
     }
   ],
-  "aktualisiert": "2026-08-24T07:45:09.383Z"
+  "aktualisiert": "2026-08-24T07:46:10.737Z"
 }
