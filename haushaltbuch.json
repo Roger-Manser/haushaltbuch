@@ -8848,7 +8848,7 @@
       "kat": "Gemüse & Früchte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "20247850",
@@ -8870,16 +8870,18 @@
           "typ": "ein",
           "aktion": true,
           "kaufort": "Lidl"
-        }
-      ],
-      "packungen": [
+        },
         {
-          "id": 21,
+          "datum": "2026-08-24",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-08-04",
-          "ablaufdatum": "2026-08-14"
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
+      "packungen": [],
       "quittungAliase": [
         "rote Peperoni"
       ],
@@ -20652,7 +20654,20 @@
       "aktion": false,
       "datum": "2026-08-24",
       "zeit": 1787558957743
+    },
+    {
+      "t": "aus",
+      "aid": 236,
+      "name": "Paprika rot",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-24",
+      "zeit": 1787559034512
     }
   ],
-  "aktualisiert": "2026-08-24T08:09:27.968Z"
+  "aktualisiert": "2026-08-24T08:10:46.397Z"
 }
