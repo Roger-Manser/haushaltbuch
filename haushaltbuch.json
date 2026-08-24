@@ -20204,7 +20204,29 @@
       "aktion": false,
       "datum": "2026-08-24",
       "zeit": 1787560222490
+    },
+    {
+      "aid": 125,
+      "d": "2026-08-24",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 236,
+      "d": "2026-08-24",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-24T08:30:43.394Z"
+  "aktualisiert": "2026-08-24T08:30:55.679Z"
 }
