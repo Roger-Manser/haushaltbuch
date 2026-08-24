@@ -6573,7 +6573,7 @@
       "kat": "Konserven & Trockenware",
       "lager": "Schlof",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "4099200011622",
@@ -6595,16 +6595,17 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-24",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "weg",
+          "aktion": false
         }
       ],
-      "packungen": [
-        {
-          "id": 8,
-          "menge": 1,
-          "kaufdatum": "2026-08-13",
-          "ablaufdatum": ""
-        }
-      ]
+      "packungen": []
     },
     {
       "id": 191,
@@ -20215,7 +20216,20 @@
       "aktion": false,
       "datum": "2026-08-24",
       "zeit": 1787560588587
+    },
+    {
+      "t": "weg",
+      "aid": 190,
+      "name": "Champignons",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 1.99,
+      "aktion": false,
+      "datum": "2026-08-24",
+      "zeit": 1787560700616
     }
   ],
-  "aktualisiert": "2026-08-24T08:36:38.321Z"
+  "aktualisiert": "2026-08-24T08:38:30.542Z"
 }
