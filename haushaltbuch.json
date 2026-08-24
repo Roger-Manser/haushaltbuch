@@ -8579,7 +8579,7 @@
       "kat": "Gemüse & Früchte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "0109882746270",
@@ -8601,16 +8601,17 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        }
-      ],
-      "packungen": [
+        },
         {
-          "id": 12,
+          "datum": "2026-08-24",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-08-04",
-          "ablaufdatum": "2026-08-14"
+          "einheit": "Pkg",
+          "typ": "weg",
+          "aktion": false
         }
       ],
+      "packungen": [],
       "geoeffnet": "2026-08-12"
     },
     {
@@ -20627,7 +20628,31 @@
       "aktion": false,
       "datum": "2026-08-24",
       "zeit": 1787557801815
+    },
+    {
+      "aid": 225,
+      "d": "2026-08-24",
+      "m": 1,
+      "p": 0,
+      "t": "weg",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "t": "weg",
+      "aid": 231,
+      "name": "Karotten",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 1.95,
+      "aktion": false,
+      "datum": "2026-08-24",
+      "zeit": 1787558957743
     }
   ],
-  "aktualisiert": "2026-08-24T07:53:00.663Z"
+  "aktualisiert": "2026-08-24T08:09:27.968Z"
 }
