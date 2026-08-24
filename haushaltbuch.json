@@ -20560,7 +20560,18 @@
       "aktion": false,
       "datum": "2026-08-23",
       "zeit": 1787462820611
+    },
+    {
+      "aid": 267,
+      "d": "2026-08-23",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": ""
     }
   ],
-  "aktualisiert": "2026-08-23T05:27:10.055Z"
+  "aktualisiert": "2026-08-24T07:00:11.532Z"
 }
