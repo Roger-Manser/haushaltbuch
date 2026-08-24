@@ -20602,7 +20602,18 @@
       "aktion": false,
       "datum": "2026-08-24",
       "zeit": 1787557449075
+    },
+    {
+      "aid": 254,
+      "d": "2026-08-24",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Migros"
     }
   ],
-  "aktualisiert": "2026-08-24T07:52:23.532Z"
+  "aktualisiert": "2026-08-24T07:52:38.015Z"
 }
