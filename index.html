@@ -539,10 +539,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.82';
+const APP_VERSION='22.83';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.83',d:'24.08.2026',items:['🎯 GELÖST: Handy-App zeigte alten Bestand nach GitHub-Sync!','Problem: loadFromGH() rief syncMenge() nicht auf → menge wurde nicht neu berechnet','Fix: syncMenge(a) wird JETZT auf alle Artikel aufgerufen beim Laden','GitHub-Bestand wird JETZT korrekt auf Handy angezeigt! ✅']},
   {v:'22.49',d:'20.08.2026',items:['🧹 AUFGERÄUMT: Alle Debug-Logs entfernt!','parseReceiptPosition(), KORREKTUR-PASS, AUTO-MATCHING, etc.','toast() Funktion gereinigt','Code ist jetzt sauber und Production-ready! ✨']},
   {v:'22.48',d:'20.08.2026',items:['🎯 FINAL-FIX: preis_brutto Return-Statement GEFIXT!','Problem: Return gab p.preis_brutto (Original 5.2) statt bruttoPreis (korrigiert 1.30)!','Fix: preis_brutto: bruttoPreis statt preis_brutto: p.preis_brutto || nettoPreis','JETZT: Preis wird KORREKT als CHF 1.30 gespeichert! ✅✅✅']},
   {v:'22.47',d:'20.08.2026',items:['🎯 MEGA-BUG GEFIXT: preis_netto wird ignoriert wenn Gesamtpreis korrigiert!','Problem: p.preis_netto=5.2 wurde verwendet obwohl bruttoPreis zu 1.30 korrigiert!','Fix: wurdKorrigiert Flag - wenn TRUE, nutze nur bruttoPreis, nicht p.preis_netto!','JETZT: Preis wird korrekt zu 1.30 CHF gespeichert! ✅']},
@@ -1364,6 +1365,8 @@ async function loadFromGH(){
       // FIX v22.81: Stelle sicher dass alle Artikel packungen haben
       ghArtikel.forEach(a=>{
         if(!a.packungen)a.packungen=[];
+        // 🎯 FIX v22.83: syncMenge aufrufen um menge mit packungen synchron zu machen!
+        syncMenge(a);
       });
       
       // FIX v22.81: Lokale Artikel mergen wenn GitHub sie nicht hat (Sync-Fehler-Schutz)
