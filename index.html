@@ -539,7 +539,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.81';
+const APP_VERSION='22.82';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
@@ -2221,7 +2221,12 @@ function alleCodes(a){
 // Migration: Artikel ohne packungen-Array bekommen einen Eintrag aus bestehendem MHD
 function ensurePackungen(a){
   if(!a.packungen||!Array.isArray(a.packungen)||a.packungen.length===0){
-    a.packungen=[{id:newPackId(),menge:a.menge,kaufdatum:a.kaufdatum||todayISO(),ablaufdatum:a.ablaufdatum||''}];
+    // FIX v22.82: NICHT auffüllen wenn a.menge===0 (ausgebucht!)
+    if(a.menge!==0){
+      a.packungen=[{id:newPackId(),menge:a.menge,kaufdatum:a.kaufdatum||todayISO(),ablaufdatum:a.ablaufdatum||''}];
+    }else{
+      a.packungen=[];  // Bleibe bei packungen=[] wenn ausgebucht
+    }
   }
   // ablaufdatum immer aus Packungen synchronisieren
   const withDate=a.packungen.filter(p=>p.menge>0&&p.ablaufdatum).sort((x,y)=>x.ablaufdatum.localeCompare(y.ablaufdatum));
