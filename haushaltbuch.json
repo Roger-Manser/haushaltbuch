@@ -7412,7 +7412,7 @@
       "kat": "Genussmittel",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stange",
       "mindest": 2,
       "barcode": "4006396071576",
@@ -7578,12 +7578,21 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-25",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
         {
           "id": 2,
-          "menge": 2,
+          "menge": 1,
           "kaufdatum": "2026-08-22",
           "ablaufdatum": "2030-08-22"
         }
@@ -9880,6 +9889,13 @@
       "text": "Anzündwolle",
       "menge": "1",
       "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1787680750455,
+      "text": "Goldfield Gold Box Zigaretten",
+      "menge": "1",
+      "einheit": "Stange",
       "checked": false
     }
   ],
@@ -20285,7 +20301,53 @@
       "aktion": false,
       "datum": "2026-08-25",
       "zeit": 1787668697340
+    },
+    {
+      "aid": 2,
+      "d": "2026-08-25",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Kiste",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Landi"
+    },
+    {
+      "aid": 71,
+      "d": "2026-08-25",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "Coop"
+    },
+    {
+      "aid": 223,
+      "d": "2026-08-25",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "t": "aus",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-25",
+      "zeit": 1787680757424
     }
   ],
-  "aktualisiert": "2026-08-25T14:38:21.807Z"
+  "aktualisiert": "2026-08-25T17:59:21.249Z"
 }
