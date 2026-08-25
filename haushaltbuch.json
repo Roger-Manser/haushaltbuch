@@ -6,7 +6,7 @@
       "marke": "Landi",
       "kat": "Genussmittel",
       "lager": "Schlof",
-      "menge": 4,
+      "menge": 3,
       "einheit": "Kiste",
       "mindest": 2,
       "barcode": "7611703611962",
@@ -123,12 +123,21 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-08-25",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
       "packungen": [
         {
           "id": 6,
-          "menge": 4,
+          "menge": 3,
           "kaufdatum": "2026-08-19",
           "ablaufdatum": ""
         }
@@ -2714,7 +2723,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
       "kaufort": "Coop",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610071221063",
@@ -2761,12 +2770,21 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-08-25",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Coop"
         }
       ],
       "packungen": [
         {
           "id": 2,
-          "menge": 2,
+          "menge": 1,
           "kaufdatum": "2026-07-18",
           "ablaufdatum": "2029-04-08"
         }
@@ -7702,7 +7720,7 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
@@ -7714,14 +7732,7 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542205864_off.jpg?t=1787560748085",
       "fotoPath": "1782542205864_off.jpg",
-      "packungen": [
-        {
-          "id": 7,
-          "menge": 1,
-          "kaufdatum": "2026-08-22",
-          "ablaufdatum": "2026-08-27"
-        }
-      ],
+      "packungen": [],
       "preisHistorie": [
         {
           "datum": "2026-06-27",
@@ -7835,6 +7846,15 @@
         },
         {
           "datum": "2026-08-22",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-25",
           "preis": 0,
           "menge": 1,
           "einheit": "Stk",
@@ -20226,7 +20246,46 @@
       "k": "Gewürze & Saucen",
       "aktion": false,
       "kaufort": ""
+    },
+    {
+      "t": "aus",
+      "aid": 223,
+      "name": "Pouletbrust Minutenschnitzel",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-25",
+      "zeit": 1787668622992
+    },
+    {
+      "t": "aus",
+      "aid": 71,
+      "name": "Curry Madras Fort Mc Cormick 38 Gr, 1 Bocal",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-25",
+      "zeit": 1787668684225
+    },
+    {
+      "t": "aus",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-25",
+      "zeit": 1787668697340
     }
   ],
-  "aktualisiert": "2026-08-25T14:36:46.380Z"
+  "aktualisiert": "2026-08-25T14:38:21.807Z"
 }
