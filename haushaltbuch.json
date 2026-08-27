@@ -1377,7 +1377,7 @@
       "packMenge": 500,
       "packEinheit": "ml",
       "kaufdatum": "2026-07-27",
-      "ablaufdatum": "2026-10-21",
+      "ablaufdatum": "2026-08-30",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542344505_off.jpg?t=1787560748085",
       "fotoPath": "1782542344505_off.jpg",
@@ -1444,10 +1444,10 @@
           "id": 1,
           "menge": 1,
           "kaufdatum": "2026-07-27",
-          "ablaufdatum": "2026-10-21"
+          "ablaufdatum": "2026-08-30"
         }
       ],
-      "geoeffnet": "2026-07-29",
+      "geoeffnet": "2026-08-27",
       "kaufort": "Lidl"
     },
     {
@@ -9786,7 +9786,7 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "4334035332369",
@@ -9798,14 +9798,7 @@
       "notiz": "Pro 100g/ml: 350 kcal, Fett 31g, KH 0.8g, Eiweiss 17g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787393426100_17873934188512203959002049945019.jpg?t=1787560748085",
       "fotoPath": "1787393426100_17873934188512203959002049945019.jpg",
-      "packungen": [
-        {
-          "id": 9,
-          "menge": 1,
-          "kaufdatum": "2026-08-22",
-          "ablaufdatum": "2026-09-10"
-        }
-      ],
+      "packungen": [],
       "preisHistorie": [
         {
           "datum": "2026-08-22",
@@ -9813,6 +9806,15 @@
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-27",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
         }
@@ -9889,13 +9891,6 @@
       "text": "Anzündwolle",
       "menge": "1",
       "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1787680750455,
-      "text": "Goldfield Gold Box Zigaretten",
-      "menge": "1",
-      "einheit": "Stange",
       "checked": false
     }
   ],
@@ -20347,7 +20342,31 @@
       "aktion": false,
       "datum": "2026-08-25",
       "zeit": 1787680757424
+    },
+    {
+      "aid": 221,
+      "d": "2026-08-25",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stange",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "t": "aus",
+      "aid": 268,
+      "name": "Bacon geschnitten",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-27",
+      "zeit": 1787851492434
     }
   ],
-  "aktualisiert": "2026-08-25T17:59:21.249Z"
+  "aktualisiert": "2026-08-27T17:25:36.344Z"
 }
