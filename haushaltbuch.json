@@ -10115,8 +10115,8 @@
       "kaufdatum": "2026-08-29",
       "ablaufdatum": "2026-09-05",
       "notiz": "",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787988698169_1000065309.jpg?t=1787988702504",
+      "fotoPath": "1787988698169_1000065309.jpg",
       "preisHistorie": [
         {
           "datum": "2026-08-29",
@@ -21234,5 +21234,5 @@
       "zeit": 1787988431368
     }
   ],
-  "aktualisiert": "2026-08-29T07:30:52.536Z"
+  "aktualisiert": "2026-08-29T07:31:49.282Z"
 }
