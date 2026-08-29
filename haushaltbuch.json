@@ -843,7 +843,7 @@
       "marke": "Mutti",
       "kat": "Gemüse & Früchte",
       "lager": "Schlof",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "80042563",
@@ -855,14 +855,7 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782306015140_off.jpg?t=1787560748085",
       "fotoPath": "1782306015140_off.jpg",
-      "packungen": [
-        {
-          "id": 11,
-          "menge": 1,
-          "kaufdatum": "2026-07-30",
-          "ablaufdatum": "2026-08-06"
-        }
-      ],
+      "packungen": [],
       "kaufort": "Lidl",
       "preisHistorie": [
         {
@@ -879,6 +872,15 @@
           "menge": 1,
           "einheit": "Stk",
           "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-29",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
         }
@@ -21232,7 +21234,20 @@
       "aktion": false,
       "datum": "2026-08-29",
       "zeit": 1787988431368
+    },
+    {
+      "t": "aus",
+      "aid": 22,
+      "name": "Mutti Solo Pomodoro Parma Passierte italienische Tomaten",
+      "lager": "Schlof",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-29",
+      "zeit": 1787988741334
     }
   ],
-  "aktualisiert": "2026-08-29T07:31:49.282Z"
+  "aktualisiert": "2026-08-29T07:32:28.394Z"
 }
