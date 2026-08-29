@@ -9892,6 +9892,27 @@
       "menge": "1",
       "einheit": "Stk",
       "checked": false
+    },
+    {
+      "id": 1787979380542,
+      "text": "Zwiebel",
+      "menge": "1",
+      "einheit": "kg",
+      "checked": false
+    },
+    {
+      "id": 1787979508407,
+      "text": "Knoblauch",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1787979516665,
+      "text": "Salat",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
     }
   ],
   "einkaufOverrides": {
@@ -20366,7 +20387,18 @@
       "aktion": false,
       "datum": "2026-08-27",
       "zeit": 1787851492434
+    },
+    {
+      "aid": 268,
+      "d": "2026-08-27",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-27T17:25:45.626Z"
+  "aktualisiert": "2026-08-29T04:58:50.680Z"
 }
