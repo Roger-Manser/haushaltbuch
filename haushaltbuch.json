@@ -10344,6 +10344,88 @@
           "ablaufdatum": "2026-09-04"
         }
       ]
+    },
+    {
+      "id": 277,
+      "name": "Mineralwasser",
+      "marke": "Farmer",
+      "kat": "Getränke",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Landi",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7611330875348",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 6,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-08-29",
+      "ablaufdatum": "2026-12-31",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-29",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
+        }
+      ],
+      "letzteEingangHeute": "10:26",
+      "packungen": [
+        {
+          "id": 20,
+          "menge": 1,
+          "kaufdatum": "2026-08-29",
+          "ablaufdatum": "2026-12-31"
+        }
+      ]
+    },
+    {
+      "id": 278,
+      "name": "Feueranzünder",
+      "marke": "",
+      "kat": "Diverses",
+      "lager": "Garten",
+      "kaufort": "Landi",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7611330781076",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 2,
+      "packEinheit": "kg",
+      "kaufdatum": "2026-08-29",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "preisHistorie": [
+        {
+          "datum": "2026-08-29",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
+        }
+      ],
+      "letzteEingangHeute": "10:33",
+      "packungen": [
+        {
+          "id": 21,
+          "menge": 1,
+          "kaufdatum": "2026-08-29",
+          "ablaufdatum": ""
+        }
+      ]
     }
   ],
   "lagerorte": [
@@ -21247,7 +21329,33 @@
       "aktion": false,
       "datum": "2026-08-29",
       "zeit": 1787988741334
+    },
+    {
+      "t": "ein",
+      "aid": 277,
+      "name": "Mineralwasser",
+      "lager": "Kühlschrank oben",
+      "kat": "Getränke",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-29",
+      "zeit": 1787991979559
+    },
+    {
+      "t": "ein",
+      "aid": 278,
+      "name": "Feueranzünder",
+      "lager": "Garten",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-29",
+      "zeit": 1787992399774
     }
   ],
-  "aktualisiert": "2026-08-29T07:32:28.394Z"
+  "aktualisiert": "2026-08-29T08:34:03.333Z"
 }
