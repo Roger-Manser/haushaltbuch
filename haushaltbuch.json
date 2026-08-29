@@ -315,14 +315,14 @@
       "marke": "Migros",
       "kat": "Reinigung & Pflege",
       "lager": "Gang unten",
-      "menge": 0,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7628871623796",
       "preis": 1.11,
       "packMenge": 1,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-06-22",
+      "kaufdatum": "2026-08-29",
       "ablaufdatum": "",
       "notiz": "No. 13",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782135607805_off.jpg?t=1787560748085",
@@ -334,7 +334,14 @@
           "menge": 3
         }
       ],
-      "packungen": []
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 2,
+          "kaufdatum": "2026-08-29",
+          "ablaufdatum": ""
+        }
+      ]
     },
     {
       "id": 9,
@@ -682,19 +689,26 @@
       "marke": "Nixe",
       "kat": "Fleisch & Fisch",
       "lager": "Vorratsschrank",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "4056489254683",
       "preis": 0,
       "packMenge": 150,
       "packEinheit": "g",
-      "kaufdatum": "2026-06-23",
+      "kaufdatum": "2026-08-29",
       "ablaufdatum": "2028-12-31",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782210777021_off.jpg?t=1787560748085",
       "fotoPath": "1782210777021_off.jpg",
-      "packungen": []
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-08-29",
+          "ablaufdatum": ""
+        }
+      ]
     },
     {
       "id": 17,
@@ -704,7 +718,7 @@
       "lager": "Küche",
       "menge": 0,
       "einheit": "Stk",
-      "mindest": 1,
+      "mindest": 0,
       "barcode": "8002461910906",
       "preis": 0,
       "packMenge": 250,
@@ -715,7 +729,9 @@
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782211035851_17822110144946005056457592513754.jpg?t=1787560748085",
       "fotoPath": "1782211035851_17822110144946005056457592513754.jpg",
       "preisHistorie": [],
-      "packungen": []
+      "packungen": [],
+      "kaufort": "",
+      "barcodes": []
     },
     {
       "id": 18,
@@ -723,19 +739,26 @@
       "marke": "Maggi",
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7613034957528",
       "preis": 0,
       "packMenge": 280,
       "packEinheit": "g",
-      "kaufdatum": "2026-06-23",
+      "kaufdatum": "2026-08-29",
       "ablaufdatum": "2027-01-01",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782212180104_off.jpg?t=1787560748085",
       "fotoPath": "1782212180104_off.jpg",
-      "packungen": []
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-08-29",
+          "ablaufdatum": ""
+        }
+      ]
     },
     {
       "id": 19,
@@ -743,19 +766,26 @@
       "marke": "Sanzoz",
       "kat": "Medikament",
       "lager": "Küche",
-      "menge": 0,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7680660150135",
       "preis": 0,
       "packMenge": 0,
       "packEinheit": "dl",
-      "kaufdatum": "2026-06-23",
+      "kaufdatum": "2026-08-29",
       "ablaufdatum": "",
       "notiz": "Blutdrucksenker",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782215805775_17822157940686375979542534197242.jpg?t=1787560748085",
       "fotoPath": "1782215805775_17822157940686375979542534197242.jpg",
-      "packungen": []
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 2,
+          "kaufdatum": "2026-08-29",
+          "ablaufdatum": ""
+        }
+      ]
     },
     {
       "id": 20,
@@ -20400,5 +20430,5 @@
       "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-29T04:58:50.680Z"
+  "aktualisiert": "2026-08-29T05:00:57.703Z"
 }
