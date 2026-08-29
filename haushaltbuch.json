@@ -153,14 +153,14 @@
       "marke": "Eisenring",
       "kat": "Diverses",
       "lager": "Kühlschrank oben",
-      "menge": 1,
+      "menge": 2,
       "einheit": "Pkg",
       "mindest": 1,
       "barcode": "",
       "preis": 3.6,
       "packMenge": 6,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-08-13",
+      "kaufdatum": "2026-08-28",
       "ablaufdatum": "2026-08-18",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782190086786_17821900533123253954791247278943.jpg?t=1787560748085",
@@ -183,6 +183,15 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-28",
+          "preis": 3.6,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Rita Eisenring"
         }
       ],
       "ownCode": "HB-000009",
@@ -192,9 +201,15 @@
           "menge": 1,
           "kaufdatum": "2026-08-13",
           "ablaufdatum": "2026-08-18"
+        },
+        {
+          "id": 22,
+          "menge": 1,
+          "kaufdatum": "2026-08-28",
+          "ablaufdatum": "2026-09-28"
         }
       ],
-      "kaufort": "Lidl",
+      "kaufort": "Rita Eisenring",
       "barcodes": []
     },
     {
@@ -21355,7 +21370,20 @@
       "aktion": false,
       "datum": "2026-08-29",
       "zeit": 1787992399774
+    },
+    {
+      "t": "ein",
+      "aid": 4,
+      "name": "Eier",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 3.6,
+      "aktion": false,
+      "datum": "2026-08-29",
+      "zeit": 1787995317356
     }
   ],
-  "aktualisiert": "2026-08-29T08:45:22.756Z"
+  "aktualisiert": "2026-08-29T09:22:05.356Z"
 }
