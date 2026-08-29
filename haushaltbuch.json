@@ -10357,7 +10357,7 @@
       "mindest": 0,
       "barcode": "7611330875348",
       "barcodes": [],
-      "preis": 0,
+      "preis": 3.65,
       "packMenge": 6,
       "packEinheit": "Stk",
       "kaufdatum": "2026-08-29",
@@ -10368,7 +10368,7 @@
       "preisHistorie": [
         {
           "datum": "2026-08-29",
-          "preis": 0,
+          "preis": 3.65,
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
@@ -10398,7 +10398,7 @@
       "mindest": 0,
       "barcode": "7611330781076",
       "barcodes": [],
-      "preis": 0,
+      "preis": 15.95,
       "packMenge": 2,
       "packEinheit": "kg",
       "kaufdatum": "2026-08-29",
@@ -10409,7 +10409,7 @@
       "preisHistorie": [
         {
           "datum": "2026-08-29",
-          "preis": 0,
+          "preis": 15.95,
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
@@ -21357,5 +21357,5 @@
       "zeit": 1787992399774
     }
   ],
-  "aktualisiert": "2026-08-29T08:43:27.126Z"
+  "aktualisiert": "2026-08-29T08:45:22.756Z"
 }
