@@ -766,7 +766,7 @@
       "marke": "Sanzoz",
       "kat": "Medikament",
       "lager": "Küche",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7680660150135",
@@ -781,7 +781,7 @@
       "packungen": [
         {
           "id": 4,
-          "menge": 2,
+          "menge": 1,
           "kaufdatum": "2026-08-29",
           "ablaufdatum": ""
         }
@@ -9941,6 +9941,13 @@
       "id": 1787979516665,
       "text": "Salat",
       "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1787980278638,
+      "text": "Kalbsplätzli",
+      "menge": "8",
       "einheit": "Stk",
       "checked": false
     }
@@ -20430,5 +20437,5 @@
       "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-29T05:00:57.703Z"
+  "aktualisiert": "2026-08-29T05:11:36.427Z"
 }
