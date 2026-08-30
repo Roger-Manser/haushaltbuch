@@ -10203,7 +10203,7 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "20969868",
@@ -10225,17 +10225,19 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-08-30",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "09:18",
-      "packungen": [
-        {
-          "id": 11,
-          "menge": 1,
-          "kaufdatum": "2026-08-29",
-          "ablaufdatum": "2026-10-06"
-        }
-      ]
+      "packungen": []
     },
     {
       "id": 274,
@@ -21383,7 +21385,339 @@
       "aktion": false,
       "datum": "2026-08-29",
       "zeit": 1787995317356
+    },
+    {
+      "aid": 4,
+      "d": "2026-08-28",
+      "m": 1,
+      "p": 3.6,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Rita Eisenring"
+    },
+    {
+      "aid": 22,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 32,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 2.95,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 32,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 38,
+      "d": "2026-08-29",
+      "m": 2,
+      "p": 3.29,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 53,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 53,
+      "d": "2026-08-29",
+      "m": 2,
+      "p": 2.35,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gewürze & Saucen",
+      "aktion": true,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 128,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 128,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 1.95,
+      "t": "ein",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 221,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 53,
+      "t": "ein",
+      "e": "Stange",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 222,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 2.85,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 222,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 223,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 6.89,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 234,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 3.49,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 234,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 252,
+      "d": "2026-08-22",
+      "m": 1,
+      "p": 1.65,
+      "t": "ein",
+      "e": "Dose",
+      "k": "Reinigung & Pflege",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 252,
+      "d": "2026-08-29",
+      "m": 2,
+      "p": 1.65,
+      "t": "ein",
+      "e": "Dose",
+      "k": "Reinigung & Pflege",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 267,
+      "d": "2026-08-29",
+      "m": 2,
+      "p": 53,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 267,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 269,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 1.49,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 270,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 2.29,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 271,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 1.95,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 272,
+      "d": "2026-08-29",
+      "m": 2,
+      "p": 1.3,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 273,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 3.99,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 274,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 1.99,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 275,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 1.99,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 276,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 6.39,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 277,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 3.65,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Getränke",
+      "aktion": false,
+      "kaufort": "Landi"
+    },
+    {
+      "aid": 278,
+      "d": "2026-08-29",
+      "m": 1,
+      "p": 15.95,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Landi"
+    },
+    {
+      "t": "aus",
+      "aid": 273,
+      "name": "Coppa with Amarone Valpolicella",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-08-30",
+      "zeit": 1788068105425
     }
   ],
-  "aktualisiert": "2026-08-29T09:22:05.356Z"
+  "aktualisiert": "2026-08-30T05:35:22.578Z"
 }
