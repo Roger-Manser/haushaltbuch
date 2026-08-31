@@ -21717,7 +21717,18 @@
       "aktion": false,
       "datum": "2026-08-30",
       "zeit": 1788068105425
+    },
+    {
+      "aid": 273,
+      "d": "2026-08-30",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-08-30T05:35:22.578Z"
+  "aktualisiert": "2026-08-31T14:02:49.726Z"
 }
