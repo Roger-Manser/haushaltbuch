@@ -4457,7 +4457,7 @@
       "kat": "Gemüse & Früchte",
       "lager": "Schlof",
       "kaufort": "Migros",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7613269197621",
@@ -4479,15 +4479,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-09-03",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Migros"
         }
       ],
       "packungen": [
-        {
-          "id": 7,
-          "menge": 1,
-          "kaufdatum": "2026-07-12",
-          "ablaufdatum": ""
-        },
         {
           "id": 8,
           "menge": 1,
@@ -10541,6 +10544,13 @@
       "id": 1787980278638,
       "text": "Kalbsplätzli",
       "menge": "8",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1788457825283,
+      "text": "Russischer Salat",
+      "menge": "1",
       "einheit": "Stk",
       "checked": false
     }
@@ -21918,7 +21928,20 @@
       "k": "Gemüse & Früchte",
       "aktion": false,
       "kaufort": "Lidl"
+    },
+    {
+      "t": "aus",
+      "aid": 121,
+      "name": "Russischer Salat",
+      "lager": "Schlof",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-03",
+      "zeit": 1788457836372
     }
   ],
-  "aktualisiert": "2026-09-03T17:50:10.339Z"
+  "aktualisiert": "2026-09-03T17:50:53.171Z"
 }
