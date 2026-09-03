@@ -4998,7 +4998,7 @@
       "kat": "Gemüse & Früchte",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 2,
+      "menge": 1,
       "einheit": "kg",
       "mindest": 0,
       "barcode": "",
@@ -5056,15 +5056,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-03",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "kg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
-        {
-          "id": 5,
-          "menge": 1,
-          "kaufdatum": "2026-07-17",
-          "ablaufdatum": "2026-09-18"
-        },
         {
           "id": 7,
           "menge": 1,
@@ -10534,13 +10537,6 @@
     "Getränkemarkt Zil"
   ],
   "einkauf": [
-    {
-      "id": 1787422546168,
-      "text": "Anzündwolle",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
     {
       "id": 1787980278638,
       "text": "Kalbsplätzli",
@@ -21898,7 +21894,31 @@
       "k": "Genussmittel",
       "aktion": false,
       "kaufort": ""
+    },
+    {
+      "t": "aus",
+      "aid": 132,
+      "name": "Zwiebel",
+      "lager": "Küche",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-03",
+      "zeit": 1788424225623
+    },
+    {
+      "aid": 132,
+      "d": "2026-09-03",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-09-03T08:30:01.304Z"
+  "aktualisiert": "2026-09-03T15:50:21.019Z"
 }
