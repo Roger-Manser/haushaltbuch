@@ -2736,7 +2736,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 2,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
@@ -2766,22 +2766,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        }
-      ],
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-07-05",
-          "ablaufdatum": ""
         },
         {
-          "id": 15,
+          "datum": "2026-09-05",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-08-13",
-          "ablaufdatum": ""
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
+      "packungen": [],
       "ownCode": "HB-000069"
     },
     {
@@ -5007,7 +5003,7 @@
       "kat": "Gemüse & Früchte",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "kg",
       "mindest": 0,
       "barcode": "",
@@ -5074,16 +5070,18 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
-        }
-      ],
-      "packungen": [
+        },
         {
-          "id": 7,
+          "datum": "2026-09-05",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-08-13",
-          "ablaufdatum": "2026-08-20"
+          "einheit": "kg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
+      "packungen": [],
       "preisProKg": 1.79
     },
     {
@@ -8243,7 +8241,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "20242824",
@@ -8265,16 +8263,17 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        }
-      ],
-      "packungen": [
+        },
         {
-          "id": 3,
+          "datum": "2026-09-05",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-08-04",
-          "ablaufdatum": "2026-09-11"
+          "einheit": "Pkg",
+          "typ": "weg",
+          "aktion": false
         }
       ],
+      "packungen": [],
       "geoeffnet": "2026-08-12"
     },
     {
@@ -8501,7 +8500,7 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "20631666",
@@ -8559,16 +8558,18 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
-        }
-      ],
-      "packungen": [
+        },
         {
-          "id": 16,
+          "datum": "2026-09-05",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-08-29",
-          "ablaufdatum": "2026-10-03"
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
+      "packungen": [],
       "geoeffnet": "2026-08-12"
     },
     {
@@ -8841,7 +8842,7 @@
       "kat": "Diverses",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
@@ -8863,16 +8864,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-08-10",
-          "ablaufdatum": ""
-        }
-      ]
+      "packungen": []
     },
     {
       "id": 242,
@@ -9924,7 +9927,7 @@
       "kat": "Süsswaren",
       "lager": "Vorratsschrank",
       "kaufort": "Coop",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "7614800120009",
@@ -9946,17 +9949,19 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Coop"
         }
       ],
       "letzteEingangHeute": "12:00",
-      "packungen": [
-        {
-          "id": 6,
-          "menge": 1,
-          "kaufdatum": "2026-08-21",
-          "ablaufdatum": "2027-03-15"
-        }
-      ]
+      "packungen": []
     },
     {
       "id": 267,
@@ -10342,7 +10347,7 @@
       "packMenge": 150,
       "packEinheit": "g",
       "kaufdatum": "2026-08-29",
-      "ablaufdatum": "2026-11-13",
+      "ablaufdatum": "2026-09-08",
       "notiz": "Nutri-Score D\nPro 100g/ml: 186 kcal, Fett 16g, KH 2.3g, Eiweiss 8.3g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1787988092992_off.jpg?t=1787988152213",
       "fotoPath": "1787988092992_off.jpg",
@@ -10363,9 +10368,10 @@
           "id": 14,
           "menge": 1,
           "kaufdatum": "2026-08-29",
-          "ablaufdatum": "2026-11-13"
+          "ablaufdatum": "2026-09-08"
         }
-      ]
+      ],
+      "geoeffnet": "2026-09-05"
     },
     {
       "id": 276,
@@ -10557,13 +10563,6 @@
   ],
   "einkauf": [
     {
-      "id": 1787980278638,
-      "text": "Kalbsplätzli",
-      "menge": "8",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
       "id": 1788457825283,
       "text": "Russischer Salat",
       "menge": "1",
@@ -10575,6 +10574,13 @@
       "text": "Chinakohl",
       "menge": "1",
       "einheit": "kg",
+      "checked": false
+    },
+    {
+      "id": 1788587735532,
+      "text": "Gemüsebouilon",
+      "menge": "1",
+      "einheit": "Stk",
       "checked": false
     }
   ],
@@ -22105,7 +22111,85 @@
       "aktion": false,
       "datum": "2026-09-05",
       "zeit": 1788587616285
+    },
+    {
+      "t": "weg",
+      "aid": 228,
+      "name": "Peterli gekraust (Krause Petersilie)",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-05",
+      "zeit": 1788587647342
+    },
+    {
+      "t": "aus",
+      "aid": 132,
+      "name": "Zwiebel",
+      "lager": "Küche",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-05",
+      "zeit": 1788587661140
+    },
+    {
+      "t": "aus",
+      "aid": 234,
+      "name": "Tilsiter",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-05",
+      "zeit": 1788587680636
+    },
+    {
+      "t": "aus",
+      "aid": 266,
+      "name": "Bretzeli",
+      "lager": "Vorratsschrank",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-05",
+      "zeit": 1788587751923
+    },
+    {
+      "t": "aus",
+      "aid": 69,
+      "name": "Petersilie",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-05",
+      "zeit": 1788587776294
+    },
+    {
+      "t": "aus",
+      "aid": 241,
+      "name": "Papiertragetasche 20L",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-05",
+      "zeit": 1788587794398
     }
   ],
-  "aktualisiert": "2026-09-05T05:53:49.330Z"
+  "aktualisiert": "2026-09-05T05:56:53.825Z"
 }
