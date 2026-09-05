@@ -1262,7 +1262,7 @@
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20228675",
-      "preis": 4.95,
+      "preis": 3.29,
       "packMenge": 500,
       "packEinheit": "g",
       "kaufdatum": "2026-09-05",
@@ -1290,7 +1290,7 @@
         },
         {
           "datum": "2026-09-05",
-          "preis": 4.95,
+          "preis": 3.29,
           "menge": 1,
           "einheit": "Stk",
           "typ": "ein",
@@ -2487,11 +2487,11 @@
         },
         {
           "datum": "2026-09-05",
-          "preis": 4.99,
+          "preis": 4.2,
           "menge": 1,
           "einheit": "Stk",
           "typ": "ein",
-          "aktion": false,
+          "aktion": true,
           "kaufort": "Lidl"
         }
       ],
@@ -2639,11 +2639,11 @@
         },
         {
           "datum": "2026-09-05",
-          "preis": 4.95,
+          "preis": 4.21,
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
-          "aktion": false,
+          "aktion": true,
           "kaufort": "Lidl"
         }
       ],
@@ -3223,7 +3223,7 @@
       "mindest": 1,
       "barcode": "20112745",
       "barcodes": [],
-      "preis": 0,
+      "preis": 1.35,
       "packMenge": 1,
       "packEinheit": "kg",
       "kaufdatum": "2026-09-05",
@@ -3251,7 +3251,7 @@
         },
         {
           "datum": "2026-09-05",
-          "preis": 0,
+          "preis": 1.35,
           "menge": 1,
           "einheit": "Stk",
           "typ": "ein",
@@ -9220,8 +9220,8 @@
         },
         {
           "datum": "2026-09-05",
-          "preis": 1.19,
-          "menge": 1,
+          "preis": 1.6,
+          "menge": 1.342,
           "einheit": "kg",
           "typ": "ein",
           "aktion": false,
@@ -10723,13 +10723,13 @@
       "marke": "Hirz",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "kaufort": "",
+      "kaufort": "Lidl",
       "menge": 1,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "7610100504686",
       "barcodes": [],
-      "preis": 0,
+      "preis": 1.95,
       "packMenge": 200,
       "packEinheit": "g",
       "kaufdatum": "2026-09-05",
@@ -10746,6 +10746,15 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": ""
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 1.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "09:27",
@@ -10770,7 +10779,7 @@
       "mindest": 0,
       "barcode": "20668518",
       "barcodes": [],
-      "preis": 0,
+      "preis": 4.95,
       "packMenge": 200,
       "packEinheit": "g",
       "kaufdatum": "2026-09-05",
@@ -10782,6 +10791,15 @@
         {
           "datum": "2026-09-05",
           "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 4.95,
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
@@ -10811,7 +10829,7 @@
       "mindest": 0,
       "barcode": "4335619079915",
       "barcodes": [],
-      "preis": 0,
+      "preis": 9.99,
       "packMenge": 320,
       "packEinheit": "g",
       "kaufdatum": "2026-09-05",
@@ -10823,6 +10841,15 @@
         {
           "datum": "2026-09-05",
           "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 9.99,
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
@@ -10852,7 +10879,7 @@
       "mindest": 0,
       "barcode": "7630537400528",
       "barcodes": [],
-      "preis": 0,
+      "preis": 7.49,
       "packMenge": 480,
       "packEinheit": "g",
       "kaufdatum": "2026-09-05",
@@ -10864,6 +10891,15 @@
         {
           "datum": "2026-09-05",
           "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 7.49,
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
@@ -10893,7 +10929,7 @@
       "mindest": 0,
       "barcode": "7630537403963",
       "barcodes": [],
-      "preis": 0,
+      "preis": 4.99,
       "packMenge": 380,
       "packEinheit": "g",
       "kaufdatum": "2026-09-05",
@@ -10905,6 +10941,15 @@
         {
           "datum": "2026-09-05",
           "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 4.99,
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
@@ -10934,7 +10979,7 @@
       "mindest": 0,
       "barcode": "20630843",
       "barcodes": [],
-      "preis": 0,
+      "preis": 1.89,
       "packMenge": 265,
       "packEinheit": "g",
       "kaufdatum": "2026-09-05",
@@ -10946,6 +10991,15 @@
         {
           "datum": "2026-09-05",
           "preis": 0,
+          "menge": 1,
+          "einheit": "Tube",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 1.89,
           "menge": 1,
           "einheit": "Tube",
           "typ": "ein",
@@ -10975,7 +11029,7 @@
       "mindest": 0,
       "barcode": "76111464",
       "barcodes": [],
-      "preis": 0,
+      "preis": 8.79,
       "packMenge": 250,
       "packEinheit": "g",
       "kaufdatum": "2026-09-05",
@@ -10987,6 +11041,15 @@
         {
           "datum": "2026-09-05",
           "preis": 0,
+          "menge": 1,
+          "einheit": "Dose",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 8.79,
           "menge": 1,
           "einheit": "Dose",
           "typ": "ein",
@@ -11016,7 +11079,7 @@
       "mindest": 0,
       "barcode": "4056489873235",
       "barcodes": [],
-      "preis": 0,
+      "preis": 1.59,
       "packMenge": 4,
       "packEinheit": "Stk",
       "kaufdatum": "2026-09-05",
@@ -11033,6 +11096,15 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 1.59,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "09:48",
@@ -11042,6 +11114,56 @@
           "menge": 1,
           "kaufdatum": "2026-09-05",
           "ablaufdatum": "2029-12-31"
+        }
+      ]
+    },
+    {
+      "id": 287,
+      "name": "Krustenbaguette Brot",
+      "marke": "",
+      "kat": "Backwaren & Brot",
+      "lager": "Küche",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "",
+      "barcodes": [],
+      "preis": 2.99,
+      "packMenge": 230,
+      "packEinheit": "g",
+      "kaufdatum": "2026-09-05",
+      "ablaufdatum": "2026-09-12",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "preisHistorie": [
+        {
+          "datum": "2026-09-05",
+          "preis": 2.99,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 2.99,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "letzteEingangHeute": "10:08",
+      "packungen": [
+        {
+          "id": 22,
+          "menge": 1,
+          "kaufdatum": "2026-09-05",
+          "ablaufdatum": "2026-09-12"
         }
       ]
     }
@@ -23198,7 +23320,20 @@
       "aktion": false,
       "datum": "2026-09-05",
       "zeit": 1788595311307
+    },
+    {
+      "t": "ein",
+      "aid": 287,
+      "name": "Krustenbaguette Brot",
+      "lager": "Küche",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.99,
+      "aktion": false,
+      "datum": "2026-09-05",
+      "zeit": 1788595721694
     }
   ],
-  "aktualisiert": "2026-09-05T08:02:23.176Z"
+  "aktualisiert": "2026-09-05T08:12:29.661Z"
 }
