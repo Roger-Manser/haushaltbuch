@@ -3217,17 +3217,17 @@
       "marke": "M-Classic",
       "kat": "Konserven & Trockenware",
       "lager": "Schlof",
-      "kaufort": "Migros",
-      "menge": 0,
+      "kaufort": "Lidl",
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
-      "barcode": "7610200010902",
+      "barcode": "20112745",
       "barcodes": [],
       "preis": 0,
       "packMenge": 1,
       "packEinheit": "kg",
-      "kaufdatum": "2026-07-05",
-      "ablaufdatum": "2026-10-31",
+      "kaufdatum": "2026-09-05",
+      "ablaufdatum": "2028-02-01",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783268893197_off.jpg?t=1787560748085",
       "fotoPath": "1783268893197_off.jpg",
@@ -3248,9 +3248,25 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
-      "packungen": []
+      "packungen": [
+        {
+          "id": 18,
+          "menge": 1,
+          "kaufdatum": "2026-09-05",
+          "ablaufdatum": "2028-02-01"
+        }
+      ]
     },
     {
       "id": 80,
@@ -7641,7 +7657,7 @@
       "kat": "Genussmittel",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 2,
+      "menge": 4,
       "einheit": "Stange",
       "mindest": 2,
       "barcode": "4006396071583",
@@ -7649,7 +7665,7 @@
       "preis": 53,
       "packMenge": 10,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-08-29",
+      "kaufdatum": "2026-09-05",
       "ablaufdatum": "2030-08-22",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785472429123_17854724199238898588606765505778.jpg?t=1787560748085",
@@ -7825,6 +7841,15 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 53,
+          "menge": 2,
+          "einheit": "Stange",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -7839,6 +7864,12 @@
           "menge": 1,
           "kaufdatum": "2026-08-29",
           "ablaufdatum": "2030-12-31"
+        },
+        {
+          "id": 20,
+          "menge": 2,
+          "kaufdatum": "2026-09-05",
+          "ablaufdatum": "2049-09-30"
         }
       ]
     },
@@ -8800,7 +8831,7 @@
       "kat": "Backwaren & Brot",
       "lager": "Küche",
       "kaufort": "",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "4056489322948",
@@ -8808,8 +8839,8 @@
       "preis": 1.69,
       "packMenge": 375,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-04",
-      "ablaufdatum": "2026-08-10",
+      "kaufdatum": "2026-09-05",
+      "ablaufdatum": "2026-09-15",
       "notiz": "Pro 100g/ml: 267 kcal, Fett 4g, KH 48g, Eiweiss 8.26666666666667g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785841496328_off.jpg?t=1787560748085",
       "fotoPath": "1785841496328_off.jpg",
@@ -8831,9 +8862,25 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": ""
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 1.69,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
         }
       ],
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 19,
+          "menge": 1,
+          "kaufdatum": "2026-09-05",
+          "ablaufdatum": "2026-09-15"
+        }
+      ],
       "geoeffnet": "2026-08-07"
     },
     {
@@ -9139,16 +9186,16 @@
       "preis": 1.19,
       "packMenge": 0,
       "packEinheit": "dl",
-      "kaufdatum": "2026-08-13",
+      "kaufdatum": "2026-09-05",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786607232912_17866072255603719976396906354021.jpg?t=1787560748085",
       "fotoPath": "1786607232912_17866072255603719976396906354021.jpg",
       "packungen": [
         {
-          "id": 18,
+          "id": 21,
           "menge": 1,
-          "kaufdatum": "2026-08-13",
+          "kaufdatum": "2026-09-05",
           "ablaufdatum": ""
         }
       ],
@@ -9161,10 +9208,29 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "kg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-05",
+          "preis": 1.19,
+          "menge": 1,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
-      "letzteEingangHeute": "09:45",
-      "barcodes": []
+      "letzteEingangHeute": "10:01",
+      "barcodes": [],
+      "preisProKg": 1.19
     },
     {
       "id": 246,
@@ -23067,7 +23133,72 @@
       "aktion": false,
       "datum": "2026-09-05",
       "zeit": 1788594621784
+    },
+    {
+      "t": "ein",
+      "aid": 79,
+      "name": "Langkornreis",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-05",
+      "zeit": 1788595212203
+    },
+    {
+      "t": "ein",
+      "aid": 237,
+      "name": "weizenbrot Toast Brot American Style",
+      "lager": "Küche",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 1.69,
+      "aktion": false,
+      "datum": "2026-09-05",
+      "zeit": 1788595254564
+    },
+    {
+      "t": "ein",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 2,
+      "einheit": "Stange",
+      "preis": 53,
+      "aktion": false,
+      "datum": "2026-09-05",
+      "zeit": 1788595279099
+    },
+    {
+      "t": "aus",
+      "aid": 245,
+      "name": "Bananen",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-05",
+      "zeit": 1788595304833
+    },
+    {
+      "t": "ein",
+      "aid": 245,
+      "name": "Bananen",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "kg",
+      "preis": 1.19,
+      "aktion": false,
+      "datum": "2026-09-05",
+      "zeit": 1788595311307
     }
   ],
-  "aktualisiert": "2026-09-05T07:50:46.118Z"
+  "aktualisiert": "2026-09-05T08:02:23.176Z"
 }
