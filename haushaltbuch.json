@@ -10746,15 +10746,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": ""
-        },
-        {
-          "datum": "2026-09-05",
-          "preis": 1.95,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "09:27",
@@ -10791,15 +10782,6 @@
         {
           "datum": "2026-09-05",
           "preis": 0,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-09-05",
-          "preis": 4.95,
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
@@ -10846,15 +10828,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-09-05",
-          "preis": 9.99,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "09:32",
@@ -10891,15 +10864,6 @@
         {
           "datum": "2026-09-05",
           "preis": 0,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-09-05",
-          "preis": 7.49,
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
@@ -10946,15 +10910,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": ""
-        },
-        {
-          "datum": "2026-09-05",
-          "preis": 4.99,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": ""
         }
       ],
       "letzteEingangHeute": "09:35",
@@ -10991,15 +10946,6 @@
         {
           "datum": "2026-09-05",
           "preis": 0,
-          "menge": 1,
-          "einheit": "Tube",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-09-05",
-          "preis": 1.89,
           "menge": 1,
           "einheit": "Tube",
           "typ": "ein",
@@ -11046,15 +10992,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-09-05",
-          "preis": 8.79,
-          "menge": 1,
-          "einheit": "Dose",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "09:47",
@@ -11096,15 +11033,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-09-05",
-          "preis": 1.59,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "09:48",
@@ -11138,15 +11066,6 @@
       "foto": "",
       "fotoPath": "",
       "preisHistorie": [
-        {
-          "datum": "2026-09-05",
-          "preis": 2.99,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
         {
           "datum": "2026-09-05",
           "preis": 2.99,
@@ -23335,5 +23254,5 @@
       "zeit": 1788595721694
     }
   ],
-  "aktualisiert": "2026-09-05T08:12:29.661Z"
+  "aktualisiert": "2026-09-05T08:12:41.617Z"
 }
