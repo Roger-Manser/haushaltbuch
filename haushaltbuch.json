@@ -23252,7 +23252,260 @@
       "aktion": false,
       "datum": "2026-09-05",
       "zeit": 1788595721694
+    },
+    {
+      "aid": 33,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 3.29,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 50,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 1.99,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 61,
+      "d": "2026-09-05",
+      "m": 2,
+      "p": 3.88,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Getränke",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 62,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 4.2,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": true,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 65,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 4.21,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": true,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 79,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 1.35,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Konserven & Trockenware",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 221,
+      "d": "2026-09-05",
+      "m": 2,
+      "p": 53,
+      "t": "ein",
+      "e": "Stange",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 222,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 2.85,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 223,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 6.89,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 237,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 1.69,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Backwaren & Brot",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 245,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 245,
+      "d": "2026-09-05",
+      "m": 1.342,
+      "p": 1.6,
+      "t": "ein",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 271,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 1.95,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 273,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 3.99,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 279,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 0,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 280,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 0,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 281,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 0,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 282,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 0,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Tiefkühl",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 283,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 0,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Tiefkühl",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 284,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 0,
+      "t": "ein",
+      "e": "Tube",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 285,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 0,
+      "t": "ein",
+      "e": "Dose",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 286,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 0,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 287,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 2.99,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Backwaren & Brot",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-09-05T08:16:32.486Z"
+  "aktualisiert": "2026-09-05T08:49:02.801Z"
 }
