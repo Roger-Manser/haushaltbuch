@@ -6,7 +6,7 @@
       "marke": "Landi",
       "kat": "Genussmittel",
       "lager": "Schlof",
-      "menge": 3,
+      "menge": 2,
       "einheit": "Kiste",
       "mindest": 2,
       "barcode": "7611703611962",
@@ -132,12 +132,21 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-09-08",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
       "packungen": [
         {
           "id": 6,
-          "menge": 3,
+          "menge": 2,
           "kaufdatum": "2026-08-19",
           "ablaufdatum": ""
         }
@@ -2329,7 +2338,7 @@
       "kat": "Genussmittel",
       "lager": "Schlof",
       "kaufort": "Coop",
-      "menge": 4,
+      "menge": 3,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "8002335104066",
@@ -2358,12 +2367,21 @@
           "einheit": "Stk",
           "typ": "aus",
           "aktion": false
+        },
+        {
+          "datum": "2026-09-08",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Coop"
         }
       ],
       "packungen": [
         {
           "id": 1,
-          "menge": 4,
+          "menge": 3,
           "kaufdatum": "2026-06-30",
           "ablaufdatum": ""
         }
@@ -7660,16 +7678,16 @@
       "kat": "Genussmittel",
       "lager": "Küche",
       "kaufort": "Lidl",
-      "menge": 4,
+      "menge": 3,
       "einheit": "Stange",
       "mindest": 2,
       "barcode": "4006396071583",
       "barcodes": [],
-      "preis": 53,
+      "preis": 0,
       "packMenge": 10,
       "packEinheit": "Stk",
       "kaufdatum": "2026-09-05",
-      "ablaufdatum": "2030-08-22",
+      "ablaufdatum": "2030-12-31",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785472429123_17854724199238898588606765505778.jpg?t=1787560748085",
       "fotoPath": "1785472429123_17854724199238898588606765505778.jpg",
@@ -7749,14 +7767,6 @@
           "menge": 1,
           "einheit": "Stange",
           "typ": "aus",
-          "aktion": false
-        },
-        {
-          "datum": "2026-07-30",
-          "preis": 0,
-          "menge": 4,
-          "einheit": "Pkg",
-          "typ": "weg",
           "aktion": false
         },
         {
@@ -7853,15 +7863,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-12",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
-        {
-          "id": 2,
-          "menge": 1,
-          "kaufdatum": "2026-08-22",
-          "ablaufdatum": "2030-08-22"
-        },
         {
           "id": 2,
           "menge": 1,
@@ -10443,15 +10456,6 @@
           "menge": 2,
           "einheit": "Stk",
           "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-09-08",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
         },
@@ -23622,7 +23626,123 @@
       "aktion": false,
       "datum": "2026-09-08",
       "zeit": 1788846030839
+    },
+    {
+      "t": "aus",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-08",
+      "zeit": 1788847001146
+    },
+    {
+      "t": "aus",
+      "aid": 60,
+      "name": "Valdobbiadene Prosecco Superiore",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-08",
+      "zeit": 1788847018306
+    },
+    {
+      "aid": 2,
+      "d": "2026-09-08",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Kiste",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Landi"
+    },
+    {
+      "aid": 60,
+      "d": "2026-09-08",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Coop"
+    },
+    {
+      "aid": 61,
+      "d": "2026-09-08",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Getränke",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 260,
+      "d": "2026-09-08",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Coop"
+    },
+    {
+      "aid": 272,
+      "d": "2026-09-08",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 273,
+      "d": "2026-09-08",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 287,
+      "d": "2026-09-08",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Backwaren & Brot",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "t": "aus",
+      "aid": 221,
+      "name": "Goldfield Gold Box Zigaretten",
+      "lager": "Küche",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-12",
+      "zeit": 1789224814751
     }
   ],
-  "aktualisiert": "2026-09-08T05:56:24.768Z"
+  "aktualisiert": "2026-09-12T16:23:01.182Z"
 }
