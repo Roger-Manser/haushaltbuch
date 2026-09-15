@@ -1705,7 +1705,7 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610128737165",
@@ -1717,15 +1717,18 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648210056_off.jpg?t=1787560748085",
       "fotoPath": "1782648210056_off.jpg",
-      "preisHistorie": [],
-      "packungen": [
+      "preisHistorie": [
         {
-          "id": 9,
+          "datum": "2026-09-14",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-07-30",
-          "ablaufdatum": "2026-08-03"
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
+      "packungen": [],
       "geoeffnet": "2026-07-31"
     },
     {
@@ -8329,7 +8332,7 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "7612300011223",
@@ -8351,16 +8354,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-14",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
-      "packungen": [
-        {
-          "id": 4,
-          "menge": 1,
-          "kaufdatum": "2026-07-31",
-          "ablaufdatum": "2026-08-21"
-        }
-      ]
+      "packungen": []
     },
     {
       "id": 227,
@@ -11188,6 +11193,13 @@
       "text": "Goldfield Gold Box Zigaretten",
       "menge": "1",
       "einheit": "Stange",
+      "checked": false
+    },
+    {
+      "id": 1789306990716,
+      "text": "backpulver",
+      "menge": "1",
+      "einheit": "Stk",
       "checked": false
     }
   ],
@@ -23742,7 +23754,66 @@
       "aktion": false,
       "datum": "2026-09-12",
       "zeit": 1789224814751
+    },
+    {
+      "aid": 221,
+      "d": "2026-09-12",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stange",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "t": "aus",
+      "aid": 43,
+      "name": "Butter",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-14",
+      "zeit": 1789400628530
+    },
+    {
+      "t": "aus",
+      "aid": 226,
+      "name": "Vorzugsbutter",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-14",
+      "zeit": 1789400637517
+    },
+    {
+      "aid": 43,
+      "d": "2026-09-14",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 226,
+      "d": "2026-09-14",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-09-12T16:23:01.182Z"
+  "aktualisiert": "2026-09-15T14:40:01.135Z"
 }
