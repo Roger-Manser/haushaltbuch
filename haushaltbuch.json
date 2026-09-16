@@ -2241,7 +2241,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Kühlschrank oben",
       "kaufort": "Migros",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Tube",
       "mindest": 0,
       "barcode": "7613036762779",
@@ -2253,15 +2253,18 @@
       "notiz": "Nutri-Score E\nPro 100g/ml: 610 kcal, Fett 66.2g, KH 1.5g, Eiweiss 1.1g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784444243120_tartare.webp?t=1787560748085",
       "fotoPath": "1784444243120_tartare.webp",
-      "preisHistorie": [],
-      "packungen": [
+      "preisHistorie": [
         {
-          "id": 6,
+          "datum": "2026-09-16",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-06-30",
-          "ablaufdatum": "2026-12-21"
+          "einheit": "Tube",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Migros"
         }
       ],
+      "packungen": [],
       "barcodes": []
     },
     {
@@ -24194,7 +24197,20 @@
       "aktion": false,
       "datum": "2026-09-16",
       "zeit": 1789569502837
+    },
+    {
+      "t": "aus",
+      "aid": 55,
+      "name": "Tartare sauce",
+      "lager": "Kühlschrank oben",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Tube",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-16",
+      "zeit": 1789569526343
     }
   ],
-  "aktualisiert": "2026-09-16T14:38:26.226Z"
+  "aktualisiert": "2026-09-16T14:38:55.938Z"
 }
