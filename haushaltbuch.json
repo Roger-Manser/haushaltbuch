@@ -1649,7 +1649,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
       "kaufort": "Migros",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610039000280",
@@ -1661,18 +1661,21 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648018150_off.jpg?t=1787560748085",
       "fotoPath": "1782648018150_off.jpg",
-      "preisHistorie": [],
+      "preisHistorie": [
+        {
+          "datum": "2026-09-16",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
       "quittungAliase": [
         "Salz"
       ],
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-09-01",
-          "ablaufdatum": ""
-        }
-      ]
+      "packungen": []
     },
     {
       "id": 42,
@@ -24178,7 +24181,20 @@
       "k": "Fleisch & Fisch",
       "aktion": false,
       "kaufort": "Lidl"
+    },
+    {
+      "t": "aus",
+      "aid": 41,
+      "name": "Tafelsalz",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-16",
+      "zeit": 1789569502837
     }
   ],
-  "aktualisiert": "2026-09-16T14:37:55.345Z"
+  "aktualisiert": "2026-09-16T14:38:26.226Z"
 }
