@@ -11314,15 +11314,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": ""
-        },
-        {
-          "datum": "2026-09-17",
-          "preis": 4.49,
-          "menge": 2,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "16:03",
@@ -11405,15 +11396,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": ""
-        },
-        {
-          "datum": "2026-09-17",
-          "preis": 4.99,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "16:14",
@@ -11546,6 +11528,170 @@
           "menge": 2,
           "kaufdatum": "2026-09-17",
           "ablaufdatum": "2026-10-04"
+        }
+      ]
+    },
+    {
+      "id": 294,
+      "name": "Backpulver",
+      "marke": "Belbake",
+      "kat": "Backwaren & Brot",
+      "lager": "Küche",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4056489546849",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 10,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-09-18",
+      "ablaufdatum": "2049-09-30",
+      "notiz": "Pro 100g/ml: 139 kcal, Fett 0.5g, KH 33.8g, Eiweiss 0.6g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1789699753617_off.jpg?t=1789699800484",
+      "fotoPath": "1789699753617_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-09-18",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "letzteEingangHeute": "04:50",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-09-18",
+          "ablaufdatum": "2049-09-30"
+        }
+      ]
+    },
+    {
+      "id": 295,
+      "name": "liquids",
+      "marke": "",
+      "kat": "Süsswaren",
+      "lager": "Küche",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4335619293922",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 70,
+      "packEinheit": "g",
+      "kaufdatum": "2026-09-18",
+      "ablaufdatum": "2027-09-16",
+      "notiz": "Pro 100g/ml: 144 kcal, Fett 0g, KH 60g, Eiweiss 0g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1789699820944_off.jpg?t=1789699866536",
+      "fotoPath": "1789699820944_off.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-09-18",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "letzteEingangHeute": "04:51",
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-09-18",
+          "ablaufdatum": "2027-09-16"
+        }
+      ]
+    },
+    {
+      "id": 296,
+      "name": "Neapolitaner Waffeln",
+      "marke": "Sondey",
+      "kat": "Süsswaren",
+      "lager": "Küche",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "20856878",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 4,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-09-18",
+      "ablaufdatum": "2026-12-31",
+      "notiz": "Vegan, Vegetarisch\nNutri-Score E\nPro 100g/ml: 512 kcal, Fett 27.5g, KH 59.4g, Eiweiss 5.2g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1789700051047_17897000429383049566695157353945.jpg?t=1789700077155",
+      "fotoPath": "1789700051047_17897000429383049566695157353945.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-09-18",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "letzteEingangHeute": "04:52",
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-09-18",
+          "ablaufdatum": "2026-12-31"
+        }
+      ]
+    },
+    {
+      "id": 297,
+      "name": "Crusty Choc",
+      "marke": "Fin Carré",
+      "kat": "Süsswaren",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "4056489904670",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 100,
+      "packEinheit": "g",
+      "kaufdatum": "2026-09-18",
+      "ablaufdatum": "2027-09-22",
+      "notiz": "Pro 100g/ml: 517 kcal, Fett 25.8g, KH 63.3g, Eiweiss 7.4g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1789700010857_17897000044778602359488623162294.jpg?t=1789700017162",
+      "fotoPath": "1789700010857_17897000044778602359488623162294.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-09-18",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        }
+      ],
+      "letzteEingangHeute": "04:53",
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-09-18",
+          "ablaufdatum": "2027-09-22"
         }
       ]
     }
@@ -24878,34 +25024,12 @@
       "kaufort": "Lidl"
     },
     {
-      "aid": 288,
-      "d": "2026-09-17",
-      "m": 2,
-      "p": 4.49,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Milchprodukte",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
       "aid": 289,
       "d": "2026-09-17",
       "m": 1,
       "p": 0,
       "t": "ein",
       "e": "Stk",
-      "k": "Fleisch & Fisch",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
-      "aid": 290,
-      "d": "2026-09-17",
-      "m": 1,
-      "p": 4.99,
-      "t": "ein",
-      "e": "Pkg",
       "k": "Fleisch & Fisch",
       "aktion": false,
       "kaufort": ""
@@ -24953,7 +25077,81 @@
       "k": "Gewürze & Saucen",
       "aktion": false,
       "kaufort": "Lidl"
+    },
+    {
+      "aid": 288,
+      "d": "2026-09-17",
+      "m": 2,
+      "p": 4.49,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 290,
+      "d": "2026-09-17",
+      "m": 1,
+      "p": 4.99,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "t": "ein",
+      "aid": 294,
+      "name": "Backpulver",
+      "lager": "Küche",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-18",
+      "zeit": 1789699800484
+    },
+    {
+      "t": "ein",
+      "aid": 295,
+      "name": "liquids",
+      "lager": "Küche",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-18",
+      "zeit": 1789699866538
+    },
+    {
+      "t": "ein",
+      "aid": 296,
+      "name": "Neapolitaner Waffeln",
+      "lager": "Küche",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-18",
+      "zeit": 1789699947231
+    },
+    {
+      "t": "ein",
+      "aid": 297,
+      "name": "Crusty Choc",
+      "lager": "Kühlschrank oben",
+      "kat": "Süsswaren",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-18",
+      "zeit": 1789700017163
     }
   ],
-  "aktualisiert": "2026-09-17T14:30:58.236Z"
+  "aktualisiert": "2026-09-18T02:54:47.222Z"
 }
