@@ -6,15 +6,15 @@
       "marke": "Landi",
       "kat": "Genussmittel",
       "lager": "Schlof",
-      "menge": 2,
+      "menge": 3,
       "einheit": "Kiste",
       "mindest": 2,
       "barcode": "7611703611962",
       "preis": 25.2,
       "packMenge": 6,
       "packEinheit": "Flasche",
-      "kaufdatum": "2026-08-19",
-      "ablaufdatum": "",
+      "kaufdatum": "2026-09-19",
+      "ablaufdatum": "2052-09-30",
       "notiz": "DE - Nährwert und Zutatenverzeichnis Zutaten: Trauben, rektifiziertes Traubenmostkonzentrat, Saccharose, Säureregulatoren: Apfelsäure, Milchsäure, Weinsäure, Stabilisatoren: Citronensäure, Hefe-Mannoproteine zur Weinsteinstabilisierung, Kaliumpolyaspartat, Metaweinsäure, Antioxidantien: Kaliumsorbat, L-Ascorbinsäure, Sulfite, Gase und Packgase: unter Schutzatmosphäre abgefüllt\n 100 ml enthalten durchschnittlich Energie Fett ..davon gesättigte Fettsäuren Kohlenhydrate ..davon Zucker Eiweiss Salz 307 kJ (73 kcal) 0 g 0 g 1.3 g 0.5 g 0 g 0 g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781961271197_17819612557295906724604013972.jpg?t=1787560748085",
       "fotoPath": "1781961271197_17819612557295906724604013972.jpg",
@@ -141,14 +141,38 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-09-19",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-09-19",
+          "preis": 25.2,
+          "menge": 2,
+          "einheit": "Kiste",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
       "packungen": [
         {
           "id": 6,
-          "menge": 2,
+          "menge": 1,
           "kaufdatum": "2026-08-19",
           "ablaufdatum": ""
+        },
+        {
+          "id": 2,
+          "menge": 2,
+          "kaufdatum": "2026-09-19",
+          "ablaufdatum": "2052-09-30"
         }
       ],
       "kaufort": "Landi",
@@ -11692,6 +11716,53 @@
           "menge": 1,
           "kaufdatum": "2026-09-18",
           "ablaufdatum": "2027-09-22"
+        }
+      ]
+    },
+    {
+      "id": 298,
+      "name": "Weisswein Lemanic",
+      "marke": "",
+      "kat": "Genussmittel",
+      "lager": "Schlof",
+      "kaufort": "Landi",
+      "menge": 2,
+      "einheit": "Kiste",
+      "mindest": 0,
+      "barcode": "7611330258981",
+      "barcodes": [],
+      "preis": 27,
+      "packMenge": 6,
+      "packEinheit": "Flasche",
+      "kaufdatum": "2026-09-19",
+      "ablaufdatum": "2049-09-30",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1789810025163_17898100158268291851405590605948.jpg?t=1789810117075",
+      "fotoPath": "1789810025163_17898100158268291851405590605948.jpg",
+      "preisHistorie": [
+        {
+          "datum": "2026-09-19",
+          "preis": 27,
+          "menge": 2,
+          "einheit": "Kiste",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
+        }
+      ],
+      "letzteEingangHeute": "11:28",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-09-19",
+          "ablaufdatum": "2049-09-30"
+        },
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-09-19",
+          "ablaufdatum": ""
         }
       ]
     }
@@ -25151,7 +25222,90 @@
       "aktion": false,
       "datum": "2026-09-18",
       "zeit": 1789700017163
+    },
+    {
+      "aid": 294,
+      "d": "2026-09-18",
+      "m": 1,
+      "p": 0,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Backwaren & Brot",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 295,
+      "d": "2026-09-18",
+      "m": 1,
+      "p": 0,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Süsswaren",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 296,
+      "d": "2026-09-18",
+      "m": 1,
+      "p": 0,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Süsswaren",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 297,
+      "d": "2026-09-18",
+      "m": 1,
+      "p": 0,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Süsswaren",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "t": "ein",
+      "aid": 298,
+      "name": "Weisswein Lemanic",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 54,
+      "aktion": false,
+      "datum": "2026-09-19",
+      "zeit": 1789810117077
+    },
+    {
+      "t": "aus",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-19",
+      "zeit": 1789810127526
+    },
+    {
+      "t": "ein",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 2,
+      "einheit": "Kiste",
+      "preis": 25.2,
+      "aktion": false,
+      "datum": "2026-09-19",
+      "zeit": 1789810158498
     }
   ],
-  "aktualisiert": "2026-09-18T02:54:47.222Z"
+  "aktualisiert": "2026-09-19T09:30:20.970Z"
 }
