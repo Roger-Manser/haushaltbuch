@@ -9065,15 +9065,6 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": ""
-        },
-        {
-          "datum": "2026-09-05",
-          "preis": 1.69,
-          "menge": 0,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "packungen": [],
@@ -11172,15 +11163,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": ""
-        },
-        {
-          "datum": "2026-09-05",
-          "preis": 4.99,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "09:35",
@@ -24168,17 +24150,6 @@
       "kaufort": "Lidl"
     },
     {
-      "aid": 283,
-      "d": "2026-09-05",
-      "m": 1,
-      "p": 0,
-      "t": "ein",
-      "e": "Pkg",
-      "k": "Tiefkühl",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
       "aid": 284,
       "d": "2026-09-05",
       "m": 1,
@@ -25414,7 +25385,40 @@
       "aktion": false,
       "datum": "2026-09-20",
       "zeit": 1789896181929
+    },
+    {
+      "aid": 41,
+      "d": "2026-09-20",
+      "m": 1,
+      "p": 0,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "Migros"
+    },
+    {
+      "aid": 43,
+      "d": "2026-09-20",
+      "m": 1,
+      "p": 2.45,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Migros"
+    },
+    {
+      "aid": 283,
+      "d": "2026-09-05",
+      "m": 1,
+      "p": 0,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Tiefkühl",
+      "aktion": false,
+      "kaufort": ""
     }
   ],
-  "aktualisiert": "2026-09-20T09:24:13.783Z"
+  "aktualisiert": "2026-09-20T09:27:58.021Z"
 }
