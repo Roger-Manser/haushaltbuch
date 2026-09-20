@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.89 — Gesamtpreis pro Gruppe korrigiert (nutzt preisHistorie) -->
+<!-- HAUSHALTBUCH v22.91 — Auto-Save mit intelligenter MHD-Logik (nach Kategorie) -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -539,10 +539,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.89';
+const APP_VERSION='22.91';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.91',d:'20.09.2026',items:['🧠 INTELLIGENTE MHD-Logik nach Kategorie!','Konserven & Trockenware, Reinigung, Gewürze: MHD leer (nicht relevant)','Fleisch, Milch, Gemüse, Tiefkühl, Backwaren: MHD = today + 30 Tage','✓ Artikel ohne Ablaufdatum sind schneller übersichtlich','Benutzer kann MHD immer noch im Dialog manuell setzen']},
+  {v:'22.90',d:'20.09.2026',items:['🤖 AUTO-SAVE für Auto-Matched Artikel!','Grüne Artikel (im Lager) werden sofort ohne Dialog gebucht','Button zeigt "Auto ✓" statt "Buchen" bei Matches','Default-MHD: today + 30 Tage (sinnvoll für Lebensmittel)','Neuer Quittungs-Name wird als Alias gespeichert → Zukünftige Matches besser!','⚡ Workflow MASSIV beschleunigt für wiederkehrende Einkäufe!']},
   {v:'22.89',d:'20.09.2026',items:['🔧 GEFIXT: Gesamtpreis nutzt preisHistorie!','Bug: Hat aktuelle menge statt eingekaufte Menge verwendet','Fix: Findet korrekt den preisHistorie-Eintrag (Datum + Ort + typ=ein)','Nutzt: preis_historisch × menge_historisch = KORREKT!']},
   {v:'22.88',d:'20.09.2026',items:['💰 Gesamtpreis pro Gruppe in "zuletzt eingekauft"!','Gruppen-Header zeigt: 📅 Datum · 🏪 Ort (X Artikel · CHF 45.90)','Summe = Preis × Menge für alle Artikel der Gruppe','Schneller Überblick: Wie viel habe ich bei diesem Einkauf ausgegeben?']},
   {v:'22.87',d:'20.09.2026',items:['✨ Gruppierung im "zuletzt eingekauft" Filter!','Artikel werden nach Datum + Einkautsort gruppiert','Visuelle Gruppen-Header zeigen: 📅 Datum · 🏪 Einkautsort (X Artikel)','Übersichtlichere Darstellung von Einkäufen!']},
@@ -2090,6 +2092,14 @@ function showDet(id){
   const extraBcCount=Array.isArray(a.barcodes)?a.barcodes.filter(Boolean).length:0;
   const extraBcHint=extraBcCount>0?' <span style="font-size:11px;color:var(--ac)">+'+extraBcCount+' weiter'+(extraBcCount===1?'er':'e')+'</span>':'';
   const codeDisplay=(a.barcode?esc(a.barcode):(a.ownCode?esc(a.ownCode)+' <span style="font-size:11px;color:var(--t2)">(eigener Code)</span>':'—'))+extraBcHint;
+
+  // MHD-Checkbox: "Von MHD-Pflicht befreien"
+  const keinMHDCheckbox=a.ablaufdatum?
+    '<label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);font-size:13px">'+
+      '<input type="checkbox" id="det-kein-mhd" '+(a.keinMHD?'checked':'')+' style="width:16px;height:16px;accent-color:var(--ac);cursor:pointer;flex-shrink:0" onchange="toggleKeinMHD('+id+')"/>'+
+      '<span style="flex:1">Von MHD-Pflicht befreien (z.B. Sirup, Essig)</span>'+
+    '</label>':'';
+
   // Rezepte die diesen Artikel verwenden
   const artName=a.name.toLowerCase();
   const rzMit=(S.rz||[]).filter(r=>(r.zutaten||[]).some(z=>{
@@ -2105,7 +2115,7 @@ function showDet(id){
       return '<div class="ir" style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showRezeptDetail(this,'+id+')" data-r=\''+rJson+'\'>'+thumb+'<div><div style="font-size:13px;font-weight:500">'+esc(r.name)+'</div><div style="font-size:11px;color:var(--t2)">'+r.port+' Port. · '+r.min+' min</div></div></div>';
     }).join('')+'</div>':
     '';
-  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span>'+(a.ablaufdatum?'<span style="flex:1;text-align:center">'+expBadgeKurz(a)+'</span><span class="iv" style="flex:none">'+fmtDateCH(a.ablaufdatum)+'</span>':'<span class="iv">—</span>')+'</div>'+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'" onclick="bestandManuellDialog('+id+')" style="cursor:pointer;text-decoration:underline dotted" title="Antippen zum direkten Eingeben">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+(a.oeffnungsdatum?'<div style="margin-top:14px;padding:10px 12px;background:var(--dl);border-radius:var(--rs);font-size:12px;color:var(--dg)">📂 Geöffnet seit '+fmtDateCH(a.oeffnungsdatum)+'</div>':'')+aliasHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button><button class="acb" style="color:var(--ac)" onclick="openSplitDialog('+id+')">✂ Trennen'+(a.mergeSources&&a.mergeSources.length?' ('+a.mergeSources.length+')':'')+'</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+
+  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span>'+(a.ablaufdatum?'<span style="flex:1;text-align:center">'+expBadgeKurz(a)+'</span><span class="iv" style="flex:none">'+fmtDateCH(a.ablaufdatum)+'</span>':'<span class="iv">—</span>')+'</div>'+keinMHDCheckbox+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'" onclick="bestandManuellDialog('+id+')" style="cursor:pointer;text-decoration:underline dotted" title="Antippen zum direkten Eingeben">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+(a.oeffnungsdatum?'<div style="margin-top:14px;padding:10px 12px;background:var(--dl);border-radius:var(--rs);font-size:12px;color:var(--dg)">📂 Geöffnet seit '+fmtDateCH(a.oeffnungsdatum)+'</div>':'')+aliasHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button><button class="acb" style="color:var(--ac)" onclick="openSplitDialog('+id+')">✂ Trennen'+(a.mergeSources&&a.mergeSources.length?' ('+a.mergeSources.length+')':'')+'</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+
     (a.ablaufdatum?'<div class="acr" style="margin-top:8px"><button class="acb" onclick="toggleAblaufIgnoriert('+id+')" style="'+(a.ablaufIgnoriert?'color:var(--ac)':'')+'">'+(a.ablaufIgnoriert?'↑ Wieder einreihen (Ablauf aktiv)':'↓ Bei Ablauf ans Ende setzen')+'</button></div>':'')+
     (opt.fwAnbruch?'<div class="acr" style="margin-top:8px"><button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen (abgelaufen)</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>':'<div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>')+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
   const heroEl=document.getElementById('dh-hero-img');
@@ -2696,6 +2706,13 @@ function toggleAblaufIgnoriert(id){
   a.ablaufIgnoriert=!a.ablaufIgnoriert;
   saveL();
   toast(a.ablaufIgnoriert?'↓ Wird bei Ablauf-Sortierung ans Ende gesetzt':'↑ Wieder normal eingereiht');
+  showDet(id);
+}
+function toggleKeinMHD(id){
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  a.keinMHD=!a.keinMHD;
+  saveL();
+  toast(a.keinMHD?'✓ Von MHD-Pflicht befreit':'✓ MHD-Überwachung wieder aktiv');
   showDet(id);
 }
 function openSplitDialog(id){
@@ -8151,10 +8168,12 @@ function renderQuittungUebersicht(datum){
         '<span style="color:var(--ok);font-size:20px">✓</span>'+
       '</div>';
     }
+    // Auto-Save für Artikel mit Lager-Match
+    const btnOnClick=it.lagerArtikelId?'autoConfirmQuittungArtikel('+i+')':'startQuittungArtikel('+i+')';
     return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd)">'+
       '<div><div style="font-size:14px;font-weight:500">'+esc(it.name)+badge+'</div>'+
       '<div style="font-size:12px;color:var(--t2)">'+it.menge+'× CHF '+it.preis.toFixed(2)+'</div></div>'+
-      '<button onclick="startQuittungArtikel('+i+')" style="background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:7px 14px;font-size:13px;cursor:pointer">Buchen</button>'+
+      '<button onclick="'+btnOnClick+'" style="background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:7px 14px;font-size:13px;cursor:pointer">'+(it.lagerArtikelId?'Auto ✓':'Buchen')+'</button>'+
     '</div>';
   }).join('');
   h+='<button onclick="closeQuittung()" style="width:100%;margin-top:14px;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Fertig</button>';
@@ -8415,6 +8434,81 @@ function saveFullArtikelDialog(){
   toast('✓ '+name+' erstellt');
   // Zurück zur Quittung
   renderQuittungUebersicht(todayISO());
+}
+
+function autoConfirmQuittungArtikel(idx){
+  const it=quittungItems[idx];
+  const body=document.getElementById('quittung-body');
+  const datum=body.dataset.datum||todayISO();
+
+  if(!it.lagerArtikelId){
+    console.warn('❌ Auto-Save: kein lagerArtikelId für Artikel '+it.name);
+    startQuittungArtikel(idx);
+    return;
+  }
+
+  // Finde den bestehenden Artikel
+  const existing=S.a.find(a=>a.id===parseInt(it.lagerArtikelId));
+  if(!existing){
+    console.warn('❌ Auto-Save: Artikel mit ID '+it.lagerArtikelId+' nicht gefunden');
+    startQuittungArtikel(idx);
+    return;
+  }
+
+  // Auto-Save durchführen
+  const menge=it.menge||1;
+  const einheit=it.einheit||'Stk';
+  const preis=it.preis||0;
+  const kaufort=quittungGeschaeft||'';
+
+  // Default Expiry: heute + 30 Tage
+  // MHD-Intelligenz: Kategorien, bei denen MHD NICHT relevant ist
+  // PLUS: Artikel-spezifisches Flag (z.B. Sirup, Essig, etc.)
+  const ohneAblaufdatum=['Konserven & Trockenware','Reinigung & Pflege','Gewürze & Saucen'];
+  const kat=(existing.kat||'').toLowerCase();
+  const brauchAblaufdatum=!existing.keinMHD && !ohneAblaufdatum.some(k=>kat.includes(k.toLowerCase()));
+
+  // Ablaufdatum nur bei relevanten Kategorien setzen
+  let ablaufdatum='';
+  if(brauchAblaufdatum){
+    const expiryDate=new Date();
+    expiryDate.setDate(expiryDate.getDate()+30);
+    ablaufdatum=expiryDate.getFullYear()+'-'+String(expiryDate.getMonth()+1).padStart(2,'0')+'-'+String(expiryDate.getDate()).padStart(2,'0');
+  }
+
+  console.log('🤖 Auto-Save: '+it.name);
+  console.log('  menge: '+menge+' '+einheit+' @ CHF '+preis);
+  console.log('  kategorie: '+existing.kat+' → ablaufdatum: '+(ablaufdatum||'(nicht relevant)'));
+
+  // BUCHEN: Packung + PreisHistorie + Quittung-Alias
+  ensurePackungen(existing);
+  const packung={id:newPackId(),menge,kaufdatum:datum,ablaufdatum:ablaufdatum||''};
+  existing.packungen.push(packung);
+  syncMenge(existing);
+  existing.kaufdatum=datum;
+  existing.kaufort=kaufort||existing.kaufort;
+
+  if(!existing.preisHistorie)existing.preisHistorie=[];
+  const ph={datum,preis,menge,einheit:existing.einheit||'Stk',typ:'ein',aktion:false,kaufort:kaufort||''};
+  existing.preisHistorie.push(ph);
+
+  if(preis>0)existing.preis=preis;
+
+  // Speichere auch den Quittungs-Original-Namen als Alias (falls noch nicht vorhanden)
+  if(!existing.quittungAliase)existing.quittungAliase=[];
+  if(it.name && !existing.quittungAliase.includes(it.name) && it.name!==existing.name){
+    existing.quittungAliase.push(it.name);
+  }
+
+  saveL();
+  addLogEntry('ein',existing.id,existing.name,existing.lager,existing.kat,menge,einheit,preis,false,true);
+
+  // Markiere als erledigt
+  quittungItems[idx]._done=true;
+
+  // Stilles Update: nur toast + re-render (kein Dialog)
+  toast('✓ '+esc(it.name)+' auto-gebucht');
+  renderQuittungUebersicht(datum);
 }
 
 function startQuittungArtikel(idx){
