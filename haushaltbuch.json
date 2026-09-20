@@ -11722,7 +11722,7 @@
       "mindest": 0,
       "barcode": "4056489904670",
       "barcodes": [],
-      "preis": 0,
+      "preis": 0.85,
       "packMenge": 100,
       "packEinheit": "g",
       "kaufdatum": "2026-09-18",
@@ -11733,7 +11733,7 @@
       "preisHistorie": [
         {
           "datum": "2026-09-18",
-          "preis": 0,
+          "preis": 0.85,
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
@@ -25281,7 +25281,7 @@
       "aid": 297,
       "d": "2026-09-18",
       "m": 1,
-      "p": 0,
+      "p": 0.85,
       "t": "ein",
       "e": "Pkg",
       "k": "Süsswaren",
@@ -25420,5 +25420,5 @@
       "kaufort": ""
     }
   ],
-  "aktualisiert": "2026-09-20T09:35:11.248Z"
+  "aktualisiert": "2026-09-20T10:06:45.031Z"
 }
