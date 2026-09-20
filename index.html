@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.86 — Kaufort in Artikelübersicht -->
+<!-- HAUSHALTBUCH v22.87 — Gruppierung nach Datum + Einkaufsort im "zuletzt eingekauft" Filter -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -1839,7 +1839,30 @@ function renderLager(){
   }else if(sortMode==='bestand'){
     fil=[...fil].sort((a,b)=>(a.menge-a.mindest)-(b.menge-b.mindest));
   }
-  const rows=fil.map(a=>arRow(a)).join('');
+
+  // Gruppierung für sortMode='neu': nach Datum + Einkaufsort
+  let rows='';
+  if(sortMode==='neu'){
+    const gruppen={};
+    fil.forEach(a=>{
+      const datum=a.kaufdatum||'???';
+      const ort=a.kaufort||'unbekannt';
+      const key=datum+'|'+ort;
+      if(!gruppen[key])gruppen[key]={datum,ort,artikel:[]};
+      gruppen[key].artikel.push(a);
+    });
+    // Gruppen in sortierten Reihenfolge rendern
+    Object.values(gruppen).forEach(g=>{
+      const datumStr=g.datum==='???'?'Datum unbekannt':fmtDateCH(g.datum);
+      rows+='<div style="padding:12px 14px;background:var(--bg2);border-bottom:1px solid var(--bd);font-size:13px;font-weight:600;color:var(--t2);display:flex;justify-content:space-between;align-items:center">'+
+        '<span>📅 '+esc(datumStr)+' · 🏪 '+esc(g.ort)+'</span>'+
+        '<span style="color:var(--t3);font-size:12px;font-weight:400">('+g.artikel.length+' Artikel)'+'</span>'+
+        '</div>'+
+        g.artikel.map(a=>arRow(a)).join('');
+    });
+  }else{
+    rows=fil.map(a=>arRow(a)).join('');
+  }
   list.innerHTML=renderAblaufDashboard()+'<div class="lgi" style="border-radius:var(--r)">'+rows+'</div>';
   nav();
 }
