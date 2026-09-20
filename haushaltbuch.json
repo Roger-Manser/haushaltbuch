@@ -1689,15 +1689,15 @@
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
       "kaufort": "Migros",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610039000280",
       "preis": 0,
       "packMenge": 500,
       "packEinheit": "g",
-      "kaufdatum": "2026-09-01",
-      "ablaufdatum": "",
+      "kaufdatum": "2026-09-20",
+      "ablaufdatum": "2049-09-30",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648018150_off.jpg?t=1787560748085",
       "fotoPath": "1782648018150_off.jpg",
@@ -1710,12 +1710,28 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-09-20",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
         }
       ],
       "quittungAliase": [
         "Salz"
       ],
-      "packungen": []
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-09-20",
+          "ablaufdatum": "2049-09-30"
+        }
+      ]
     },
     {
       "id": 42,
@@ -1752,16 +1768,16 @@
       "marke": "BO Butter",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "kaufort": "Lidl",
-      "menge": 0,
+      "kaufort": "Migros",
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610128737165",
       "preis": 2.45,
       "packMenge": 250,
       "packEinheit": "g",
-      "kaufdatum": "2026-07-30",
-      "ablaufdatum": "2026-08-03",
+      "kaufdatum": "2026-09-20",
+      "ablaufdatum": "2026-09-20",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782648210056_off.jpg?t=1787560748085",
       "fotoPath": "1782648210056_off.jpg",
@@ -1774,9 +1790,25 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-09-20",
+          "preis": 2.45,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
         }
       ],
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-09-20",
+          "ablaufdatum": "2026-09-20"
+        }
+      ],
       "geoeffnet": "2026-07-31"
     },
     {
@@ -11849,8 +11881,8 @@
   ],
   "einkauf": [
     {
-      "id": 1788457825283,
-      "text": "Russischer Salat",
+      "id": 1789896198590,
+      "text": "Birchermüsli",
       "menge": "1",
       "einheit": "Stk",
       "checked": false
@@ -25356,7 +25388,33 @@
       "k": "Genussmittel",
       "aktion": false,
       "kaufort": "Landi"
+    },
+    {
+      "t": "ein",
+      "aid": 41,
+      "name": "Tafelsalz",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-20",
+      "zeit": 1789896168701
+    },
+    {
+      "t": "ein",
+      "aid": 43,
+      "name": "Butter",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.45,
+      "aktion": false,
+      "datum": "2026-09-20",
+      "zeit": 1789896181929
     }
   ],
-  "aktualisiert": "2026-09-20T09:20:09.230Z"
+  "aktualisiert": "2026-09-20T09:24:13.783Z"
 }
