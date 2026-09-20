@@ -539,10 +539,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.85';
+const APP_VERSION='22.87';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.87',d:'20.09.2026',items:['✨ Gruppierung im "zuletzt eingekauft" Filter!','Artikel werden nach Datum + Einkautsort gruppiert','Visuelle Gruppen-Header zeigen: 📅 Datum · 🏪 Einkautsort (X Artikel)','Übersichtlichere Darstellung von Einkäufen!']},
+  {v:'22.86',d:'20.09.2026',items:['➕ Kaufort in der Artikelübersicht!','Einkautsort wird in der Meta-Zeile angezeigt','Zeigt: Lager · Marke · Packung · Preis · Kaufdatum · Kaufort','Schneller Überblick: Wo wurde das Produkt gekauft?']},
   {v:'22.85',d:'24.08.2026',items:['🎯 KOMPLETT GELÖST: syncMenge() beim App-Start!','Problem: loadL() synchronisierte Bestände nicht beim App-Start','Fix: syncMenge(a) wird JETZT auch beim localStorage-Laden aufgerufen','Bestand-Diskrepanz Handy ↔ Web ist JETZT vollständig behoben! ✅✅✅']},
   {v:'22.49',d:'20.08.2026',items:['🧹 AUFGERÄUMT: Alle Debug-Logs entfernt!','parseReceiptPosition(), KORREKTUR-PASS, AUTO-MATCHING, etc.','toast() Funktion gereinigt','Code ist jetzt sauber und Production-ready! ✨']},
   {v:'22.48',d:'20.08.2026',items:['🎯 FINAL-FIX: preis_brutto Return-Statement GEFIXT!','Problem: Return gab p.preis_brutto (Original 5.2) statt bruttoPreis (korrigiert 1.30)!','Fix: preis_brutto: bruttoPreis statt preis_brutto: p.preis_brutto || nettoPreis','JETZT: Preis wird KORREKT als CHF 1.30 gespeichert! ✅✅✅']},
