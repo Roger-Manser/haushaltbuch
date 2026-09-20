@@ -4716,16 +4716,16 @@
       "kat": "Gemüse & Früchte",
       "lager": "Schlof",
       "kaufort": "Migros",
-      "menge": 1,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7613269197621",
       "barcodes": [],
-      "preis": 0,
+      "preis": 2.6,
       "packMenge": 850,
       "packEinheit": "g",
-      "kaufdatum": "2026-07-12",
-      "ablaufdatum": "",
+      "kaufdatum": "2026-09-20",
+      "ablaufdatum": "2026-10-20",
       "notiz": "Nutri-Score B\nPro 100g/ml: 57 kcal, Fett 0.5g, KH 9.3g, Eiweiss 2.6g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783864458153_off.jpg?t=1787560748085",
       "fotoPath": "1783864458153_off.jpg",
@@ -4747,6 +4747,15 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-09-20",
+          "preis": 2.6,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
         }
       ],
       "packungen": [
@@ -4755,7 +4764,16 @@
           "menge": 1,
           "kaufdatum": "2026-07-12",
           "ablaufdatum": ""
+        },
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-09-20",
+          "ablaufdatum": "2026-10-20"
         }
+      ],
+      "quittungAliase": [
+        "MClass Russischer Salat"
       ]
     },
     {
@@ -11797,6 +11815,207 @@
           "ablaufdatum": ""
         }
       ]
+    },
+    {
+      "id": 299,
+      "name": "Krustenkranz dunkel",
+      "marke": "",
+      "kat": "Backwaren & Brot",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "",
+      "preis": 3.2,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-09-20",
+      "ablaufdatum": "2026-09-27",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-09-20",
+          "ablaufdatum": "2026-09-27"
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-09-20",
+          "preis": 3.2,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "letzteEingangHeute": "12:09"
+    },
+    {
+      "id": 300,
+      "name": "MClass Joghurt Mokka",
+      "marke": "",
+      "kat": "Milchprodukte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Migros",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "",
+      "preis": 0.55,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-09-20",
+      "ablaufdatum": "2026-09-27",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 2,
+          "kaufdatum": "2026-09-20",
+          "ablaufdatum": "2026-09-27"
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-09-20",
+          "preis": 0.55,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "letzteEingangHeute": "12:10"
+    },
+    {
+      "id": 301,
+      "name": "MClass Jog. Kokos/Choc",
+      "marke": "",
+      "kat": "Milchprodukte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Migros",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "",
+      "preis": 0.7,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-09-20",
+      "ablaufdatum": "2026-09-27",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 2,
+          "kaufdatum": "2026-09-20",
+          "ablaufdatum": "2026-09-27"
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-09-20",
+          "preis": 0.7,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "letzteEingangHeute": "12:10"
+    },
+    {
+      "id": 302,
+      "name": "Excellence Vanille",
+      "marke": "",
+      "kat": "Süsswaren",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Migros",
+      "menge": 4,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "",
+      "preis": 1.05,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-09-20",
+      "ablaufdatum": "2026-09-27",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 4,
+          "kaufdatum": "2026-09-20",
+          "ablaufdatum": "2026-09-27"
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-09-20",
+          "preis": 1.05,
+          "menge": 4,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "letzteEingangHeute": "12:10"
+    },
+    {
+      "id": 303,
+      "name": "MClass Russi. Salat",
+      "marke": "",
+      "kat": "Konserven & Trockenware",
+      "lager": "Schlof",
+      "kaufort": "Migros",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "",
+      "preis": 1.7,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-09-20",
+      "ablaufdatum": "2026-09-20",
+      "notiz": "",
+      "foto": "",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 6,
+          "menge": 2,
+          "kaufdatum": "2026-09-20",
+          "ablaufdatum": "2026-09-20"
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-09-20",
+          "preis": 1.7,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "letzteEingangHeute": "12:11",
+      "barcodes": []
     }
   ],
   "lagerorte": [
@@ -25418,7 +25637,151 @@
       "k": "Tiefkühl",
       "aktion": false,
       "kaufort": ""
+    },
+    {
+      "t": "ein",
+      "aid": 299,
+      "name": "Krustenkranz dunkel",
+      "lager": "Kühlschrank oben",
+      "kat": "Backwaren & Brot",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 3.2,
+      "aktion": false,
+      "datum": "2026-09-20",
+      "zeit": 1789898996134
+    },
+    {
+      "t": "ein",
+      "aid": 300,
+      "name": "MClass Joghurt Mokka",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 0.55,
+      "aktion": false,
+      "datum": "2026-09-20",
+      "zeit": 1789899007818
+    },
+    {
+      "t": "ein",
+      "aid": 301,
+      "name": "MClass Jog. Kokos/Choc",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 0.7,
+      "aktion": false,
+      "datum": "2026-09-20",
+      "zeit": 1789899015248
+    },
+    {
+      "t": "ein",
+      "aid": 302,
+      "name": "Excellence Vanille",
+      "lager": "Kühlschrank oben",
+      "kat": "Süsswaren",
+      "menge": 4,
+      "einheit": "Stk",
+      "preis": 1.05,
+      "aktion": false,
+      "datum": "2026-09-20",
+      "zeit": 1789899022082
+    },
+    {
+      "t": "ein",
+      "aid": 121,
+      "name": "Russischer Salat",
+      "lager": "Schlof",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.6,
+      "aktion": false,
+      "datum": "2026-09-20",
+      "zeit": 1789899024596
+    },
+    {
+      "t": "ein",
+      "aid": 303,
+      "name": "MClass Russi. Salat",
+      "lager": "Kühlschrank oben",
+      "kat": "Konserven & Trockenware",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 1.7,
+      "aktion": false,
+      "datum": "2026-09-20",
+      "zeit": 1789899062464
+    },
+    {
+      "aid": 121,
+      "d": "2026-09-20",
+      "m": 1,
+      "p": 2.6,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Migros"
+    },
+    {
+      "aid": 299,
+      "d": "2026-09-20",
+      "m": 1,
+      "p": 3.2,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Backwaren & Brot",
+      "aktion": false,
+      "kaufort": "Migros"
+    },
+    {
+      "aid": 300,
+      "d": "2026-09-20",
+      "m": 2,
+      "p": 0.55,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Migros"
+    },
+    {
+      "aid": 301,
+      "d": "2026-09-20",
+      "m": 2,
+      "p": 0.7,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Migros"
+    },
+    {
+      "aid": 302,
+      "d": "2026-09-20",
+      "m": 4,
+      "p": 1.05,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Süsswaren",
+      "aktion": false,
+      "kaufort": "Migros"
+    },
+    {
+      "aid": 303,
+      "d": "2026-09-20",
+      "m": 2,
+      "p": 1.7,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Konserven & Trockenware",
+      "aktion": false,
+      "kaufort": "Migros"
     }
   ],
-  "aktualisiert": "2026-09-20T10:06:45.031Z"
+  "aktualisiert": "2026-09-20T10:19:04.182Z"
 }
