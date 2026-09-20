@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.91 — Auto-Save mit intelligenter MHD-Logik (nach Kategorie) -->
+<!-- HAUSHALTBUCH v22.92 — Kein MHD Button bei Quittungsscan -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -539,10 +539,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.91';
+const APP_VERSION='22.92';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.92',d:'20.09.2026',items:['✓ "Kein MHD" Button beim Quittungsscan!','Quittungs-Artikel-Dialog hat jetzt Button "Kein MHD"','Mit Klick wird das Ablaufdatum gelöscht (leergelassen)','Button wird grau, um Bestätigung zu zeigen','Perfekt für: Sirup, Essig, Gewürze, Konserven ohne Ablauf']},
   {v:'22.91',d:'20.09.2026',items:['🧠 INTELLIGENTE MHD-Logik nach Kategorie!','Konserven & Trockenware, Reinigung, Gewürze: MHD leer (nicht relevant)','Fleisch, Milch, Gemüse, Tiefkühl, Backwaren: MHD = today + 30 Tage','✓ Artikel ohne Ablaufdatum sind schneller übersichtlich','Benutzer kann MHD immer noch im Dialog manuell setzen']},
   {v:'22.90',d:'20.09.2026',items:['🤖 AUTO-SAVE für Auto-Matched Artikel!','Grüne Artikel (im Lager) werden sofort ohne Dialog gebucht','Button zeigt "Auto ✓" statt "Buchen" bei Matches','Default-MHD: today + 30 Tage (sinnvoll für Lebensmittel)','Neuer Quittungs-Name wird als Alias gespeichert → Zukünftige Matches besser!','⚡ Workflow MASSIV beschleunigt für wiederkehrende Einkäufe!']},
   {v:'22.89',d:'20.09.2026',items:['🔧 GEFIXT: Gesamtpreis nutzt preisHistorie!','Bug: Hat aktuelle menge statt eingekaufte Menge verwendet','Fix: Findet korrekt den preisHistorie-Eintrag (Datum + Ort + typ=ein)','Nutzt: preis_historisch × menge_historisch = KORREKT!']},
@@ -8577,7 +8578,8 @@ function startQuittungArtikel(idx){
   const buttonLabel=duplikatWarnung?'Duplikat ignorieren':'Überspringen';
   h+='<div style="display:flex;gap:8px;margin-top:14px">'+
     '<button onclick="renderQuittungUebersicht(\''+esc(datum)+'\')" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">'+buttonLabel+'</button>'+
-    (!existing?'<button onclick="openFullArtikelDialog(\''+esc(it.name)+'\',,'+it.preis+',\'' +esc(it.kat||'Diverses')+'\')" style="flex:1;padding:12px;border:1px solid var(--am);background:var(--al);border-radius:var(--rs);font-size:13px;cursor:pointer;color:var(--ac)">⚙ Erweitert</button>':'')+ 
+    (!existing?'<button onclick="openFullArtikelDialog(\''+esc(it.name)+'\',,'+it.preis+',\'' +esc(it.kat||'Diverses')+'\')" style="flex:1;padding:12px;border:1px solid var(--am);background:var(--al);border-radius:var(--rs);font-size:13px;cursor:pointer;color:var(--ac)">⚙ Erweitert</button>':'')+
+    (showMHD?'<button onclick="document.getElementById(\'qq-ad\').value=\'\';this.style.opacity=\'0.5\'" style="flex:0.7;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:13px;cursor:pointer;color:var(--t2)">Kein MHD</button>':'')+
     '<button onclick="confirmQuittungArtikel('+idx+','+!!existing+(existing?','+existing.id:',null')+')" style="flex:'+(existing?'2':'1')+';padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer">Eingang buchen</button>'+
   '</div>';
 
