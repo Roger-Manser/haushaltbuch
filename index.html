@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v20.1-FINAL-CACHE-BUST-99999 cache-bust-9999 -->
+<!-- HAUSHALTBUCH v22.86 — Kaufort in Artikelübersicht -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -1893,7 +1893,7 @@ function arRow(a){
   const bc=a.menge===0?'lo':a.menge<a.mindest?'wn':'ok';
   const th=a.foto?'<div class="at has-photo" data-thumb-id="'+a.id+'"><img src="'+esc(a.foto)+'" loading="lazy"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div>';
   const pinfo=packInfo(a);
-  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'')+(a.preis?' · CHF '+a.preis.toFixed(2):'')+(a.kaufdatum?' · '+fmtDateCH(a.kaufdatum):'');
+  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'')+(a.preis?' · CHF '+a.preis.toFixed(2):'')+(a.kaufdatum?' · '+fmtDateCH(a.kaufdatum):'')+(a.kaufort?' · '+esc(a.kaufort):'');
   const eb=(a.ablaufdatum&&a.menge>0)?expBadgeA(a):'';
   const unitLabel=a.packMenge>0?esc(a.einheit||'Stk'):esc(a.einheit||'Stk');
   const aufListe=S.ek.some(e=>e.text.toLowerCase()===a.name.toLowerCase()&&!e.checked);
