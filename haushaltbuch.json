@@ -6,7 +6,7 @@
       "marke": "Landi",
       "kat": "Genussmittel",
       "lager": "Schlof",
-      "menge": 3,
+      "menge": 2,
       "einheit": "Kiste",
       "mindest": 2,
       "barcode": "7611703611962",
@@ -21,12 +21,13 @@
       "preisHistorie": [
         {
           "datum": "2026-06-20",
-          "preis": 50.2,
-          "menge": 4
+          "preis": 25.2,
+          "menge": 4,
+          "aktion": false
         },
         {
           "datum": "2026-06-27",
-          "preis": 50.2,
+          "preis": 25.2,
           "menge": 1,
           "aktion": false
         },
@@ -40,7 +41,7 @@
         },
         {
           "datum": "2026-07-04",
-          "preis": 50.2,
+          "preis": 25.2,
           "menge": 1,
           "einheit": "Kiste",
           "typ": "ein",
@@ -159,15 +160,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-09-26",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
       "packungen": [
-        {
-          "id": 6,
-          "menge": 1,
-          "kaufdatum": "2026-08-19",
-          "ablaufdatum": ""
-        },
         {
           "id": 2,
           "menge": 2,
@@ -11776,7 +11780,7 @@
       "kat": "Genussmittel",
       "lager": "Schlof",
       "kaufort": "Landi",
-      "menge": 2,
+      "menge": 0,
       "einheit": "Kiste",
       "mindest": 0,
       "barcode": "7611330258981",
@@ -11798,23 +11802,28 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-09-26",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-09-26",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
       "letzteEingangHeute": "11:28",
-      "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-09-19",
-          "ablaufdatum": "2049-09-30"
-        },
-        {
-          "id": 3,
-          "menge": 1,
-          "kaufdatum": "2026-09-19",
-          "ablaufdatum": ""
-        }
-      ]
+      "packungen": []
     },
     {
       "id": 299,
@@ -11859,22 +11868,22 @@
     {
       "id": 300,
       "name": "MClass Joghurt Mokka",
-      "marke": "",
+      "marke": "M-Classic",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Migros",
       "menge": 2,
       "einheit": "Stk",
       "mindest": 0,
-      "barcode": "",
+      "barcode": "7613404162415",
       "preis": 0.55,
-      "packMenge": 0,
-      "packEinheit": "",
+      "packMenge": 200,
+      "packEinheit": "g",
       "kaufdatum": "2026-09-20",
       "ablaufdatum": "2026-09-27",
-      "notiz": "",
-      "foto": "",
-      "fotoPath": "",
+      "notiz": "Nutri-Score C\nPro 100g/ml: 93 kcal, Fett 3g, KH 13g, Eiweiss 3.5g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1789908608531_17899085866161967648281169236138.jpg?t=1789908627753",
+      "fotoPath": "1789908625456_off.jpg",
       "packungen": [
         {
           "id": 2,
@@ -11894,7 +11903,8 @@
           "kaufort": "Migros"
         }
       ],
-      "letzteEingangHeute": "12:10"
+      "letzteEingangHeute": "12:10",
+      "barcodes": []
     },
     {
       "id": 301,
@@ -20254,7 +20264,7 @@
       "aid": 2,
       "d": "2026-07-04",
       "m": 1,
-      "p": 50.2,
+      "p": 25.2,
       "t": "ein",
       "e": "Kiste",
       "k": "Genussmittel",
@@ -25739,17 +25749,6 @@
       "kaufort": "Migros"
     },
     {
-      "aid": 300,
-      "d": "2026-09-20",
-      "m": 2,
-      "p": 0.55,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Milchprodukte",
-      "aktion": false,
-      "kaufort": "Migros"
-    },
-    {
       "aid": 301,
       "d": "2026-09-20",
       "m": 2,
@@ -25781,7 +25780,57 @@
       "k": "Konserven & Trockenware",
       "aktion": false,
       "kaufort": "Migros"
+    },
+    {
+      "aid": 300,
+      "d": "2026-09-20",
+      "m": 2,
+      "p": 0.55,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Migros"
+    },
+    {
+      "t": "aus",
+      "aid": 298,
+      "name": "Weisswein Lemanic",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-26",
+      "zeit": 1790420034819
+    },
+    {
+      "t": "aus",
+      "aid": 298,
+      "name": "Weisswein Lemanic",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-26",
+      "zeit": 1790420038534
+    },
+    {
+      "t": "aus",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-09-26",
+      "zeit": 1790420056050
     }
   ],
-  "aktualisiert": "2026-09-20T10:56:15.718Z"
+  "aktualisiert": "2026-09-26T10:55:46.986Z"
 }
