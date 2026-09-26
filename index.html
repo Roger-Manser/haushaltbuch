@@ -539,10 +539,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.92';
+const APP_VERSION='22.93';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.93',d:'26.09.2026',items:['🐛 GEFIXT: "Daten vom Github laden" Fehler!','Problem: const-Variable konnte nicht neu zugewiesen werden','Fehler: "Assignment to constant variable" bei lokalen GitHub-Merges','✓ Jetzt funktioniert das Laden von GitHub-Daten fehlerlos!']},
   {v:'22.92',d:'20.09.2026',items:['✓ "Kein MHD" Button beim Quittungsscan!','Quittungs-Artikel-Dialog hat jetzt Button "Kein MHD"','Mit Klick wird das Ablaufdatum gelöscht (leergelassen)','Button wird grau, um Bestätigung zu zeigen','Perfekt für: Sirup, Essig, Gewürze, Konserven ohne Ablauf']},
   {v:'22.91',d:'20.09.2026',items:['🧠 INTELLIGENTE MHD-Logik nach Kategorie!','Konserven & Trockenware, Reinigung, Gewürze: MHD leer (nicht relevant)','Fleisch, Milch, Gemüse, Tiefkühl, Backwaren: MHD = today + 30 Tage','✓ Artikel ohne Ablaufdatum sind schneller übersichtlich','Benutzer kann MHD immer noch im Dialog manuell setzen']},
   {v:'22.90',d:'20.09.2026',items:['🤖 AUTO-SAVE für Auto-Matched Artikel!','Grüne Artikel (im Lager) werden sofort ohne Dialog gebucht','Button zeigt "Auto ✓" statt "Buchen" bei Matches','Default-MHD: today + 30 Tage (sinnvoll für Lebensmittel)','Neuer Quittungs-Name wird als Alias gespeichert → Zukünftige Matches besser!','⚡ Workflow MASSIV beschleunigt für wiederkehrende Einkäufe!']},
@@ -1356,7 +1357,7 @@ async function loadFromGH(){
     const f=await ghGet('haushaltbuch.json');
     if(f&&f.content){
       const d=JSON.parse(b64DecodeUtf8(f.content.replace(/\n/g,'')));
-      const ghArtikel=d.artikel||[];
+      let ghArtikel=d.artikel||[];
       // Warnung wenn lokaler Stand mehr Artikel hat als GitHub (unsynced local changes)
       if(S.a.length>ghArtikel.length){
         hideLdr();
