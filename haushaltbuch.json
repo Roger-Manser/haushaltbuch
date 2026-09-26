@@ -11811,15 +11811,6 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Landi"
-        },
-        {
-          "datum": "2026-09-26",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Kiste",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Landi"
         }
       ],
       "letzteEingangHeute": "11:28",
@@ -25830,7 +25821,29 @@
       "aktion": false,
       "datum": "2026-09-26",
       "zeit": 1790420056050
+    },
+    {
+      "aid": 2,
+      "d": "2026-09-26",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Kiste",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Landi"
+    },
+    {
+      "aid": 298,
+      "d": "2026-09-26",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Kiste",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Landi"
     }
   ],
-  "aktualisiert": "2026-09-26T10:55:46.986Z"
+  "aktualisiert": "2026-09-26T10:59:20.930Z"
 }
