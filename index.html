@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.106 — Cancel & Skip-Button Fixes -->
+<!-- HAUSHALTBUCH v22.107 — OCR Worker-Based Implementation -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.106"/>
+<meta name="app-version" content="22.107"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.106';
+const APP_VERSION='22.107';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.107',d:'03.10.2026',items:['🐛 FIX: Tesseract.js v5 API — createWorker korrekt implementiert','⏱️ Worker creation timeout: 15 Sekunden','⏱️ OCR recognition timeout: 25 Sekunden','📊 Erweiterte Konsolen-Logging für OCR-Debugging','🔄 Worker wird nach Verwendung korrekt aufgeräumt']},
   {v:'22.106',d:'03.10.2026',items:['🐛 FIX: "Überspringen" Button entfernt Dialog korrekt','🐛 FIX: "Abbrechen" Button kehrt zur Lager-Ansicht zurück','Beide Dialog-Buttons verwenden ID-basierte Selektoren']},
   {v:'22.105',d:'03.10.2026',items:['✨ Geschäftsauswahl-Dialog schließt nach Auswahl','✨ Quittungs-Button: "Quittung fotografieren" → "Quittung"','🤖 Tesseract.js OCR Integration für Quittungs-Text-Extraktion','🔄 Auto-Matching: Gescannte Barcodes gegen Quittungs-Text abgleichen']},
   {v:'22.104',d:'03.10.2026',items:['🐛 FIX: Cancel Button im Geschäft-Dialog','🐛 FIX: Galerie-Zugriff für Quittungsfotos (Camera/Gallery Dialog)','✅ VERIFIED: Duplikat-Barcode Handling','✅ VERIFIED: Temp-Puffer löschen auf Cancel']},
@@ -8178,19 +8179,82 @@ function handleQuittungFile(e) {
     barcodeEinkaufState.quittungFoto = evt.target.result;
 
     // OCR auf der Quittung durchführen
-    toast('📄 Quittung wird analysiert...');
+    toast('📄 Quittung wird analysiert... (bis 30 Sekunden)');
+    console.log('[OCR] Starting OCR process...');
+
+    let worker = null;
     try {
-      const { data: { text } } = await Tesseract.recognize(evt.target.result, 'deu');
-      barcodeEinkaufState.quittungText = text.toUpperCase();
+      if (window.Tesseract && window.Tesseract.createWorker) {
+        console.log('[OCR] Creating Tesseract worker...');
+
+        // Worker erstellen mit Timeout
+        worker = await Promise.race([
+          Tesseract.createWorker('deu'),
+          new Promise((_, rej) => setTimeout(() => rej(new Error('Worker creation timeout')), 15000))
+        ]);
+        console.log('[OCR] Worker created successfully');
+
+        // OCR durchführen mit Timeout
+        console.log('[OCR] Starting recognition...');
+        const result = await Promise.race([
+          worker.recognize(evt.target.result),
+          new Promise((_, rej) => setTimeout(() => rej(new Error('Recognition timeout')), 25000))
+        ]);
+
+        console.log('[OCR] Recognition complete:', result);
+
+        if (result && result.data && result.data.text) {
+          barcodeEinkaufState.quittungText = result.data.text.toUpperCase();
+          console.log('[OCR] Extracted text length:', barcodeEinkaufState.quittungText.length);
+          toast('✅ Quittung analysiert');
+        } else {
+          console.log('[OCR] No text found in result');
+          toast('⚠️ OCR konnte keinen Text finden');
+          barcodeEinkaufState.quittungText = '';
+        }
+      } else if (window.Tesseract && window.Tesseract.recognize) {
+        // Fallback für ältere API
+        console.log('[OCR] Using legacy recognize API');
+        const result = await Promise.race([
+          Tesseract.recognize(evt.target.result, 'deu'),
+          new Promise((_, rej) => setTimeout(() => rej(new Error('OCR Timeout')), 25000))
+        ]);
+        if (result && result.data && result.data.text) {
+          barcodeEinkaufState.quittungText = result.data.text.toUpperCase();
+          toast('✅ Quittung analysiert');
+        } else {
+          toast('⚠️ OCR konnte keinen Text finden');
+          barcodeEinkaufState.quittungText = '';
+        }
+      } else {
+        console.warn('[OCR] Tesseract.js not available');
+        toast('⚠️ OCR nicht verfügbar');
+        barcodeEinkaufState.quittungText = '';
+      }
     } catch (err) {
-      console.error('OCR Fehler:', err);
+      console.error('[OCR] Error:', err);
+      toast('⚠️ OCR Fehler — weiter ohne Text-Abgleich');
       barcodeEinkaufState.quittungText = '';
+    } finally {
+      // Worker aufräumen
+      if (worker) {
+        try {
+          console.log('[OCR] Terminating worker...');
+          await worker.terminate();
+          console.log('[OCR] Worker terminated');
+        } catch (e) {
+          console.warn('[OCR] Worker termination failed:', e);
+        }
+      }
     }
 
-    // Jetzt Artikel verarbeiten: Alle Barcodes neu auflösen mit korrekten Daten
-    await processAllBarcodes();
-
-    finishBarcodeEinkauf();
+    // Kurze Verzögerung bevor Verarbeitung startet
+    setTimeout(async () => {
+      console.log('[OCR] Starting processAllBarcodes...');
+      // Jetzt Artikel verarbeiten: Alle Barcodes neu auflösen mit korrekten Daten
+      await processAllBarcodes();
+      finishBarcodeEinkauf();
+    }, 500);
   };
   reader.readAsDataURL(file);
 }
