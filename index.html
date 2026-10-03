@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.107 — OCR Worker-Based Implementation -->
+<!-- HAUSHALTBUCH v22.108 — Claude Vision API für Quittungs-Analyse -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.107"/>
+<meta name="app-version" content="22.108"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.107';
+const APP_VERSION='22.108';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.108',d:'03.10.2026',items:['✨ ZURÜCK zur bewährten Claude Vision API statt Tesseract.js OCR','📸 Quittung wird von Claude Sonnet 4.6 intelligent analysiert','✅ KI extrahiert Artikel + Preise direkt mit hoher Genauigkeit','🔄 Ergebnis wird mit gescannten Barcodes abgeglichen','⏱️ Timeout: 60 Sekunden für API + Bildverarbeitung','🔑 Benötigt Anthropic API Key in den Einstellungen']},
   {v:'22.107',d:'03.10.2026',items:['🐛 FIX: Tesseract.js v5 API — createWorker korrekt implementiert','⏱️ Worker creation timeout: 15 Sekunden','⏱️ OCR recognition timeout: 25 Sekunden','📊 Erweiterte Konsolen-Logging für OCR-Debugging','🔄 Worker wird nach Verwendung korrekt aufgeräumt']},
   {v:'22.106',d:'03.10.2026',items:['🐛 FIX: "Überspringen" Button entfernt Dialog korrekt','🐛 FIX: "Abbrechen" Button kehrt zur Lager-Ansicht zurück','Beide Dialog-Buttons verwenden ID-basierte Selektoren']},
   {v:'22.105',d:'03.10.2026',items:['✨ Geschäftsauswahl-Dialog schließt nach Auswahl','✨ Quittungs-Button: "Quittung fotografieren" → "Quittung"','🤖 Tesseract.js OCR Integration für Quittungs-Text-Extraktion','🔄 Auto-Matching: Gescannte Barcodes gegen Quittungs-Text abgleichen']},
@@ -8167,96 +8168,134 @@ function captureQuittungFromGallery() {
   input.click();
 }
 
-function handleQuittungFile(e) {
+async function handleQuittungFile(e) {
   const file = e.target.files[0];
   if (!file) return;
-  const reader = new FileReader();
-  reader.onload = async (evt) => {
-    const dlg = document.getElementById('barcode-quittung-dlg');
-    if (dlg) dlg.remove();
 
-    // Quittung speichern im State
-    barcodeEinkaufState.quittungFoto = evt.target.result;
+  const dlg = document.getElementById('barcode-quittung-dlg');
+  if (dlg) dlg.remove();
 
-    // OCR auf der Quittung durchführen
-    toast('📄 Quittung wird analysiert... (bis 30 Sekunden)');
-    console.log('[OCR] Starting OCR process...');
+  toast('📄 Quittung wird analysiert... (bis 60 Sekunden)');
+  console.log('[Quittung] Dateiverarbeitung gestartet');
 
-    let worker = null;
-    try {
-      if (window.Tesseract && window.Tesseract.createWorker) {
-        console.log('[OCR] Creating Tesseract worker...');
+  try {
+    // Schritt 1: Bild als Base64 lesen
+    const b64 = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result.split(',')[1]);
+      r.onerror = () => rej(new Error('Datei konnte nicht gelesen werden'));
+      r.readAsDataURL(file);
+    });
 
-        // Worker erstellen mit Timeout
-        worker = await Promise.race([
-          Tesseract.createWorker('deu'),
-          new Promise((_, rej) => setTimeout(() => rej(new Error('Worker creation timeout')), 15000))
-        ]);
-        console.log('[OCR] Worker created successfully');
+    // Schritt 2: Bild-Typ erkennen
+    let mediaType = file.type || 'image/jpeg';
+    if (b64.startsWith('/9j/')) mediaType = 'image/jpeg';
+    else if (b64.startsWith('iVBOR')) mediaType = 'image/png';
+    else if (b64.startsWith('R0lGO')) mediaType = 'image/gif';
+    else if (b64.startsWith('UklGR')) mediaType = 'image/webp';
 
-        // OCR durchführen mit Timeout
-        console.log('[OCR] Starting recognition...');
-        const result = await Promise.race([
-          worker.recognize(evt.target.result),
-          new Promise((_, rej) => setTimeout(() => rej(new Error('Recognition timeout')), 25000))
-        ]);
+    console.log('[Quittung] Bild-Typ:', mediaType);
 
-        console.log('[OCR] Recognition complete:', result);
-
-        if (result && result.data && result.data.text) {
-          barcodeEinkaufState.quittungText = result.data.text.toUpperCase();
-          console.log('[OCR] Extracted text length:', barcodeEinkaufState.quittungText.length);
-          toast('✅ Quittung analysiert');
-        } else {
-          console.log('[OCR] No text found in result');
-          toast('⚠️ OCR konnte keinen Text finden');
-          barcodeEinkaufState.quittungText = '';
-        }
-      } else if (window.Tesseract && window.Tesseract.recognize) {
-        // Fallback für ältere API
-        console.log('[OCR] Using legacy recognize API');
-        const result = await Promise.race([
-          Tesseract.recognize(evt.target.result, 'deu'),
-          new Promise((_, rej) => setTimeout(() => rej(new Error('OCR Timeout')), 25000))
-        ]);
-        if (result && result.data && result.data.text) {
-          barcodeEinkaufState.quittungText = result.data.text.toUpperCase();
-          toast('✅ Quittung analysiert');
-        } else {
-          toast('⚠️ OCR konnte keinen Text finden');
-          barcodeEinkaufState.quittungText = '';
-        }
-      } else {
-        console.warn('[OCR] Tesseract.js not available');
-        toast('⚠️ OCR nicht verfügbar');
-        barcodeEinkaufState.quittungText = '';
-      }
-    } catch (err) {
-      console.error('[OCR] Error:', err);
-      toast('⚠️ OCR Fehler — weiter ohne Text-Abgleich');
+    // Schritt 3: API-Key prüfen
+    const aiKey = localStorage.getItem('hb_ai_key') || '';
+    if (!aiKey) {
+      toast('❌ Kein Anthropic API Key hinterlegt');
+      console.warn('[Quittung] API Key fehlt');
       barcodeEinkaufState.quittungText = '';
-    } finally {
-      // Worker aufräumen
-      if (worker) {
-        try {
-          console.log('[OCR] Terminating worker...');
-          await worker.terminate();
-          console.log('[OCR] Worker terminated');
-        } catch (e) {
-          console.warn('[OCR] Worker termination failed:', e);
-        }
-      }
+      return;
     }
 
-    // Kurze Verzögerung bevor Verarbeitung startet
-    setTimeout(async () => {
-      console.log('[OCR] Starting processAllBarcodes...');
-      // Jetzt Artikel verarbeiten: Alle Barcodes neu auflösen mit korrekten Daten
-      await processAllBarcodes();
-      finishBarcodeEinkauf();
-    }, 500);
-  };
-  reader.readAsDataURL(file);
+    // Schritt 4: Claude Vision API aufrufen
+    console.log('[Quittung] Claude Vision API wird aufgerufen...');
+    const prompt =
+      'Analysiere diese Quittung/Kassenbon und extrahiere alle gekauften Artikel.\n' +
+      'Antworte NUR mit JSON (kein Markdown):\n' +
+      '{\n' +
+      '  "artikel": [\n' +
+      '    {"name":"Artikel-Name","menge":1,"preis_brutto":10.50,"rabatt":0,"preis_netto":10.50,"einheit":"Stk"}\n' +
+      '  ]\n' +
+      '}\n\n' +
+      'Regeln:\n' +
+      '- name: Produktname von der Quittung (WICHTIG: Barcode-nummern wenn sichtbar!)\n' +
+      '- menge: Anzahl/Gewicht (Standard 1)\n' +
+      '- preis_brutto: GESAMT-PREIS vor Rabatt\n' +
+      '- rabatt: Rabatt-Betrag (Standard 0)\n' +
+      '- preis_netto: preis_brutto - rabatt\n' +
+      '- einheit: Stk/kg/g/l/ml etc.\n' +
+      '- WICHTIG: Extrahiere AUCH Barcode-Nummern falls sichtbar (13-stellig EAN, oder 4-20 Ziffern intern)\n' +
+      '- Nur echte Produkte, keine Steuern/Gesamtsumme als Artikel';
+
+    const res = await Promise.race([
+      fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': aiKey,
+          'anthropic-dangerous-direct-browser-access': 'true',
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-6',
+          max_tokens: 1500,
+          messages: [{
+            role: 'user',
+            content: [
+              { type: 'image', source: { type: 'base64', media_type: mediaType, data: b64 } },
+              { type: 'text', text: prompt }
+            ]
+          }]
+        })
+      }),
+      new Promise((_, rej) => setTimeout(() => rej(new Error('API Timeout')), 55000))
+    ]);
+
+    if (!res.ok) {
+      const errText = await res.text().catch(() => '');
+      console.error('[Quittung] API Error:', res.status, errText);
+      toast('⚠️ Claude API Fehler — weiter ohne Text-Abgleich');
+      barcodeEinkaufState.quittungText = '';
+      return;
+    }
+
+    const data = await res.json();
+    const text = data.content && data.content[0] && data.content[0].text || '';
+    const clean = text.replace(/```json|```/g, '').trim();
+
+    console.log('[Quittung] KI-Response:', clean.slice(0, 500));
+
+    // Schritt 5: JSON parsen
+    let parsed;
+    try {
+      parsed = JSON.parse(clean);
+      console.log('[Quittung] JSON geparst - Artikel gefunden:', parsed.artikel?.length || 0);
+    } catch (pe) {
+      console.error('[Quittung] JSON Parse Fehler:', pe.message);
+      toast('⚠️ OCR Fehler — weiter ohne Text-Abgleich');
+      barcodeEinkaufState.quittungText = '';
+      return;
+    }
+
+    // Schritt 6: Quittungs-Text speichern für Barcode-Abgleich
+    barcodeEinkaufState.quittungText = (parsed.artikel || [])
+      .map(a => a.name + ' ' + a.menge + ' ' + (a.barcode || '') + ' ' + (a.preis_brutto || a.preis_netto || 0))
+      .join('\n')
+      .toUpperCase();
+
+    console.log('[Quittung] Text für Barcode-Abgleich gespeichert');
+    toast('✅ Quittung analysiert');
+
+  } catch (err) {
+    console.error('[Quittung] Fehler:', err);
+    toast('⚠️ Quittungs-Fehler — weiter ohne Text-Abgleich');
+    barcodeEinkaufState.quittungText = '';
+  }
+
+  // Starte Artikel-Verarbeitung
+  setTimeout(async () => {
+    console.log('[Quittung] Starte processAllBarcodes...');
+    await processAllBarcodes();
+    finishBarcodeEinkauf();
+  }, 500);
 }
 
 async function processAllBarcodes() {
