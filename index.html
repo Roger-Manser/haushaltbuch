@@ -7878,7 +7878,7 @@ function openShopSelectionDialog(){
       '<div style="display:flex;flex-direction:column;gap:8px">'+
         S.ge.map(g=>'<button onclick="selectBarcodeShop(\''+esc(g).replace(/'/g,"\\'")+'\')" style="padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;cursor:pointer;color:var(--tx)">'+esc(g)+'</button>').join('')+
         '<button onclick="addNewBarcodeShop()" style="padding:12px;background:var(--ol);border:1px solid var(--ok);border-radius:var(--rs);font-size:15px;cursor:pointer;color:var(--ok);font-weight:600">+ Neues Geschäft</button>'+
-        '<button onclick="this.parentElement.parentElement.parentElement.remove();barcodeEinkaufState={geschaeft:\\'\\',artikel:[],idx:0}" style="padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--dg);font-weight:500">Abbrechen</button>'+
+        '<button onclick="this.parentElement.parentElement.parentElement.remove();barcodeEinkaufState={geschaeft:\\"\\",artikel:[],idx:0}" style="padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--dg);font-weight:500">Abbrechen</button>'+
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
