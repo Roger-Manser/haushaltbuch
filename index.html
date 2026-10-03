@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.92 — Kein MHD Button bei Quittungsscan -->
+<!-- HAUSHALTBUCH v22.98 — Phase 1: Barcode-Einkauf mit Artikel-Lookup -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -445,17 +445,17 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   <div class="tb"><span class="tb-t">Einkauf</span></div>
   <div style="padding:20px;display:flex;flex-direction:column;gap:16px;height:100%;justify-content:flex-start">
     <div style="text-align:center;margin-bottom:10px">
-      <div style="font-size:16px;font-weight:600;color:var(--tx);margin-bottom:6px">Quittung scannen</div>
-      <div style="font-size:13px;color:var(--t2)">Artikel automatisch erkennen & einbuchen</div>
+      <div style="font-size:16px;font-weight:600;color:var(--tx);margin-bottom:6px">🔍 Barcode-Einkauf</div>
+      <div style="font-size:13px;color:var(--t2)">Artikel scannend erfassen — einfach & schnell</div>
     </div>
-    <button onclick="openQuittungFile(true)" style="width:100%;padding:18px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity 0.2s">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-      <span>Quittung von Kamera</span>
+    <button onclick="startBarcodeEinkauf()" style="width:100%;padding:18px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity 0.2s;flex-direction:column">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:32px;height:32px"><path d="M3 5v14M7 5v14M11 5v14M15 5v14M19 5v14"/></svg>
+      <span>Einkauf starten (Barcode-Modus)</span>
     </button>
-    <button onclick="openQuittungFile(false)" style="width:100%;padding:18px;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:var(--rs);font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity 0.2s">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:22px;height:22px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-      <span>Quittung vom Bild</span>
-    </button>
+    <hr style="border:none;border-top:1px solid var(--bd);margin:10px 0"/>
+    <div style="font-size:12px;color:var(--t3);text-align:center">
+      📋 Phase 2: Quittung-Scan folgt demnächst
+    </div>
   </div>
 </div>
 
@@ -7854,6 +7854,278 @@ function toast(m){
     },8000);  // 8 Sekunden (doppelt so lange)
   },50);
 }
+
+/* ── PHASE 1: Barcode-Einkauf ─────────────────────────────────────── */
+let barcodeEinkaufState={
+  geschaeft:'',
+  artikel:[],  // {barcode, artikel?, foto?, new?: bool}
+  idx:0
+};
+
+function startBarcodeEinkauf(){
+  barcodeEinkaufState={geschaeft:'',artikel:[],idx:0};
+  openShopSelectionDialog();
+}
+
+function openShopSelectionDialog(){
+  const dlg=document.createElement('div');
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">🏪 Geschäft wählen</div>'+
+      '<div style="font-size:12px;color:var(--t2);margin-bottom:16px">In welchem Geschäft sind Sie einkaufen?</div>'+
+      '<div style="display:flex;flex-direction:column;gap:8px">'+
+        S.ge.map(g=>'<button onclick="selectBarcodeShop(\''+esc(g).replace(/'/g,"\\'")+'\')" style="padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;cursor:pointer;color:var(--tx)">'+esc(g)+'</button>').join('')+
+        '<button onclick="addNewBarcodeShop()" style="padding:12px;background:var(--ol);border:1px solid var(--ok);border-radius:var(--rs);font-size:15px;cursor:pointer;color:var(--ok);font-weight:600">+ Neues Geschäft</button>'+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(dlg);
+  dlg.onclick=e=>{if(e.target===dlg)dlg.remove();};
+}
+
+function selectBarcodeShop(shop){
+  barcodeEinkaufState.geschaeft=shop;
+  const dlg=document.querySelector('[style*="position:fixed"][style*="rgba(0,0,0,.5)"]');
+  if(dlg)dlg.remove();
+  startBarcodeInputLoop();
+}
+
+function addNewBarcodeShop(){
+  const n=prompt('Neues Geschäft:');
+  if(!n||!n.trim())return;
+  const nm=n.trim();
+  if(!S.ge.includes(nm)){
+    S.ge.push(nm);
+    saveL();
+  }
+  const dlg=document.querySelector('[style*="position:fixed"][style*="rgba(0,0,0,.5)"]');
+  if(dlg)dlg.remove();
+  openShopSelectionDialog(); // Dialog neu öffnen mit neuem Geschäft
+}
+
+function startBarcodeInputLoop(){
+  barcodeEinkaufState.idx=0;
+  askNextBarcode();
+}
+
+function askNextBarcode(){
+  const dlg=document.createElement('div');
+  dlg.id='barcode-input-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">🔍 Artikel '+(barcodeEinkaufState.artikel.length+1)+' erfassen</div>'+
+      '<div style="font-size:12px;color:var(--t2);margin-bottom:16px">Barcode eingeben oder scannen</div>'+
+      '<input type="text" id="barcode-input-field" placeholder="Barcode hier eingeben oder scannen..." autofocus style="width:100%;padding:12px;border:1px solid var(--ac);border-radius:var(--rs);font-size:16px;background:var(--bg);color:var(--tx);margin-bottom:12px;font-weight:600"/>'+
+      '<div style="display:flex;gap:8px">'+
+        '<button onclick="closeBarcodeInputDialog()" style="flex:1;padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+        '<button onclick="processBarcodeInput()" style="flex:1;padding:12px;background:var(--ac);border:none;border-radius:var(--rs);font-size:14px;cursor:pointer;color:#fff;font-weight:600">✓ Weiter</button>'+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(dlg);
+  const input=document.getElementById('barcode-input-field');
+  input.onkeypress=e=>{if(e.key==='Enter')processBarcodeInput();};
+}
+
+function closeBarcodeInputDialog(){
+  const dlg=document.getElementById('barcode-input-dlg');
+  if(dlg){dlg.remove();}
+  finishBarcodeEinkauf();
+}
+
+function processBarcodeInput(){
+  const input=document.getElementById('barcode-input-field');
+  if(!input)return;
+  const barcode=input.value.trim();
+  if(!barcode){toast('Bitte Barcode eingeben');return;}
+  const dlg=document.getElementById('barcode-input-dlg');
+  if(dlg)dlg.remove();
+
+  // Artikel in State speichern
+  barcodeEinkaufState.artikel.push({barcode});
+
+  // Prüfen: Artikel bekannt?
+  const known=artikelByCode(barcode);
+  if(known){
+    // Bekannt: Foto prüfen
+    processBarcodeArticle(known);
+  }else{
+    // Neu: Online-Lookup + Foto
+    createNewBarcodeArticle(barcode);
+  }
+}
+
+function processBarcodeArticle(artikel){
+  if(artikel.foto){
+    // Hat schon Foto
+    toast('✓ '+artikel.name+' (Foto vorhanden)');
+    askNextBarcode();
+  }else{
+    // Foto fehlt
+    const dlg=document.createElement('div');
+    dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+    dlg.innerHTML=
+      '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+        '<div style="font-weight:700;font-size:16px;margin-bottom:4px">📸 Foto erforderlich</div>'+
+        '<div style="font-size:13px;color:var(--t2);margin-bottom:16px">«'+esc(artikel.name)+'» benötigt noch ein Foto</div>'+
+        '<div style="display:flex;gap:8px">'+
+          '<button onclick="this.parentElement.parentElement.parentElement.remove();askNextBarcode()" style="flex:1;padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Überspringen</button>'+
+          '<button onclick="capturePhotoForArticle('+artikel.id+');this.parentElement.parentElement.parentElement.remove()" style="flex:1;padding:12px;background:var(--ac);border:none;border-radius:var(--rs);font-size:14px;cursor:pointer;color:#fff;font-weight:600">📸 Foto machen</button>'+
+        '</div>'+
+      '</div>';
+    document.body.appendChild(dlg);
+  }
+}
+
+function createNewBarcodeArticle(barcode){
+  // Hier wird die OFF-API aufgerufen
+  const statusEl=document.createElement('div');
+  statusEl.id='bc-lookup-status';
+  statusEl.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:9050;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;gap:10px;font-size:15px';
+  statusEl.innerHTML='<div style="font-size:30px">🔍</div><div>Produktdaten laden...</div>';
+  document.body.appendChild(statusEl);
+
+  lookupOFFBarcode(barcode,statusEl);
+}
+
+async function lookupOFFBarcode(barcode,statusEl){
+  try{
+    const r=await fetch('https://world.openfoodfacts.org/api/v2/product/'+encodeURIComponent(barcode)+'.json');
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const data=await r.json();
+    if(data.status===1&&data.product){
+      const p=data.product;
+      const newArticle={
+        id:generateNewArticleId(),
+        name:p.product_name_de||p.product_name||'Neuer Artikel',
+        marke:p.brands||'',
+        kat:'Diverses', // Default
+        bc:[barcode],
+        menge:0,
+        mindest:0,
+        lager:'',
+        einheit:'Stk',
+        preis:0,
+        ablaufdatum:'',
+        kaufdatum:todayISO(),
+        kaufort:barcodeEinkaufState.geschaeft||'',
+        notiz:'zuletzt erfasst'
+      };
+      barcodeEinkaufState.artikel[barcodeEinkaufState.artikel.length-1].artikel=newArticle;
+      statusEl.remove();
+      capturePhotoForNewArticle(newArticle);
+    }else{
+      throw new Error('Produkt nicht gefunden');
+    }
+  }catch(e){
+    statusEl.remove();
+    const dlg=document.createElement('div');
+    dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
+    dlg.innerHTML=
+      '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
+        '<div style="font-weight:700;font-size:16px;margin-bottom:4px">❌ Produkt nicht gefunden</div>'+
+        '<div style="font-size:13px;color:var(--t2);margin-bottom:16px">Bitte manuell eingeben</div>'+
+        '<input type="text" id="manual-name" placeholder="Produktname..." style="width:100%;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;background:var(--bg);color:var(--tx);margin-bottom:10px"/>'+
+        '<div style="display:flex;gap:8px">'+
+          '<button onclick="this.parentElement.parentElement.parentElement.remove();askNextBarcode()" style="flex:1;padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+          '<button onclick="saveManualBarcodeArticle(this.previousElementSibling.previousElementSibling.value)" style="flex:1;padding:12px;background:var(--ac);border:none;border-radius:var(--rs);font-size:14px;cursor:pointer;color:#fff;font-weight:600">✓ Speichern</button>'+
+        '</div>'+
+      '</div>';
+    document.body.appendChild(dlg);
+    document.getElementById('manual-name').focus();
+  }
+}
+
+function saveManualBarcodeArticle(name){
+  if(!name.trim()){toast('Bitte Name eingeben');return;}
+  const newArticle={
+    id:generateNewArticleId(),
+    name:name.trim(),
+    marke:'',
+    kat:'Diverses',
+    bc:[barcodeEinkaufState.artikel[barcodeEinkaufState.artikel.length-1].barcode],
+    menge:0,
+    mindest:0,
+    lager:'',
+    einheit:'Stk',
+    preis:0,
+    ablaufdatum:'',
+    kaufdatum:todayISO(),
+    kaufort:barcodeEinkaufState.geschaeft||'',
+    notiz:'zuletzt erfasst'
+  };
+  barcodeEinkaufState.artikel[barcodeEinkaufState.artikel.length-1].artikel=newArticle;
+  const dlg=document.querySelector('[style*="position:fixed"][style*="rgba(0,0,0,.5)"]');
+  if(dlg)dlg.remove();
+  capturePhotoForNewArticle(newArticle);
+}
+
+function capturePhotoForArticle(articleId){
+  const input=document.createElement('input');
+  input.type='file';
+  input.accept='image/*';
+  input.capture='environment';
+  input.onchange=async()=>{
+    const file=input.files[0];
+    if(!file)return;
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const artikel=S.a.find(a=>a.id===articleId);
+      if(artikel){
+        artikel.foto=e.target.result;
+        saveL();
+        toast('✓ Foto gespeichert');
+        askNextBarcode();
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+  input.click();
+}
+
+function capturePhotoForNewArticle(newArticle){
+  const input=document.createElement('input');
+  input.type='file';
+  input.accept='image/*';
+  input.capture='environment';
+  input.onchange=async()=>{
+    const file=input.files[0];
+    if(file){
+      const reader=new FileReader();
+      reader.onload=e=>{
+        newArticle.foto=e.target.result;
+        finishNewArticle(newArticle);
+      };
+      reader.readAsDataURL(file);
+    }else{
+      finishNewArticle(newArticle);
+    }
+  };
+  input.click();
+}
+
+function finishNewArticle(newArticle){
+  S.a.push(newArticle);
+  saveL();
+  toast('✓ Neuer Artikel: '+newArticle.name);
+  askNextBarcode();
+}
+
+function generateNewArticleId(){
+  return Math.max(0,...S.a.map(a=>a.id||0))+1;
+}
+
+function finishBarcodeEinkauf(){
+  const cnt=barcodeEinkaufState.artikel.length;
+  toast('✓ '+cnt+' Artikel erfasst — Filter "zuletzt erfasst" verwenden zum Überprüfen');
+  barcodeEinkaufState={geschaeft:'',artikel:[],idx:0};
+  goScreen('s-lager');
+}
+
+function artikelByCode(barcode){
+  return S.a.find(a=>(a.bc||[]).includes(barcode));
+}
+
 /* ── Quittung scannen (Claude Vision) ────────────────────────────── */
 let quittungItems=[]; // erkannte Artikel von der Quittung
 let debugState = {
