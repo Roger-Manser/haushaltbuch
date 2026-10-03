@@ -558,10 +558,14 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.103';
+const APP_VERSION='22.106';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.106',d:'03.10.2026',items:['🐛 FIX: "Überspringen" Button entfernt Dialog korrekt','🐛 FIX: "Abbrechen" Button kehrt zur Lager-Ansicht zurück','Beide Dialog-Buttons verwenden ID-basierte Selektoren']},
+  {v:'22.105',d:'03.10.2026',items:['✨ Geschäftsauswahl-Dialog schließt nach Auswahl','✨ Quittungs-Button: "Quittung fotografieren" → "Quittung"','🤖 Tesseract.js OCR Integration für Quittungs-Text-Extraktion','🔄 Auto-Matching: Gescannte Barcodes gegen Quittungs-Text abgleichen']},
+  {v:'22.104',d:'03.10.2026',items:['🐛 FIX: Cancel Button im Geschäft-Dialog','🐛 FIX: Galerie-Zugriff für Quittungsfotos (Camera/Gallery Dialog)','✅ VERIFIED: Duplikat-Barcode Handling','✅ VERIFIED: Temp-Puffer löschen auf Cancel']},
+  {v:'22.103',d:'03.10.2026',items:['✨ Phase 1 Barcode-Scanner DEPLOYED','📱 Kamera-basierter Scanner mit Quagga2','✓ EAN-13/EAN-8 Checksummen-Validierung','🏪 Open Food Facts Lookup nach Quittung']},
   {v:'22.97',d:'03.10.2026',items:['✅ KORREKTUR: Beide Einkauf-Systeme!','Tab 1: "Einkaufsliste" (alt) - Artikel-Verwaltung','Tab 2: "Einkauf" (Scanner) - Quittung schnell einbuchen','Einkaufsliste ist wiederhergestellt + neuer Scanner-Ansatz']},
   {v:'22.96',d:'03.10.2026',items:['🎯 NEUER ANSATZ: Einkauf-Register (Scanner)!','Register "Einkauf" komplett redesigned','Zwei große Buttons: Quittung von Kamera / vom Bild','Schneller Workflow für neue Einkäufe einbuchen']},
   {v:'22.95',d:'26.09.2026',items:['✓ MHD-befreite Artikel aus Dashboard entfernt!','Artikel mit keinMHD=true tauchen nicht mehr in "Bald verbrauchen" auf','Logik: Nur Artikel mit aktiven Ablaufdaten werden verfolgt','Perfekt für: Sirup, Essig, Gewürze, Konserven']},
