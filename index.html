@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.103 — Phase 1: + Geschäftsinterne Barcodes unterstützt -->
+<!-- HAUSHALTBUCH v22.104 — Phase 1.5: Bugfixes Barcode-Scanner -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.102"/>
+<meta name="app-version" content="22.104"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -7878,6 +7878,7 @@ function openShopSelectionDialog(){
       '<div style="display:flex;flex-direction:column;gap:8px">'+
         S.ge.map(g=>'<button onclick="selectBarcodeShop(\''+esc(g).replace(/'/g,"\\'")+'\')" style="padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;cursor:pointer;color:var(--tx)">'+esc(g)+'</button>').join('')+
         '<button onclick="addNewBarcodeShop()" style="padding:12px;background:var(--ol);border:1px solid var(--ok);border-radius:var(--rs);font-size:15px;cursor:pointer;color:var(--ok);font-weight:600">+ Neues Geschäft</button>'+
+        '<button onclick="this.parentElement.parentElement.parentElement.remove();barcodeEinkaufState={geschaeft:\\'\\',artikel:[],idx:0}" style="padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--dg);font-weight:500">Abbrechen</button>'+
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
@@ -8128,29 +8129,54 @@ function showBarcodeQuittungDialog() {
 }
 
 function captureBarcodeQuittung() {
+  // Zeige Dialog mit Wahl zwischen Kamera und Galerie
+  const chooseDlg = document.createElement('div');
+  chooseDlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9001;display:flex;align-items:flex-end;justify-content:center';
+  chooseDlg.innerHTML =
+    '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom));">' +
+      '<div style="font-weight:600;font-size:14px;margin-bottom:12px">Foto auswählen</div>' +
+      '<div style="display:flex;gap:8px">' +
+        '<button onclick="this.parentElement.parentElement.parentElement.remove();captureQuittungFromCamera()" style="flex:1;padding:12px;background:var(--ac);border:none;border-radius:var(--rs);font-size:13px;cursor:pointer;color:#fff;font-weight:600">📷 Kamera</button>' +
+        '<button onclick="this.parentElement.parentElement.parentElement.remove();captureQuittungFromGallery()" style="flex:1;padding:12px;background:var(--al);border:1px solid var(--am);border-radius:var(--rs);font-size:13px;cursor:pointer;color:var(--ac);font-weight:600">🖼️ Galerie</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(chooseDlg);
+}
+
+function captureQuittungFromCamera() {
   const input = document.createElement('input');
   input.type = 'file';
   input.accept = 'image/*';
   input.capture = 'environment';
-  input.onchange = async () => {
-    const file = input.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = async (e) => {
-      const dlg = document.getElementById('barcode-quittung-dlg');
-      if (dlg) dlg.remove();
-
-      // Quittung speichern im State
-      barcodeEinkaufState.quittungFoto = e.target.result;
-
-      // Jetzt Artikel verarbeiten: Alle Barcodes neu auflösen mit korrekten Daten
-      await processAllBarcodes();
-
-      finishBarcodeEinkauf();
-    };
-    reader.readAsDataURL(file);
-  };
+  input.onchange = handleQuittungFile;
   input.click();
+}
+
+function captureQuittungFromGallery() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.onchange = handleQuittungFile;
+  input.click();
+}
+
+function handleQuittungFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async (evt) => {
+    const dlg = document.getElementById('barcode-quittung-dlg');
+    if (dlg) dlg.remove();
+
+    // Quittung speichern im State
+    barcodeEinkaufState.quittungFoto = evt.target.result;
+
+    // Jetzt Artikel verarbeiten: Alle Barcodes neu auflösen mit korrekten Daten
+    await processAllBarcodes();
+
+    finishBarcodeEinkauf();
+  };
+  reader.readAsDataURL(file);
 }
 
 async function processAllBarcodes() {
