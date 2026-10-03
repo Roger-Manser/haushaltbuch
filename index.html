@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.104 — Phase 1.5: Bugfixes Barcode-Scanner -->
+<!-- HAUSHALTBUCH v22.105 — Phase 1.5: Quittungs-OCR & Dialog-Fixes -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.104"/>
+<meta name="app-version" content="22.105"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -296,6 +296,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
 <script src="https://cdn.jsdelivr.net/npm/@ericblade/quagga2@1.8.4/dist/quagga.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.12.1/JsBarcode.all.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5.0.4/dist/tesseract.min.js"></script>
 </head>
 <body>
 <div id="app">
@@ -7887,9 +7888,10 @@ function openShopSelectionDialog(){
 
 function selectBarcodeShop(shop){
   barcodeEinkaufState.geschaeft=shop;
-  const dlg=document.querySelector('[style*="position:fixed"][style*="rgba(0,0,0,.5)"]');
-  if(dlg)dlg.remove();
-  startBarcodeInputLoop();
+  // Alle offenen Dialoge entfernen
+  document.querySelectorAll('[style*="position:fixed"][style*="rgba(0,0,0,.5)"]').forEach(d => d.remove());
+  // Kurze Verzögerung vor Start
+  setTimeout(() => startBarcodeInputLoop(), 100);
 }
 
 function backToShopSelection(){
@@ -8122,7 +8124,7 @@ function showBarcodeQuittungDialog() {
       '<div style="font-size:12px;color:var(--t2);margin-bottom:16px">Foto der Quittung zum Abgleich mit ' + barcodeEinkaufState.artikel.length + ' Barcodes</div>' +
       '<div style="display:flex;gap:8px">' +
         '<button onclick="this.parentElement.parentElement.parentElement.remove();finishBarcodeEinkauf()" style="flex:1;padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Überspringen</button>' +
-        '<button onclick="captureBarcodeQuittung()" style="flex:1;padding:12px;background:var(--ac);border:none;border-radius:var(--rs);font-size:14px;cursor:pointer;color:#fff;font-weight:600">📸 Quittung fotografieren</button>' +
+        '<button onclick="captureBarcodeQuittung()" style="flex:1;padding:12px;background:var(--ac);border:none;border-radius:var(--rs);font-size:14px;cursor:pointer;color:#fff;font-weight:600">Quittung</button>' +
       '</div>' +
     '</div>';
   document.body.appendChild(dlg);
@@ -8171,6 +8173,16 @@ function handleQuittungFile(e) {
     // Quittung speichern im State
     barcodeEinkaufState.quittungFoto = evt.target.result;
 
+    // OCR auf der Quittung durchführen
+    toast('📄 Quittung wird analysiert...');
+    try {
+      const { data: { text } } = await Tesseract.recognize(evt.target.result, 'deu');
+      barcodeEinkaufState.quittungText = text.toUpperCase();
+    } catch (err) {
+      console.error('OCR Fehler:', err);
+      barcodeEinkaufState.quittungText = '';
+    }
+
     // Jetzt Artikel verarbeiten: Alle Barcodes neu auflösen mit korrekten Daten
     await processAllBarcodes();
 
@@ -8180,6 +8192,8 @@ function handleQuittungFile(e) {
 }
 
 async function processAllBarcodes() {
+  const quittungText = barcodeEinkaufState.quittungText || '';
+
   // Verarbeite alle gescannten Barcodes nacheinander
   for (let i = 0; i < barcodeEinkaufState.artikel.length; i++) {
     const item = barcodeEinkaufState.artikel[i];
@@ -8187,8 +8201,9 @@ async function processAllBarcodes() {
 
     const known = artikelByCode(item.barcode);
     if (known) {
-      // Bekannter Artikel
+      // Bekannter Artikel — überprüfe ob in Quittung
       item.artikel = known;
+      item.inQuittung = quittungText.includes(item.barcode) || quittungText.includes(known.name.toUpperCase());
     } else {
       // Neuer Artikel: Open Food Facts abfragen
       try {
@@ -8214,6 +8229,7 @@ async function processAllBarcodes() {
               notiz: 'zuletzt erfasst'
             };
             item.artikel = newArticle;
+            item.inQuittung = quittungText.includes(item.barcode) || quittungText.includes(newArticle.name.toUpperCase());
           }
         }
       } catch (e) {
