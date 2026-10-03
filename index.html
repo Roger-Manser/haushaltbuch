@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.99 — Phase 1: Kamera-Barcode-Scan + Quittung-Matching -->
+<!-- HAUSHALTBUCH v22.102 — Phase 1: + Geschäftsinterne Barcodes unterstützt -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<!-- CACHE BUST v99 -->
-<link rel="manifest" href="manifest.json?v=99999"/>
+<!-- CACHE BUST v2302 -->
+<link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
 <title>Haushaltbuch</title>
@@ -7890,6 +7890,10 @@ function selectBarcodeShop(shop){
   startBarcodeInputLoop();
 }
 
+function backToShopSelection(){
+  closeBarcodeCamera();
+}
+
 function addNewBarcodeShop(){
   const n=prompt('Neues Geschäft:');
   if(!n||!n.trim())return;
@@ -7912,88 +7916,169 @@ function startBarcodeInputLoop(){
 async function startBarcodeCamera(){
   const dlg=document.createElement('div');
   dlg.id='barcode-camera-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:#000;z-index:9000;display:flex;flex-direction:column;align-items:center;justify-content:flex-end';
+  dlg.style.cssText='position:fixed;inset:0;background:#000;z-index:9000;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-end;overflow:hidden';
   dlg.innerHTML=
-    '<video id="barcode-video" autoplay playsinline style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0"></video>'+
+    '<video id="barcode-video" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;z-index:1"></video>'+
+    '<div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;display:flex;align-items:center;justify-content:center;color:#666;font-size:14px" id="barcode-loading">📹 Kamera startet...</div>'+
     '<canvas id="barcode-canvas" style="display:none"></canvas>'+
-    '<div style="position:relative;z-index:9001;width:100%;padding:20px;background:rgba(0,0,0,0.7);display:flex;flex-direction:column;gap:12px">'+
-      '<div style="color:#fff;text-align:center;font-weight:600;font-size:15px">🔍 Barcode scannen</div>'+
-      '<div style="color:#ccc;text-align:center;font-size:13px">Artikel: '+(barcodeEinkaufState.artikel.length+1)+'</div>'+
-      '<input type="text" id="barcode-manual-input" placeholder="Oder Barcode manuell eingeben..." style="width:100%;padding:12px;border:1px solid #555;border-radius:var(--rs);font-size:14px;background:#222;color:#fff"/>'+
-      '<div style="display:flex;gap:8px">'+
-        '<button onclick="closeBarcodeCamera()" style="flex:1;padding:12px;background:#333;border:1px solid #555;border-radius:var(--rs);font-size:14px;cursor:pointer;color:#ccc">Abbrechen</button>'+
-        '<button onclick="finishBarcodeInputAndStartQuittung()" style="flex:1;padding:12px;background:var(--ac);border:none;border-radius:var(--rs);font-size:14px;cursor:pointer;color:#fff;font-weight:600">✓ Fertig ('+barcodeEinkaufState.artikel.length+')</button>'+
+    '<div style="position:relative;z-index:3;width:100%;background:linear-gradient(to top,rgba(0,0,0,0.95),rgba(0,0,0,0.8));padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px">'+
+      '<div style="color:#fff;text-align:center;font-weight:600;font-size:14px">🔍 Barcode scannen</div>'+
+      '<div style="color:#ccc;text-align:center;font-size:12px" id="barcode-counter">Erfasst: '+barcodeEinkaufState.artikel.length+' Artikel</div>'+
+      '<input type="text" id="barcode-manual-input" placeholder="Barcode eingeben..." style="width:100%;padding:10px;border:1px solid #555;border-radius:var(--rs);font-size:13px;background:#222;color:#fff;font-weight:500"/>'+
+      '<div style="display:flex;gap:6px">'+
+        '<button onclick="backToShopSelection()" style="flex:1;padding:10px;background:#333;border:1px solid #555;border-radius:var(--rs);font-size:13px;cursor:pointer;color:#ccc">← Zurück</button>'+
+        '<button onclick="finishBarcodeInputAndStartQuittung()" style="flex:1;padding:10px;background:var(--ac);border:none;border-radius:var(--rs);font-size:13px;cursor:pointer;color:#fff;font-weight:600">✓ Fertig</button>'+
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
 
-  // Quagga2 starten
+  // Video + Scanner starten
   try {
     const video = document.getElementById('barcode-video');
     const canvas = document.getElementById('barcode-canvas');
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas ? canvas.getContext('2d') : null;
     const manualInput = document.getElementById('barcode-manual-input');
+    const loadingDiv = document.getElementById('barcode-loading');
+    const counterDiv = document.getElementById('barcode-counter');
 
-    // Video-Stream starten
+    // Video-Stream mit Fehlerbehandlung
     const stream = await navigator.mediaDevices.getUserMedia({
       video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
     });
     video.srcObject = stream;
+    video.play();
 
-    // Einfacher Barcode-Scanner mit HTML5 Canvas
-    const scanInterval = setInterval(() => {
-      if (video.readyState === video.HAVE_ENOUGH_DATA) {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        ctx.drawImage(video, 0, 0);
+    // Loading-Text entfernen wenn Video lädt
+    video.oncanplay = () => {
+      if (loadingDiv) loadingDiv.style.display = 'none';
+    };
 
-        // Quagga2 verwenden wenn vorhanden
-        if (typeof Quagga !== 'undefined') {
-          Quagga.decodeSingle({
-            src: canvas.toDataURL(),
-            numOfWorkers: 2,
-            inputStream: { type: 'ImageData' },
-            decoder: { readers: ['ean_reader', 'ean_8_reader', 'code_128_reader', 'code_39_reader'] }
-          }, (result) => {
-            if (result && result.codeResult) {
-              const barcode = result.codeResult.code;
-              if (!barcodeEinkaufState.artikel.some(a => a.barcode === barcode)) {
-                addBarcodeToBuffer(barcode);
+    let lastScanTime = 0;
+    const minScanInterval = 800; // Mindestens 800ms zwischen Scans
+    let scanInterval = null;
+
+    // Barcode-Scanner mit Quagga2
+    if (typeof Quagga !== 'undefined' && canvas && ctx) {
+      scanInterval = setInterval(() => {
+        try {
+          if (video.readyState === video.HAVE_ENOUGH_DATA && Date.now() - lastScanTime > minScanInterval) {
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            ctx.drawImage(video, 0, 0);
+
+            Quagga.decodeSingle({
+              src: canvas.toDataURL('image/jpeg', 0.8),
+              numOfWorkers: 1,
+              decoder: { readers: ['ean_reader', 'ean_8_reader', 'code_128_reader', 'code_39_reader'] }
+            }, (result) => {
+              if (result && result.codeResult && result.codeResult.code) {
+                const barcode = result.codeResult.code;
+                if (!barcodeEinkaufState.artikel.some(a => a.barcode === barcode)) {
+                  addBarcodeToBuffer(barcode);
+                  lastScanTime = Date.now();
+                  counterDiv.textContent = 'Erfasst: '+barcodeEinkaufState.artikel.length+' Artikel';
+                }
               }
-            }
-          });
+            });
+          }
+        } catch (e) {
+          // Quagga-Fehler ignorieren
         }
-      }
-    }, 200);
+      }, 100);
+    }
 
+    // Manuelle Eingabe
     manualInput.onkeypress = (e) => {
       if (e.key === 'Enter') {
         const barcode = manualInput.value.trim();
         if (barcode && !barcodeEinkaufState.artikel.some(a => a.barcode === barcode)) {
           addBarcodeToBuffer(barcode);
+          counterDiv.textContent = 'Erfasst: '+barcodeEinkaufState.artikel.length+' Artikel';
           manualInput.value = '';
+          manualInput.focus();
+          lastScanTime = Date.now();
         }
       }
     };
+    manualInput.focus();
 
-    // Cleanup
+    // Cleanup-Funktion
     dlg.__cleanup = () => {
-      clearInterval(scanInterval);
+      if (scanInterval) clearInterval(scanInterval);
       stream.getTracks().forEach(t => t.stop());
     };
   } catch (err) {
     console.error('Kamera-Fehler:', err);
-    toast('Kamera nicht verfügbar - Manuelle Eingabe verwenden');
+    document.getElementById('barcode-loading').innerHTML = '❌ Kamera nicht verfügbar<br><small>Verwende manuelle Eingabe</small>';
+    document.getElementById('barcode-loading').style.fontSize = '12px';
+    document.getElementById('barcode-video').style.display = 'none';
   }
+}
+
+function validateBarcode(barcode) {
+  // Format-Prüfung: nur Ziffern
+  if (!/^\d+$/.test(barcode)) {
+    return { valid: false, reason: 'Nur Ziffern erlaubt' };
+  }
+
+  // Mindestlänge prüfen
+  if (barcode.length < 4) {
+    return { valid: false, reason: 'Barcode zu kurz (min. 4 Ziffern)' };
+  }
+
+  // Maximallänge prüfen (Praxis: max ~16)
+  if (barcode.length > 20) {
+    return { valid: false, reason: 'Barcode zu lang (max. 20 Ziffern)' };
+  }
+
+  // EAN-13 Checksummen-Validierung (Standard)
+  if (barcode.length === 13) {
+    const digits = barcode.split('').map(Number);
+    let sum = 0;
+    for (let i = 0; i < 12; i++) {
+      sum += digits[i] * (i % 2 === 0 ? 1 : 3);
+    }
+    const checksum = (10 - (sum % 10)) % 10;
+    if (checksum !== digits[12]) {
+      return { valid: false, reason: 'EAN-13 Checksumme ungültig' };
+    }
+    return { valid: true, type: 'EAN-13' };
+  }
+
+  // EAN-8 Checksummen-Validierung (Standard)
+  if (barcode.length === 8) {
+    const digits = barcode.split('').map(Number);
+    let sum = 0;
+    for (let i = 0; i < 7; i++) {
+      sum += digits[i] * (i % 2 === 0 ? 3 : 1);
+    }
+    const checksum = (10 - (sum % 10)) % 10;
+    if (checksum !== digits[7]) {
+      return { valid: false, reason: 'EAN-8 Checksumme ungültig' };
+    }
+    return { valid: true, type: 'EAN-8' };
+  }
+
+  // Alle anderen Längen: geschäftsinterne Barcodes, UPC, etc. akzeptieren
+  // (keine Checksumme, weil nicht standardisiert)
+  return { valid: true, type: 'Geschäftsinterner Code' };
 }
 
 function addBarcodeToBuffer(barcode) {
   if (!barcodeEinkaufState.artikel.some(a => a.barcode === barcode)) {
+    const validation = validateBarcode(barcode);
+
+    if (!validation.valid) {
+      toast('⚠️ '+validation.reason);
+      return;
+    }
+
     barcodeEinkaufState.artikel.push({barcode, artikel: null});
-    toast('✓ Barcode erfasst');
-    // Dialog aktualisieren
-    const btn = document.querySelector('[onclick*="finishBarcodeInputAndStartQuittung"]');
-    if (btn) btn.textContent = '✓ Fertig (' + barcodeEinkaufState.artikel.length + ')';
+    const typeLabel = validation.type === 'EAN-13' ? '📦' : validation.type === 'EAN-8' ? '📫' : '🏪';
+    const msg = '✓ '+typeLabel+' '+validation.type;
+    toast(msg);
+  } else {
+    toast('ℹ️ Barcode bereits erfasst');
   }
 }
 
@@ -8003,7 +8088,9 @@ function closeBarcodeCamera() {
     if (dlg.__cleanup) dlg.__cleanup();
     dlg.remove();
   }
-  finishBarcodeEinkauf();
+  // Zurück zu Geschäft-Dialog
+  barcodeEinkaufState.artikel = [];
+  openShopSelectionDialog();
 }
 
 function finishBarcodeInputAndStartQuittung() {
