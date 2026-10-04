@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.136 — FEATURE: Barcode-Bestätigung nach dem Scannen mit Korrektur-Option -->
+<!-- HAUSHALTBUCH v22.137 — IMPROVEMENT: Scanner pausiert nach Scan + Video-Keepalive gegen Stromsparmodus -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.136"/>
+<meta name="app-version" content="22.137"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.136';
+const APP_VERSION='22.137';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.137',d:'04.10.2026',items:['⏸️ IMPROVEMENT: Scanner pausiert nach erfolgreichem Scan bis Bestätigung','🎥 Video-Keepalive: Alle 2 Sekunden play() um Stromsparmodus zu vermeiden','⚡ Kamera bleibt aktiv und responsive während Benutzer entscheidet','🔄 Scanner nach Bestätigen/Verwerfen/Korrigieren automatisch fortgesetzt','✅ Besseres UX: Benutzer sieht Video und pausiert bei jedem Code']},
   {v:'22.136',d:'04.10.2026',items:['🔍 FEATURE: Bestätigungsdialog nach Barcode-Scan zeigt erkannten Code','✏️ Benutzer kann unvollständige/fehlerhafte Barcodes korrigieren','📦 Großes Display des Barcodes mit Typ (EAN-13/EAN-8/etc.)','🎯 3 Optionen: Bestätigen / Korrigieren / Verwerfen','✅ Verhindert unvollständige Barcodes in der Datenbank']},
   {v:'22.135',d:'04.10.2026',items:['⏱️ VERBESSERUNG: Timeouts erhöht (8s → 20-25s) für zuverlässigere API-Antworten','🔄 Retry-Logik hinzugefügt: max 3 Versuche pro API mit 1s Pause','🌐 Konsistentere Suchergebnisse auch bei schwachem Netzwerk','📊 Bessere Error-Logs zum Debuggen von API-Problemen','✅ Produktinfos werden zuverlässiger und konsistenter gezeigt']},
   {v:'22.134',d:'04.10.2026',items:['🌐 INTERNET-SUCHE: Automatische Produktinfo-Suche für gescannte Barcodes','📸 Zeigt Produktbild, Name und Beschreibung aus Open Food Facts/EAN Database','🔘 Radio-Buttons zur Auswahl des Barcodes beim Vergleich','✅ Ausgewählter Barcode + Online-Infos werden zum Artikel hinzugefügt','🎯 Kompletter Workflow: Scan → Vergleich → Internet-Info → Zuweisen']},
@@ -8007,11 +8008,30 @@ async function startBarcodeCamera(){
     let lastScanTime = 0;
     const minScanInterval = 800; // Mindestens 800ms zwischen Scans
     let scanInterval = null;
+    let scannerPaused = false; // Flag um Scanner nach Scan zu pausieren
+
+    // State für Pausieren/Fortsetzen speichern
+    barcodeEinkaufState.scannerPauseResume = {
+      pause: () => { scannerPaused = true; },
+      resume: () => {
+        scannerPaused = false;
+        lastScanTime = Date.now(); // Setzt Timer zurück um sofort scannen zu können
+        video.play(); // Video weiter abspielen
+      }
+    };
+
+    // Video aktiv halten um Stromsparmodus zu vermeiden
+    const keepVideoActive = setInterval(() => {
+      if (video.paused) video.play();
+    }, 2000);
 
     // Barcode-Scanner mit Quagga2
     if (typeof Quagga !== 'undefined' && canvas && ctx) {
       scanInterval = setInterval(() => {
         try {
+          // Stoppe Scanning wenn Scanner pausiert ist
+          if (scannerPaused) return;
+
           if (video.readyState === video.HAVE_ENOUGH_DATA && Date.now() - lastScanTime > minScanInterval) {
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
@@ -8025,6 +8045,8 @@ async function startBarcodeCamera(){
               if (result && result.codeResult && result.codeResult.code) {
                 const barcode = result.codeResult.code;
                 if (!barcodeEinkaufState.artikel.some(a => a.barcode === barcode)) {
+                  // PAUSIERE SCANNER nach erfolgreichem Scan
+                  barcodeEinkaufState.scannerPauseResume.pause();
                   addBarcodeToBuffer(barcode);
                   lastScanTime = Date.now();
                   counterDiv.textContent = 'Erfasst: '+barcodeEinkaufState.artikel.length+' Artikel';
@@ -8056,6 +8078,7 @@ async function startBarcodeCamera(){
     // Cleanup-Funktion
     dlg.__cleanup = () => {
       if (scanInterval) clearInterval(scanInterval);
+      if (keepVideoActive) clearInterval(keepVideoActive);
       stream.getTracks().forEach(t => t.stop());
     };
   } catch (err) {
@@ -8146,13 +8169,19 @@ function showBarcodeConfirmationDialog(barcode, validation) {
     '</div>'+
     '<div style="font-size:12px;color:var(--t2);margin-bottom:16px">Ist das korrekt?</div>'+
     '<div style="display:flex;flex-direction:column;gap:8px">'+
-      '<button onclick="confirmBarcodeAndAdd(\''+esc(barcode.replace(/'/g,"\\'"))+'\',\''+esc(validation.type.replace(/'/g,"\\'"))+'\');this.closest(\'#barcode-confirm-dlg\').remove()" style="width:100%;padding:12px;background:#10b981;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px">✓ Ja, Bestätigen</button>'+
+      '<button onclick="confirmBarcodeAndAdd(\''+esc(barcode.replace(/'/g,"\\'"))+'\',\''+esc(validation.type.replace(/'/g,"\\'"))+'\');resumeScanning();this.closest(\'#barcode-confirm-dlg\').remove()" style="width:100%;padding:12px;background:#10b981;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px">✓ Ja, Bestätigen</button>'+
       '<button onclick="showBarcodeManualEntryDialog()" style="width:100%;padding:12px;background:#f59e0b;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px">✏️ Korrigieren</button>'+
-      '<button onclick="this.closest(\'#barcode-confirm-dlg\').remove()" style="width:100%;padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:500;cursor:pointer;font-size:14px">❌ Verwerfen</button>'+
+      '<button onclick="resumeScanning();this.closest(\'#barcode-confirm-dlg\').remove()" style="width:100%;padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:500;cursor:pointer;font-size:14px">❌ Verwerfen</button>'+
     '</div>'+
   '</div>';
 
   document.body.appendChild(dlg);
+}
+
+function resumeScanning() {
+  if (barcodeEinkaufState.scannerPauseResume) {
+    barcodeEinkaufState.scannerPauseResume.resume();
+  }
 }
 
 function confirmBarcodeAndAdd(barcode, barcodeType) {
@@ -8208,6 +8237,7 @@ function submitManualBarcode() {
   if (dlg) dlg.remove();
 
   confirmBarcodeAndAdd(barcode, validation.type);
+  resumeScanning();
 }
 
 function showArticleReviewDialog(){
