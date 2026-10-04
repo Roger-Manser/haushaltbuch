@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.155 — KAMERA: Warte auf loadedmetadata, starte Scanning nur mit echten Frames -->
+<!-- HAUSHALTBUCH v22.156 — KAMERA: z-index Fix – Video ÜBER Content-Div statt darunter -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.155"/>
+<meta name="app-version" content="22.156"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,7 +558,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.155';
+const APP_VERSION='22.156';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -571,6 +571,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.156',d:'04.10.2026',items:['🎯 KRITISCH FIX: z-index Problem — Video war hinter Content-Div versteckt!','📺 Video jetzt mit z-index:10 (über alles), Content-Div auf z-index:5 reduziert','✅ DAS erklärt den "schwarzen Bildschirm" trotz echten Video-Daten (1280x720)','🔧 CSS-Stapelung korrigiert: Loading(2) < Video(10) > Content(5)','🎉 Kamera sollte JETZT endlich sichtbar sein!']},
   {v:'22.155',d:'04.10.2026',items:['🎬 FIX: Warte auf loadedmetadata Event BEVOR Video-Scanning startet','⏱️ videoWidth=0 Problem behoben: Canvas-Scanning startet erst bei echten Frame-Daten','🔍 Periodische Checks ob videoWidth > 0 (Fallback wenn Event nicht kommt)','📹 Video-Frame Readiness wird jetzt korrekt geprüft','✅ Sollte endlich echte Bilder vom Barcode-Video zeigen']},
   {v:'22.154',d:'04.10.2026',items:['🔍 DIAGNOSE-VERSION: Trace-Logs für Function-Call-Chain','📊 Early Logs in startBarcodeInputLoop() um zu sehen ob Funktion aufgerufen wird','🎯 getUserMedia() Fehler werden explizit geloggt','🔧 Global Error Handler für unerwartete Exceptions','📱 Bestimmt ob startBarcodeCamera() überhaupt aufgerufen wird']},
   {v:'22.153',d:'04.10.2026',items:['🔥 AGGRESSIVER FIX: Video-Feed sofort sichtbar ohne Warten auf Events','❌ ENTFERNT: autoplay Attribut (Browser kann das blocken)','✅ FORCIERT: Loading-Div wird sofort versteckt (nicht auf Events warten)','📹 Better Error-Handling mit try/catch für video.play()','🐛 Debug-Logs hinzugefügt um Kamera-Probleme zu tracken']},
@@ -8224,10 +8225,10 @@ async function startBarcodeCamera(){
   dlg.id='barcode-camera-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:#000;z-index:9000;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-end;overflow:hidden';
   dlg.innerHTML=
-    '<video id="barcode-video" playsinline muted style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;z-index:1;display:block;background:#000"></video>'+
+    '<video id="barcode-video" playsinline muted style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;z-index:10;display:block;background:#000"></video>'+
     '<div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;display:flex;align-items:center;justify-content:center;color:#666;font-size:14px" id="barcode-loading">📹 Kamera startet...</div>'+
     '<canvas id="barcode-canvas" style="display:none"></canvas>'+
-    '<div style="position:relative;z-index:3;width:100%;background:linear-gradient(to top,rgba(0,0,0,0.95),rgba(0,0,0,0.8));padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px">'+
+    '<div style="position:fixed;bottom:0;left:0;right:0;z-index:5;width:100%;background:linear-gradient(to top,rgba(0,0,0,0.95),rgba(0,0,0,0.8));padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px">'+
       '<div style="color:#fff;text-align:center;font-weight:600;font-size:14px">🔍 Barcode scannen</div>'+
       '<div style="color:#ccc;text-align:center;font-size:12px" id="barcode-counter">Erfasst: '+barcodeEinkaufState.artikel.length+' Artikel</div>'+
       '<input type="text" id="barcode-manual-input" placeholder="Barcode eingeben..." style="position:absolute;bottom:-9999px;width:1px;height:1px;opacity:0" autocomplete="off" inputmode="none"/>'+
