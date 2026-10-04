@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.110 — Detail-Debugging für Barcode-Verarbeitung (für jeden Barcode einzeln) -->
+<!-- HAUSHALTBUCH v22.112 — Geschäfts-Dialog wird nach Auswahl nicht mehr erneut angezeigt -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.110"/>
+<meta name="app-version" content="22.112"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.110';
+const APP_VERSION='22.112';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.112',d:'04.10.2026',items:['🐛 FIX: Geschäfts-Dialog wird nach Auswahl nicht mehr erneut angezeigt','🔄 closeBarcodeCamera() navigiert zu goScreen("s-lager") statt openShopSelectionDialog()','✅ Dialog erscheint nur einmalig beim App-Start','🎯 Nutzererlebnis: Kamera schließen kehrt zur Lager-Ansicht zurück','📱 Workflow ist jetzt intuitiver und weniger überraschend']},
+  {v:'22.111',d:'04.10.2026',items:['🐛 FIX: Abbrechen Button im Geschäfts-Auswahl-Dialog','🔧 Dialog bekommt ID: shop-selection-dlg','✅ Abbrechen nutzt jetzt document.getElementById() statt DOM-Traversing','🛡️ Robuster: Kein this.parentElement.parentElement.parentElement mehr','🔙 Zurück zum Lager funktioniert jetzt zuverlässig']},
   {v:'22.110',d:'04.10.2026',items:['🐛 FIX: Doppelte handleQuittungFile() Funktion - Alte Funktion gelöscht','📊 Detail-Debugging für Barcode-Verarbeitung: Toast für jeden Barcode [X/Y]','🌐 Open Food Facts Abfrage-Zeit gemessen','⏱️ 10-Sekunden Timeout pro OFF API-Abfrage (verhindert Hängen)','✅ Artikel-Speicherung Toast am Ende','🔍 Zeigt genau wo die App steckenbleibt: [1/7], [2/7], etc.']},
   {v:'22.109',d:'03.10.2026',items:['✨ Umfassendes Debugging: Toast-Meldungen zeigen jeden Verarbeitungsschritt','📸 Bild wird gelesen - Größe angezeigt','🖼️ Format erkannt (JPEG/PNG/GIF/WebP)','🔑 API Key verifiziert','📡 Sende zu Claude + Response-Zeit angezeigt','✅ HTTP 200 OK + Article-Count','🔄 Speichere für Barcode-Abgleich','✅ Quittung analysiert + Navigiere zum Lager','👁️ Volle Visibilität: Benutzer sieht jetzt exakt wo der Prozess läuft']},
   {v:'22.108',d:'03.10.2026',items:['✨ ZURÜCK zur bewährten Claude Vision API statt Tesseract.js OCR','📸 Quittung wird von Claude Sonnet 4.6 intelligent analysiert','✅ KI extrahiert Artikel + Preise direkt mit hoher Genauigkeit','🔄 Ergebnis wird mit gescannten Barcodes abgeglichen','⏱️ Timeout: 60 Sekunden für API + Bildverarbeitung','🔑 Benötigt Anthropic API Key in den Einstellungen']},
@@ -7879,6 +7881,7 @@ function startBarcodeEinkauf(){
 
 function openShopSelectionDialog(){
   const dlg=document.createElement('div');
+  dlg.id='shop-selection-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
@@ -7887,7 +7890,7 @@ function openShopSelectionDialog(){
       '<div style="display:flex;flex-direction:column;gap:8px">'+
         S.ge.map(g=>'<button onclick="selectBarcodeShop(\''+esc(g).replace(/'/g,"\\'")+'\')" style="padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;cursor:pointer;color:var(--tx)">'+esc(g)+'</button>').join('')+
         '<button onclick="addNewBarcodeShop()" style="padding:12px;background:var(--ol);border:1px solid var(--ok);border-radius:var(--rs);font-size:15px;cursor:pointer;color:var(--ok);font-weight:600">+ Neues Geschäft</button>'+
-        '<button onclick="this.parentElement.parentElement.parentElement.remove();barcodeEinkaufState={geschaeft:\\"\\",artikel:[],idx:0};goScreen(\'s-lager\')" style="padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--dg);font-weight:500">Abbrechen</button>'+
+        '<button onclick="const d=document.getElementById(\'shop-selection-dlg\');if(d)d.remove();barcodeEinkaufState={geschaeft:\\"\\",artikel:[],idx:0};goScreen(\'s-lager\')" style="padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--dg);font-weight:500">Abbrechen</button>'+
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
@@ -8100,9 +8103,9 @@ function closeBarcodeCamera() {
     if (dlg.__cleanup) dlg.__cleanup();
     dlg.remove();
   }
-  // Zurück zu Geschäft-Dialog
+  // Zurück zur Warehouse-Ansicht (Dialog soll NICHT mehr erscheinen)
   barcodeEinkaufState.artikel = [];
-  openShopSelectionDialog();
+  goScreen('s-lager');
 }
 
 function finishBarcodeInputAndStartQuittung() {
