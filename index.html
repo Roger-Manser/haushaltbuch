@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.109 — Umfassendes Debugging: Toast-Meldungen für jeden Verarbeitungsschritt -->
+<!-- HAUSHALTBUCH v22.110 — Detail-Debugging für Barcode-Verarbeitung (für jeden Barcode einzeln) -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.109"/>
+<meta name="app-version" content="22.110"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.109';
+const APP_VERSION='22.110';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.110',d:'04.10.2026',items:['🐛 FIX: Doppelte handleQuittungFile() Funktion - Alte Funktion gelöscht','📊 Detail-Debugging für Barcode-Verarbeitung: Toast für jeden Barcode [X/Y]','🌐 Open Food Facts Abfrage-Zeit gemessen','⏱️ 10-Sekunden Timeout pro OFF API-Abfrage (verhindert Hängen)','✅ Artikel-Speicherung Toast am Ende','🔍 Zeigt genau wo die App steckenbleibt: [1/7], [2/7], etc.']},
   {v:'22.109',d:'03.10.2026',items:['✨ Umfassendes Debugging: Toast-Meldungen zeigen jeden Verarbeitungsschritt','📸 Bild wird gelesen - Größe angezeigt','🖼️ Format erkannt (JPEG/PNG/GIF/WebP)','🔑 API Key verifiziert','📡 Sende zu Claude + Response-Zeit angezeigt','✅ HTTP 200 OK + Article-Count','🔄 Speichere für Barcode-Abgleich','✅ Quittung analysiert + Navigiere zum Lager','👁️ Volle Visibilität: Benutzer sieht jetzt exakt wo der Prozess läuft']},
   {v:'22.108',d:'03.10.2026',items:['✨ ZURÜCK zur bewährten Claude Vision API statt Tesseract.js OCR','📸 Quittung wird von Claude Sonnet 4.6 intelligent analysiert','✅ KI extrahiert Artikel + Preise direkt mit hoher Genauigkeit','🔄 Ergebnis wird mit gescannten Barcodes abgeglichen','⏱️ Timeout: 60 Sekunden für API + Bildverarbeitung','🔑 Benötigt Anthropic API Key in den Einstellungen']},
   {v:'22.107',d:'03.10.2026',items:['🐛 FIX: Tesseract.js v5 API — createWorker korrekt implementiert','⏱️ Worker creation timeout: 15 Sekunden','⏱️ OCR recognition timeout: 25 Sekunden','📊 Erweiterte Konsolen-Logging für OCR-Debugging','🔄 Worker wird nach Verwendung korrekt aufgeräumt']},
@@ -8170,7 +8171,8 @@ function captureQuittungFromGallery() {
 }
 
 async function handleQuittungFile(e) {
-  const file = e.target.files[0];
+  // Akzeptiert beide Aufrufetypen: Event-Objekt (e.target.files) oder Input-Element (e.files)
+  const file = (e.target ? e.target.files[0] : e.files[0]);
   if (!file) return;
 
   const dlg = document.getElementById('barcode-quittung-dlg');
@@ -8331,21 +8333,44 @@ async function handleQuittungFile(e) {
 
 async function processAllBarcodes() {
   const quittungText = barcodeEinkaufState.quittungText || '';
+  const totalBarcodes = barcodeEinkaufState.artikel.length;
+
+  toast('📦 Verarbeite ' + totalBarcodes + ' Barcodes...');
+  console.log('[Barcodes] Start: ' + totalBarcodes + ' Artikel zu verarbeiten');
 
   // Verarbeite alle gescannten Barcodes nacheinander
-  for (let i = 0; i < barcodeEinkaufState.artikel.length; i++) {
+  for (let i = 0; i < totalBarcodes; i++) {
     const item = barcodeEinkaufState.artikel[i];
-    if (item.artikel) continue; // Bereits verarbeitet
+    if (item.artikel) {
+      toast('✅ [' + (i+1) + '/' + totalBarcodes + '] ' + (item.artikel.name || 'Artikel') + ' (gekannt)');
+      continue; // Bereits verarbeitet
+    }
+
+    toast('🔍 [' + (i+1) + '/' + totalBarcodes + '] Barcode ' + item.barcode + '...');
+    console.log('[Barcode] [' + (i+1) + '/' + totalBarcodes + '] Verarbeite: ' + item.barcode);
 
     const known = artikelByCode(item.barcode);
     if (known) {
       // Bekannter Artikel — überprüfe ob in Quittung
       item.artikel = known;
       item.inQuittung = quittungText.includes(item.barcode) || quittungText.includes(known.name.toUpperCase());
+      toast('✅ [' + (i+1) + '/' + totalBarcodes + '] ' + known.name + ' (Lager)');
+      console.log('[Barcode] [' + (i+1) + '/' + totalBarcodes + '] Im Lager gefunden: ' + known.name);
     } else {
       // Neuer Artikel: Open Food Facts abfragen
+      toast('🌐 [' + (i+1) + '/' + totalBarcodes + '] Abfrage Open Food Facts...');
+      console.log('[Barcode] [' + (i+1) + '/' + totalBarcodes + '] Frage Open Food Facts ab...');
+
       try {
-        const r = await fetch('https://world.openfoodfacts.org/api/v2/product/' + encodeURIComponent(item.barcode) + '.json');
+        const offStart = Date.now();
+        const r = await Promise.race([
+          fetch('https://world.openfoodfacts.org/api/v2/product/' + encodeURIComponent(item.barcode) + '.json'),
+          new Promise((_, rej) => setTimeout(() => rej(new Error('Timeout')), 10000))
+        ]);
+
+        const offTime = Date.now() - offStart;
+        console.log('[Barcode] [' + (i+1) + '/' + totalBarcodes + '] API Response nach ' + offTime + 'ms');
+
         if (r.ok) {
           const data = await r.json();
           if (data.status === 1 && data.product) {
@@ -8368,21 +8393,38 @@ async function processAllBarcodes() {
             };
             item.artikel = newArticle;
             item.inQuittung = quittungText.includes(item.barcode) || quittungText.includes(newArticle.name.toUpperCase());
+            toast('✅ [' + (i+1) + '/' + totalBarcodes + '] ' + newArticle.name + ' (neu)');
+            console.log('[Barcode] [' + (i+1) + '/' + totalBarcodes + '] Neu hinzugefügt: ' + newArticle.name);
+          } else {
+            toast('❌ [' + (i+1) + '/' + totalBarcodes + '] ' + item.barcode + ' nicht gefunden');
+            console.log('[Barcode] [' + (i+1) + '/' + totalBarcodes + '] Nicht in OFF: ' + item.barcode);
           }
+        } else {
+          toast('⚠️ [' + (i+1) + '/' + totalBarcodes + '] API Error ' + r.status);
+          console.warn('[Barcode] [' + (i+1) + '/' + totalBarcodes + '] API Error: ' + r.status);
         }
       } catch (e) {
-        // Fehler ignorieren, Artikel bleibt null
+        toast('⚠️ [' + (i+1) + '/' + totalBarcodes + '] Fehler: ' + e.message);
+        console.error('[Barcode] [' + (i+1) + '/' + totalBarcodes + '] Fehler: ' + e.message);
       }
     }
   }
 
+  console.log('[Barcodes] Speichere verarbeitete Artikel...');
+  toast('💾 Speichere ' + totalBarcodes + ' Artikel...');
+
   // Jetzt alle Artikel mit gültigem artikel-Objekt in S.a eintragen
+  let savedCount = 0;
   barcodeEinkaufState.artikel.forEach(item => {
     if (item.artikel && !S.a.some(a => a.id === item.artikel.id)) {
       S.a.push(item.artikel);
+      savedCount++;
     }
   });
+
+  console.log('[Barcodes] Gespeichert: ' + savedCount + ' neue Artikel');
   saveL();
+  toast('✅ ' + savedCount + ' neue Artikel gespeichert!');
 }
 
 function askNextBarcode(){
@@ -8533,195 +8575,6 @@ function _openQuittungDo(preselectedInput){
 
 function closeQuittung(){
   document.getElementById('quittung-overlay').style.display='none';
-}
-
-async function handleQuittungFile(input){
-  const file=input.files[0];if(!file)return;
-  
-  // WICHTIG: body definieren!
-  const body=document.getElementById('quittung-body');
-  if(!body)return;
-  
-  // Overlay ÖFFNEN (damit quittung-body sichtbar ist!)
-  document.getElementById('quittung-overlay').style.display='flex';
-  
-  // Toast sofort zeigen!
-  toast('📄 Quittung wird gescannt...');
-  
-  // Bild als Base64 lesen
-  const b64=await new Promise((res,rej)=>{
-    const r=new FileReader();
-    r.onload=()=>res(r.result.split(',')[1]);
-    r.onerror=()=>rej(new Error('Datei konnte nicht gelesen werden'));
-    r.readAsDataURL(file);
-  });
-
-  // Echten Bild-Typ aus den Base64-Daten erkennen (file.type ist auf Android oft falsch)
-  let mediaType=file.type||'image/jpeg';
-  if(b64.startsWith('/9j/'))mediaType='image/jpeg';
-  else if(b64.startsWith('iVBOR'))mediaType='image/png';
-  else if(b64.startsWith('R0lGO'))mediaType='image/gif';
-  else if(b64.startsWith('UklGR'))mediaType='image/webp';
-
-  // Claude Vision API
-  try{
-    const prompt=
-      'Analysiere diese Quittung/Kassenbon und extrahiere alle gekauften Artikel mit Rabatten.\n'+
-      'Antworte NUR mit einem JSON-Objekt, keine andere Ausgabe:\n'+
-      '{\n'+
-      '  "geschaeft": "Lidl",\n'+
-      '  "datum": "2026-08-13",\n'+
-      '  "artikel": [\n'+
-      '    {"name":"Goldfield Gold Box","menge":20,"preis_brutto":115.00,"rabatt":9.00,"preis_netto":106.00,"einheit":"Stk","kat":"Süsswaren"},\n'+
-      '    {"name":"Chinakohl","menge":0.952,"preis_brutto":2.37,"rabatt":0,"preis_netto":2.37,"einheit":"kg","kat":"Gemüse & Früchte"},\n'+
-      '    ...\n'+
-      '  ]\n'+
-      '}\n\n'+
-      'Regeln:\n'+
-      '- name: Produktname von der Quittung\n'+
-      '- menge: Anzahl/Gewicht (Standard 1)\n'+
-      '- preis_brutto: GESAMT-PREIS DES ARTIKELS VOR RABATT in CHF\n'+
-      '- rabatt: Rabatt-Betrag für diesen Artikel in CHF (z.B. Stangenrabatt, Aktion) - Standard 0\n'+
-      '- preis_netto: preis_brutto - rabatt = Finaler Preis in CHF\n'+
-      '- einheit: Stk/kg/g/l/ml/Pkg/Flasche/Dose etc. (WICHTIG: bei Lose-Ware kg/g, bei Verpackung Stk)\n'+
-      '- kat: eine von: Milchprodukte, Fleisch & Fisch, Gemüse & Früchte, Tiefkühl, Getränke, Konserven & Trockenware, Backwaren & Brot, Gewürze & Saucen, Süsswaren, Reinigung & Pflege, Diverses\n'+
-      '- geschaeft: Geschäftsname (Migros/Coop/Lidl/Aldi/Denner/Volg/Online oder erkannter Name)\n'+
-      '- datum: Datum im Format JJJJ-MM-TT (oder heutiges Datum falls nicht lesbar)\n'+
-      '- WICHTIG: Rabatte ZUORDNEN zu Artikeln (z.B. Stangenrabatt zur Goldfield-Box, NICHT als eigener Artikel)\n'+
-      '- Loose-Ware (kg) mit GESAMT-PREIS, nicht Preis pro kg\n'+
-      '- Nur echte Produkte, keine Steuern/Totals als eigene Artikel';
-
-    const aiKey=localStorage.getItem('hb_ai_key')||'';
-    if(!aiKey){
-      body.innerHTML='<div style="text-align:center;padding:24px;color:var(--wn)"><div style="font-size:36px;margin-bottom:8px">🔑</div>Kein Anthropic API Key hinterlegt.<br><br><button onclick="closeQuittung();goScreen(\'s-settings\')" style="padding:10px 20px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);cursor:pointer;font-weight:600">Zu den Einstellungen</button></div>';
-      return;
-    }
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','x-api-key':aiKey,'anthropic-dangerous-direct-browser-access':'true','anthropic-version':'2023-06-01'},
-      body:JSON.stringify({
-        model:'claude-sonnet-4-6',
-        max_tokens:1500,
-        messages:[{role:'user',content:[
-          {type:'image',source:{type:'base64',media_type:mediaType,data:b64}},
-          {type:'text',text:prompt}
-        ]}]
-      })
-    });
-    if(!res.ok){
-      const errText=await res.text().catch(()=>'');
-      let errMsg='API-Fehler '+res.status;
-      if(res.status===401)errMsg='API Key ungültig (401). Prüfe den Key in den Einstellungen.';
-      else if(res.status===403)errMsg='Zugriff verweigert (403). API Key hat nicht genügend Rechte.';
-      else if(res.status===400){
-        try{const e=JSON.parse(errText);errMsg='Anfrage-Fehler: '+(e.error?.message||errText.slice(0,120));}catch(x){errMsg='Anfrage-Fehler (400): '+errText.slice(0,120);}
-      }
-      else if(res.status===429)errMsg='Zu viele Anfragen (429). Bitte kurz warten.';
-      else if(res.status===529)errMsg='Anthropic API überlastet (529). Bitte später erneut versuchen.';
-      body.innerHTML='<div style="text-align:center;padding:24px;color:var(--dg)"><div style="font-size:36px;margin-bottom:8px">⚠️</div>'+esc(errMsg)+'</div>';
-      return;
-    }
-    const data=await res.json();
-    // Token-Verbrauch tracken
-    if(data.usage){
-      const u=data.usage;
-      const inTok=u.input_tokens||0;
-      const outTok=u.output_tokens||0;
-      // Sonnet 4.6 Preise: $3/MTok input, $15/MTok output
-      const kostenUsd=(inTok*3+outTok*15)/1000000;
-      const kostenChf=Math.round(kostenUsd*0.88*10000)/10000; // ~0.88 CHF/USD
-      trackAiUsage(inTok,outTok,kostenChf);
-    }
-    const text=data.content&&data.content[0]&&data.content[0].text||'';
-    const clean=text.replace(/```json|```/g,'').trim();
-    console.log('📥 KI-Response (raw):', text.slice(0,500));
-    console.log('📥 KI-Response (clean):', clean.slice(0,500));
-    
-    // SPEICHERE rawResponse für Debug-Interface
-    debugState.rawResponse = text;
-    
-    console.log('🎯 VOR JSON.parse');
-    let parsed;
-    try{parsed=JSON.parse(clean);console.log('✓ JSON geparst');}catch(pe){
-      body.innerHTML='<div style="text-align:center;padding:24px;color:var(--dg)"><div style="font-size:36px;margin-bottom:8px">⚠️</div>Antwort konnte nicht verarbeitet werden.<br><br><div style="font-size:11px;color:var(--t3);margin-top:8px;text-align:left;max-height:120px;overflow:auto;background:var(--bg);padding:8px;border-radius:var(--rs)">'+esc(text.slice(0,500))+'</div></div>';
-      return;
-    }
-
-    // 🎯 WICHTIG: quittungItems setzen SOFORT nach JSON.parse!
-    quittungItems=parsed.artikel||[];
-    
-    // PREIS-VALIDIERUNGS-PASS: Erkenne KI-Fehler bei Brutto-Preisen
-    try{
-      quittungItems.forEach((it,idx) => {
-        
-        // Problem: Wenn menge > 1 und preis_netto < menge * 5
-        // → KI hat wahrscheinlich Einzelpreis gegeben
-        if(it.menge > 1 && it.preis_netto) {
-          const preisProEinheit = it.preis_netto / it.menge;
-          
-          // Wenn Preis pro Einheit < 10 CHF und menge ist große Zahl
-          // → Wahrscheinlich Einzelpreis-Fehler
-          if(preisProEinheit > 0.5 && preisProEinheit < 10 && it.menge > 5) {
-            
-            // ABER: Was ist der KORREKTE Gesamtpreis?
-            // Wenn rabatt vorhanden: netto + rabatt = brutto
-            const bruttoKorrekt = (it.preis_netto || 0) + (it.rabatt || 0);
-            
-            it.preis_brutto = bruttoKorrekt;
-          }
-        }
-      });
-    }catch(ve){
-      console.warn('⚠️ Validierungs-Fehler (ignoriert):', ve.message);
-    }
-    quittungGeschaeft=parsed.geschaeft||'';
-    quittungIdx=0;
-
-    if(!quittungItems.length){
-      body.innerHTML='<div style="text-align:center;padding:24px;color:var(--dg)">Keine Artikel auf der Quittung erkannt. Bitte ein klareres Foto versuchen.</div>';
-      return;
-    }
-
-    
-    // AUTO-MATCHING: Versuche sofort Artikel zuzuordnen
-    quittungItems.forEach((it,idx)=>{
-      if(it.lagerArtikelId)return; // Schon zugeordnet
-      const found=findQuittungMatch(it.name);
-      if(found){
-        it.lagerArtikelId=found.id;
-      }
-    });
-
-    // KORREKTUR-PASS: Speichere korrigierte Werte von parseReceiptPosition() zurück in quittungItems
-    quittungItems.forEach((it, idx) => {
-      const parsed = parseReceiptPosition(it);
-      // Speichere ALLE korrigierten Werte zurück
-      it.menge = parsed.menge;
-      it.einheit = parsed.einheit;
-      it.type = parsed.type;
-      it.preis_brutto = parsed.preis_brutto;
-      it.preis_netto = parsed.preis_netto;
-      it.rabatt = parsed.rabatt;
-      // WICHTIG: it.preis für UI-Rendering setzen (Fallback: preis_brutto)
-      it.preis = parsed.preis_brutto || parsed.preis_netto || 0;
-      // lagerArtikelId und lagerMatch NICHT überschreiben!
-    });
-    
-    
-    // Wenn Debug-Modus aktiviert: Debug-Interface öffnen
-    if(opt.quittungDebug) {
-      openDebugInterface(text);
-    } else {
-      // Normal: Zeige Quittungs-Übersicht
-      console.log('🎯 VOR renderQuittungUebersicht() - wird aufgerufen mit datum='+todayISO());
-      renderQuittungUebersicht(todayISO());  // ← WICHTIG: Mit Kaufdatum übergeben!
-      console.log('✓ NACH renderQuittungUebersicht()');
-    }
-
-  }catch(e){
-    const body=document.getElementById('quittung-body');
-    body.innerHTML='<div style="text-align:center;padding:24px;color:var(--dg)"><div style="font-size:36px;margin-bottom:8px">⚠️</div>Fehler beim Quittungsscan:<br><br><strong>'+esc(e.message)+'</strong><br><br><div style="font-size:12px;color:var(--t3);margin-top:12px;line-height:1.5">Mögliche Ursachen:<br>• API Key ungültig oder nicht eingetragen<br>• Kein Guthaben auf dem Anthropic-Konto<br>• Bild zu gross oder unleserlich<br><br>API Key prüfen: <button onclick="closeQuittung();goScreen(\'s-settings\')" style="color:var(--ac);background:none;border:none;text-decoration:underline;cursor:pointer;font-size:12px">Einstellungen öffnen</button></div></div>';
-  }
 }
 
 function renderQuittungUebersicht(datum){
