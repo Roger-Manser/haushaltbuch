@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.150 — BARCODE CACHE: Immer erstellen, auch wenn leer -->
+<!-- HAUSHALTBUCH v22.151 — BARCODE CACHE: Barcodes sofort beim Scannen zur Cache hinzufügen -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.150"/>
+<meta name="app-version" content="22.151"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.150';
+const APP_VERSION='22.151';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.151',d:'04.10.2026',items:['🔧 KRITISCH FIX: Barcodes werden SOFORT beim Scannen zur persistenten Cache hinzugefügt','📲 Behebt Problem: Barcodes aus Mobile-App werden jetzt zu GitHub synced','✅ addScannedBarcodeToCache() wird in confirmBarcodeAndAdd() aufgerufen','🔄 Minimal-Entry mit Barcode wird erstellt, später mit API-Daten ergänzt','🌐 Mobile + Web App können jetzt Barcodes über GitHub teilen']},
   {v:'22.150',d:'04.10.2026',items:['🔧 FIX: barcode-cache.json wird IMMER erstellt (auch wenn leer)','❌ FEHLER BEHOBEN: 404 Not Found bei erstem Sync','✅ Bedingung entfernt: Datei wird unabhängig von Barcode-Count erstellt','🌐 Konsistente Repo-Struktur: barcode-cache.json existiert immer']},
   {v:'22.149',d:'04.10.2026',items:['🔄 FEATURE: Barcode-Cache mit GitHub-Sync','💾 Alle gescannten Barcodes werden persistent gecacht','🌐 Barcode-Cache synced mit GitHub über barcode-cache.json','📲 Mobile + Web App teilen jetzt Barcode-Daten via GitHub','⚡ Reduziert API-Calls zu Open Food Facts/EAN Database']},
   {v:'22.148',d:'04.10.2026',items:['🎯 FIX: S.a wird vor Quittungs-Suche geladen','❌ FEHLER BEHOBEN: "Artikel-Datenbank nicht verfügbar" beim Suchen','🔧 loadL() wird explicit in handleQuittungFile() aufgerufen','🛡️ Fallback-Reload in filterQuittungSuche() als Sicherheit']},
@@ -994,6 +995,40 @@ function addToBarcodeCacheIfNotExists(barcode,data){
     };
     saveBarcodeCacheL();
     console.log('[BarcodeCache] Barcode hinzugefügt:',barcode);
+    return true;
+  }else{
+    // Update existing entry with new data if provided
+    const existing=barcodeCache.barcodes[barcode];
+    if(data.name)existing.name=data.name;
+    if(data.marke)existing.marke=data.marke||data.brand;
+    if(data.kategorien)existing.kategorien=data.kategorien||data.category;
+    if(data.description)existing.description=data.description;
+    if(data.image)existing.image=data.image;
+    if(data.source)existing.source=data.source;
+    if(data.offData)existing.offData=data.offData;
+    if(existing.scannedOnly)existing.scannedOnly=false; // Mark as no longer scanned-only
+    saveBarcodeCacheL();
+    console.log('[BarcodeCache] Barcode aktualisiert:',barcode);
+    return false;
+  }
+}
+function addScannedBarcodeToCache(barcode){
+  // Füge gerade gescannten Barcode zur persistenten Cache hinzu (ohne API-Daten)
+  if(!barcodeCache.barcodes[barcode]){
+    barcodeCache.barcodes[barcode]={
+      barcode:barcode,
+      name:'',
+      marke:'',
+      kategorien:'',
+      description:'',
+      image:'',
+      source:'Gescannt (noch nicht gesucht)',
+      offData:{},
+      addedAt:Date.now(),
+      scannedOnly:true
+    };
+    saveBarcodeCacheL();
+    console.log('[BarcodeCache] Barcode gescannt (minimal hinzugefügt):',barcode);
     return true;
   }
   return false;
@@ -8391,6 +8426,9 @@ function confirmBarcodeAndAdd(barcode, barcodeType) {
 
   // Speichere Barcodes persistent
   saveBarcodeState();
+
+  // Füge Barcode auch zur GitHub-Sync Cache hinzu (minimal, ohne API-Daten)
+  addScannedBarcodeToCache(barcode);
 
   // Update Counter im Dialog
   const counterDiv = document.getElementById('barcode-counter');
