@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.160 — BARCODE-CACHE: GitHub-Sync hinzugefügt, Barcodes werden jetzt synchronisiert -->
+<!-- HAUSHALTBUCH v22.161 — BARCODE-CACHE: Daten-Merge statt Überschreiben, Sync-Konflikt behoben -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.160"/>
+<meta name="app-version" content="22.161"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,7 +558,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.160';
+const APP_VERSION='22.161';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -571,6 +571,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.161',d:'04.10.2026',items:['🔧 MEGA-FIX: loadBarcodeCacheFromGH() überschrieb lokale Barcodes mit leeren GitHub-Daten!','❌ PROBLEM BEHOBEN: MERGE statt ÜBERSCHREIBEN','✅ Lokale Barcodes werden BEWAHRT, GitHub-Daten werden hinzugefügt (merge logic)','✅ Sync-Konflikt aufgelöst: lokal gewinnt bei Konflikten','🌐 Barcodes gehen nicht mehr verloren bei GitHub-Sync!']},
   {v:'22.160',d:'04.10.2026',items:['🔧 KRITISCHER FIX: Barcodes werden jetzt zu GitHub synchronisiert!','❌ PROBLEM BEHOBEN: addScannedBarcodeToCache() speicherte lokal, synced aber nicht','✅ syncBarcodeCacheToGH() wird jetzt nach jedem Scan aufgerufen','✅ Mobile + Web App teilen jetzt Barcodes via GitHub (beide Richtungen)','🌐 Barcode-Sync funktioniert vollständig end-to-end!']},
   {v:'22.159',d:'04.10.2026',items:['🔧 KRITISCHER FIX: "Fertig" Button ist JETZT SICHTBAR!','❌ PROBLEM BEHOBEN: Content-Div Buttons wurden von Confirmation-Dialog überlagert','✅ Content-Div z-index: 5 → 9100 (über Confirmation-Dialog)','✅ pointer-events:auto hinzugefügt (Buttons sind clickable)','🎯 Du kannst jetzt zum Quittungsscan übergehen!']},
   {v:'22.158',d:'04.10.2026',items:['🔧 HOTFIX: Dialog-Buttons sind jetzt sichtbar!','❌ PROBLEM BEHOBEN: Dialog war mit bottom:0 falsch positioniert','✅ Neu: inset:0 mit flex-direction:column + justify-content:flex-end','👁️ Overlay-Opazität auf 0.2 reduziert (transparenter)','✅ Buttons stehen im unteren Bereich, Kamera bleibt oben sichtbar']},
@@ -981,22 +982,38 @@ async function loadBarcodeCacheFromGH(){
     const content=b64DecodeUtf8(ghFile.content);
     const data=JSON.parse(content);
     if(data&&data.barcodes){
-      barcodeCache=data;
+      // 🔧 KRITISCH: MERGE statt ÜBERSCHREIBEN!
+      // Merge GitHub-Daten mit lokalen Daten (lokal gewinnt bei Konflikten)
+      const ghBarcodes=data.barcodes||{};
+      for(const barcode in ghBarcodes){
+        if(!barcodeCache.barcodes[barcode]){
+          barcodeCache.barcodes[barcode]=ghBarcodes[barcode];
+        }
+      }
+      barcodeCache.lastUpdated=Math.max(barcodeCache.lastUpdated,data.lastUpdated||0);
       saveBarcodeCacheL();
-      console.log('[BarcodeCache] Geladen von GitHub:',Object.keys(barcodeCache.barcodes).length,'Barcodes');
+      console.log('[BarcodeCache] Geladen von GitHub:',Object.keys(ghBarcodes).length,'Barcodes, gemerged mit lokalen Daten');
     }
   }catch(e){console.log('[BarcodeCache] Fehler beim Laden von GitHub:',e.message);}
 }
 async function syncBarcodeCacheToGH(){
-  if(!gh.tok||!gh.own||!gh.repo)return;
+  if(!gh.tok||!gh.own||!gh.repo){
+    console.log('[BarcodeCache] GitHub nicht konfiguriert (tok,own,repo)');
+    return;
+  }
   try{
+    console.log('[BarcodeCache] Starte Sync zu GitHub...');
     barcodeCache.lastUpdated=Date.now();
     const content=JSON.stringify(barcodeCache,null,2);
+    console.log('[BarcodeCache] Content zu pushen:',content.length,'bytes,',Object.keys(barcodeCache.barcodes).length,'Barcodes');
     const ghFile=await ghGet('barcode-cache.json');
+    console.log('[BarcodeCache] GitHub File info:',ghFile?'EXISTS':'NOT_EXISTS');
     const sha=ghFile?ghFile.sha:undefined;
-    await ghPut('barcode-cache.json',content,'Barcode-Cache aktualisiert',sha);
-    console.log('[BarcodeCache] Synced zu GitHub:',Object.keys(barcodeCache.barcodes).length,'Barcodes');
-  }catch(e){console.log('[BarcodeCache] Fehler beim Sync zu GitHub:',e.message);}
+    const result=await ghPut('barcode-cache.json',content,'Barcode-Cache aktualisiert',sha);
+    console.log('[BarcodeCache] ✅ Synced zu GitHub:',Object.keys(barcodeCache.barcodes).length,'Barcodes','— Result:',result);
+  }catch(e){
+    console.error('[BarcodeCache] ❌ FEHLER beim Sync zu GitHub:',e.message,e);
+  }
 }
 function addToBarcodeCacheIfNotExists(barcode,data){
   let changed=false;
@@ -1037,6 +1054,11 @@ function addToBarcodeCacheIfNotExists(barcode,data){
 }
 function addScannedBarcodeToCache(barcode){
   // Füge gerade gescannten Barcode zur persistenten Cache hinzu (ohne API-Daten)
+  console.log('[BarcodeCache] addScannedBarcodeToCache() aufgerufen mit:',barcode,'| Typ:',typeof barcode,'| Länge:',barcode?.length);
+  if(!barcode||barcode.trim()===''){
+    console.log('[BarcodeCache] ❌ Barcode ist leer!');
+    return false;
+  }
   if(!barcodeCache.barcodes[barcode]){
     barcodeCache.barcodes[barcode]={
       barcode:barcode,
@@ -1051,10 +1073,12 @@ function addScannedBarcodeToCache(barcode){
       scannedOnly:true
     };
     saveBarcodeCacheL();
-    console.log('[BarcodeCache] Barcode gescannt (minimal hinzugefügt):',barcode);
+    console.log('[BarcodeCache] ✅ Barcode gescannt (minimal hinzugefügt):',barcode,'| Total in Cache:',Object.keys(barcodeCache.barcodes).length);
     // 🔧 KRITISCH: Synchronisiere sofort zu GitHub!
     syncBarcodeCacheToGH().catch(e=>console.error('[BarcodeCache] Sync-Fehler:',e.message));
     return true;
+  }else{
+    console.log('[BarcodeCache] ℹ️ Barcode bereits in Cache:',barcode);
   }
   return false;
 }
