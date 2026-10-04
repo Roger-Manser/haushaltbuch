@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.141 — FEATURE: Barcode-Scanning ist jetzt optional - man kann auch ohne Barcodes weitermachen -->
+<!-- HAUSHALTBUCH v22.142 — FIX: Resume-Modus für gespeicherte Barcodes - beim Fertig-Drücken geht es jetzt richtig zur Quittung -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,9 +9,9 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.141"/>
-<!-- CACHE BUST v2302 -->
-<link rel="manifest" href="manifest.json?v=2302"/>
+<meta name="app-version" content="22.142"/>
+<!-- CACHE BUST v2304 -->
+<link rel="manifest" href="manifest.json?v=2304"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
 <title>Haushaltbuch</title>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.141';
+const APP_VERSION='22.142';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.142',d:'04.10.2026',items:['🐛 BUGFIX: Resume-Modus für gespeicherte Barcodes','✅ Beim Fertig-Drücken geht es jetzt richtig zur Quittung','📌 Speichert Anzahl Artikel beim "Weitermachen"','🔄 Unterscheidet Resume-Modus (alte Barcodes) von Neu-Scan','✨ Markiert Resume-Status für korrekte Weiterleitung']},
   {v:'22.141',d:'04.10.2026',items:['🎯 FEATURE: Barcode-Scanning ist OPTIONAL — man kann auch ohne Barcodes weitermachen','✓ "Fertig (optional)" Button zeigt dass Scanning übersprungbar ist','⏭️ Kein Barcode = direkt zum Lager (keine Blockade mehr!)','📸 Mit Barcodes = Quittung scannen zum Abgleich','✅ Workflow ist flexibel: mit oder ohne Scanner']},
   {v:'22.140',d:'04.10.2026',items:['💾 KRITISCH: Alle Artikel-Daten werden persistent gespeichert (Internet, Foto, Preis, Shop)','🔄 erkannteArtikel werden mit allen Details in localStorage gespeichert','📥 onlineDaten + apiCache werden persistent gespeichert','⚡ saveBarcodeState() wird nach jeder Änderung aufgerufen (Bestätigung, Skip, Zuweisung)','✅ Beim Reload: Alle Daten (Barcode, Name, Bild, Preis, Geschichte) bleiben erhalten']},
   {v:'22.139',d:'04.10.2026',items:['🔧 BUGFIX: Duplikat-Barcodes werden ignoriert + Scanner läuft weiter','📦 Artikel-Änderungen (Barcode-Zuweisung) werden ins Haupt-Array kopiert','✅ Skip-Funktion entfernt Artikel aus BEIDEN Arrays (artikel + erkannteArtikel)','🔍 Datenbank-Suche normalisiert Barcodes (führende Nullen)','📥 Alle Änderungen werden vor Speicherung ins Haupt-Array synchronisiert']},
@@ -7946,10 +7947,12 @@ function startBarcodeEinkauf(){
   // Prüfe ob alte Barcodes existieren
   if(loadBarcodeState() && barcodeEinkaufState.artikel.length>0){
     // Es gibt gespeicherte Barcodes - frage Benutzer
+    barcodeEinkaufState._resumeMode=false; // Reset resume-Modus
+    barcodeEinkaufState._articleCountAtResume=0;
     showBarcodeResumeDialog();
   }else{
     // Keine alten Barcodes - starte neuen Einkauf
-    barcodeEinkaufState={geschaeft:'',artikel:[],idx:0,apiCache:{}};
+    barcodeEinkaufState={geschaeft:'',artikel:[],idx:0,apiCache:{},_resumeMode:false,_articleCountAtResume:0};
     openShopSelectionDialog();
   }
 }
@@ -7981,6 +7984,10 @@ function showBarcodeResumeDialog(){
   continueBtn.textContent='✅ Weitermachen (Barcodes behalten)';
   continueBtn.addEventListener('click',()=>{
     dlg.remove();
+    // Markiere dass wir in Resume-Modus sind
+    barcodeEinkaufState._resumeMode=true;
+    barcodeEinkaufState._articleCountAtResume=barcodeEinkaufState.artikel.length;
+    console.log('[Resume] Starte Resume-Modus mit '+barcodeEinkaufState._articleCountAtResume+' gespeicherten Artikeln');
     startBarcodeInputLoop();
   });
   btnContainer.appendChild(continueBtn);
@@ -7991,7 +7998,7 @@ function showBarcodeResumeDialog(){
   newBtn.textContent='🆕 Neuer Einkauf (Barcodes löschen)';
   newBtn.addEventListener('click',()=>{
     dlg.remove();
-    barcodeEinkaufState={geschaeft:'',artikel:[],idx:0,apiCache:{}};
+    barcodeEinkaufState={geschaeft:'',artikel:[],idx:0,apiCache:{},_resumeMode:false,_articleCountAtResume:0};
     localStorage.removeItem('barcodeEinkaufState');
     toast('🗑️ Alte Barcodes gelöscht');
     openShopSelectionDialog();
@@ -8004,7 +8011,7 @@ function showBarcodeResumeDialog(){
   cancelBtn.textContent='❌ Abbrechen';
   cancelBtn.addEventListener('click',()=>{
     dlg.remove();
-    barcodeEinkaufState={geschaeft:'',artikel:[],idx:0,apiCache:{}};
+    barcodeEinkaufState={geschaeft:'',artikel:[],idx:0,apiCache:{},_resumeMode:false,_articleCountAtResume:0};
     goScreen('s-lager');
   });
   btnContainer.appendChild(cancelBtn);
@@ -9390,15 +9397,34 @@ function finishBarcodeInputAndStartQuittung() {
     dlg.remove();
   }
 
-  // Wenn KEINE Barcodes gescannt: direkt zum Lager (Scanning ist optional!)
-  if (barcodeEinkaufState.artikel.length === 0) {
+  const isResume = barcodeEinkaufState._resumeMode;
+  const resumeCount = barcodeEinkaufState._articleCountAtResume || 0;
+  const currentCount = barcodeEinkaufState.artikel.length;
+
+  console.log('[Finish] Resume-Modus: '+isResume+', Resume-Count: '+resumeCount+', Current: '+currentCount);
+
+  // Wenn Resume-Modus: Prüfe ob mindestens die ursprünglichen Artikel noch vorhanden sind
+  if (isResume) {
+    if (currentCount >= resumeCount && resumeCount > 0) {
+      // Resume-Barcodes sind noch da - zeige Quittung
+      console.log('[Finish] Resume-Barcodes erhalten (' + currentCount + ' Artikel) - zeige Quittung');
+      toast('✅ ' + currentCount + ' Barcodes vorhanden — zeige Quittung');
+      setTimeout(() => showBarcodeQuittungDialog(), 500);
+      return;
+    }
+  }
+
+  // Wenn KEINE Barcodes vorhanden: direkt zum Lager (Scanning ist optional!)
+  if (currentCount === 0) {
     toast('ℹ️ Keine Barcodes gescannt — direkt zum Lager');
+    console.log('[Finish] Keine Barcodes - gehe zum Lager');
     setTimeout(() => finishBarcodeEinkauf(), 500);
     return;
   }
 
-  // Mit Barcodes: Quittung zum Abgleich
-  toast('Nun Quittung scannen zum Abgleich');
+  // Normal-Fall: Mit Barcodes: Quittung zum Abgleich
+  console.log('[Finish] Normale Quittung mit ' + currentCount + ' Artikeln');
+  toast('✅ ' + currentCount + ' Barcodes erfasst — zeige Quittung');
   setTimeout(() => showBarcodeQuittungDialog(), 500);
 }
 
