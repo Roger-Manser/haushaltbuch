@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.154 — KAMERA: Diagnose-Logs für Function-Aufruf-Trace -->
+<!-- HAUSHALTBUCH v22.155 — KAMERA: Warte auf loadedmetadata, starte Scanning nur mit echten Frames -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.154"/>
+<meta name="app-version" content="22.155"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,7 +558,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.154';
+const APP_VERSION='22.155';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -571,6 +571,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.155',d:'04.10.2026',items:['🎬 FIX: Warte auf loadedmetadata Event BEVOR Video-Scanning startet','⏱️ videoWidth=0 Problem behoben: Canvas-Scanning startet erst bei echten Frame-Daten','🔍 Periodische Checks ob videoWidth > 0 (Fallback wenn Event nicht kommt)','📹 Video-Frame Readiness wird jetzt korrekt geprüft','✅ Sollte endlich echte Bilder vom Barcode-Video zeigen']},
   {v:'22.154',d:'04.10.2026',items:['🔍 DIAGNOSE-VERSION: Trace-Logs für Function-Call-Chain','📊 Early Logs in startBarcodeInputLoop() um zu sehen ob Funktion aufgerufen wird','🎯 getUserMedia() Fehler werden explizit geloggt','🔧 Global Error Handler für unerwartete Exceptions','📱 Bestimmt ob startBarcodeCamera() überhaupt aufgerufen wird']},
   {v:'22.153',d:'04.10.2026',items:['🔥 AGGRESSIVER FIX: Video-Feed sofort sichtbar ohne Warten auf Events','❌ ENTFERNT: autoplay Attribut (Browser kann das blocken)','✅ FORCIERT: Loading-Div wird sofort versteckt (nicht auf Events warten)','📹 Better Error-Handling mit try/catch für video.play()','🐛 Debug-Logs hinzugefügt um Kamera-Probleme zu tracken']},
   {v:'22.152',d:'04.10.2026',items:['🐛 BUGFIX: Kamera-Feed ist jetzt sichtbar','❌ PROBLEM BEHOBEN: Loading-Div überlagerte das Video mit z-index','✅ onloadedmetadata Event hinzugefügt als Fallback','⏱️ Timeout nach 1s um sicherzustellen dass Loading-Div verschwindet','📹 Video ist jetzt nach dem Öffnen sofort sichtbar (statt Schwarz)']},
@@ -8266,11 +8267,40 @@ async function startBarcodeCamera(){
     video.srcObject = stream;
     console.log('[BarcodeCamera] srcObject gesetzt, videoWidth:'+video.videoWidth);
 
-    // AGGRESSIVE FIX: Verstecke Loading-Div sofort und starte Video
-    if (loadingDiv) {
-      loadingDiv.style.display = 'none';
-      console.log('[BarcodeCamera] Loading-Div versteckt');
-    }
+    // WARTE AUF VIDEO READINESS: loadedmetadata oder Timeout
+    let videoReady = false;
+    let readyCheckInterval = null;
+
+    const markVideoReady = () => {
+      if (!videoReady) {
+        videoReady = true;
+        console.log('[BarcodeCamera] VIDEO READY: videoWidth:'+video.videoWidth+' videoHeight:'+video.videoHeight+' readyState:'+video.readyState);
+        if (readyCheckInterval) clearInterval(readyCheckInterval);
+        if (loadingDiv) loadingDiv.style.display = 'none';
+      }
+    };
+
+    // Event Handler: loadedmetadata
+    video.onloadedmetadata = () => {
+      console.log('[BarcodeCamera] ✓ loadedmetadata Event, videoWidth:'+video.videoWidth+' videoHeight:'+video.videoHeight);
+      markVideoReady();
+    };
+
+    // Fallback: Periodisch check ob videoWidth > 0
+    readyCheckInterval = setInterval(() => {
+      if (video.videoWidth > 0 && video.videoHeight > 0) {
+        console.log('[BarcodeCamera] ✓ Fallback Ready Check: videoWidth:'+video.videoWidth);
+        markVideoReady();
+      }
+    }, 100);
+
+    // Timeout Fallback: Nach 3s forciert "ready" auch wenn Metadaten nicht da
+    setTimeout(() => {
+      if (!videoReady) {
+        console.log('[BarcodeCamera] ⚠️ Erzwinge Video-Ready nach 3s Timeout (videoWidth:'+video.videoWidth+')');
+        markVideoReady();
+      }
+    }, 3000);
 
     // Versuche Video zu starten (kann Error werfen wenn Browser blockt)
     try {
@@ -8285,21 +8315,6 @@ async function startBarcodeCamera(){
         console.log('[BarcodeCamera] play() fehlgeschlagen:', err.message);
       });
     }
-
-    // Zusätzliche Event-Handler für Fallback
-    video.oncanplay = () => {
-      if (loadingDiv) loadingDiv.style.display = 'none';
-      console.log('[BarcodeCamera] oncanplay Event');
-    };
-    video.onloadedmetadata = () => {
-      if (loadingDiv) loadingDiv.style.display = 'none';
-      console.log('[BarcodeCamera] onloadedmetadata Event, videoWidth:'+video.videoWidth+' videoHeight:'+video.videoHeight);
-    };
-    // Fallback: Hide loading div nach 500ms (schneller fallback)
-    setTimeout(() => {
-      if (loadingDiv) loadingDiv.style.display = 'none';
-      console.log('[BarcodeCamera] Fallback: Loading-Div versteckt nach 500ms');
-    }, 500);
 
     let lastScanTime = 0;
     const minScanInterval = 800; // Mindestens 800ms zwischen Scans
@@ -8321,17 +8336,27 @@ async function startBarcodeCamera(){
       if (video.paused) video.play();
     }, 2000);
 
-    // Barcode-Scanner mit Quagga2
+    // Barcode-Scanner mit Quagga2 — nur wenn videoReady!
     if (typeof Quagga !== 'undefined' && canvas && ctx) {
       scanInterval = setInterval(() => {
         try {
           // Stoppe Scanning wenn Scanner pausiert ist
           if (scannerPaused) return;
 
+          // WICHTIG: Nur wenn Video wirklich bereit und Daten vorhanden
+          if (!videoReady) {
+            console.log('[BarcodeCamera] Scanning noch nicht gestartet: videoReady='+videoReady);
+            return;
+          }
+
           if (video.readyState === video.HAVE_ENOUGH_DATA && Date.now() - lastScanTime > minScanInterval) {
-            canvas.width = video.videoWidth;
-            canvas.height = video.videoHeight;
-            ctx.drawImage(video, 0, 0);
+            if (video.videoWidth > 0 && video.videoHeight > 0) {
+              canvas.width = video.videoWidth;
+              canvas.height = video.videoHeight;
+              ctx.drawImage(video, 0, 0);
+            } else {
+              return; // Video hat noch keine Dimensionen
+            }
 
             Quagga.decodeSingle({
               src: canvas.toDataURL('image/jpeg', 0.8),
@@ -8375,6 +8400,7 @@ async function startBarcodeCamera(){
     dlg.__cleanup = () => {
       if (scanInterval) clearInterval(scanInterval);
       if (keepVideoActive) clearInterval(keepVideoActive);
+      if (readyCheckInterval) clearInterval(readyCheckInterval);
       stream.getTracks().forEach(t => t.stop());
     };
   } catch (err) {
