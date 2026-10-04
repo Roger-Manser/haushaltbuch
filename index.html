@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.113 — Abbrechen-Button im Geschäfts-Dialog gefixt -->
+<!-- HAUSHALTBUCH v22.115 — Artikel-Review-Dialog: Jeder erkannte Artikel wird einzeln angezeigt -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.113"/>
+<meta name="app-version" content="22.115"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.113';
+const APP_VERSION='22.115';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.115',d:'04.10.2026',items:['✨ NEUE FEATURE: Artikel-Review-Dialog für jeden erkannten Artikel','🔍 Jeder Artikel wird einzeln angezeigt mit allen Details','✅ Benutzer kann jeden Artikel bestätigen oder überspringen','📋 Volle Kontrolle über die KI-Erkennung vor Barcode-Verarbeitung','🎯 Besseres Debugging und Datenqualität']},
+  {v:'22.114',d:'04.10.2026',items:['🐛 FIX: Shop-Selection-Dialog wird nach Auswahl zuverlässig entfernt','✨ selectBarcodeShop() nutzt jetzt getElementById() statt querySelectorAll()','🎯 Dialog-Entfernung ist jetzt präzise und nicht mehrdeutig','💯 Der Dialog bleibt nach dem Scan nicht mehr übrig']},
   {v:'22.113',d:'04.10.2026',items:['🐛 FIX: Abbrechen-Button im Geschäfts-Dialog — saubere Implementierung','✨ Neue Funktion: cancelBarcodeShopSelection() statt inline-JavaScript','🔧 Entfernt: Escaping-Fehler im Button-Code','🎯 Button ist jetzt zuverlässig und wartbar','📊 Debug-Toasts zeigen Dialog-Status: öffnen/auswählen/abbrechen']},
   {v:'22.112',d:'04.10.2026',items:['🐛 FIX: Geschäfts-Dialog wird nach Auswahl nicht mehr erneut angezeigt','🔄 closeBarcodeCamera() navigiert zu goScreen("s-lager") statt openShopSelectionDialog()','✅ Dialog erscheint nur einmalig beim App-Start','🎯 Nutzererlebnis: Kamera schließen kehrt zur Lager-Ansicht zurück','📱 Workflow ist jetzt intuitiver und weniger überraschend']},
   {v:'22.111',d:'04.10.2026',items:['🐛 FIX: Abbrechen Button im Geschäfts-Auswahl-Dialog','🔧 Dialog bekommt ID: shop-selection-dlg','✅ Abbrechen nutzt jetzt document.getElementById() statt DOM-Traversing','🛡️ Robuster: Kein this.parentElement.parentElement.parentElement mehr','🔙 Zurück zum Lager funktioniert jetzt zuverlässig']},
@@ -7902,8 +7904,9 @@ function openShopSelectionDialog(){
 function selectBarcodeShop(shop){
   toast('✅ Geschäft ausgewählt: ' + shop);
   barcodeEinkaufState.geschaeft=shop;
-  // Alle offenen Dialoge entfernen
-  document.querySelectorAll('[style*="position:fixed"][style*="rgba(0,0,0,.5)"]').forEach(d => d.remove());
+  // Shop-Auswahl-Dialog entfernen
+  const dlg = document.getElementById('shop-selection-dlg');
+  if(dlg) dlg.remove();
   // Kurze Verzögerung vor Start
   setTimeout(() => startBarcodeInputLoop(), 100);
 }
@@ -8106,6 +8109,82 @@ function addBarcodeToBuffer(barcode) {
   } else {
     toast('ℹ️ Barcode bereits erfasst');
   }
+}
+
+function showArticleReviewDialog(){
+  if(!barcodeEinkaufState.erkannteArtikel || barcodeEinkaufState.erkannteArtikel.length===0){
+    toast('❌ Keine Artikel erkannt');
+    return;
+  }
+  barcodeEinkaufState.reviewIdx=0;
+  showNextArticleReview();
+}
+
+function showNextArticleReview(){
+  const idx=barcodeEinkaufState.reviewIdx||0;
+  const artikel=barcodeEinkaufState.erkannteArtikel[idx];
+  if(!artikel){
+    // Alle Artikel reviewed - starte Barcode-Verarbeitung
+    finishArticleReview();
+    return;
+  }
+
+  const total=barcodeEinkaufState.erkannteArtikel.length;
+  const dlg=document.createElement('div');
+  dlg.id='article-review-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center';
+  dlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r);width:90%;max-width:500px;padding:20px;max-height:80vh;overflow-y:auto">'+
+      '<div style="font-weight:700;font-size:18px;margin-bottom:4px">🔍 Artikel '+(idx+1)+'/'+total+'</div>'+
+      '<div style="font-size:13px;color:var(--t2);margin-bottom:16px">KI hat diesen Artikel erkannt</div>'+
+      '<div style="background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin-bottom:12px;font-size:14px;line-height:1.6">'+
+        '<div style="font-weight:600;margin-bottom:8px;color:var(--ok)">📦 '+esc(artikel.name||'Unbekannt')+'</div>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;color:var(--t2)">'+
+          '<div><strong>Menge:</strong> '+esc(artikel.menge+' '+(artikel.einheit||'Stk'))+'</div>'+
+          '<div><strong>Einheit:</strong> '+esc(artikel.einheit||'Stk')+'</div>'+
+          '<div><strong>Brutto:</strong> CHF '+artikel.preis_brutto?.toFixed(2)||'0.00'+'</div>'+
+          '<div><strong>Netto:</strong> CHF '+artikel.preis_netto?.toFixed(2)||'0.00'+'</div>'+
+          (artikel.rabatt&&artikel.rabatt>0?'<div><strong>Rabatt:</strong> CHF '+artikel.rabatt?.toFixed(2)+'</div>':'<div></div>')+
+          '<div><strong>Barcode:</strong> '+(artikel.barcode?esc(artikel.barcode):'(keine)')+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="display:flex;flex-direction:column;gap:8px">'+
+        '<button onclick="confirmArticleReview()" style="padding:12px;background:var(--ok);border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:15px">✅ Bestätigen</button>'+
+        '<button onclick="skipArticleReview()" style="padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:500;cursor:pointer;font-size:15px">❌ Überspringen</button>'+
+      '</div>'+
+    '</div>';
+  document.body.appendChild(dlg);
+}
+
+function confirmArticleReview(){
+  const dlg=document.getElementById('article-review-dlg');
+  if(dlg)dlg.remove();
+  barcodeEinkaufState.reviewIdx=(barcodeEinkaufState.reviewIdx||0)+1;
+  showNextArticleReview();
+}
+
+function skipArticleReview(){
+  const dlg=document.getElementById('article-review-dlg');
+  if(dlg)dlg.remove();
+  // Artikel aus der Liste entfernen
+  const idx=barcodeEinkaufState.reviewIdx||0;
+  barcodeEinkaufState.erkannteArtikel.splice(idx,1);
+  toast('⏭️ Artikel übersprungen');
+  showNextArticleReview();
+}
+
+function finishArticleReview(){
+  const dlg=document.getElementById('article-review-dlg');
+  if(dlg)dlg.remove();
+  toast('✅ Alle Artikel reviewed!');
+  setTimeout(async ()=>{
+    toast('🔄 Verarbeite Barcodes...');
+    console.log('[Quittung] Starte processAllBarcodes...');
+    await processAllBarcodes();
+    toast('✅ Fertig! Navigiere zum Lager...');
+    console.log('[Quittung] Beende Einkauf...');
+    finishBarcodeEinkauf();
+  },500);
 }
 
 function closeBarcodeCamera() {
@@ -8328,21 +8407,18 @@ async function handleQuittungFile(e) {
     console.log('[Quittung] Quittungs-Text gespeichert, Länge:', barcodeEinkaufState.quittungText.length);
     toast('✅ Quittung analysiert!');
 
+    // Speichere die erkannten Artikel für Review
+    barcodeEinkaufState.erkannteArtikel = parsed.artikel || [];
+    console.log('[Quittung] ' + barcodeEinkaufState.erkannteArtikel.length + ' Artikel zum Review gespeichert');
+
+    // Zeige Artikel-Review-Dialog
+    setTimeout(() => showArticleReviewDialog(), 500);
+
   } catch (err) {
     console.error('[Quittung] Fehler:', err);
     toast('❌ Fehler: ' + err.message);
     barcodeEinkaufState.quittungText = '';
   }
-
-  // Starte Artikel-Verarbeitung
-  setTimeout(async () => {
-    toast('🔄 Verarbeite Barcodes...');
-    console.log('[Quittung] Starte processAllBarcodes...');
-    await processAllBarcodes();
-    toast('✅ Fertig! Navigiere zum Lager...');
-    console.log('[Quittung] Beende Einkauf...');
-    finishBarcodeEinkauf();
-  }, 500);
 }
 
 async function processAllBarcodes() {
