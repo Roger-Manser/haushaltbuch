@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.138 — IMPROVEMENT: API-Caching + Einbuchen-Button Event-Handler Fix -->
+<!-- HAUSHALTBUCH v22.139 — BUGFIX: Duplikat-Barcodes, Artikel-Sync, Datenbank-Suche mit Normalisierung -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.138"/>
+<meta name="app-version" content="22.139"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.138';
+const APP_VERSION='22.139';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.139',d:'04.10.2026',items:['🔧 BUGFIX: Duplikat-Barcodes werden ignoriert + Scanner läuft weiter','📦 Artikel-Änderungen (Barcode-Zuweisung) werden ins Haupt-Array kopiert','✅ Skip-Funktion entfernt Artikel aus BEIDEN Arrays (artikel + erkannteArtikel)','🔍 Datenbank-Suche normalisiert Barcodes (führende Nullen)','📥 Alle Änderungen werden vor Speicherung ins Haupt-Array synchronisiert']},
   {v:'22.138',d:'04.10.2026',items:['💾 FEATURE: API-Caching für Barcodes — verhindert redundante Anfragen','⚡ Suchergebnisse werden im Cache gespeichert (pro Barcode)','🔄 Gleiche Barcodes können sofort wieder aus Cache geladen werden','🎯 Einbuchen-Button: Event-Handler Fix mit stopPropagation()','✅ Schneller und zuverlässiger Workflow nach Barcode-Zuweisung']},
   {v:'22.137',d:'04.10.2026',items:['⏸️ IMPROVEMENT: Scanner pausiert nach erfolgreichem Scan bis Bestätigung','🎥 Video-Keepalive: Alle 2 Sekunden play() um Stromsparmodus zu vermeiden','⚡ Kamera bleibt aktiv und responsive während Benutzer entscheidet','🔄 Scanner nach Bestätigen/Verwerfen/Korrigieren automatisch fortgesetzt','✅ Besseres UX: Benutzer sieht Video und pausiert bei jedem Code']},
   {v:'22.136',d:'04.10.2026',items:['🔍 FEATURE: Bestätigungsdialog nach Barcode-Scan zeigt erkannten Code','✏️ Benutzer kann unvollständige/fehlerhafte Barcodes korrigieren','📦 Großes Display des Barcodes mit Typ (EAN-13/EAN-8/etc.)','🎯 3 Optionen: Bestätigen / Korrigieren / Verwerfen','✅ Verhindert unvollständige Barcodes in der Datenbank']},
@@ -8143,6 +8144,7 @@ function validateBarcode(barcode) {
 function addBarcodeToBuffer(barcode) {
   if (barcodeEinkaufState.artikel.some(a => a.barcode === barcode)) {
     toast('ℹ️ Barcode bereits erfasst');
+    resumeScanning();  // Scanner muss weiterlaufen!
     return;
   }
 
@@ -8336,6 +8338,19 @@ function showNextArticleReview(){
 function confirmArticleReview(){
   const dlg=document.getElementById('article-review-dlg');
   if(dlg)dlg.remove();
+
+  // Kopiere Änderungen zurück zum Haupt-Array
+  const idx=barcodeEinkaufState.reviewIdx||0;
+  if(barcodeEinkaufState.erkannteArtikel && barcodeEinkaufState.erkannteArtikel[idx]){
+    const updatedArtikel=barcodeEinkaufState.erkannteArtikel[idx];
+    if(barcodeEinkaufState.artikel && barcodeEinkaufState.artikel[updatedArtikel.index]){
+      barcodeEinkaufState.artikel[updatedArtikel.index]={
+        ...barcodeEinkaufState.artikel[updatedArtikel.index],
+        ...updatedArtikel
+      };
+    }
+  }
+
   barcodeEinkaufState.reviewIdx=(barcodeEinkaufState.reviewIdx||0)+1;
   showNextArticleReview();
 }
@@ -8398,8 +8413,19 @@ function cancelAssignArticle(){
 function skipArticleReview(){
   const dlg=document.getElementById('article-review-dlg');
   if(dlg)dlg.remove();
-  // Artikel aus der Liste entfernen
+  // Artikel aus beiden Listen entfernen
   const idx=barcodeEinkaufState.reviewIdx||0;
+  if(barcodeEinkaufState.erkannteArtikel && barcodeEinkaufState.erkannteArtikel[idx]){
+    const origIdx=barcodeEinkaufState.erkannteArtikel[idx].index;
+    // Entferne aus artikel Array
+    if(barcodeEinkaufState.artikel && barcodeEinkaufState.artikel[origIdx]){
+      barcodeEinkaufState.artikel.splice(origIdx,1);
+      // Aktualisiere alle Indizes in erkannteArtikel nach diesem
+      barcodeEinkaufState.erkannteArtikel.forEach(a=>{
+        if(a.index>origIdx)a.index--;
+      });
+    }
+  }
   barcodeEinkaufState.erkannteArtikel.splice(idx,1);
   toast('⏭️ Artikel übersprungen');
   showNextArticleReview();
@@ -8510,6 +8536,14 @@ function assignSelectedBarcode(){
     }
   }else{
     artikel.barcode=selectedBarcode;
+  }
+
+  // Kopiere Änderungen zurück zum Haupt-Array
+  if(barcodeEinkaufState.artikel && barcodeEinkaufState.artikel[artikel.index]){
+    barcodeEinkaufState.artikel[artikel.index]={
+      ...barcodeEinkaufState.artikel[artikel.index],
+      ...artikel
+    };
   }
 
   toast('✓ Barcode zugewiesen');
@@ -9109,6 +9143,19 @@ function cancelNewArticleDialog(){
 function finishArticleReview(){
   const dlg=document.getElementById('article-review-dlg');
   if(dlg)dlg.remove();
+
+  // Kopiere alle verbleibenden Änderungen aus erkannteArtikel zurück zu artikel
+  if(barcodeEinkaufState.erkannteArtikel){
+    barcodeEinkaufState.erkannteArtikel.forEach(updated=>{
+      if(barcodeEinkaufState.artikel && barcodeEinkaufState.artikel[updated.index]){
+        barcodeEinkaufState.artikel[updated.index]={
+          ...barcodeEinkaufState.artikel[updated.index],
+          ...updated
+        };
+      }
+    });
+  }
+
   toast('✅ Alle Artikel reviewed!');
   setTimeout(async ()=>{
     toast('🔄 Verarbeite Barcodes...');
@@ -9578,7 +9625,20 @@ function finishBarcodeEinkauf(){
 }
 
 function artikelByCode(barcode){
-  return S.a.find(a=>(a.bc||[]).includes(barcode));
+  if(!barcode)return null;
+
+  // Genaue Suche zuerst
+  const exact=S.a.find(a=>(a.bc||[]).includes(barcode));
+  if(exact)return exact;
+
+  // Falls nicht exakt gefunden, versuche mit normalisierten Barcodes
+  // (z.B. führende Nullen entfernen für EAN)
+  const normalized=barcode.replace(/^0+/,'');
+  if(normalized && normalized!==barcode){
+    return S.a.find(a=>(a.bc||[]).some(bc=>bc.replace(/^0+/,'')==normalized));
+  }
+
+  return null;
 }
 
 /* ── Quittung scannen (Claude Vision) ────────────────────────────── */
