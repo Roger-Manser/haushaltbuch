@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.161 — BARCODE-CACHE: Daten-Merge statt Überschreiben, Sync-Konflikt behoben -->
+<!-- HAUSHALTBUCH v22.162 — BARCODE-CACHE: String-Konvertierung und localStorage-Fehlerbehandlung -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.161"/>
+<meta name="app-version" content="22.162"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,7 +558,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.161';
+const APP_VERSION='22.162';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -571,6 +571,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.162',d:'05.10.2026',items:['🔧 BUGFIX: Barcode-String-Konvertierung & localStorage-Fehlerbehandlung','✅ addScannedBarcodeToCache(): Barcode sicher zu String konvertieren','✅ validateBarcode(): String-Konvertierung vor Format-Checks','📊 localStorage-Fehler werden jetzt geloggt (QuotaExceededError etc.)','🐛 Verhindert Fehler wenn Barcode nicht vom Typ String ist']},
   {v:'22.161',d:'04.10.2026',items:['🔧 MEGA-FIX: loadBarcodeCacheFromGH() überschrieb lokale Barcodes mit leeren GitHub-Daten!','❌ PROBLEM BEHOBEN: MERGE statt ÜBERSCHREIBEN','✅ Lokale Barcodes werden BEWAHRT, GitHub-Daten werden hinzugefügt (merge logic)','✅ Sync-Konflikt aufgelöst: lokal gewinnt bei Konflikten','🌐 Barcodes gehen nicht mehr verloren bei GitHub-Sync!']},
   {v:'22.160',d:'04.10.2026',items:['🔧 KRITISCHER FIX: Barcodes werden jetzt zu GitHub synchronisiert!','❌ PROBLEM BEHOBEN: addScannedBarcodeToCache() speicherte lokal, synced aber nicht','✅ syncBarcodeCacheToGH() wird jetzt nach jedem Scan aufgerufen','✅ Mobile + Web App teilen jetzt Barcodes via GitHub (beide Richtungen)','🌐 Barcode-Sync funktioniert vollständig end-to-end!']},
   {v:'22.159',d:'04.10.2026',items:['🔧 KRITISCHER FIX: "Fertig" Button ist JETZT SICHTBAR!','❌ PROBLEM BEHOBEN: Content-Div Buttons wurden von Confirmation-Dialog überlagert','✅ Content-Div z-index: 5 → 9100 (über Confirmation-Dialog)','✅ pointer-events:auto hinzugefügt (Buttons sind clickable)','🎯 Du kannst jetzt zum Quittungsscan übergehen!']},
@@ -971,8 +972,7 @@ function loadBarcodeCacheL(){
   console.log('[BarcodeCache] Geladen aus localStorage:',Object.keys(barcodeCache.barcodes).length,'Barcodes');
 }
 function saveBarcodeCacheL(){
-  try{localStorage.setItem('hb_barcode_cache',JSON.stringify(barcodeCache));}catch(e){}
-  console.log('[BarcodeCache] Gespeichert in localStorage:',Object.keys(barcodeCache.barcodes).length,'Barcodes');
+  try{localStorage.setItem('hb_barcode_cache',JSON.stringify(barcodeCache));console.log('[BarcodeCache] ✅ Gespeichert in localStorage:',Object.keys(barcodeCache.barcodes).length,'Barcodes');}catch(e){console.error('[BarcodeCache] ❌ localStorage FEHLER:',e.message);}
 }
 async function loadBarcodeCacheFromGH(){
   if(!gh.tok||!gh.own||!gh.repo)return;
@@ -1054,8 +1054,9 @@ function addToBarcodeCacheIfNotExists(barcode,data){
 }
 function addScannedBarcodeToCache(barcode){
   // Füge gerade gescannten Barcode zur persistenten Cache hinzu (ohne API-Daten)
-  console.log('[BarcodeCache] addScannedBarcodeToCache() aufgerufen mit:',barcode,'| Typ:',typeof barcode,'| Länge:',barcode?.length);
-  if(!barcode||barcode.trim()===''){
+  barcode=String(barcode).trim();  // 🔧 Sicher zu String konvertieren
+  console.log('[BarcodeCache] addScannedBarcodeToCache() aufgerufen mit:',barcode,'| Länge:',barcode?.length);
+  if(!barcode){
     console.log('[BarcodeCache] ❌ Barcode ist leer!');
     return false;
   }
@@ -8448,6 +8449,8 @@ async function startBarcodeCamera(){
 }
 
 function validateBarcode(barcode) {
+  // Sicher zu String konvertieren
+  barcode=String(barcode).trim();
   // Format-Prüfung: nur Ziffern
   if (!/^\d+$/.test(barcode)) {
     return { valid: false, reason: 'Nur Ziffern erlaubt' };
