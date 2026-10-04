@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.124 — Dialog scrollbar: max-height:85vh + overflow-y:auto -->
+<!-- HAUSHALTBUCH v22.125 — DEBUGGING: Gelber TEST-Box + DIVs statt Buttons -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.124"/>
+<meta name="app-version" content="22.125"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.124';
+const APP_VERSION='22.125';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.125',d:'04.10.2026',items:['🐛 DEBUGGING-VERSION: Gelber TEST-Box zum Diagnose','❌ Gelbe Box = Inhalt wird rendert, Buttons sollten auch sichtbar sein','✅ Buttons: Jetzt DIVs statt Button-Element (mehr Kompatibilität)','🔍 Wenn du keine gelbe Box siehst = Dialog-Scrolling Problem','💡 Wenn du gelbe Box siehst = Buttons müssten auch sichtbar sein!']},
   {v:'22.124',d:'04.10.2026',items:['🔑 KRITISCH: Dialog ist jetzt SCROLLBAR!','❌ Problem erkannt: Buttons waren außerhalb der Dialog-Box','✅ Lösung: max-height:85vh + overflow-y:auto auf innerem Dialog','📜 Dialog scrollt wenn Inhalt zu lang ist','👆 Swipe/Scroll um Buttons zu sehen!']},
   {v:'22.123',d:'04.10.2026',items:['💥 RADIKAL VEREINFACHT: Vertikale Button-Liste, KEINE Flex/Grid!','❌ Entfernt: alle komplexen CSS-Properties (flex, gap, calc, etc)','✅ Neu: display:block, width:100%, margin-bottom:8px','📱 4 Buttons übereinander, maximal einfach','🎯 Das wird definitiv funktionieren!']},
   {v:'22.122',d:'04.10.2026',items:['🔥 KRITISCH: Komplett neue Button-Struktur mit expliziten Rows!','❌ Fehler: Flexbox mit flex-wrap war noch nicht zuverlässig','✅ Lösung: 2 separate Zeilen mit je 2 Buttons (height:48px)','🎯 Vereinfachte HTML-Struktur, keine komplexen Berechnungen','✨ Buttons MÜSSEN jetzt sichtbar sein!']},
@@ -8176,12 +8177,15 @@ function showNextArticleReview(){
         '</div>'+
       '</div>'+
 
-      // 4 Action Buttons - Ultra-Simple Layout (MINIMAL CSS)
-      '<div style="margin-top:20px;width:100%">'+
-        '<button onclick="confirmArticleReview()" style="display:block;width:100%;padding:12px;margin-bottom:8px;background:#10b981;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box">✅ Einbuchen</button>'+
-        '<button onclick="compareWithScannedBarcodes()" style="display:block;width:100%;padding:12px;margin-bottom:8px;background:#3b82f6;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box">🔍 Vergleich</button>'+
-        '<button onclick="createNewArticleWithWebSearch()" style="display:block;width:100%;padding:12px;margin-bottom:8px;background:#8b5cf6;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box">🌐 Neu+Suche</button>'+
-        '<button onclick="skipArticleReview()" style="display:block;width:100%;padding:12px;background:#ef4444;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box">⏭️ Überspringen</button>'+
+      // TEST: Prüfe ob Inhalt unter Details sichtbar ist
+      '<div style="background:#ffff00;color:#000;padding:10px;margin-top:20px;text-align:center;border-radius:6px;font-weight:bold">TEST: Du solltest mich sehen!</div>'+
+
+      // 4 Action Buttons - DIV-basiert statt Button-Element
+      '<div style="margin-top:12px;width:100%">'+
+        '<div onclick="confirmArticleReview()" style="display:block;width:100%;padding:12px;margin-bottom:8px;background:#10b981;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box;text-align:center">✅ Einbuchen</div>'+
+        '<div onclick="compareWithScannedBarcodes()" style="display:block;width:100%;padding:12px;margin-bottom:8px;background:#3b82f6;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box;text-align:center">🔍 Vergleich</div>'+
+        '<div onclick="createNewArticleWithWebSearch()" style="display:block;width:100%;padding:12px;margin-bottom:8px;background:#8b5cf6;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box;text-align:center">🌐 Neu+Suche</div>'+
+        '<div onclick="skipArticleReview()" style="display:block;width:100%;padding:12px;background:#ef4444;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box;text-align:center">⏭️ Überspringen</div>'+
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
