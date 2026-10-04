@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.118 — Artikel-Review: Farbkontrast fix + 4 Aktion-Buttons (Einbuchen, Vergleich, Neu+Suche, Überspringen) -->
+<!-- HAUSHALTBUCH v22.119 — BugFix: showNextArticleReview() wird jetzt aufgerufen nach Quittungs-Parsing -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.118"/>
+<meta name="app-version" content="22.119"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.118';
+const APP_VERSION='22.119';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.119',d:'04.10.2026',items:['🐛 KRITISCH: BugFix - showNextArticleReview() wird jetzt aufgerufen!','❌ Fehler: handleQuittungFile() rief showArticleReviewDialog() auf (nicht existent)','✅ Korrigiert: Aufruft jetzt showNextArticleReview() nach Quittungs-Parsing','🎯 Artikel-Review Dialog wird JETZT nach Quittung angezeigt','✅ 4-Button Layout funktioniert jetzt!']},
   {v:'22.118',d:'04.10.2026',items:['🎨 FIX: Farbkontrast in Status-Box (grün/rot) mit besserer Lesbarkeit','🔘 NEUE 4-Button Layout: Einbuchen, Barcode-Vergleich, Neu+Web-Suche, Überspringen','🔍 compareWithScannedBarcodes() zeigt gescannte Strichcodes zum Vergleich','🌐 createNewArticleWithWebSearch() sucht in Open Food Facts nach Barcode','✅ Umfassendere Artikel-Review mit allen notwendigen Aktionen']},
   {v:'22.117',d:'04.10.2026',items:['✨ ERWEITERT: Artikel-Review-Dialog mit mehr Informationen','📚 Zeigt ob Artikel in Datenbank bekannt ist (grüne/rote Box)','💰 Berechnet Einzelpreis wenn Menge > 1','🔗 Button "Zuweisen" bei unbekannten Artikeln → Wählt aus bestehenden Artikeln','✅ Bessere Kontrolle und Datenzuordnung beim Review']},
   {v:'22.116',d:'04.10.2026',items:['🐛 FIX: Versionsprüfung funktioniert jetzt zuverlässig','📡 Lädt version.json und vergleicht mit lokaler Version','✅ Zeigt "Neue Version verfügbar" oder "Bereits aktuell" korrekt','🔧 compareVersions() Funktion für semantischen Versionsvergleich','🎯 Mobile App zeigt jetzt die richtige Update-Information']},
@@ -8609,7 +8610,7 @@ async function handleQuittungFile(e) {
     console.log('[Quittung] ' + barcodeEinkaufState.erkannteArtikel.length + ' Artikel zum Review gespeichert');
 
     // Zeige Artikel-Review-Dialog
-    setTimeout(() => showArticleReviewDialog(), 500);
+    setTimeout(() => showNextArticleReview(), 500);
 
   } catch (err) {
     console.error('[Quittung] Fehler:', err);
