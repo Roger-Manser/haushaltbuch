@@ -12063,46 +12063,6 @@
       "packMenge": 0,
       "packEinheit": "",
       "packungen": []
-    },
-    {
-      "id": 304,
-      "name": "c.m. plus Knusper-Müesli Äpfel & Honig",
-      "marke": "Familia, c.m. plu original  Familia",
-      "kat": "Diverses",
-      "bc": [
-        "7610023050819"
-      ],
-      "menge": 0,
-      "mindest": 0,
-      "lager": "",
-      "einheit": "Stk",
-      "preis": 0,
-      "ablaufdatum": "",
-      "kaufdatum": "2026-10-04",
-      "kaufort": "Lidl",
-      "notiz": "zuletzt erfasst",
-      "packMenge": 0,
-      "packEinheit": ""
-    },
-    {
-      "id": 305,
-      "name": "Sardines",
-      "marke": "",
-      "kat": "Diverses",
-      "bc": [
-        "12111411"
-      ],
-      "menge": 0,
-      "mindest": 0,
-      "lager": "",
-      "einheit": "Stk",
-      "preis": 0,
-      "ablaufdatum": "",
-      "kaufdatum": "2026-10-04",
-      "kaufort": "Lidl",
-      "notiz": "zuletzt erfasst",
-      "packMenge": 0,
-      "packEinheit": ""
     }
   ],
   "lagerorte": [
@@ -25931,5 +25891,5 @@
       "kaufort": "Landi"
     }
   ],
-  "aktualisiert": "2026-10-04T10:21:23.914Z"
+  "aktualisiert": "2026-10-04T10:22:03.861Z"
 }
