@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.122 — BugFix: Explizite 2x2 Button-Struktur mit Row-Layout -->
+<!-- HAUSHALTBUCH v22.123 — RADIKAL vereinfacht: Vertikale Button-Liste, keine Flex -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.122"/>
+<meta name="app-version" content="22.123"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.122';
+const APP_VERSION='22.123';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.123',d:'04.10.2026',items:['💥 RADIKAL VEREINFACHT: Vertikale Button-Liste, KEINE Flex/Grid!','❌ Entfernt: alle komplexen CSS-Properties (flex, gap, calc, etc)','✅ Neu: display:block, width:100%, margin-bottom:8px','📱 4 Buttons übereinander, maximal einfach','🎯 Das wird definitiv funktionieren!']},
   {v:'22.122',d:'04.10.2026',items:['🔥 KRITISCH: Komplett neue Button-Struktur mit expliziten Rows!','❌ Fehler: Flexbox mit flex-wrap war noch nicht zuverlässig','✅ Lösung: 2 separate Zeilen mit je 2 Buttons (height:48px)','🎯 Vereinfachte HTML-Struktur, keine komplexen Berechnungen','✨ Buttons MÜSSEN jetzt sichtbar sein!']},
   {v:'22.121',d:'04.10.2026',items:['🔧 KRITISCH: Wechsel zu Flexbox-Layout für zuverlässige Button-Anzeige','❌ Fehler: Grid-Layout war zu komplex für Button-Elemente','✅ Lösung: flex:1 1 calc(50% - 4px) mit flex-wrap für 2x2 Layout','📱 box-sizing:border-box für konsistente Größen','👆 Buttons sollten jetzt sichtbar sein!']},
   {v:'22.120',d:'04.10.2026',items:['🐛 KRITISCH BugFix: Buttons im Artikel-Review Dialog sind jetzt sichtbar!','❌ Fehler: Buttons waren unsichtbar weil inline statt block','✅ Korrigiert: width:100% und min-height:44px für alle Buttons','🎯 Grid-Layout funktioniert jetzt für responsive Button-Layout','👆 Touch-friendly: min-height:44px für mobile devices']},
@@ -8174,16 +8175,12 @@ function showNextArticleReview(){
         '</div>'+
       '</div>'+
 
-      // 4 Action Buttons - 2x2 Explicit Layout
-      '<div style="margin-top:16px">'+
-        '<div style="margin-bottom:8px;display:flex;gap:8px">'+
-          '<button onclick="confirmArticleReview()" style="flex:1;padding:14px;background:#10b981;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px;height:48px">✅ Einbuchen</button>'+
-          '<button onclick="compareWithScannedBarcodes()" style="flex:1;padding:14px;background:#3b82f6;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px;height:48px">🔍 Vergleich</button>'+
-        '</div>'+
-        '<div style="display:flex;gap:8px">'+
-          '<button onclick="createNewArticleWithWebSearch()" style="flex:1;padding:14px;background:#8b5cf6;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px;height:48px">🌐 Neu+Suche</button>'+
-          '<button onclick="skipArticleReview()" style="flex:1;padding:14px;background:#ef4444;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px;height:48px">⏭️ Überspringen</button>'+
-        '</div>'+
+      // 4 Action Buttons - Ultra-Simple Layout (MINIMAL CSS)
+      '<div style="margin-top:20px;width:100%">'+
+        '<button onclick="confirmArticleReview()" style="display:block;width:100%;padding:12px;margin-bottom:8px;background:#10b981;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box">✅ Einbuchen</button>'+
+        '<button onclick="compareWithScannedBarcodes()" style="display:block;width:100%;padding:12px;margin-bottom:8px;background:#3b82f6;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box">🔍 Vergleich</button>'+
+        '<button onclick="createNewArticleWithWebSearch()" style="display:block;width:100%;padding:12px;margin-bottom:8px;background:#8b5cf6;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box">🌐 Neu+Suche</button>'+
+        '<button onclick="skipArticleReview()" style="display:block;width:100%;padding:12px;background:#ef4444;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box">⏭️ Überspringen</button>'+
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
