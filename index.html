@@ -7971,6 +7971,7 @@ async function startBarcodeCamera(){
       '<div style="color:#fff;text-align:center;font-weight:600;font-size:14px">🔍 Barcode scannen</div>'+
       '<div style="color:#ccc;text-align:center;font-size:12px" id="barcode-counter">Erfasst: '+barcodeEinkaufState.artikel.length+' Artikel</div>'+
       '<input type="text" id="barcode-manual-input" placeholder="Barcode eingeben..." style="width:100%;padding:10px;border:1px solid #555;border-radius:var(--rs);font-size:13px;background:#222;color:#fff;font-weight:500"/>'+
+      (barcodeEinkaufState.artikel.length>0?'<button onclick="closeBarcodeCamera()" style="width:100%;padding:12px;background:linear-gradient(135deg,#4CAF50,#45a049);border:none;border-radius:var(--rs);font-size:14px;cursor:pointer;color:#fff;font-weight:600;margin-bottom:6px">⏭️ Artikel überprüfen</button>':'')+
       '<div style="display:flex;gap:6px">'+
         '<button onclick="backToShopSelection()" style="flex:1;padding:10px;background:#333;border:1px solid #555;border-radius:var(--rs);font-size:13px;cursor:pointer;color:#ccc">← Zurück</button>'+
         '<button onclick="finishBarcodeInputAndStartQuittung()" style="flex:1;padding:10px;background:var(--ac);border:none;border-radius:var(--rs);font-size:13px;cursor:pointer;color:#fff;font-weight:600">✓ Fertig</button>'+
@@ -8283,7 +8284,7 @@ function skipArticleReview(){
   showNextArticleReview();
 }
 
-function compareWithScannedBarcodes(){
+async function compareWithScannedBarcodes(){
   const idx=barcodeEinkaufState.reviewIdx||0;
   const artikel=barcodeEinkaufState.erkannteArtikel[idx];
 
@@ -8301,21 +8302,100 @@ function compareWithScannedBarcodes(){
   const compareDlg=document.createElement('div');
   compareDlg.id='barcode-compare-dlg';
   compareDlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9001;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:10px';
+
+  // Sammle alle nicht-identischen Barcodes
+  const nonMatchingBarcodes=scannedBarcodes.filter(bc=>bc!==artikel.barcode);
+
+  // Starte Web-Suche für alle nicht-identischen Barcodes
+  let onlineDaten={};
+  if(nonMatchingBarcodes.length>0){
+    toast('🔍 Suche Produktinfo zu gescannten Barcodes...');
+    for(const bc of nonMatchingBarcodes){
+      try{
+        const results=await Promise.race([
+          Promise.all([
+            searchOpenFoodFacts(bc),
+            searchEANDatabase(bc)
+          ]),
+          new Promise((_,reject)=>setTimeout(()=>reject(new Error('timeout')),8000))
+        ]);
+        const validResult=results.find(r=>r!==null);
+        if(validResult){
+          onlineDaten[bc]=validResult;
+        }
+      }catch(e){
+        console.log('[BarcodeCompare] Keine Infos für',bc);
+      }
+    }
+  }
+
+  barcodeEinkaufState.onlineDaten=onlineDaten;
+  barcodeEinkaufState.selectedBarcode=null;
+
   compareDlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:500px;padding:20px;margin:auto">'+
+    '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:600px;padding:20px;margin:auto">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">🔍 Barcode-Vergleich</div>'+
       '<div style="font-size:13px;color:var(--t2);margin-bottom:16px">Erkannter Barcode: <strong>'+esc(artikel.barcode||'(keine)')+'</strong></div>'+
-      '<div style="font-size:13px;color:var(--t2);margin-bottom:12px">Gescannte Strichcodes:</div>'+
-      '<div style="max-height:400px;overflow-y:auto;border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:12px">'+
-        (scannedBarcodes.length===0?'<div style="padding:10px;color:var(--t2)">Keine gescannten Strichcodes</div>':
-        scannedBarcodes.map((bc,i)=>'<div style="padding:10px;border-bottom:1px solid var(--bd);background:var(--bg);font-family:monospace;font-size:13px">'+
-          '<div style="margin-bottom:4px">'+esc(bc)+'</div>'+
-          (bc===artikel.barcode?'<div style="color:#10b981;font-weight:600">✅ Übereinstimmung!</div>':'<div style="color:var(--t2);font-size:12px">Nicht identisch</div>')+
-        '</div>').join(''))+
+      '<div style="font-size:13px;color:var(--t2);margin-bottom:12px">Gescannte Strichcodes - wähle einen:</div>'+
+      '<div style="max-height:600px;overflow-y:auto;border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:12px">'+
+        scannedBarcodes.map((bc,i)=>{
+          const isMatch=bc===artikel.barcode;
+          const onlineInfo=onlineDaten[bc];
+          return '<label style="display:flex;cursor:pointer;padding:12px;border-bottom:1px solid var(--bd);background:var(--bg);align-items:flex-start;gap:10px">'+
+            '<input type="radio" name="barcode-select" value="'+esc(bc)+'" style="margin-top:3px;cursor:pointer">'+
+            '<div style="flex:1">'+
+              '<div style="font-family:monospace;font-size:13px;margin-bottom:8px">'+esc(bc)+'</div>'+
+              (isMatch?
+                '<div style="color:#10b981;font-weight:600;margin-bottom:8px">✅ Übereinstimmung!</div>':
+                '<div style="color:var(--t2);font-size:12px;margin-bottom:8px">Nicht identisch</div>')+
+              (onlineInfo?
+                '<div style="background:rgba(0,0,0,0.2);border-radius:var(--rs);padding:10px;margin-top:8px">'+
+                  (onlineInfo.image?'<img src="'+onlineInfo.image+'" style="width:100%;max-height:150px;object-fit:contain;border-radius:var(--rs);margin-bottom:8px">':'')+
+                  '<div style="font-weight:600;font-size:13px;color:#fff;margin-bottom:4px">'+esc(onlineInfo.name||'Unbekannt')+'</div>'+
+                  (onlineInfo.description?'<div style="font-size:12px;color:var(--t2)">'+esc(onlineInfo.description).substring(0,100)+'...</div>':'')+
+                '</div>':
+                '<div style="font-size:12px;color:var(--t2);margin-top:8px">⚠️ Keine Produktinfo online gefunden</div>')+
+            '</div>'+
+          '</label>';
+        }).join('')+
       '</div>'+
-      '<button onclick="cancelBarcodeCompare()" style="width:100%;padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:500;cursor:pointer">Zurück</button>'+
+      '<div style="display:flex;gap:8px">'+
+        '<button onclick="assignSelectedBarcode()" style="flex:1;padding:12px;background:#10b981;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer">✓ Zuweisen</button>'+
+        '<button onclick="cancelBarcodeCompare()" style="flex:1;padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:500;cursor:pointer">Zurück</button>'+
+      '</div>'+
     '</div>';
   document.body.appendChild(compareDlg);
+}
+
+function assignSelectedBarcode(){
+  const selected=document.querySelector('input[name="barcode-select"]:checked');
+  if(!selected){
+    toast('⚠️ Bitte einen Barcode wählen');
+    return;
+  }
+
+  const selectedBarcode=selected.value;
+  const idx=barcodeEinkaufState.reviewIdx||0;
+  const artikel=barcodeEinkaufState.erkannteArtikel[idx];
+  const onlineInfo=barcodeEinkaufState.onlineDaten?.[selectedBarcode];
+
+  // Aktualisiere den Artikel mit dem gewählten Barcode und Online-Infos
+  if(onlineInfo){
+    artikel.barcode=selectedBarcode;
+    artikel.name=onlineInfo.name||artikel.name;
+    artikel.description=onlineInfo.description||artikel.description;
+    if(onlineInfo.image){
+      artikel.image=onlineInfo.image;
+    }
+  }else{
+    artikel.barcode=selectedBarcode;
+  }
+
+  toast('✓ Barcode zugewiesen');
+  const dlg=document.getElementById('barcode-compare-dlg');
+  if(dlg)dlg.remove();
+
+  setTimeout(()=>showNextArticleReview(), 300);
 }
 
 function cancelBarcodeCompare(){
