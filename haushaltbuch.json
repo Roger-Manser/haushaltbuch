@@ -12099,24 +12099,6 @@
       "packungen": [],
       "preisHistorie": [],
       "quittungAliase": []
-    },
-    {
-      "id": 305,
-      "name": "Regenbogen Forellenfilets",
-      "marke": "nautica",
-      "kat": "Diverses",
-      "bc": [
-        "4056489147268"
-      ],
-      "menge": 0,
-      "mindest": 0,
-      "lager": "",
-      "einheit": "Stk",
-      "preis": 0,
-      "ablaufdatum": "",
-      "kaufdatum": "2026-10-04",
-      "kaufort": "Lidl",
-      "notiz": "zuletzt erfasst"
     }
   ],
   "lagerorte": [
@@ -26030,5 +26012,5 @@
       "kaufort": "Migros"
     }
   ],
-  "aktualisiert": "2026-10-04T17:38:48.312Z"
+  "aktualisiert": "2026-10-04T17:39:04.083Z"
 }
