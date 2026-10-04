@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.129 — ENDLICH: Buttons mit createElement/appendChild statt innerHTML! -->
+<!-- HAUSHALTBUCH v22.130 — Internet Barcode Lookup: Multi-Source Suche mit Foto & Bestätigung -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.129"/>
+<meta name="app-version" content="22.130"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.129';
+const APP_VERSION='22.130';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.130',d:'04.10.2026',items:['🌐 Internet-Barcode-Suche: Multi-Source Lookup (Open Food Facts + EAN Database)','📸 Produktfotos herunterladen und als Base64 speichern','✅ Benutzerbestätigung erforderlich vor Datenspeicherung','✏️ Manuelles Eintragen als Fallback wenn keine Online-Infos gefunden','🔍 Einfache UI zur Bestätigung oder Ablehnung der gefundenen Daten']},
   {v:'22.129',d:'04.10.2026',items:['🎯 RADIKAL: Dialog mit createElement/appendChild statt innerHTML!','❌ Problem: innerHTML-String war zu lang oder wurde abgeschnitten','✅ Lösung: Alle Elemente programmisch mit DOM-API erstellen','📍 Zuverlässiger, debuggbar, keine String-Konkatenation-Fehler','🔥 Buttons sollten DEFINITIV jetzt sichtbar und clickbar sein!']},
   {v:'22.128',d:'04.10.2026',items:['🔥 KRITISCH: Buttons NICHT clickbar! addEventListener statt onclick!','❌ Problem: onclick-Attribute in innerHTML funktionieren nicht zuverlässig','✅ Lösung: addEventListener nach appendChild mit Button-IDs','🎯 pointer-events:auto auf allen Elementen (explizit)','💡 Buttons sollten jetzt clickbar sein!']},
   {v:'22.127',d:'04.10.2026',items:['🐛 FIX: Buttons waren HORIZONTAL statt VERTIKAL','❌ Problem: flex-direction:column wurde nicht angewendet','✅ Lösung: display:block + margin-bottom:8px für jeden Button','📍 Jeder Button jetzt display:block, width:100%, untereinander','🎯 Buttons sollten jetzt VERTIKAL unter dem Dialog-Inhalt sein!']},
@@ -8346,41 +8347,481 @@ function performBarcodeWebSearch(){
     return;
   }
 
-  toast('🔍 Suche nach Barcode in Open Food Facts...');
+  const dlg=document.getElementById('new-article-search-dlg');
+  if(dlg){
+    const btn=dlg.querySelector('button[onclick="performBarcodeWebSearch()"]');
+    if(btn)btn.disabled=true;
+  }
 
-  // Suche in Open Food Facts
-  fetch('https://world.openfoodfacts.org/api/v0/product/'+encodeURIComponent(barcode)+'.json')
-    .then(r=>r.json())
-    .then(data=>{
-      if(data.status===1&&data.product){
-        const prod=data.product;
-        toast('✅ Produkt gefunden!');
-        console.log('[WebSearch] Gefundenes Produkt:', prod);
+  toast('🔍 Suche nach Barcode in mehreren Quellen...');
+  console.log('[WebSearch] Starte Suche für Barcode:', barcode);
 
-        // Erstelle neuen Artikel basierend auf Suchergebnis
-        const idx=barcodeEinkaufState.reviewIdx||0;
-        const erkannter=barcodeEinkaufState.erkannteArtikel[idx];
-
-        // Speichere Web-Such-Daten
-        erkannter.webSuchErgebnis={
-          name:prod.product_name||erkannter.name,
-          marke:prod.brands||'',
-          kategorien:prod.categories||'',
-          barcode:barcode
-        };
-
-        toast('✅ Artikel mit Web-Daten aktualisiert');
-        const dlg=document.getElementById('new-article-search-dlg');
-        if(dlg)dlg.remove();
-        setTimeout(()=>showNextArticleReview(), 300);
-      }else{
-        toast('❌ Barcode nicht in Open Food Facts gefunden');
+  // Suche in mehreren Quellen gleichzeitig
+  Promise.all([
+    searchOpenFoodFacts(barcode),
+    searchEANDatabase(barcode)
+  ])
+    .then(results=>{
+      const validResults=results.filter(r=>r!==null);
+      if(validResults.length===0){
+        toast('❌ Barcode in keiner Quelle gefunden');
+        if(dlg){
+          const btn=dlg.querySelector('button[onclick="performBarcodeWebSearch()"]');
+          if(btn)btn.disabled=false;
+        }
+        showManualEntryOption();
+        return;
       }
+
+      // Nutze das beste Ergebnis
+      const best=validResults[0];
+      console.log('[WebSearch] Bestes Ergebnis:', best);
+      showBarcodeSearchConfirmation(barcode, best);
     })
     .catch(err=>{
       console.error('[WebSearch] Fehler:', err);
       toast('❌ Fehler bei der Web-Suche');
+      if(dlg){
+        const btn=dlg.querySelector('button[onclick="performBarcodeWebSearch()"]');
+        if(btn)btn.disabled=false;
+      }
     });
+}
+
+async function searchOpenFoodFacts(barcode){
+  try{
+    const r=await fetch('https://world.openfoodfacts.org/api/v0/product/'+encodeURIComponent(barcode)+'.json',{timeout:5000});
+    const data=await r.json();
+    if(data.status===1&&data.product){
+      const prod=data.product;
+      const imageUrl=prod.image_front_url||prod.image_url||'';
+      return{
+        name:prod.product_name||'Unbekannt',
+        marke:prod.brands||'',
+        kategorien:prod.categories||'',
+        description:prod.product_name||'',
+        imageUrl:imageUrl,
+        source:'Open Food Facts'
+      };
+    }
+    return null;
+  }catch(e){
+    console.log('[OpenFoodFacts] Fehler:', e.message);
+    return null;
+  }
+}
+
+async function searchEANDatabase(barcode){
+  try{
+    const r=await fetch('https://api.eandata.com/product/'+encodeURIComponent(barcode),{timeout:5000});
+    if(!r.ok)return null;
+    const data=await r.json();
+    if(data&&data.Product){
+      const prod=data.Product;
+      return{
+        name:prod.ProductName||'Unbekannt',
+        marke:prod.Brand||'',
+        kategorien:prod.Category||'',
+        description:prod.ProductDescription||prod.ProductName||'',
+        imageUrl:prod.ImageUrl||'',
+        source:'EAN Database'
+      };
+    }
+    return null;
+  }catch(e){
+    console.log('[EANDatabase] Fehler:', e.message);
+    return null;
+  }
+}
+
+function showBarcodeSearchConfirmation(barcode, result){
+  const dlg=document.getElementById('new-article-search-dlg');
+  if(dlg)dlg.remove();
+
+  const confirmDlg=document.createElement('div');
+  confirmDlg.id='barcode-confirm-dlg';
+  confirmDlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9001;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:10px';
+
+  const inner=document.createElement('div');
+  inner.style.cssText='background:var(--sf);border-radius:var(--r);width:100%;max-width:480px;padding:20px;margin:auto;max-height:80vh;overflow-y:auto';
+
+  const title=document.createElement('div');
+  title.style.cssText='font-weight:700;font-size:16px;margin-bottom:12px';
+  title.textContent='✅ Artikel gefunden - Bestätigung';
+  inner.appendChild(title);
+
+  const source=document.createElement('div');
+  source.style.cssText='font-size:11px;color:var(--t2);margin-bottom:12px;padding:6px 10px;background:var(--bg);border-radius:var(--rs)';
+  source.textContent='Quelle: '+result.source;
+  inner.appendChild(source);
+
+  // Bild anzeigen wenn vorhanden
+  if(result.imageUrl){
+    const imgContainer=document.createElement('div');
+    imgContainer.style.cssText='margin-bottom:14px;border-radius:var(--rs);overflow:hidden;background:var(--bg);max-height:240px;display:flex;align-items:center;justify-content:center';
+    const img=document.createElement('img');
+    img.src=result.imageUrl;
+    img.style.cssText='width:100%;height:auto;max-height:240px;object-fit:cover';
+    img.onerror=()=>imgContainer.remove();
+    imgContainer.appendChild(img);
+    inner.appendChild(imgContainer);
+  }
+
+  // Produkt-Name
+  const nameLabel=document.createElement('div');
+  nameLabel.style.cssText='font-size:13px;color:var(--t2);margin-bottom:4px;font-weight:500';
+  nameLabel.textContent='📦 Produktname';
+  inner.appendChild(nameLabel);
+
+  const nameVal=document.createElement('div');
+  nameVal.style.cssText='background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:10px;margin-bottom:12px;font-size:14px;font-weight:500;color:var(--tx)';
+  nameVal.textContent=result.name;
+  inner.appendChild(nameVal);
+
+  // Marke wenn vorhanden
+  if(result.marke){
+    const markeLabel=document.createElement('div');
+    markeLabel.style.cssText='font-size:13px;color:var(--t2);margin-bottom:4px;font-weight:500';
+    markeLabel.textContent='🏷️ Marke';
+    inner.appendChild(markeLabel);
+
+    const markeVal=document.createElement('div');
+    markeVal.style.cssText='background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:10px;margin-bottom:12px;font-size:14px;color:var(--t2)';
+    markeVal.textContent=result.marke;
+    inner.appendChild(markeVal);
+  }
+
+  // Kategorie wenn vorhanden
+  if(result.kategorien){
+    const katLabel=document.createElement('div');
+    katLabel.style.cssText='font-size:13px;color:var(--t2);margin-bottom:4px;font-weight:500';
+    katLabel.textContent='📂 Kategorie';
+    inner.appendChild(katLabel);
+
+    const katVal=document.createElement('div');
+    katVal.style.cssText='background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:10px;margin-bottom:12px;font-size:14px;color:var(--t2)';
+    katVal.textContent=result.kategorien;
+    inner.appendChild(katVal);
+  }
+
+  // Barcode anzeigen
+  const bcLabel=document.createElement('div');
+  bcLabel.style.cssText='font-size:13px;color:var(--t2);margin-bottom:4px;font-weight:500';
+  bcLabel.textContent='🔢 Barcode';
+  inner.appendChild(bcLabel);
+
+  const bcVal=document.createElement('div');
+  bcVal.style.cssText='background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:10px;margin-bottom:16px;font-family:monospace;font-size:13px;color:var(--t2);word-break:break-all';
+  bcVal.textContent=barcode;
+  inner.appendChild(bcVal);
+
+  // Buttons
+  const btnContainer=document.createElement('div');
+  btnContainer.style.cssText='display:flex;gap:8px;flex-direction:column';
+
+  const acceptBtn=document.createElement('button');
+  acceptBtn.style.cssText='width:100%;padding:12px;background:#10b981;color:#fff;border:none;border-radius:var(--rs);font-weight:600;cursor:pointer;font-size:14px';
+  acceptBtn.textContent='✅ Akzeptieren & Speichern';
+  acceptBtn.addEventListener('click',()=>saveBarcodeArticleToDatabase(barcode, result));
+  btnContainer.appendChild(acceptBtn);
+
+  const rejectBtn=document.createElement('button');
+  rejectBtn.style.cssText='width:100%;padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);color:var(--t2);font-weight:600;cursor:pointer;font-size:14px';
+  rejectBtn.textContent='↩️ Ablehnen - Neu suchen';
+  rejectBtn.addEventListener('click',()=>{
+    confirmDlg.remove();
+    setTimeout(()=>createNewArticleWithWebSearch(), 300);
+  });
+  btnContainer.appendChild(rejectBtn);
+
+  const manualBtn=document.createElement('button');
+  manualBtn.style.cssText='width:100%;padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:600;cursor:pointer;font-size:14px';
+  manualBtn.textContent='✏️ Manuell eingeben';
+  manualBtn.addEventListener('click',()=>{
+    confirmDlg.remove();
+    setTimeout(()=>showManualArticleEntryDialog(barcode), 300);
+  });
+  btnContainer.appendChild(manualBtn);
+
+  inner.appendChild(btnContainer);
+  confirmDlg.appendChild(inner);
+  document.body.appendChild(confirmDlg);
+}
+
+async function saveBarcodeArticleToDatabase(barcode, result){
+  const idx=barcodeEinkaufState.reviewIdx||0;
+  const erkannter=barcodeEinkaufState.erkannteArtikel[idx];
+
+  try{
+    // Konvertiere Image zu Base64 wenn vorhanden
+    let fotoBase64='';
+    if(result.imageUrl){
+      fotoBase64=await downloadImageAsBase64(result.imageUrl);
+    }
+
+    // Erstelle neuen Artikel
+    const newId=S.nid||1;
+    S.nid=(S.nid||0)+1;
+
+    const newArticle={
+      id:newId,
+      name:result.name||'Unbekannt',
+      marke:result.marke||'',
+      kat:result.kategorien||'',
+      lager:0,
+      kaufort:'',
+      menge:0,
+      einheit:'Stk',
+      mindest:0,
+      barcode:barcode,
+      bc:[barcode],
+      preis:0,
+      packMenge:0,
+      packEinheit:'',
+      kaufdatum:'',
+      ablaufdatum:'',
+      notiz:'Internet-Quelle: '+result.source,
+      foto:fotoBase64,
+      fotoPath:'',
+      packungen:[],
+      preisHistorie:[],
+      quittungAliase:[]
+    };
+
+    S.a.push(newArticle);
+    saveL();
+    toast('✅ Artikel in Datenbank gespeichert: '+result.name);
+    console.log('[WebSearch] Artikel gespeichert:', newArticle);
+
+    // Schließe Dialog und gehe zum nächsten Artikel
+    const dlg=document.getElementById('barcode-confirm-dlg');
+    if(dlg)dlg.remove();
+
+    // Markiere als bearbeitet
+    erkannter.webSuchErgebnis=result;
+    erkannter.zugewiesenerArtikel=newArticle;
+
+    setTimeout(()=>showNextArticleReview(), 300);
+  }catch(e){
+    console.error('[SaveArticle] Fehler:', e);
+    toast('❌ Fehler beim Speichern: '+e.message);
+  }
+}
+
+async function downloadImageAsBase64(imageUrl){
+  try{
+    const r=await fetch(imageUrl);
+    if(!r.ok)return '';
+    const blob=await r.blob();
+    return new Promise((resolve,reject)=>{
+      const reader=new FileReader();
+      reader.onload=()=>resolve(reader.result);
+      reader.onerror=reject;
+      reader.readAsDataURL(blob);
+    });
+  }catch(e){
+    console.log('[ImageDownload] Fehler:', e.message);
+    return '';
+  }
+}
+
+function showManualArticleEntryDialog(barcode){
+  const dlg=document.getElementById('barcode-confirm-dlg');
+  if(dlg)dlg.remove();
+
+  const manualDlg=document.createElement('div');
+  manualDlg.id='manual-article-dlg';
+  manualDlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9001;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:10px';
+
+  const inner=document.createElement('div');
+  inner.style.cssText='background:var(--sf);border-radius:var(--r);width:100%;max-width:480px;padding:20px;margin:auto;max-height:80vh;overflow-y:auto';
+
+  const title=document.createElement('div');
+  title.style.cssText='font-weight:700;font-size:16px;margin-bottom:12px';
+  title.textContent='✏️ Artikel manuell eingeben';
+  inner.appendChild(title);
+
+  // Name-Feld
+  const nameLabel=document.createElement('label');
+  nameLabel.style.cssText='display:block;font-size:13px;color:var(--t2);margin-bottom:4px;font-weight:500';
+  nameLabel.textContent='📦 Produktname *';
+  inner.appendChild(nameLabel);
+
+  const nameInput=document.createElement('input');
+  nameInput.type='text';
+  nameInput.id='manual-name-input';
+  nameInput.placeholder='z.B. Milch 3.5%';
+  nameInput.style.cssText='width:100%;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:12px;font-size:14px;box-sizing:border-box';
+  inner.appendChild(nameInput);
+
+  // Marke-Feld
+  const markeLabel=document.createElement('label');
+  markeLabel.style.cssText='display:block;font-size:13px;color:var(--t2);margin-bottom:4px;font-weight:500';
+  markeLabel.textContent='🏷️ Marke';
+  inner.appendChild(markeLabel);
+
+  const markeInput=document.createElement('input');
+  markeInput.type='text';
+  markeInput.id='manual-marke-input';
+  markeInput.placeholder='z.B. Emmi';
+  markeInput.style.cssText='width:100%;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:12px;font-size:14px;box-sizing:border-box';
+  inner.appendChild(markeInput);
+
+  // Kategorie-Feld
+  const katLabel=document.createElement('label');
+  katLabel.style.cssText='display:block;font-size:13px;color:var(--t2);margin-bottom:4px;font-weight:500';
+  katLabel.textContent='📂 Kategorie';
+  inner.appendChild(katLabel);
+
+  const katInput=document.createElement('input');
+  katInput.type='text';
+  katInput.id='manual-kat-input';
+  katInput.placeholder='z.B. Milchprodukte';
+  katInput.style.cssText='width:100%;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:12px;font-size:14px;box-sizing:border-box';
+  inner.appendChild(katInput);
+
+  // Barcode-Anzeige
+  const bcLabel=document.createElement('label');
+  bcLabel.style.cssText='display:block;font-size:13px;color:var(--t2);margin-bottom:4px;font-weight:500';
+  bcLabel.textContent='🔢 Barcode';
+  inner.appendChild(bcLabel);
+
+  const bcInput=document.createElement('input');
+  bcInput.type='text';
+  bcInput.value=barcode;
+  bcInput.style.cssText='width:100%;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:16px;font-family:monospace;font-size:13px;box-sizing:border-box;background:var(--bg);color:var(--t2)';
+  bcInput.readOnly=true;
+  inner.appendChild(bcInput);
+
+  // Buttons
+  const btnContainer=document.createElement('div');
+  btnContainer.style.cssText='display:flex;gap:8px;flex-direction:column';
+
+  const saveBtn=document.createElement('button');
+  saveBtn.style.cssText='width:100%;padding:12px;background:#10b981;color:#fff;border:none;border-radius:var(--rs);font-weight:600;cursor:pointer;font-size:14px';
+  saveBtn.textContent='✅ Speichern';
+  saveBtn.addEventListener('click',()=>saveManualArticle(barcode));
+  btnContainer.appendChild(saveBtn);
+
+  const cancelBtn=document.createElement('button');
+  cancelBtn.style.cssText='width:100%;padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:600;cursor:pointer;font-size:14px';
+  cancelBtn.textContent='Abbrechen';
+  cancelBtn.addEventListener('click',()=>{
+    manualDlg.remove();
+    setTimeout(()=>createNewArticleWithWebSearch(), 300);
+  });
+  btnContainer.appendChild(cancelBtn);
+
+  inner.appendChild(btnContainer);
+  manualDlg.appendChild(inner);
+  document.body.appendChild(manualDlg);
+
+  // Focus auf Name-Feld
+  nameInput.focus();
+}
+
+function saveManualArticle(barcode){
+  const name=document.getElementById('manual-name-input')?.value;
+  if(!name){
+    toast('❌ Produktname erforderlich');
+    return;
+  }
+
+  const marke=document.getElementById('manual-marke-input')?.value||'';
+  const kat=document.getElementById('manual-kat-input')?.value||'';
+
+  // Erstelle neuen Artikel
+  const newId=S.nid||1;
+  S.nid=(S.nid||0)+1;
+
+  const newArticle={
+    id:newId,
+    name:name,
+    marke:marke,
+    kat:kat,
+    lager:0,
+    kaufort:'',
+    menge:0,
+    einheit:'Stk',
+    mindest:0,
+    barcode:barcode,
+    bc:[barcode],
+    preis:0,
+    packMenge:0,
+    packEinheit:'',
+    kaufdatum:'',
+    ablaufdatum:'',
+    notiz:'Manuell eingegeben',
+    foto:'',
+    fotoPath:'',
+    packungen:[],
+    preisHistorie:[],
+    quittungAliase:[]
+  };
+
+  S.a.push(newArticle);
+  saveL();
+  toast('✅ Artikel manuell erstellt: '+name);
+  console.log('[ManualEntry] Artikel gespeichert:', newArticle);
+
+  const dlg=document.getElementById('manual-article-dlg');
+  if(dlg)dlg.remove();
+
+  // Markiere als bearbeitet
+  const idx=barcodeEinkaufState.reviewIdx||0;
+  const erkannter=barcodeEinkaufState.erkannteArtikel[idx];
+  erkannter.zugewiesenerArtikel=newArticle;
+
+  setTimeout(()=>showNextArticleReview(), 300);
+}
+
+function showManualEntryOption(){
+  const dlg=document.getElementById('new-article-search-dlg');
+  if(dlg)dlg.remove();
+
+  const manualDlg=document.createElement('div');
+  manualDlg.id='no-results-dlg';
+  manualDlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9001;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:10px';
+
+  const inner=document.createElement('div');
+  inner.style.cssText='background:var(--sf);border-radius:var(--r);width:100%;max-width:420px;padding:20px;margin:auto';
+
+  const title=document.createElement('div');
+  title.style.cssText='font-weight:700;font-size:16px;margin-bottom:12px;color:var(--wn)';
+  title.textContent='❌ Barcode nicht gefunden';
+  inner.appendChild(title);
+
+  const msg=document.createElement('div');
+  msg.style.cssText='font-size:14px;color:var(--t2);margin-bottom:16px;line-height:1.6';
+  msg.textContent='Der Barcode konnte in den Datenbanken nicht gefunden werden. Bitte geben Sie die Informationen manuell ein.';
+  inner.appendChild(msg);
+
+  const btnContainer=document.createElement('div');
+  btnContainer.style.cssText='display:flex;gap:8px;flex-direction:column';
+
+  const manualBtn=document.createElement('button');
+  manualBtn.style.cssText='width:100%;padding:12px;background:#f59e0b;color:#fff;border:none;border-radius:var(--rs);font-weight:600;cursor:pointer;font-size:14px';
+  manualBtn.textContent='✏️ Manuell eingeben';
+  manualBtn.addEventListener('click',()=>{
+    manualDlg.remove();
+    const idx=barcodeEinkaufState.reviewIdx||0;
+    const erkannter=barcodeEinkaufState.erkannteArtikel[idx];
+    setTimeout(()=>showManualArticleEntryDialog(erkannter.barcode), 300);
+  });
+  btnContainer.appendChild(manualBtn);
+
+  const skipBtn=document.createElement('button');
+  skipBtn.style.cssText='width:100%;padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);color:var(--t2);font-weight:600;cursor:pointer;font-size:14px';
+  skipBtn.textContent='⏭️ Überspringen';
+  skipBtn.addEventListener('click',()=>{
+    manualDlg.remove();
+    skipArticleReview();
+  });
+  btnContainer.appendChild(skipBtn);
+
+  inner.appendChild(btnContainer);
+  manualDlg.appendChild(inner);
+  document.body.appendChild(manualDlg);
 }
 
 function cancelNewArticleDialog(){
