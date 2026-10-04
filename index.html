@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.152 — KAMERA BUG FIX: Loading-Div überlagerte Video-Feed -->
+<!-- HAUSHALTBUCH v22.154 — KAMERA: Diagnose-Logs für Function-Aufruf-Trace -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.152"/>
+<meta name="app-version" content="22.154"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,21 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.152';
+const APP_VERSION='22.154';
+
+// Globaler Error Handler für diagnostische Zwecke
+window.addEventListener('error', (event) => {
+  console.error('[GLOBAL_ERROR]', event.message, event.filename, event.lineno, event.error);
+});
+
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('[UNHANDLED_REJECTION]', event.reason);
+});
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.154',d:'04.10.2026',items:['🔍 DIAGNOSE-VERSION: Trace-Logs für Function-Call-Chain','📊 Early Logs in startBarcodeInputLoop() um zu sehen ob Funktion aufgerufen wird','🎯 getUserMedia() Fehler werden explizit geloggt','🔧 Global Error Handler für unerwartete Exceptions','📱 Bestimmt ob startBarcodeCamera() überhaupt aufgerufen wird']},
+  {v:'22.153',d:'04.10.2026',items:['🔥 AGGRESSIVER FIX: Video-Feed sofort sichtbar ohne Warten auf Events','❌ ENTFERNT: autoplay Attribut (Browser kann das blocken)','✅ FORCIERT: Loading-Div wird sofort versteckt (nicht auf Events warten)','📹 Better Error-Handling mit try/catch für video.play()','🐛 Debug-Logs hinzugefügt um Kamera-Probleme zu tracken']},
   {v:'22.152',d:'04.10.2026',items:['🐛 BUGFIX: Kamera-Feed ist jetzt sichtbar','❌ PROBLEM BEHOBEN: Loading-Div überlagerte das Video mit z-index','✅ onloadedmetadata Event hinzugefügt als Fallback','⏱️ Timeout nach 1s um sicherzustellen dass Loading-Div verschwindet','📹 Video ist jetzt nach dem Öffnen sofort sichtbar (statt Schwarz)']},
   {v:'22.151',d:'04.10.2026',items:['🔧 KRITISCH FIX: Barcodes werden SOFORT beim Scannen zur persistenten Cache hinzugefügt','📲 Behebt Problem: Barcodes aus Mobile-App werden jetzt zu GitHub synced','✅ addScannedBarcodeToCache() wird in confirmBarcodeAndAdd() aufgerufen','🔄 Minimal-Entry mit Barcode wird erstellt, später mit API-Daten ergänzt','🌐 Mobile + Web App können jetzt Barcodes über GitHub teilen']},
   {v:'22.150',d:'04.10.2026',items:['🔧 FIX: barcode-cache.json wird IMMER erstellt (auch wenn leer)','❌ FEHLER BEHOBEN: 404 Not Found bei erstem Sync','✅ Bedingung entfernt: Datei wird unabhängig von Barcode-Count erstellt','🌐 Konsistente Repo-Struktur: barcode-cache.json existiert immer']},
@@ -8194,8 +8205,16 @@ function addNewBarcodeShop(){
 }
 
 function startBarcodeInputLoop(){
+  console.log('[BarcodeInput] startBarcodeInputLoop() aufgerufen');
+  console.log('[BarcodeInput] barcodeEinkaufState:', barcodeEinkaufState);
   barcodeEinkaufState.idx=0;
-  startBarcodeCamera();
+  console.log('[BarcodeInput] Rufe startBarcodeCamera() auf...');
+  try {
+    startBarcodeCamera();
+    console.log('[BarcodeInput] startBarcodeCamera() aufgerufen erfolgreich');
+  } catch (err) {
+    console.error('[BarcodeInput] Fehler beim Aufrufen von startBarcodeCamera():', err.message, err.stack);
+  }
 }
 
 // Kamera-Scanner starten
@@ -8204,7 +8223,7 @@ async function startBarcodeCamera(){
   dlg.id='barcode-camera-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:#000;z-index:9000;display:flex;flex-direction:column;align-items:stretch;justify-content:flex-end;overflow:hidden';
   dlg.innerHTML=
-    '<video id="barcode-video" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;z-index:1"></video>'+
+    '<video id="barcode-video" playsinline muted style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;z-index:1;display:block;background:#000"></video>'+
     '<div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;display:flex;align-items:center;justify-content:center;color:#666;font-size:14px" id="barcode-loading">📹 Kamera startet...</div>'+
     '<canvas id="barcode-canvas" style="display:none"></canvas>'+
     '<div style="position:relative;z-index:3;width:100%;background:linear-gradient(to top,rgba(0,0,0,0.95),rgba(0,0,0,0.8));padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px">'+
@@ -8228,24 +8247,59 @@ async function startBarcodeCamera(){
     const loadingDiv = document.getElementById('barcode-loading');
     const counterDiv = document.getElementById('barcode-counter');
 
-    // Video-Stream mit Fehlerbehandlung
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
-    });
-    video.srcObject = stream;
-    video.play();
+    console.log('[BarcodeCamera] startBarcodeCamera() aufgerufen, versuche getUserMedia...');
+    console.log('[BarcodeCamera] Video-Element vorhanden:', !!video);
+    console.log('[BarcodeCamera] Canvas-Element vorhanden:', !!canvas);
 
-    // Loading-Text entfernen wenn Video lädt
+    // Video-Stream mit Fehlerbehandlung
+    console.log('[BarcodeCamera] Anfrage getUserMedia mit facingMode:environment...');
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+      });
+      console.log('[BarcodeCamera] MediaStream erhalten! srcObject wird gesetzt...');
+    } catch (gumErr) {
+      console.error('[BarcodeCamera] getUserMedia() fehlgeschlagen:', gumErr.name, gumErr.message);
+      throw gumErr;
+    }
+    video.srcObject = stream;
+    console.log('[BarcodeCamera] srcObject gesetzt, videoWidth:'+video.videoWidth);
+
+    // AGGRESSIVE FIX: Verstecke Loading-Div sofort und starte Video
+    if (loadingDiv) {
+      loadingDiv.style.display = 'none';
+      console.log('[BarcodeCamera] Loading-Div versteckt');
+    }
+
+    // Versuche Video zu starten (kann Error werfen wenn Browser blockt)
+    try {
+      await video.play();
+      console.log('[BarcodeCamera] Video gestartet erfolgreich');
+    } catch (e) {
+      console.log('[BarcodeCamera] video.play() Error:', e.message);
+      // Versuche es mit Promise-based play
+      video.play().then(() => {
+        console.log('[BarcodeCamera] Video startet jetzt');
+      }).catch(err => {
+        console.log('[BarcodeCamera] play() fehlgeschlagen:', err.message);
+      });
+    }
+
+    // Zusätzliche Event-Handler für Fallback
     video.oncanplay = () => {
       if (loadingDiv) loadingDiv.style.display = 'none';
+      console.log('[BarcodeCamera] oncanplay Event');
     };
     video.onloadedmetadata = () => {
       if (loadingDiv) loadingDiv.style.display = 'none';
+      console.log('[BarcodeCamera] onloadedmetadata Event, videoWidth:'+video.videoWidth+' videoHeight:'+video.videoHeight);
     };
-    // Fallback: Hide loading div nach 1 Sekunde (für den Fall dass Events nicht feuern)
+    // Fallback: Hide loading div nach 500ms (schneller fallback)
     setTimeout(() => {
       if (loadingDiv) loadingDiv.style.display = 'none';
-    }, 1000);
+      console.log('[BarcodeCamera] Fallback: Loading-Div versteckt nach 500ms');
+    }, 500);
 
     let lastScanTime = 0;
     const minScanInterval = 800; // Mindestens 800ms zwischen Scans
