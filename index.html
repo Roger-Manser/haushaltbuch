@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.116 — Versionsprüfung gefixt: Vergleicht mit version.json -->
+<!-- HAUSHALTBUCH v22.117 — Artikel-Review erweitert: DB-Status, Einzelpreis, Zuweisen -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.116"/>
+<meta name="app-version" content="22.117"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.116';
+const APP_VERSION='22.117';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.117',d:'04.10.2026',items:['✨ ERWEITERT: Artikel-Review-Dialog mit mehr Informationen','📚 Zeigt ob Artikel in Datenbank bekannt ist (grüne/rote Box)','💰 Berechnet Einzelpreis wenn Menge > 1','🔗 Button "Zuweisen" bei unbekannten Artikeln → Wählt aus bestehenden Artikeln','✅ Bessere Kontrolle und Datenzuordnung beim Review']},
   {v:'22.116',d:'04.10.2026',items:['🐛 FIX: Versionsprüfung funktioniert jetzt zuverlässig','📡 Lädt version.json und vergleicht mit lokaler Version','✅ Zeigt "Neue Version verfügbar" oder "Bereits aktuell" korrekt','🔧 compareVersions() Funktion für semantischen Versionsvergleich','🎯 Mobile App zeigt jetzt die richtige Update-Information']},
   {v:'22.115',d:'04.10.2026',items:['✨ NEUE FEATURE: Artikel-Review-Dialog für jeden erkannten Artikel','🔍 Jeder Artikel wird einzeln angezeigt mit allen Details','✅ Benutzer kann jeden Artikel bestätigen oder überspringen','📋 Volle Kontrolle über die KI-Erkennung vor Barcode-Verarbeitung','🎯 Besseres Debugging und Datenqualität']},
   {v:'22.114',d:'04.10.2026',items:['🐛 FIX: Shop-Selection-Dialog wird nach Auswahl zuverlässig entfernt','✨ selectBarcodeShop() nutzt jetzt getElementById() statt querySelectorAll()','🎯 Dialog-Entfernung ist jetzt präzise und nicht mehrdeutig','💯 Der Dialog bleibt nach dem Scan nicht mehr übrig']},
@@ -8131,26 +8132,47 @@ function showNextArticleReview(){
   }
 
   const total=barcodeEinkaufState.erkannteArtikel.length;
+
+  // Prüfe ob Artikel in Datenbank bekannt ist
+  const bekannterArtikel=artikel.barcode?artikelByCode(artikel.barcode):null;
+  const isInDB=!!bekannterArtikel;
+
+  // Berechne Einzelpreis wenn menge > 1
+  const menge=artikel.menge||1;
+  const gesamtpreis=artikel.preis_brutto||0;
+  const einzelpreis=menge>1?gesamtpreis/menge:gesamtpreis;
+
   const dlg=document.createElement('div');
   dlg.id='article-review-dlg';
-  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:10px';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r);width:90%;max-width:500px;padding:20px;max-height:80vh;overflow-y:auto">'+
+    '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:520px;padding:20px;margin:auto">'+
       '<div style="font-weight:700;font-size:18px;margin-bottom:4px">🔍 Artikel '+(idx+1)+'/'+total+'</div>'+
       '<div style="font-size:13px;color:var(--t2);margin-bottom:16px">KI hat diesen Artikel erkannt</div>'+
-      '<div style="background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin-bottom:12px;font-size:14px;line-height:1.6">'+
-        '<div style="font-weight:600;margin-bottom:8px;color:var(--ok)">📦 '+esc(artikel.name||'Unbekannt')+'</div>'+
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px;color:var(--t2)">'+
+
+      // Status: In DB oder nicht
+      '<div style="background:'+(isInDB?'#d1fae5':'#fef2f2')+';border:1px solid '+(isInDB?'#a7f3d0':'#fca5a5')+';border-radius:var(--rs);padding:10px;margin-bottom:12px;font-size:13px">'+
+        (isInDB?'✅ <strong>Im Lager gefunden:</strong> '+esc(bekannterArtikel.name):'⚠️ <strong>Nicht in Datenbank!</strong> Artikel unbekannt oder andere Bezeichnung')+
+      '</div>'+
+
+      // Artikel Details
+      '<div style="background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin-bottom:12px;font-size:14px;line-height:1.8">'+
+        '<div style="font-weight:600;margin-bottom:10px;color:var(--ok)">📦 '+esc(artikel.name||'Unbekannt')+'</div>'+
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;color:var(--t2)">'+
           '<div><strong>Menge:</strong> '+esc(artikel.menge+' '+(artikel.einheit||'Stk'))+'</div>'+
           '<div><strong>Einheit:</strong> '+esc(artikel.einheit||'Stk')+'</div>'+
-          '<div><strong>Brutto:</strong> CHF '+artikel.preis_brutto?.toFixed(2)||'0.00'+'</div>'+
+          '<div><strong>Gesamtpreis:</strong> CHF '+artikel.preis_brutto?.toFixed(2)+'</div>'+
+          (menge>1?'<div><strong>Einzelpreis:</strong> CHF '+einzelpreis.toFixed(2)+'</div>':'<div></div>')+
           '<div><strong>Netto:</strong> CHF '+artikel.preis_netto?.toFixed(2)||'0.00'+'</div>'+
           (artikel.rabatt&&artikel.rabatt>0?'<div><strong>Rabatt:</strong> CHF '+artikel.rabatt?.toFixed(2)+'</div>':'<div></div>')+
-          '<div><strong>Barcode:</strong> '+(artikel.barcode?esc(artikel.barcode):'(keine)')+'</div>'+
+          '<div style="grid-column:1/-1"><strong>Barcode:</strong> '+(artikel.barcode?esc(artikel.barcode):'(keine)')+'</div>'+
         '</div>'+
       '</div>'+
+
+      // Buttons
       '<div style="display:flex;flex-direction:column;gap:8px">'+
         '<button onclick="confirmArticleReview()" style="padding:12px;background:var(--ok);border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:15px">✅ Bestätigen</button>'+
+        (isInDB?'':'<button onclick="assignArticleReview()" style="padding:12px;background:var(--ol);border:1px solid var(--ok);border-radius:var(--rs);color:var(--ok);font-weight:600;cursor:pointer;font-size:15px">🔗 Zuweisen</button>')+
         '<button onclick="skipArticleReview()" style="padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:500;cursor:pointer;font-size:15px">❌ Überspringen</button>'+
       '</div>'+
     '</div>';
@@ -8162,6 +8184,61 @@ function confirmArticleReview(){
   if(dlg)dlg.remove();
   barcodeEinkaufState.reviewIdx=(barcodeEinkaufState.reviewIdx||0)+1;
   showNextArticleReview();
+}
+
+function assignArticleReview(){
+  const idx=barcodeEinkaufState.reviewIdx||0;
+  const artikel=barcodeEinkaufState.erkannteArtikel[idx];
+
+  // Zeige Liste aller Artikel in der Datenbank
+  const allArtikel=S.a||[];
+  if(allArtikel.length===0){
+    toast('❌ Keine Artikel in der Datenbank vorhanden');
+    return;
+  }
+
+  const dlg=document.getElementById('article-review-dlg');
+  if(dlg)dlg.remove();
+
+  const assignDlg=document.createElement('div');
+  assignDlg.id='assign-article-dlg';
+  assignDlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9001;display:flex;align-items:center;justify-content:center;overflow-y:auto;padding:10px';
+  assignDlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:500px;padding:20px;margin:auto">'+
+      '<div style="font-weight:700;font-size:16px;margin-bottom:4px">🔗 Artikel zuweisen</div>'+
+      '<div style="font-size:13px;color:var(--t2);margin-bottom:16px">Welchem Artikel entspricht "<strong>'+esc(artikel.name)+'</strong>"?</div>'+
+      '<div style="max-height:400px;overflow-y:auto;border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:12px">'+
+        allArtikel.map((a,i)=>'<div onclick="selectAssignedArticle('+i+')" style="padding:10px;border-bottom:1px solid var(--bd);cursor:pointer;background:var(--bg);hover-background:var(--hl)">'+
+          '<div style="font-weight:600;color:var(--ok)">'+esc(a.name)+'</div>'+
+          '<div style="font-size:12px;color:var(--t2)">'+esc(a.marke||'')+' • '+esc(a.kat||'')+' • '+a.bc.join(', ')+'</div>'+
+        '</div>').join('')+
+      '</div>'+
+      '<button onclick="cancelAssignArticle()" style="width:100%;padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:500;cursor:pointer">Abbrechen</button>'+
+    '</div>';
+  document.body.appendChild(assignDlg);
+}
+
+function selectAssignedArticle(idx){
+  const assignDlg=document.getElementById('assign-article-dlg');
+  if(assignDlg)assignDlg.remove();
+
+  const reviewIdx=barcodeEinkaufState.reviewIdx||0;
+  const artikel=barcodeEinkaufState.erkannteArtikel[reviewIdx];
+  const selectedArtikel=S.a[idx];
+
+  // Speichere den zugewiesenen Artikel
+  artikel.zugewiesenerArtikel=selectedArtikel;
+  toast('✅ Zugewiesen: '+selectedArtikel.name);
+
+  // Aktualisiere die Anzeige
+  setTimeout(()=>showNextArticleReview(), 300);
+}
+
+function cancelAssignArticle(){
+  const dlg=document.getElementById('assign-article-dlg');
+  if(dlg)dlg.remove();
+  // Zeige wieder den Original-Dialog
+  setTimeout(()=>showNextArticleReview(), 300);
 }
 
 function skipArticleReview(){
