@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.120 — BugFix: Buttons in Artikel-Review Dialog sind jetzt sichtbar -->
+<!-- HAUSHALTBUCH v22.121 — BugFix: Flexbox Layout für zuverlässige Button-Anzeige -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.120"/>
+<meta name="app-version" content="22.121"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.120';
+const APP_VERSION='22.121';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.121',d:'04.10.2026',items:['🔧 KRITISCH: Wechsel zu Flexbox-Layout für zuverlässige Button-Anzeige','❌ Fehler: Grid-Layout war zu komplex für Button-Elemente','✅ Lösung: flex:1 1 calc(50% - 4px) mit flex-wrap für 2x2 Layout','📱 box-sizing:border-box für konsistente Größen','👆 Buttons sollten jetzt sichtbar sein!']},
   {v:'22.120',d:'04.10.2026',items:['🐛 KRITISCH BugFix: Buttons im Artikel-Review Dialog sind jetzt sichtbar!','❌ Fehler: Buttons waren unsichtbar weil inline statt block','✅ Korrigiert: width:100% und min-height:44px für alle Buttons','🎯 Grid-Layout funktioniert jetzt für responsive Button-Layout','👆 Touch-friendly: min-height:44px für mobile devices']},
   {v:'22.119',d:'04.10.2026',items:['🐛 KRITISCH: BugFix - showNextArticleReview() wird jetzt aufgerufen!','❌ Fehler: handleQuittungFile() rief showArticleReviewDialog() auf (nicht existent)','✅ Korrigiert: Aufruft jetzt showNextArticleReview() nach Quittungs-Parsing','🎯 Artikel-Review Dialog wird JETZT nach Quittung angezeigt','✅ 4-Button Layout funktioniert jetzt!']},
   {v:'22.118',d:'04.10.2026',items:['🎨 FIX: Farbkontrast in Status-Box (grün/rot) mit besserer Lesbarkeit','🔘 NEUE 4-Button Layout: Einbuchen, Barcode-Vergleich, Neu+Web-Suche, Überspringen','🔍 compareWithScannedBarcodes() zeigt gescannte Strichcodes zum Vergleich','🌐 createNewArticleWithWebSearch() sucht in Open Food Facts nach Barcode','✅ Umfassendere Artikel-Review mit allen notwendigen Aktionen']},
@@ -8172,12 +8173,12 @@ function showNextArticleReview(){
         '</div>'+
       '</div>'+
 
-      // 4 Action Buttons - 2x2 Grid
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">'+
-        '<button onclick="confirmArticleReview()" style="width:100%;padding:12px;background:#10b981;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px;min-height:44px">✅ Einbuchen</button>'+
-        '<button onclick="compareWithScannedBarcodes()" style="width:100%;padding:12px;background:#3b82f6;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px;min-height:44px">🔍 Vergleich</button>'+
-        '<button onclick="createNewArticleWithWebSearch()" style="width:100%;padding:12px;background:#8b5cf6;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px;min-height:44px">🌐 Neu+Suche</button>'+
-        '<button onclick="skipArticleReview()" style="width:100%;padding:12px;background:#ef4444;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px;min-height:44px">⏭️ Überspringen</button>'+
+      // 4 Action Buttons - 2x2 Flex Layout
+      '<div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px">'+
+        '<button onclick="confirmArticleReview()" style="flex:1 1 calc(50% - 4px);padding:14px 12px;background:#10b981;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px;min-height:48px;box-sizing:border-box">✅ Einbuchen</button>'+
+        '<button onclick="compareWithScannedBarcodes()" style="flex:1 1 calc(50% - 4px);padding:14px 12px;background:#3b82f6;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px;min-height:48px;box-sizing:border-box">🔍 Vergleich</button>'+
+        '<button onclick="createNewArticleWithWebSearch()" style="flex:1 1 calc(50% - 4px);padding:14px 12px;background:#8b5cf6;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px;min-height:48px;box-sizing:border-box">🌐 Neu+Suche</button>'+
+        '<button onclick="skipArticleReview()" style="flex:1 1 calc(50% - 4px);padding:14px 12px;background:#ef4444;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px;min-height:48px;box-sizing:border-box">⏭️ Überspringen</button>'+
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
