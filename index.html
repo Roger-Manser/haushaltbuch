@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.112 — Geschäfts-Dialog wird nach Auswahl nicht mehr erneut angezeigt -->
+<!-- HAUSHALTBUCH v22.113 — Abbrechen-Button im Geschäfts-Dialog gefixt -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.112"/>
+<meta name="app-version" content="22.113"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.112';
+const APP_VERSION='22.113';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.113',d:'04.10.2026',items:['🐛 FIX: Abbrechen-Button im Geschäfts-Dialog — saubere Implementierung','✨ Neue Funktion: cancelBarcodeShopSelection() statt inline-JavaScript','🔧 Entfernt: Escaping-Fehler im Button-Code','🎯 Button ist jetzt zuverlässig und wartbar','📊 Debug-Toasts zeigen Dialog-Status: öffnen/auswählen/abbrechen']},
   {v:'22.112',d:'04.10.2026',items:['🐛 FIX: Geschäfts-Dialog wird nach Auswahl nicht mehr erneut angezeigt','🔄 closeBarcodeCamera() navigiert zu goScreen("s-lager") statt openShopSelectionDialog()','✅ Dialog erscheint nur einmalig beim App-Start','🎯 Nutzererlebnis: Kamera schließen kehrt zur Lager-Ansicht zurück','📱 Workflow ist jetzt intuitiver und weniger überraschend']},
   {v:'22.111',d:'04.10.2026',items:['🐛 FIX: Abbrechen Button im Geschäfts-Auswahl-Dialog','🔧 Dialog bekommt ID: shop-selection-dlg','✅ Abbrechen nutzt jetzt document.getElementById() statt DOM-Traversing','🛡️ Robuster: Kein this.parentElement.parentElement.parentElement mehr','🔙 Zurück zum Lager funktioniert jetzt zuverlässig']},
   {v:'22.110',d:'04.10.2026',items:['🐛 FIX: Doppelte handleQuittungFile() Funktion - Alte Funktion gelöscht','📊 Detail-Debugging für Barcode-Verarbeitung: Toast für jeden Barcode [X/Y]','🌐 Open Food Facts Abfrage-Zeit gemessen','⏱️ 10-Sekunden Timeout pro OFF API-Abfrage (verhindert Hängen)','✅ Artikel-Speicherung Toast am Ende','🔍 Zeigt genau wo die App steckenbleibt: [1/7], [2/7], etc.']},
@@ -7880,6 +7881,7 @@ function startBarcodeEinkauf(){
 }
 
 function openShopSelectionDialog(){
+  toast('📂 Geschäfts-Auswahl-Dialog öffnen...');
   const dlg=document.createElement('div');
   dlg.id='shop-selection-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:flex-end;justify-content:center';
@@ -7890,7 +7892,7 @@ function openShopSelectionDialog(){
       '<div style="display:flex;flex-direction:column;gap:8px">'+
         S.ge.map(g=>'<button onclick="selectBarcodeShop(\''+esc(g).replace(/'/g,"\\'")+'\')" style="padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);font-size:15px;cursor:pointer;color:var(--tx)">'+esc(g)+'</button>').join('')+
         '<button onclick="addNewBarcodeShop()" style="padding:12px;background:var(--ol);border:1px solid var(--ok);border-radius:var(--rs);font-size:15px;cursor:pointer;color:var(--ok);font-weight:600">+ Neues Geschäft</button>'+
-        '<button onclick="const d=document.getElementById(\'shop-selection-dlg\');if(d)d.remove();barcodeEinkaufState={geschaeft:\\"\\",artikel:[],idx:0};goScreen(\'s-lager\')" style="padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--dg);font-weight:500">Abbrechen</button>'+
+        '<button onclick="cancelBarcodeShopSelection()" style="padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--dg);font-weight:500">Abbrechen</button>'+
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
@@ -7898,11 +7900,20 @@ function openShopSelectionDialog(){
 }
 
 function selectBarcodeShop(shop){
+  toast('✅ Geschäft ausgewählt: ' + shop);
   barcodeEinkaufState.geschaeft=shop;
   // Alle offenen Dialoge entfernen
   document.querySelectorAll('[style*="position:fixed"][style*="rgba(0,0,0,.5)"]').forEach(d => d.remove());
   // Kurze Verzögerung vor Start
   setTimeout(() => startBarcodeInputLoop(), 100);
+}
+
+function cancelBarcodeShopSelection(){
+  toast('❌ Geschäfts-Auswahl abgebrochen - zurück zum Lager');
+  const dlg = document.getElementById('shop-selection-dlg');
+  if(dlg) dlg.remove();
+  barcodeEinkaufState = {geschaeft:'', artikel:[], idx:0};
+  goScreen('s-lager');
 }
 
 function backToShopSelection(){
