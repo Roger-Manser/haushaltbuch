@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.148 — FIX: S.a wird geladen vor Quittungs-Suche -->
+<!-- HAUSHALTBUCH v22.149 — BARCODE CACHE: GitHub-Sync für Barcode-Lookups -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.148"/>
+<meta name="app-version" content="22.149"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.148';
+const APP_VERSION='22.149';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.149',d:'04.10.2026',items:['🔄 FEATURE: Barcode-Cache mit GitHub-Sync','💾 Alle gescannten Barcodes werden persistent gecacht','🌐 Barcode-Cache synced mit GitHub über barcode-cache.json','📲 Mobile + Web App teilen jetzt Barcode-Daten via GitHub','⚡ Reduziert API-Calls zu Open Food Facts/EAN Database']},
   {v:'22.148',d:'04.10.2026',items:['🎯 FIX: S.a wird vor Quittungs-Suche geladen','❌ FEHLER BEHOBEN: "Artikel-Datenbank nicht verfügbar" beim Suchen','🔧 loadL() wird explicit in handleQuittungFile() aufgerufen','🛡️ Fallback-Reload in filterQuittungSuche() als Sicherheit']},
   {v:'22.147',d:'04.10.2026',items:['🐛 BUGFIX: Tastatur beim Barcode-Scan ausgeblendet','📱 Input-Feld ist unsichtbar, verdeckt nicht die Kamera','⌨️ Externe Barcode-Pistole funktioniert trotzdem','👁️ Ungestörte Sicht auf Kamera während Scanning']},
   {v:'22.146',d:'04.10.2026',items:['⚡ UX-IMPROVEMENT: Resume-Modus springt direkt zur Quittung','✅ Weitermachen (Barcodes behalten) → Quittungs-Scan','📌 Kein Barcode-Scanner nötig wenn Barcodes schon da','🔍 Schnellerer Workflow: Barcodes → Quittung → Abgleich']},
@@ -941,6 +942,62 @@ function lsm(n){return licon(n).replace('width:20px;height:20px','width:13px;hei
 let S={a:[],lo:[...LD],ka:[...KD],ei:[...ED],ge:[...GD],ek:[],eko:{},nid:1,rz:[],log:[]};
 let deferredInstallPrompt=null;
 let gh={tok:'',own:'',repo:'',br:'main'};
+
+/* ── Barcode-Cache: GitHub-synchronisiert für mobile + web ─────────── */
+let barcodeCache={barcodes:{},lastUpdated:0};
+function loadBarcodeCacheL(){
+  try{const r=localStorage.getItem('hb_barcode_cache');if(r)barcodeCache=JSON.parse(r);}catch(e){barcodeCache={barcodes:{},lastUpdated:0};}
+  console.log('[BarcodeCache] Geladen aus localStorage:',Object.keys(barcodeCache.barcodes).length,'Barcodes');
+}
+function saveBarcodeCacheL(){
+  try{localStorage.setItem('hb_barcode_cache',JSON.stringify(barcodeCache));}catch(e){}
+  console.log('[BarcodeCache] Gespeichert in localStorage:',Object.keys(barcodeCache.barcodes).length,'Barcodes');
+}
+async function loadBarcodeCacheFromGH(){
+  if(!gh.tok||!gh.own||!gh.repo)return;
+  try{
+    const ghFile=await ghGet('barcode-cache.json');
+    if(!ghFile||!ghFile.content)return;
+    const content=b64DecodeUtf8(ghFile.content);
+    const data=JSON.parse(content);
+    if(data&&data.barcodes){
+      barcodeCache=data;
+      saveBarcodeCacheL();
+      console.log('[BarcodeCache] Geladen von GitHub:',Object.keys(barcodeCache.barcodes).length,'Barcodes');
+    }
+  }catch(e){console.log('[BarcodeCache] Fehler beim Laden von GitHub:',e.message);}
+}
+async function syncBarcodeCacheToGH(){
+  if(!gh.tok||!gh.own||!gh.repo)return;
+  try{
+    barcodeCache.lastUpdated=Date.now();
+    const content=JSON.stringify(barcodeCache,null,2);
+    const ghFile=await ghGet('barcode-cache.json');
+    const sha=ghFile?ghFile.sha:undefined;
+    await ghPut('barcode-cache.json',content,'Barcode-Cache aktualisiert',sha);
+    console.log('[BarcodeCache] Synced zu GitHub:',Object.keys(barcodeCache.barcodes).length,'Barcodes');
+  }catch(e){console.log('[BarcodeCache] Fehler beim Sync zu GitHub:',e.message);}
+}
+function addToBarcodeCacheIfNotExists(barcode,data){
+  if(!barcodeCache.barcodes[barcode]){
+    barcodeCache.barcodes[barcode]={
+      barcode:barcode,
+      name:data.name||'',
+      marke:data.marke||data.brand||'',
+      kategorien:data.kategorien||data.category||'',
+      description:data.description||'',
+      image:data.image||'',
+      source:data.source||'',
+      offData:data.offData||{},
+      addedAt:Date.now()
+    };
+    saveBarcodeCacheL();
+    console.log('[BarcodeCache] Barcode hinzugefügt:',barcode);
+    return true;
+  }
+  return false;
+}
+
 let opt={fotoZwang:false,
   fwDashboard:true,      // Ablauf-Dashboard auf Lager-Screen
   quittungTraining:false, // Trainingsmodus: nur Aliase lernen, kein Warenbestand
@@ -954,6 +1011,7 @@ let opt={fotoZwang:false,
 function loadOpt(){try{const r=localStorage.getItem('hbopt');if(r)opt={...opt,...JSON.parse(r)};}catch(e){}}
 function saveOpt(){try{localStorage.setItem('hbopt',JSON.stringify(opt));}catch(e){}}
 loadOpt();
+loadBarcodeCacheL(); // Barcode-Cache laden
 
 // Inventar-Zwischenspeicher: [{barcode,menge,mhd}]
 let invBuffer=[];
@@ -986,6 +1044,8 @@ function loadL(){
   // Nach dem Laden: prüfen ob Daten auf GitHub neuer sind
   // 🎯 DEAKTIVIERT v22.85: Zu riskant! Kann alte Daten von GitHub nachladen!
   // checkDataVersionOnStartup().catch(e=>console.error('Data version check fehlgeschlagen:',e));
+  // Barcode-Cache von GitHub laden (separate, sichere Datei)
+  if(gh.tok&&gh.own&&gh.repo){setTimeout(()=>loadBarcodeCacheFromGH().catch(e=>console.log('[BarcodeCache] Startup-Fehler:',e.message)),100);}
 }
 // Beim App-Start: Auto-Check welcher Datenstamm neuer ist (Lokal vs GitHub)
 async function checkDataVersionOnStartup(){
@@ -996,22 +1056,22 @@ async function checkDataVersionOnStartup(){
     const savedModified=parseInt(localStorage.getItem('hb_lastModified')||'0');
     const logModified=S.log?.length?Math.max(...S.log.map(l=>l.zeit||0)):0;
     const localModified=Math.max(savedModified,logModified);
-    
+
     // 2. GitHub: haushaltbuch.json laden
     const ghFile=await ghGet('haushaltbuch.json');
     if(!ghFile?.content)return; // GitHub nicht erreichbar
-    
+
     const ghData=JSON.parse(b64DecodeUtf8(ghFile.content.replace(/\n/g,'')));
     const ghModified=new Date(ghData.aktualisiert).getTime();
     const ghCount=(ghData.artikel||[]).length;
     const lokalCount=S.a.length;
-    
+
     // 3. Vergleichen
     const diff=ghModified-localModified;
-    
+
     // Wenn <2s Unterschied: ignorieren
     if(Math.abs(diff)<2000)return;
-    
+
     if(ghModified>localModified){
       // GitHub ist neuer → laden
       toast('📥 Lade neuere Daten von GitHub...');
@@ -1025,6 +1085,8 @@ async function checkDataVersionOnStartup(){
     // Fehler ignorieren — kein Blocker für App-Start
     console.error('checkDataVersionOnStartup Fehler:',e.message);
   }
+  // Barcode-Cache von GitHub laden (separate Datei)
+  try{await loadBarcodeCacheFromGH();}catch(e){console.log('[BarcodeCache] Fehler beim Laden:',e.message);}
 }
 function saveL(){
   try{localStorage.setItem('hb3',JSON.stringify(S));}catch(e){}
@@ -1403,6 +1465,18 @@ async function doSync(){
     localStorage.setItem('hb_lastModified',String(Date.now()));
     sdot('ok');hideLdr();
     toast('Synchronisiert: '+S.a.length+' Artikel auf GitHub geschrieben');
+
+    // Barcode-Cache synced (separate Datei, non-blocking)
+    try{
+      if(Object.keys(barcodeCache.barcodes).length>0){
+        await syncBarcodeCacheToGH();
+        console.log('[BarcodeCache] Synced nach Haupt-Sync');
+      }
+    }catch(e){
+      console.log('[BarcodeCache] Fehler beim Sync:',e.message);
+      // Nicht kritisch — Haupt-Daten sind bereits synced
+    }
+
     renderLager();
   }catch(err){
     hideLdr();sdot('dt');
@@ -1478,6 +1552,8 @@ async function loadFromGH(){
     if(rzf&&rzf.content){
       try{const j=JSON.parse(b64DecodeUtf8(rzf.content.replace(/\n/g,'')));S.rz=Array.isArray(j)?j:(j.rezepte||[]);saveL();}catch(e){}
     }
+    // Barcode-Cache von GitHub laden (separate, sichere Datei)
+    try{await loadBarcodeCacheFromGH();}catch(e){console.log('[BarcodeCache] Fehler beim Laden:',e.message);}
     sdot('ok');hideLdr();toast('Daten von GitHub geladen ('+S.a.length+' Artikel)');renderLager();
   }catch(err){hideLdr();toast('Fehler: '+err.message.slice(0,50));}
 }
@@ -8760,10 +8836,28 @@ function performBarcodeWebSearch(){
 }
 
 async function searchOpenFoodFacts(barcode){
-  // Prüfe Cache zuerst
+  // Prüfe lokalen Session-Cache zuerst
   if(barcodeEinkaufState.apiCache[barcode]){
-    console.log('[OpenFoodFacts] Ergebnis aus Cache:', barcode);
+    console.log('[OpenFoodFacts] Ergebnis aus Session-Cache:', barcode);
     return barcodeEinkaufState.apiCache[barcode];
+  }
+
+  // Prüfe persistenten Barcode-Cache von GitHub
+  if(barcodeCache.barcodes[barcode]){
+    console.log('[OpenFoodFacts] Ergebnis aus Barcode-Cache:', barcode);
+    const cached=barcodeCache.barcodes[barcode];
+    const result={
+      name:cached.name,
+      marke:cached.marke,
+      kategorien:cached.kategorien,
+      description:cached.description,
+      image:cached.image,
+      source:cached.source||'Barcode-Cache',
+      offData:cached.offData||{}
+    };
+    // Speichere auch im Session-Cache
+    barcodeEinkaufState.apiCache[barcode]=result;
+    return result;
   }
 
   // Retry-Logik: max 3 Versuche mit erhöhtem Timeout
@@ -8796,10 +8890,18 @@ async function searchOpenFoodFacts(barcode){
           kategorien: prod.categories || '',
           description: prod.product_name || '',
           image: imageUrl,
-          source: 'Open Food Facts'
+          source: 'Open Food Facts',
+          offData: {
+            product_name: prod.product_name || '',
+            brands: prod.brands || '',
+            categories: prod.categories || '',
+            quantity: prod.quantity || '',
+            generic_name: prod.generic_name || ''
+          }
         };
-        // Speichere in Cache
+        // Speichere in Session-Cache und persistentem Barcode-Cache
         barcodeEinkaufState.apiCache[barcode] = result;
+        addToBarcodeCacheIfNotExists(barcode, result);
         return result;
       }
       return null;
@@ -8816,10 +8918,28 @@ async function searchOpenFoodFacts(barcode){
 }
 
 async function searchEANDatabase(barcode){
-  // Prüfe Cache zuerst
+  // Prüfe lokalen Session-Cache zuerst
   if(barcodeEinkaufState.apiCache[barcode]){
-    console.log('[EANDatabase] Ergebnis aus Cache:', barcode);
+    console.log('[EANDatabase] Ergebnis aus Session-Cache:', barcode);
     return barcodeEinkaufState.apiCache[barcode];
+  }
+
+  // Prüfe persistenten Barcode-Cache von GitHub
+  if(barcodeCache.barcodes[barcode]){
+    console.log('[EANDatabase] Ergebnis aus Barcode-Cache:', barcode);
+    const cached=barcodeCache.barcodes[barcode];
+    const result={
+      name:cached.name,
+      marke:cached.marke,
+      kategorien:cached.kategorien,
+      description:cached.description,
+      image:cached.image,
+      source:cached.source||'Barcode-Cache',
+      offData:cached.offData||{}
+    };
+    // Speichere auch im Session-Cache
+    barcodeEinkaufState.apiCache[barcode]=result;
+    return result;
   }
 
   // Retry-Logik: max 3 Versuche mit erhöhtem Timeout
@@ -8853,8 +8973,9 @@ async function searchEANDatabase(barcode){
           image: prod.ImageUrl || '',
           source: 'EAN Database'
         };
-        // Speichere in Cache
+        // Speichere in Session-Cache und persistentem Barcode-Cache
         barcodeEinkaufState.apiCache[barcode] = result;
+        addToBarcodeCacheIfNotExists(barcode, result);
         return result;
       }
       return null;
