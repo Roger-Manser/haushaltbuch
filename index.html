@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.125 — DEBUGGING: Gelber TEST-Box + DIVs statt Buttons -->
+<!-- HAUSHALTBUCH v22.126 — FIX: Dialog mit scrollbarem Content + fester Button-Leiste -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.125"/>
+<meta name="app-version" content="22.126"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.125';
+const APP_VERSION='22.126';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.126',d:'04.10.2026',items:['🎯 KRITISCH: Dialog mit Flexbox-Layout - Content scrollbar, Buttons FEST','❌ Problem: Buttons waren nicht sichtbar (Content klippte sie ab)','✅ Lösung: Inner Dialog display:flex + flex-direction:column','📜 Content-Bereich: flex:1, overflow-y:auto, border-bottom separator','🔒 Button-Bereich: flex-shrink:0, FEST am Boden, immer sichtbar!']},
   {v:'22.125',d:'04.10.2026',items:['🐛 DEBUGGING-VERSION: Gelber TEST-Box zum Diagnose','❌ Gelbe Box = Inhalt wird rendert, Buttons sollten auch sichtbar sein','✅ Buttons: Jetzt DIVs statt Button-Element (mehr Kompatibilität)','🔍 Wenn du keine gelbe Box siehst = Dialog-Scrolling Problem','💡 Wenn du gelbe Box siehst = Buttons müssten auch sichtbar sein!']},
   {v:'22.124',d:'04.10.2026',items:['🔑 KRITISCH: Dialog ist jetzt SCROLLBAR!','❌ Problem erkannt: Buttons waren außerhalb der Dialog-Box','✅ Lösung: max-height:85vh + overflow-y:auto auf innerem Dialog','📜 Dialog scrollt wenn Inhalt zu lang ist','👆 Swipe/Scroll um Buttons zu sehen!']},
   {v:'22.123',d:'04.10.2026',items:['💥 RADIKAL VEREINFACHT: Vertikale Button-Liste, KEINE Flex/Grid!','❌ Entfernt: alle komplexen CSS-Properties (flex, gap, calc, etc)','✅ Neu: display:block, width:100%, margin-bottom:8px','📱 4 Buttons übereinander, maximal einfach','🎯 Das wird definitiv funktionieren!']},
@@ -8154,38 +8155,38 @@ function showNextArticleReview(){
   dlg.id='article-review-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;overflow:hidden;padding:10px';
   dlg.innerHTML=
-    '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:520px;max-height:85vh;padding:20px;margin:auto;overflow-y:auto">'+
-      '<div style="font-weight:700;font-size:18px;margin-bottom:4px">🔍 Artikel '+(idx+1)+'/'+total+'</div>'+
-      '<div style="font-size:13px;color:var(--t2);margin-bottom:16px">KI hat diesen Artikel erkannt</div>'+
+    '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:520px;max-height:85vh;display:flex;flex-direction:column;padding:0">'+
+      // SCROLLABLE CONTENT AREA (flex:1, overflow-y:auto)
+      '<div style="flex:1;overflow-y:auto;padding:20px;border-bottom:1px solid var(--bd)">'+
+        '<div style="font-weight:700;font-size:18px;margin-bottom:4px">🔍 Artikel '+(idx+1)+'/'+total+'</div>'+
+        '<div style="font-size:13px;color:var(--t2);margin-bottom:16px">KI hat diesen Artikel erkannt</div>'+
 
-      // Status: In DB oder nicht - mit besserer Farbkontrast
-      '<div style="background:'+(isInDB?'#10b981':'#ef4444')+';border:1px solid '+(isInDB?'#059669':'#dc2626')+';border-radius:var(--rs);padding:12px;margin-bottom:12px;font-size:13px;color:#fff;font-weight:500">'+
-        (isInDB?'✅ Im Lager gefunden: '+esc(bekannterArtikel.name):'⚠️ Nicht in Datenbank! Artikel unbekannt oder andere Bezeichnung')+
-      '</div>'+
+        // Status: In DB oder nicht - mit besserer Farbkontrast
+        '<div style="background:'+(isInDB?'#10b981':'#ef4444')+';border:1px solid '+(isInDB?'#059669':'#dc2626')+';border-radius:var(--rs);padding:12px;margin-bottom:12px;font-size:13px;color:#fff;font-weight:500">'+
+          (isInDB?'✅ Im Lager gefunden: '+esc(bekannterArtikel.name):'⚠️ Nicht in Datenbank! Artikel unbekannt oder andere Bezeichnung')+
+        '</div>'+
 
-      // Artikel Details
-      '<div style="background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin-bottom:12px;font-size:14px;line-height:1.8">'+
-        '<div style="font-weight:600;margin-bottom:10px;color:var(--ok)">📦 '+esc(artikel.name||'Unbekannt')+'</div>'+
-        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;color:var(--t2)">'+
-          '<div><strong>Menge:</strong> '+esc(artikel.menge+' '+(artikel.einheit||'Stk'))+'</div>'+
-          '<div><strong>Einheit:</strong> '+esc(artikel.einheit||'Stk')+'</div>'+
-          '<div><strong>Gesamtpreis:</strong> CHF '+artikel.preis_brutto?.toFixed(2)+'</div>'+
-          (menge>1?'<div><strong>Einzelpreis:</strong> CHF '+einzelpreis.toFixed(2)+'</div>':'<div></div>')+
-          '<div><strong>Netto:</strong> CHF '+artikel.preis_netto?.toFixed(2)||'0.00'+'</div>'+
-          (artikel.rabatt&&artikel.rabatt>0?'<div><strong>Rabatt:</strong> CHF '+artikel.rabatt?.toFixed(2)+'</div>':'<div></div>')+
-          '<div style="grid-column:1/-1"><strong>Barcode:</strong> '+(artikel.barcode?esc(artikel.barcode):'(keine)')+'</div>'+
+        // Artikel Details
+        '<div style="background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin-bottom:12px;font-size:14px;line-height:1.8">'+
+          '<div style="font-weight:600;margin-bottom:10px;color:var(--ok)">📦 '+esc(artikel.name||'Unbekannt')+'</div>'+
+          '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;color:var(--t2)">'+
+            '<div><strong>Menge:</strong> '+esc(artikel.menge+' '+(artikel.einheit||'Stk'))+'</div>'+
+            '<div><strong>Einheit:</strong> '+esc(artikel.einheit||'Stk')+'</div>'+
+            '<div><strong>Gesamtpreis:</strong> CHF '+artikel.preis_brutto?.toFixed(2)+'</div>'+
+            (menge>1?'<div><strong>Einzelpreis:</strong> CHF '+einzelpreis.toFixed(2)+'</div>':'<div></div>')+
+            '<div><strong>Netto:</strong> CHF '+artikel.preis_netto?.toFixed(2)||'0.00'+'</div>'+
+            (artikel.rabatt&&artikel.rabatt>0?'<div><strong>Rabatt:</strong> CHF '+artikel.rabatt?.toFixed(2)+'</div>':'<div></div>')+
+            '<div style="grid-column:1/-1"><strong>Barcode:</strong> '+(artikel.barcode?esc(artikel.barcode):'(keine)')+'</div>'+
+          '</div>'+
         '</div>'+
       '</div>'+
 
-      // TEST: Prüfe ob Inhalt unter Details sichtbar ist
-      '<div style="background:#ffff00;color:#000;padding:10px;margin-top:20px;text-align:center;border-radius:6px;font-weight:bold">TEST: Du solltest mich sehen!</div>'+
-
-      // 4 Action Buttons - DIV-basiert statt Button-Element
-      '<div style="margin-top:12px;width:100%">'+
-        '<div onclick="confirmArticleReview()" style="display:block;width:100%;padding:12px;margin-bottom:8px;background:#10b981;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box;text-align:center">✅ Einbuchen</div>'+
-        '<div onclick="compareWithScannedBarcodes()" style="display:block;width:100%;padding:12px;margin-bottom:8px;background:#3b82f6;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box;text-align:center">🔍 Vergleich</div>'+
-        '<div onclick="createNewArticleWithWebSearch()" style="display:block;width:100%;padding:12px;margin-bottom:8px;background:#8b5cf6;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box;text-align:center">🌐 Neu+Suche</div>'+
-        '<div onclick="skipArticleReview()" style="display:block;width:100%;padding:12px;background:#ef4444;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box;text-align:center">⏭️ Überspringen</div>'+
+      // FIXED BUTTON SECTION (flex-shrink:0 - immer sichtbar am Boden)
+      '<div style="flex-shrink:0;padding:16px;display:flex;flex-direction:column;gap:8px">'+
+        '<div onclick="confirmArticleReview()" style="width:100%;padding:12px;background:#10b981;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box;text-align:center;transition:background 0.2s">✅ Einbuchen</div>'+
+        '<div onclick="compareWithScannedBarcodes()" style="width:100%;padding:12px;background:#3b82f6;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box;text-align:center;transition:background 0.2s">🔍 Vergleich</div>'+
+        '<div onclick="createNewArticleWithWebSearch()" style="width:100%;padding:12px;background:#8b5cf6;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box;text-align:center;transition:background 0.2s">🌐 Neu+Suche</div>'+
+        '<div onclick="skipArticleReview()" style="width:100%;padding:12px;background:#ef4444;border:none;border-radius:6px;color:#fff;font-weight:600;cursor:pointer;font-size:14px;box-sizing:border-box;text-align:center;transition:background 0.2s">⏭️ Überspringen</div>'+
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
