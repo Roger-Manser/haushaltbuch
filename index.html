@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.144 — UX: Quittungs-Suche öffnet automatisch wenn Artikel nicht gefunden wird -->
+<!-- HAUSHALTBUCH v22.146 — UX: Resume-Modus springt direkt zur Quittung -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,9 +9,9 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.144"/>
-<!-- CACHE BUST v2306 -->
-<link rel="manifest" href="manifest.json?v=2306"/>
+<meta name="app-version" content="22.146"/>
+<!-- CACHE BUST v2308 -->
+<link rel="manifest" href="manifest.json?v=2308"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
 <title>Haushaltbuch</title>
@@ -558,10 +558,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.144';
+const APP_VERSION='22.146';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.146',d:'04.10.2026',items:['⚡ UX-IMPROVEMENT: Resume-Modus springt direkt zur Quittung','✅ Weitermachen (Barcodes behalten) → Quittungs-Scan','📌 Kein Barcode-Scanner nötig wenn Barcodes schon da','🔍 Schnellerer Workflow: Barcodes → Quittung → Abgleich']},
+  {v:'22.145',d:'04.10.2026',items:['🐛 BUGFIX: Suche & Zuordnung funktioniert jetzt','✅ Alias-Normalisierung: String und Array werden korrekt verarbeitet','📎 Suchresultate rendern jetzt richtig','🔍 Artikel-Buttons sind klickbar, Zuordnung speichert Alias']},
   {v:'22.144',d:'04.10.2026',items:['✨ UX-IMPROVEMENT: Quittungs-Suche öffnet automatisch','🔍 Wenn Artikel nicht automatisch gefunden wird → direkt zur Suchbox','📎 Alias-Speichern funktioniert automatisch nach Artikel-Wahl','⚡ Schnellerer Workflow: Kein "ändern" Button nötig']},
   {v:'22.143',d:'04.10.2026',items:['🐛 BUGFIX: Doppelte Barcodes im Vergleich-Dialog beim Resume','✅ erkannteArtikel wird jetzt IMMER neu aus artikel erzeugt','📌 Verhindert Duplikate aus alter localStorage bei Resume','🔄 Synchronisiert artikel und erkannteArtikel korrekt']},
   {v:'22.142',d:'04.10.2026',items:['🐛 BUGFIX: Resume-Modus für gespeicherte Barcodes','✅ Beim Fertig-Drücken geht es jetzt richtig zur Quittung','📌 Speichert Anzahl Artikel beim "Weitermachen"','🔄 Unterscheidet Resume-Modus (alte Barcodes) von Neu-Scan','✨ Markiert Resume-Status für korrekte Weiterleitung']},
@@ -7990,7 +7992,8 @@ function showBarcodeResumeDialog(){
     barcodeEinkaufState._resumeMode=true;
     barcodeEinkaufState._articleCountAtResume=barcodeEinkaufState.artikel.length;
     console.log('[Resume] Starte Resume-Modus mit '+barcodeEinkaufState._articleCountAtResume+' gespeicherten Artikeln');
-    startBarcodeInputLoop();
+    // IM RESUME-MODUS: Direkt zur Quittungs-Übersicht (nicht nochmal Scanner!)
+    finishBarcodeInputAndStartQuittung();
   });
   btnContainer.appendChild(continueBtn);
 
@@ -10061,12 +10064,15 @@ function filterQuittungSuche(idx){
     liste.innerHTML='<div style="color:var(--t3);font-size:13px;padding:8px">Kein Artikel gefunden</div>';
     return;
   }
-  liste.innerHTML=treffer.map(a=>
-    '<button onclick="zuordnungBestaetigen('+idx+','+a.id+')" style="width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px">'+
+  liste.innerHTML=treffer.map(a=>{
+    // Normalisiere quittungAliase (kann String oder Array sein)
+    const aliases=a.quittungAliase?(typeof a.quittungAliase==='string'?a.quittungAliase.split('\n'):a.quittungAliase):[];
+    const aliasText=aliases.length?' · Aliases: '+aliases.join(', '):'';
+    return '<button onclick="zuordnungBestaetigen('+idx+','+a.id+')" style="width:100%;padding:10px 12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:2px">'+
       '<span style="font-size:14px;font-weight:600;color:var(--tx)">'+esc(a.name)+'</span>'+
-      '<span style="font-size:11px;color:var(--t3)">'+esc(a.kat||'')+(a.lager?' · '+esc(a.lager):'')+(a.quittungAliase&&a.quittungAliase.length?' · Aliases: '+a.quittungAliase.join(', '):'')+' · Bestand: '+fmtMenge(a.menge)+' '+esc(a.einheit||'Stk')+'</span>'+
-    '</button>'
-  ).join('');
+      '<span style="font-size:11px;color:var(--t3)">'+esc(a.kat||'')+(a.lager?' · '+esc(a.lager):'')+aliasText+' · Bestand: '+fmtMenge(a.menge)+' '+esc(a.einheit||'Stk')+'</span>'+
+    '</button>';
+  }).join('');
 }
 
 function renderAliasUebersicht(){
