@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.157 — KAMERA: Bestätigungsdialog unter Video, nicht über -->
+<!-- HAUSHALTBUCH v22.158 — KAMERA: Dialog-Buttons fixes, Overlay-Opazität reduziert -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.157"/>
+<meta name="app-version" content="22.158"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,7 +558,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.157';
+const APP_VERSION='22.158';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -571,6 +571,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.158',d:'04.10.2026',items:['🔧 HOTFIX: Dialog-Buttons sind jetzt sichtbar!','❌ PROBLEM BEHOBEN: Dialog war mit bottom:0 falsch positioniert','✅ Neu: inset:0 mit flex-direction:column + justify-content:flex-end','👁️ Overlay-Opazität auf 0.2 reduziert (transparenter)','✅ Buttons stehen im unteren Bereich, Kamera bleibt oben sichtbar']},
   {v:'22.157',d:'04.10.2026',items:['📋 FIX: Bestätigungsdialog überlagerte die Kamera','🎬 Dialog jetzt mit z-index:9050 (unter Video z-index:10)','👁️ Benutzer kann Kamera sehen WÄHREND Dialog offen ist','🎯 Overlay-Hintergrund minimiert: nur um Dialog, nicht fullscreen','✅ Scanning kann weiter stattfinden: Kamera bleibt sichtbar']},
   {v:'22.156',d:'04.10.2026',items:['🎯 KRITISCH FIX: z-index Problem — Video war hinter Content-Div versteckt!','📺 Video jetzt mit z-index:10 (über alles), Content-Div auf z-index:5 reduziert','✅ DAS erklärt den "schwarzen Bildschirm" trotz echten Video-Daten (1280x720)','🔧 CSS-Stapelung korrigiert: Loading(2) < Video(10) > Content(5)','🎉 Kamera sollte JETZT endlich sichtbar sein!']},
   {v:'22.155',d:'04.10.2026',items:['🎬 FIX: Warte auf loadedmetadata Event BEVOR Video-Scanning startet','⏱️ videoWidth=0 Problem behoben: Canvas-Scanning startet erst bei echten Frame-Daten','🔍 Periodische Checks ob videoWidth > 0 (Fallback wenn Event nicht kommt)','📹 Video-Frame Readiness wird jetzt korrekt geprüft','✅ Sollte endlich echte Bilder vom Barcode-Video zeigen']},
@@ -8482,7 +8483,7 @@ function addBarcodeToBuffer(barcode) {
 function showBarcodeConfirmationDialog(barcode, validation) {
   const dlg = document.createElement('div');
   dlg.id = 'barcode-confirm-dlg';
-  dlg.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,.7);z-index:9050;display:flex;align-items:flex-end;justify-content:center;padding:10px';
+  dlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.2);z-index:9050;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:10px';
 
   const typeIcon = validation.type === 'EAN-13' ? '📦' : validation.type === 'EAN-8' ? '📫' : '🏪';
 
@@ -8533,7 +8534,7 @@ function showBarcodeManualEntryDialog() {
 
   const manualDlg = document.createElement('div');
   manualDlg.id = 'barcode-manual-dlg';
-  manualDlg.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:rgba(0,0,0,.7);z-index:9050;display:flex;align-items:flex-end;justify-content:center;padding:10px';
+  manualDlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.2);z-index:9050;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:10px';
 
   manualDlg.innerHTML = '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:400px;padding:20px">'+
     '<div style="font-weight:700;font-size:16px;margin-bottom:4px">✏️ Barcode korrigieren</div>'+
