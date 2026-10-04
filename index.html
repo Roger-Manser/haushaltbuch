@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.158 — KAMERA: Dialog-Buttons fixes, Overlay-Opazität reduziert -->
+<!-- HAUSHALTBUCH v22.160 — BARCODE-CACHE: GitHub-Sync hinzugefügt, Barcodes werden jetzt synchronisiert -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.158"/>
+<meta name="app-version" content="22.160"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,7 +558,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.158';
+const APP_VERSION='22.160';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -571,6 +571,8 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.160',d:'04.10.2026',items:['🔧 KRITISCHER FIX: Barcodes werden jetzt zu GitHub synchronisiert!','❌ PROBLEM BEHOBEN: addScannedBarcodeToCache() speicherte lokal, synced aber nicht','✅ syncBarcodeCacheToGH() wird jetzt nach jedem Scan aufgerufen','✅ Mobile + Web App teilen jetzt Barcodes via GitHub (beide Richtungen)','🌐 Barcode-Sync funktioniert vollständig end-to-end!']},
+  {v:'22.159',d:'04.10.2026',items:['🔧 KRITISCHER FIX: "Fertig" Button ist JETZT SICHTBAR!','❌ PROBLEM BEHOBEN: Content-Div Buttons wurden von Confirmation-Dialog überlagert','✅ Content-Div z-index: 5 → 9100 (über Confirmation-Dialog)','✅ pointer-events:auto hinzugefügt (Buttons sind clickable)','🎯 Du kannst jetzt zum Quittungsscan übergehen!']},
   {v:'22.158',d:'04.10.2026',items:['🔧 HOTFIX: Dialog-Buttons sind jetzt sichtbar!','❌ PROBLEM BEHOBEN: Dialog war mit bottom:0 falsch positioniert','✅ Neu: inset:0 mit flex-direction:column + justify-content:flex-end','👁️ Overlay-Opazität auf 0.2 reduziert (transparenter)','✅ Buttons stehen im unteren Bereich, Kamera bleibt oben sichtbar']},
   {v:'22.157',d:'04.10.2026',items:['📋 FIX: Bestätigungsdialog überlagerte die Kamera','🎬 Dialog jetzt mit z-index:9050 (unter Video z-index:10)','👁️ Benutzer kann Kamera sehen WÄHREND Dialog offen ist','🎯 Overlay-Hintergrund minimiert: nur um Dialog, nicht fullscreen','✅ Scanning kann weiter stattfinden: Kamera bleibt sichtbar']},
   {v:'22.156',d:'04.10.2026',items:['🎯 KRITISCH FIX: z-index Problem — Video war hinter Content-Div versteckt!','📺 Video jetzt mit z-index:10 (über alles), Content-Div auf z-index:5 reduziert','✅ DAS erklärt den "schwarzen Bildschirm" trotz echten Video-Daten (1280x720)','🔧 CSS-Stapelung korrigiert: Loading(2) < Video(10) > Content(5)','🎉 Kamera sollte JETZT endlich sichtbar sein!']},
@@ -997,6 +999,7 @@ async function syncBarcodeCacheToGH(){
   }catch(e){console.log('[BarcodeCache] Fehler beim Sync zu GitHub:',e.message);}
 }
 function addToBarcodeCacheIfNotExists(barcode,data){
+  let changed=false;
   if(!barcodeCache.barcodes[barcode]){
     barcodeCache.barcodes[barcode]={
       barcode:barcode,
@@ -1011,22 +1014,26 @@ function addToBarcodeCacheIfNotExists(barcode,data){
     };
     saveBarcodeCacheL();
     console.log('[BarcodeCache] Barcode hinzugefügt:',barcode);
-    return true;
+    changed=true;
   }else{
     // Update existing entry with new data if provided
     const existing=barcodeCache.barcodes[barcode];
-    if(data.name)existing.name=data.name;
-    if(data.marke)existing.marke=data.marke||data.brand;
-    if(data.kategorien)existing.kategorien=data.kategorien||data.category;
-    if(data.description)existing.description=data.description;
-    if(data.image)existing.image=data.image;
-    if(data.source)existing.source=data.source;
-    if(data.offData)existing.offData=data.offData;
-    if(existing.scannedOnly)existing.scannedOnly=false; // Mark as no longer scanned-only
-    saveBarcodeCacheL();
-    console.log('[BarcodeCache] Barcode aktualisiert:',barcode);
-    return false;
+    if(data.name&&data.name!==existing.name){existing.name=data.name;changed=true;}
+    if(data.marke&&(data.marke||data.brand)!==existing.marke){existing.marke=data.marke||data.brand;changed=true;}
+    if(data.kategorien&&(data.kategorien||data.category)!==existing.kategorien){existing.kategorien=data.kategorien||data.category;changed=true;}
+    if(data.description&&data.description!==existing.description){existing.description=data.description;changed=true;}
+    if(data.image&&data.image!==existing.image){existing.image=data.image;changed=true;}
+    if(data.source&&data.source!==existing.source){existing.source=data.source;changed=true;}
+    if(data.offData&&JSON.stringify(data.offData)!==JSON.stringify(existing.offData)){existing.offData=data.offData;changed=true;}
+    if(existing.scannedOnly){existing.scannedOnly=false;changed=true;} // Mark as no longer scanned-only
+    if(changed){
+      saveBarcodeCacheL();
+      console.log('[BarcodeCache] Barcode aktualisiert:',barcode);
+    }
   }
+  // 🔧 KRITISCH: Synchronisiere zu GitHub wenn etwas geändert wurde!
+  if(changed)syncBarcodeCacheToGH().catch(e=>console.error('[BarcodeCache] Sync-Fehler:',e.message));
+  return changed;
 }
 function addScannedBarcodeToCache(barcode){
   // Füge gerade gescannten Barcode zur persistenten Cache hinzu (ohne API-Daten)
@@ -1045,6 +1052,8 @@ function addScannedBarcodeToCache(barcode){
     };
     saveBarcodeCacheL();
     console.log('[BarcodeCache] Barcode gescannt (minimal hinzugefügt):',barcode);
+    // 🔧 KRITISCH: Synchronisiere sofort zu GitHub!
+    syncBarcodeCacheToGH().catch(e=>console.error('[BarcodeCache] Sync-Fehler:',e.message));
     return true;
   }
   return false;
@@ -8230,7 +8239,7 @@ async function startBarcodeCamera(){
     '<video id="barcode-video" playsinline muted style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;z-index:10;display:block;background:#000"></video>'+
     '<div style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;display:flex;align-items:center;justify-content:center;color:#666;font-size:14px" id="barcode-loading">📹 Kamera startet...</div>'+
     '<canvas id="barcode-canvas" style="display:none"></canvas>'+
-    '<div style="position:fixed;bottom:0;left:0;right:0;z-index:5;width:100%;background:linear-gradient(to top,rgba(0,0,0,0.95),rgba(0,0,0,0.8));padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px">'+
+    '<div style="position:fixed;bottom:0;left:0;right:0;z-index:9100;width:100%;background:linear-gradient(to top,rgba(0,0,0,0.95),rgba(0,0,0,0.8));padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px;pointer-events:auto">'+
       '<div style="color:#fff;text-align:center;font-weight:600;font-size:14px">🔍 Barcode scannen</div>'+
       '<div style="color:#ccc;text-align:center;font-size:12px" id="barcode-counter">Erfasst: '+barcodeEinkaufState.artikel.length+' Artikel</div>'+
       '<input type="text" id="barcode-manual-input" placeholder="Barcode eingeben..." style="position:absolute;bottom:-9999px;width:1px;height:1px;opacity:0" autocomplete="off" inputmode="none"/>'+
