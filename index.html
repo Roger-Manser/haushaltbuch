@@ -7902,9 +7902,106 @@ let barcodeEinkaufState={
   apiCache:{}  // Cache für Online-Suchen: barcode -> {name, image, description, etc}
 };
 
+// Speichere Barcodes persistent
+function saveBarcodeState(){
+  try{
+    localStorage.setItem('barcodeEinkaufState',JSON.stringify({
+      artikel:barcodeEinkaufState.artikel,
+      geschaeft:barcodeEinkaufState.geschaeft
+    }));
+    console.log('[Persist] Barcodes gespeichert: '+barcodeEinkaufState.artikel.length);
+  }catch(e){
+    console.warn('[Persist] Fehler beim Speichern:',e.message);
+  }
+}
+
+// Lade gespeicherte Barcodes
+function loadBarcodeState(){
+  try{
+    const saved=localStorage.getItem('barcodeEinkaufState');
+    if(saved){
+      const data=JSON.parse(saved);
+      barcodeEinkaufState.artikel=data.artikel||[];
+      barcodeEinkaufState.geschaeft=data.geschaeft||'';
+      console.log('[Persist] Barcodes geladen: '+barcodeEinkaufState.artikel.length);
+      return true;
+    }
+  }catch(e){
+    console.warn('[Persist] Fehler beim Laden:',e.message);
+  }
+  return false;
+}
+
 function startBarcodeEinkauf(){
-  barcodeEinkaufState={geschaeft:'',artikel:[],idx:0,apiCache:{}};
-  openShopSelectionDialog();
+  // Prüfe ob alte Barcodes existieren
+  if(loadBarcodeState() && barcodeEinkaufState.artikel.length>0){
+    // Es gibt gespeicherte Barcodes - frage Benutzer
+    showBarcodeResumeDialog();
+  }else{
+    // Keine alten Barcodes - starte neuen Einkauf
+    barcodeEinkaufState={geschaeft:'',artikel:[],idx:0,apiCache:{}};
+    openShopSelectionDialog();
+  }
+}
+
+function showBarcodeResumeDialog(){
+  const dlg=document.createElement('div');
+  dlg.id='barcode-resume-dlg';
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:10px';
+
+  const inner=document.createElement('div');
+  inner.style.cssText='background:var(--sf);border-radius:var(--r);width:100%;max-width:420px;padding:20px';
+
+  const title=document.createElement('div');
+  title.style.cssText='font-weight:700;font-size:16px;margin-bottom:4px';
+  title.textContent='📦 Gespeicherte Barcodes gefunden';
+  inner.appendChild(title);
+
+  const msg=document.createElement('div');
+  msg.style.cssText='font-size:14px;color:var(--t2);margin-bottom:16px;line-height:1.6';
+  msg.innerHTML='✅ <strong>'+barcodeEinkaufState.artikel.length+' Barcodes</strong> vom letzten Einkauf<br/>Geschäft: '+esc(barcodeEinkaufState.geschaeft||'(nicht gespeichert)');
+  inner.appendChild(msg);
+
+  const btnContainer=document.createElement('div');
+  btnContainer.style.cssText='display:flex;flex-direction:column;gap:8px';
+
+  // Button: Weitermachen
+  const continueBtn=document.createElement('button');
+  continueBtn.style.cssText='width:100%;padding:12px;background:#10b981;color:#fff;border:none;border-radius:var(--rs);font-weight:600;cursor:pointer;font-size:14px';
+  continueBtn.textContent='✅ Weitermachen (Barcodes behalten)';
+  continueBtn.addEventListener('click',()=>{
+    dlg.remove();
+    startBarcodeInputLoop();
+  });
+  btnContainer.appendChild(continueBtn);
+
+  // Button: Neuer Einkauf
+  const newBtn=document.createElement('button');
+  newBtn.style.cssText='width:100%;padding:12px;background:#3b82f6;color:#fff;border:none;border-radius:var(--rs);font-weight:600;cursor:pointer;font-size:14px';
+  newBtn.textContent='🆕 Neuer Einkauf (Barcodes löschen)';
+  newBtn.addEventListener('click',()=>{
+    dlg.remove();
+    barcodeEinkaufState={geschaeft:'',artikel:[],idx:0,apiCache:{}};
+    localStorage.removeItem('barcodeEinkaufState');
+    toast('🗑️ Alte Barcodes gelöscht');
+    openShopSelectionDialog();
+  });
+  btnContainer.appendChild(newBtn);
+
+  // Button: Abbrechen
+  const cancelBtn=document.createElement('button');
+  cancelBtn.style.cssText='width:100%;padding:12px;background:var(--dl);border:1px solid var(--dg);color:var(--dg);border-radius:var(--rs);font-weight:600;cursor:pointer;font-size:14px';
+  cancelBtn.textContent='❌ Abbrechen';
+  cancelBtn.addEventListener('click',()=>{
+    dlg.remove();
+    barcodeEinkaufState={geschaeft:'',artikel:[],idx:0,apiCache:{}};
+    goScreen('s-lager');
+  });
+  btnContainer.appendChild(cancelBtn);
+
+  inner.appendChild(btnContainer);
+  dlg.appendChild(inner);
+  document.body.appendChild(dlg);
 }
 
 function openShopSelectionDialog(){
@@ -8192,6 +8289,9 @@ function confirmBarcodeAndAdd(barcode, barcodeType) {
   barcodeEinkaufState.artikel.push({barcode, artikel: null});
   const typeIcon = barcodeType === 'EAN-13' ? '📦' : barcodeType === 'EAN-8' ? '📫' : '🏪';
   toast('✓ '+typeIcon+' '+barcodeType+' hinzugefügt');
+
+  // Speichere Barcodes persistent
+  saveBarcodeState();
 
   // Update Counter im Dialog
   const counterDiv = document.getElementById('barcode-counter');
@@ -9224,12 +9324,25 @@ function showBarcodeOptionsDialog(count){
   });
   btnContainer.appendChild(scanMoreBtn);
 
+  const saveExitBtn = document.createElement('button');
+  saveExitBtn.style.cssText = 'width:100%;padding:12px;background:#8b5cf6;color:#fff;border:none;border-radius:var(--rs);font-weight:600;cursor:pointer;font-size:14px';
+  saveExitBtn.textContent = '💾 Zum Lager (Barcodes speichern)';
+  saveExitBtn.addEventListener('click', () => {
+    optDlg.remove();
+    saveBarcodeState();
+    toast('✅ '+count+' Barcodes gespeichert');
+    goScreen('s-lager');
+  });
+  btnContainer.appendChild(saveExitBtn);
+
   const skipBtn = document.createElement('button');
   skipBtn.style.cssText = 'width:100%;padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:600;cursor:pointer;font-size:14px';
-  skipBtn.textContent = '❌ Barcodes verwerfen & zum Lager';
+  skipBtn.textContent = '❌ Barcodes löschen & zum Lager';
   skipBtn.addEventListener('click', () => {
     optDlg.remove();
     barcodeEinkaufState.artikel = [];
+    localStorage.removeItem('barcodeEinkaufState');
+    toast('🗑️ Barcodes gelöscht');
     goScreen('s-lager');
   });
   btnContainer.appendChild(skipBtn);
