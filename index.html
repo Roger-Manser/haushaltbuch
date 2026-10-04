@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.151 — BARCODE CACHE: Barcodes sofort beim Scannen zur Cache hinzufügen -->
+<!-- HAUSHALTBUCH v22.152 — KAMERA BUG FIX: Loading-Div überlagerte Video-Feed -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.151"/>
+<meta name="app-version" content="22.152"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.151';
+const APP_VERSION='22.152';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.152',d:'04.10.2026',items:['🐛 BUGFIX: Kamera-Feed ist jetzt sichtbar','❌ PROBLEM BEHOBEN: Loading-Div überlagerte das Video mit z-index','✅ onloadedmetadata Event hinzugefügt als Fallback','⏱️ Timeout nach 1s um sicherzustellen dass Loading-Div verschwindet','📹 Video ist jetzt nach dem Öffnen sofort sichtbar (statt Schwarz)']},
   {v:'22.151',d:'04.10.2026',items:['🔧 KRITISCH FIX: Barcodes werden SOFORT beim Scannen zur persistenten Cache hinzugefügt','📲 Behebt Problem: Barcodes aus Mobile-App werden jetzt zu GitHub synced','✅ addScannedBarcodeToCache() wird in confirmBarcodeAndAdd() aufgerufen','🔄 Minimal-Entry mit Barcode wird erstellt, später mit API-Daten ergänzt','🌐 Mobile + Web App können jetzt Barcodes über GitHub teilen']},
   {v:'22.150',d:'04.10.2026',items:['🔧 FIX: barcode-cache.json wird IMMER erstellt (auch wenn leer)','❌ FEHLER BEHOBEN: 404 Not Found bei erstem Sync','✅ Bedingung entfernt: Datei wird unabhängig von Barcode-Count erstellt','🌐 Konsistente Repo-Struktur: barcode-cache.json existiert immer']},
   {v:'22.149',d:'04.10.2026',items:['🔄 FEATURE: Barcode-Cache mit GitHub-Sync','💾 Alle gescannten Barcodes werden persistent gecacht','🌐 Barcode-Cache synced mit GitHub über barcode-cache.json','📲 Mobile + Web App teilen jetzt Barcode-Daten via GitHub','⚡ Reduziert API-Calls zu Open Food Facts/EAN Database']},
@@ -8238,6 +8239,13 @@ async function startBarcodeCamera(){
     video.oncanplay = () => {
       if (loadingDiv) loadingDiv.style.display = 'none';
     };
+    video.onloadedmetadata = () => {
+      if (loadingDiv) loadingDiv.style.display = 'none';
+    };
+    // Fallback: Hide loading div nach 1 Sekunde (für den Fall dass Events nicht feuern)
+    setTimeout(() => {
+      if (loadingDiv) loadingDiv.style.display = 'none';
+    }, 1000);
 
     let lastScanTime = 0;
     const minScanInterval = 800; // Mindestens 800ms zwischen Scans
