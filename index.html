@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.139 — BUGFIX: Duplikat-Barcodes, Artikel-Sync, Datenbank-Suche mit Normalisierung -->
+<!-- HAUSHALTBUCH v22.141 — FEATURE: Barcode-Scanning ist jetzt optional - man kann auch ohne Barcodes weitermachen -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.139"/>
+<meta name="app-version" content="22.141"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,12 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.139';
+const APP_VERSION='22.141';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.141',d:'04.10.2026',items:['🎯 FEATURE: Barcode-Scanning ist OPTIONAL — man kann auch ohne Barcodes weitermachen','✓ "Fertig (optional)" Button zeigt dass Scanning übersprungbar ist','⏭️ Kein Barcode = direkt zum Lager (keine Blockade mehr!)','📸 Mit Barcodes = Quittung scannen zum Abgleich','✅ Workflow ist flexibel: mit oder ohne Scanner']},
+  {v:'22.140',d:'04.10.2026',items:['💾 KRITISCH: Alle Artikel-Daten werden persistent gespeichert (Internet, Foto, Preis, Shop)','🔄 erkannteArtikel werden mit allen Details in localStorage gespeichert','📥 onlineDaten + apiCache werden persistent gespeichert','⚡ saveBarcodeState() wird nach jeder Änderung aufgerufen (Bestätigung, Skip, Zuweisung)','✅ Beim Reload: Alle Daten (Barcode, Name, Bild, Preis, Geschichte) bleiben erhalten']},
   {v:'22.139',d:'04.10.2026',items:['🔧 BUGFIX: Duplikat-Barcodes werden ignoriert + Scanner läuft weiter','📦 Artikel-Änderungen (Barcode-Zuweisung) werden ins Haupt-Array kopiert','✅ Skip-Funktion entfernt Artikel aus BEIDEN Arrays (artikel + erkannteArtikel)','🔍 Datenbank-Suche normalisiert Barcodes (führende Nullen)','📥 Alle Änderungen werden vor Speicherung ins Haupt-Array synchronisiert']},
   {v:'22.138',d:'04.10.2026',items:['💾 FEATURE: API-Caching für Barcodes — verhindert redundante Anfragen','⚡ Suchergebnisse werden im Cache gespeichert (pro Barcode)','🔄 Gleiche Barcodes können sofort wieder aus Cache geladen werden','🎯 Einbuchen-Button: Event-Handler Fix mit stopPropagation()','✅ Schneller und zuverlässiger Workflow nach Barcode-Zuweisung']},
   {v:'22.137',d:'04.10.2026',items:['⏸️ IMPROVEMENT: Scanner pausiert nach erfolgreichem Scan bis Bestätigung','🎥 Video-Keepalive: Alle 2 Sekunden play() um Stromsparmodus zu vermeiden','⚡ Kamera bleibt aktiv und responsive während Benutzer entscheidet','🔄 Scanner nach Bestätigen/Verwerfen/Korrigieren automatisch fortgesetzt','✅ Besseres UX: Benutzer sieht Video und pausiert bei jedem Code']},
@@ -7902,28 +7904,36 @@ let barcodeEinkaufState={
   apiCache:{}  // Cache für Online-Suchen: barcode -> {name, image, description, etc}
 };
 
-// Speichere Barcodes persistent
+// Speichere Barcodes persistent MIT ALLEN DATEN
 function saveBarcodeState(){
   try{
     localStorage.setItem('barcodeEinkaufState',JSON.stringify({
       artikel:barcodeEinkaufState.artikel,
-      geschaeft:barcodeEinkaufState.geschaeft
+      erkannteArtikel:barcodeEinkaufState.erkannteArtikel,
+      geschaeft:barcodeEinkaufState.geschaeft,
+      reviewIdx:barcodeEinkaufState.reviewIdx,
+      onlineDaten:barcodeEinkaufState.onlineDaten||{},
+      apiCache:barcodeEinkaufState.apiCache||{}
     }));
-    console.log('[Persist] Barcodes gespeichert: '+barcodeEinkaufState.artikel.length);
+    console.log('[Persist] Barcodes gespeichert: '+barcodeEinkaufState.artikel.length+' Artikel mit Internet-Daten');
   }catch(e){
     console.warn('[Persist] Fehler beim Speichern:',e.message);
   }
 }
 
-// Lade gespeicherte Barcodes
+// Lade gespeicherte Barcodes MIT ALLEN DATEN
 function loadBarcodeState(){
   try{
     const saved=localStorage.getItem('barcodeEinkaufState');
     if(saved){
       const data=JSON.parse(saved);
       barcodeEinkaufState.artikel=data.artikel||[];
+      barcodeEinkaufState.erkannteArtikel=data.erkannteArtikel||[];
       barcodeEinkaufState.geschaeft=data.geschaeft||'';
-      console.log('[Persist] Barcodes geladen: '+barcodeEinkaufState.artikel.length);
+      barcodeEinkaufState.reviewIdx=data.reviewIdx||0;
+      barcodeEinkaufState.onlineDaten=data.onlineDaten||{};
+      barcodeEinkaufState.apiCache=data.apiCache||{};
+      console.log('[Persist] Barcodes geladen: '+barcodeEinkaufState.artikel.length+' Artikel mit allen Daten (Internet, Foto, Preis, Shop)');
       return true;
     }
   }catch(e){
@@ -8079,7 +8089,7 @@ async function startBarcodeCamera(){
       (barcodeEinkaufState.artikel.length>0?'<button onclick="closeBarcodeCamera()" style="width:100%;padding:12px;background:linear-gradient(135deg,#4CAF50,#45a049);border:none;border-radius:var(--rs);font-size:14px;cursor:pointer;color:#fff;font-weight:600;margin-bottom:6px">⏭️ Artikel überprüfen</button>':'')+
       '<div style="display:flex;gap:6px">'+
         '<button onclick="backToShopSelection()" style="flex:1;padding:10px;background:#333;border:1px solid #555;border-radius:var(--rs);font-size:13px;cursor:pointer;color:#ccc">← Zurück</button>'+
-        '<button onclick="finishBarcodeInputAndStartQuittung()" style="flex:1;padding:10px;background:var(--ac);border:none;border-radius:var(--rs);font-size:13px;cursor:pointer;color:#fff;font-weight:600">✓ Fertig</button>'+
+        '<button onclick="finishBarcodeInputAndStartQuittung()" style="flex:1;padding:10px;background:var(--ac);border:none;border-radius:var(--rs);font-size:13px;cursor:pointer;color:#fff;font-weight:600">✓ Fertig (optional)</button>'+
       '</div>'+
     '</div>';
   document.body.appendChild(dlg);
@@ -8452,6 +8462,7 @@ function confirmArticleReview(){
   }
 
   barcodeEinkaufState.reviewIdx=(barcodeEinkaufState.reviewIdx||0)+1;
+  saveBarcodeState();  // Speichere nach jeder Bestätigung
   showNextArticleReview();
 }
 
@@ -8528,6 +8539,7 @@ function skipArticleReview(){
   }
   barcodeEinkaufState.erkannteArtikel.splice(idx,1);
   toast('⏭️ Artikel übersprungen');
+  saveBarcodeState();  // Speichere nach dem Überspringen
   showNextArticleReview();
 }
 
@@ -8647,6 +8659,7 @@ function assignSelectedBarcode(){
   }
 
   toast('✓ Barcode zugewiesen');
+  saveBarcodeState();  // Speichere nach Barcode-Zuweisung
   const dlg=document.getElementById('barcode-compare-dlg');
   if(dlg)dlg.remove();
 
@@ -9257,6 +9270,7 @@ function finishArticleReview(){
   }
 
   toast('✅ Alle Artikel reviewed!');
+  saveBarcodeState();  // Speichere alle finalen Änderungen
   setTimeout(async ()=>{
     toast('🔄 Verarbeite Barcodes...');
     console.log('[Quittung] Starte processAllBarcodes...');
@@ -9376,12 +9390,14 @@ function finishBarcodeInputAndStartQuittung() {
     dlg.remove();
   }
 
+  // Wenn KEINE Barcodes gescannt: direkt zum Lager (Scanning ist optional!)
   if (barcodeEinkaufState.artikel.length === 0) {
-    toast('Bitte mindestens einen Barcode scannen');
-    setTimeout(() => startBarcodeCamera(), 500);
+    toast('ℹ️ Keine Barcodes gescannt — direkt zum Lager');
+    setTimeout(() => finishBarcodeEinkauf(), 500);
     return;
   }
 
+  // Mit Barcodes: Quittung zum Abgleich
   toast('Nun Quittung scannen zum Abgleich');
   setTimeout(() => showBarcodeQuittungDialog(), 500);
 }
