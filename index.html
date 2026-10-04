@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.137 — IMPROVEMENT: Scanner pausiert nach Scan + Video-Keepalive gegen Stromsparmodus -->
+<!-- HAUSHALTBUCH v22.138 — IMPROVEMENT: API-Caching + Einbuchen-Button Event-Handler Fix -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.137"/>
+<meta name="app-version" content="22.138"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.137';
+const APP_VERSION='22.138';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.138',d:'04.10.2026',items:['💾 FEATURE: API-Caching für Barcodes — verhindert redundante Anfragen','⚡ Suchergebnisse werden im Cache gespeichert (pro Barcode)','🔄 Gleiche Barcodes können sofort wieder aus Cache geladen werden','🎯 Einbuchen-Button: Event-Handler Fix mit stopPropagation()','✅ Schneller und zuverlässiger Workflow nach Barcode-Zuweisung']},
   {v:'22.137',d:'04.10.2026',items:['⏸️ IMPROVEMENT: Scanner pausiert nach erfolgreichem Scan bis Bestätigung','🎥 Video-Keepalive: Alle 2 Sekunden play() um Stromsparmodus zu vermeiden','⚡ Kamera bleibt aktiv und responsive während Benutzer entscheidet','🔄 Scanner nach Bestätigen/Verwerfen/Korrigieren automatisch fortgesetzt','✅ Besseres UX: Benutzer sieht Video und pausiert bei jedem Code']},
   {v:'22.136',d:'04.10.2026',items:['🔍 FEATURE: Bestätigungsdialog nach Barcode-Scan zeigt erkannten Code','✏️ Benutzer kann unvollständige/fehlerhafte Barcodes korrigieren','📦 Großes Display des Barcodes mit Typ (EAN-13/EAN-8/etc.)','🎯 3 Optionen: Bestätigen / Korrigieren / Verwerfen','✅ Verhindert unvollständige Barcodes in der Datenbank']},
   {v:'22.135',d:'04.10.2026',items:['⏱️ VERBESSERUNG: Timeouts erhöht (8s → 20-25s) für zuverlässigere API-Antworten','🔄 Retry-Logik hinzugefügt: max 3 Versuche pro API mit 1s Pause','🌐 Konsistentere Suchergebnisse auch bei schwachem Netzwerk','📊 Bessere Error-Logs zum Debuggen von API-Problemen','✅ Produktinfos werden zuverlässiger und konsistenter gezeigt']},
@@ -7896,11 +7897,12 @@ function toast(m){
 let barcodeEinkaufState={
   geschaeft:'',
   artikel:[],  // {barcode, artikel?, foto?, new?: bool}
-  idx:0
+  idx:0,
+  apiCache:{}  // Cache für Online-Suchen: barcode -> {name, image, description, etc}
 };
 
 function startBarcodeEinkauf(){
-  barcodeEinkaufState={geschaeft:'',artikel:[],idx:0};
+  barcodeEinkaufState={geschaeft:'',artikel:[],idx:0,apiCache:{}};
   openShopSelectionDialog();
 }
 
@@ -8311,7 +8313,15 @@ function showNextArticleReview(){
   const btns=document.createElement('div');
   btns.style.cssText='flex-shrink:0;padding:16px;display:block;width:100%;pointer-events:auto';
 
-  const mkBtn=(id,txt,c,h)=>{const b=document.createElement('div');b.id=id;b.style.cssText='display:block;width:100%;padding:12px;margin-bottom:8px;background:'+c+';color:#fff;font-weight:600;cursor:pointer;font-size:16px;box-sizing:border-box;text-align:center;border-radius:6px;pointer-events:auto';b.textContent=txt;b.addEventListener('click',h);return b;};
+  const mkBtn=(id,txt,c,h)=>{
+    const b=document.createElement('div');
+    b.id=id;
+    b.style.cssText='display:block;width:100%;padding:12px;margin-bottom:8px;background:'+c+';color:#fff;font-weight:600;cursor:pointer;font-size:16px;box-sizing:border-box;text-align:center;border-radius:6px;pointer-events:auto;transition:opacity 0.2s';
+    b.textContent=txt;
+    b.addEventListener('click',(e)=>{e.stopPropagation();h();});
+    b.addEventListener('touchend',(e)=>{e.stopPropagation();h();});
+    return b;
+  };
   btns.appendChild(mkBtn('btn-einbuchen','✅ Einbuchen','#10b981',confirmArticleReview));
   btns.appendChild(mkBtn('btn-vergleich','🔍 Vergleich','#3b82f6',compareWithScannedBarcodes));
   btns.appendChild(mkBtn('btn-neusuche','🌐 Neu+Suche','#8b5cf6',createNewArticleWithWebSearch));
@@ -8590,6 +8600,12 @@ function performBarcodeWebSearch(){
 }
 
 async function searchOpenFoodFacts(barcode){
+  // Prüfe Cache zuerst
+  if(barcodeEinkaufState.apiCache[barcode]){
+    console.log('[OpenFoodFacts] Ergebnis aus Cache:', barcode);
+    return barcodeEinkaufState.apiCache[barcode];
+  }
+
   // Retry-Logik: max 3 Versuche mit erhöhtem Timeout
   for(let attempt=1;attempt<=3;attempt++){
     try{
@@ -8597,7 +8613,7 @@ async function searchOpenFoodFacts(barcode){
       const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 Sekunden
       const r = await fetch('https://world.openfoodfacts.org/api/v0/product/'+encodeURIComponent(barcode)+'.json', {
         signal: controller.signal,
-        headers: { 'User-Agent': 'Haushaltbuch/22.134' }
+        headers: { 'User-Agent': 'Haushaltbuch/22.137' }
       });
       clearTimeout(timeoutId);
 
@@ -8614,7 +8630,7 @@ async function searchOpenFoodFacts(barcode){
       if(data.status===1&&data.product){
         const prod = data.product;
         const imageUrl = prod.image_front_url || prod.image_url || '';
-        return{
+        const result = {
           name: prod.product_name || 'Unbekannt',
           marke: prod.brands || '',
           kategorien: prod.categories || '',
@@ -8622,6 +8638,9 @@ async function searchOpenFoodFacts(barcode){
           image: imageUrl,
           source: 'Open Food Facts'
         };
+        // Speichere in Cache
+        barcodeEinkaufState.apiCache[barcode] = result;
+        return result;
       }
       return null;
     }catch(e){
@@ -8637,6 +8656,12 @@ async function searchOpenFoodFacts(barcode){
 }
 
 async function searchEANDatabase(barcode){
+  // Prüfe Cache zuerst
+  if(barcodeEinkaufState.apiCache[barcode]){
+    console.log('[EANDatabase] Ergebnis aus Cache:', barcode);
+    return barcodeEinkaufState.apiCache[barcode];
+  }
+
   // Retry-Logik: max 3 Versuche mit erhöhtem Timeout
   for(let attempt=1;attempt<=3;attempt++){
     try{
@@ -8644,7 +8669,7 @@ async function searchEANDatabase(barcode){
       const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 Sekunden
       const r = await fetch('https://api.eandata.com/product/'+encodeURIComponent(barcode), {
         signal: controller.signal,
-        headers: { 'User-Agent': 'Haushaltbuch/22.134' }
+        headers: { 'User-Agent': 'Haushaltbuch/22.137' }
       });
       clearTimeout(timeoutId);
 
@@ -8660,7 +8685,7 @@ async function searchEANDatabase(barcode){
       const data = await r.json();
       if(data && data.Product){
         const prod = data.Product;
-        return{
+        const result = {
           name: prod.ProductName || 'Unbekannt',
           marke: prod.Brand || '',
           kategorien: prod.Category || '',
@@ -8668,6 +8693,9 @@ async function searchEANDatabase(barcode){
           image: prod.ImageUrl || '',
           source: 'EAN Database'
         };
+        // Speichere in Cache
+        barcodeEinkaufState.apiCache[barcode] = result;
+        return result;
       }
       return null;
     }catch(e){
