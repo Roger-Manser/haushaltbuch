@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.130 — Internet Barcode Lookup: Multi-Source Suche mit Foto & Bestätigung -->
+<!-- HAUSHALTBUCH v22.131 — Barcode-Scan überspringbar + Workflow optimiert für Mobile -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.130"/>
+<meta name="app-version" content="22.131"/>
 <!-- CACHE BUST v2302 -->
 <link rel="manifest" href="manifest.json?v=2302"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,10 +558,11 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.130';
+const APP_VERSION='22.131';
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.131',d:'04.10.2026',items:['📱 Barcode-Scan kann übersprungen werden ohne Artikel zu löschen','🔄 Neuer Workflow: Scan beenden → Optionen (Review/Weiterscan/Verwerfen)','⏱️ API-Timeout erhöht auf 8 Sekunden (mobiles Netzwerk optimiert)','✅ Barcodes bleiben erhalten bis Einkauf abgeschlossen','🔗 Handy-Scan → Web-App-Review seamless workflow']},
   {v:'22.130',d:'04.10.2026',items:['🌐 Internet-Barcode-Suche: Multi-Source Lookup (Open Food Facts + EAN Database)','📸 Produktfotos herunterladen und als Base64 speichern','✅ Benutzerbestätigung erforderlich vor Datenspeicherung','✏️ Manuelles Eintragen als Fallback wenn keine Online-Infos gefunden','🔍 Einfache UI zur Bestätigung oder Ablehnung der gefundenen Daten']},
   {v:'22.129',d:'04.10.2026',items:['🎯 RADIKAL: Dialog mit createElement/appendChild statt innerHTML!','❌ Problem: innerHTML-String war zu lang oder wurde abgeschnitten','✅ Lösung: Alle Elemente programmisch mit DOM-API erstellen','📍 Zuverlässiger, debuggbar, keine String-Konkatenation-Fehler','🔥 Buttons sollten DEFINITIV jetzt sichtbar und clickbar sein!']},
   {v:'22.128',d:'04.10.2026',items:['🔥 KRITISCH: Buttons NICHT clickbar! addEventListener statt onclick!','❌ Problem: onclick-Attribute in innerHTML funktionieren nicht zuverlässig','✅ Lösung: addEventListener nach appendChild mit Button-IDs','🎯 pointer-events:auto auf allen Elementen (explizit)','💡 Buttons sollten jetzt clickbar sein!']},
@@ -8390,18 +8391,26 @@ function performBarcodeWebSearch(){
 
 async function searchOpenFoodFacts(barcode){
   try{
-    const r=await fetch('https://world.openfoodfacts.org/api/v0/product/'+encodeURIComponent(barcode)+'.json',{timeout:5000});
-    const data=await r.json();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+    const r = await fetch('https://world.openfoodfacts.org/api/v0/product/'+encodeURIComponent(barcode)+'.json', {
+      signal: controller.signal,
+      headers: { 'User-Agent': 'Haushaltbuch/22.130' }
+    });
+    clearTimeout(timeoutId);
+
+    if(!r.ok) return null;
+    const data = await r.json();
     if(data.status===1&&data.product){
-      const prod=data.product;
-      const imageUrl=prod.image_front_url||prod.image_url||'';
+      const prod = data.product;
+      const imageUrl = prod.image_front_url || prod.image_url || '';
       return{
-        name:prod.product_name||'Unbekannt',
-        marke:prod.brands||'',
-        kategorien:prod.categories||'',
-        description:prod.product_name||'',
-        imageUrl:imageUrl,
-        source:'Open Food Facts'
+        name: prod.product_name || 'Unbekannt',
+        marke: prod.brands || '',
+        kategorien: prod.categories || '',
+        description: prod.product_name || '',
+        imageUrl: imageUrl,
+        source: 'Open Food Facts'
       };
     }
     return null;
@@ -8413,18 +8422,25 @@ async function searchOpenFoodFacts(barcode){
 
 async function searchEANDatabase(barcode){
   try{
-    const r=await fetch('https://api.eandata.com/product/'+encodeURIComponent(barcode),{timeout:5000});
-    if(!r.ok)return null;
-    const data=await r.json();
-    if(data&&data.Product){
-      const prod=data.Product;
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 8000);
+    const r = await fetch('https://api.eandata.com/product/'+encodeURIComponent(barcode), {
+      signal: controller.signal,
+      headers: { 'User-Agent': 'Haushaltbuch/22.130' }
+    });
+    clearTimeout(timeoutId);
+
+    if(!r.ok) return null;
+    const data = await r.json();
+    if(data && data.Product){
+      const prod = data.Product;
       return{
-        name:prod.ProductName||'Unbekannt',
-        marke:prod.Brand||'',
-        kategorien:prod.Category||'',
-        description:prod.ProductDescription||prod.ProductName||'',
-        imageUrl:prod.ImageUrl||'',
-        source:'EAN Database'
+        name: prod.ProductName || 'Unbekannt',
+        marke: prod.Brand || '',
+        kategorien: prod.Category || '',
+        description: prod.ProductDescription || prod.ProductName || '',
+        imageUrl: prod.ImageUrl || '',
+        source: 'EAN Database'
       };
     }
     return null;
@@ -8850,9 +8866,87 @@ function closeBarcodeCamera() {
     if (dlg.__cleanup) dlg.__cleanup();
     dlg.remove();
   }
-  // Zurück zur Warehouse-Ansicht (Dialog soll NICHT mehr erscheinen)
-  barcodeEinkaufState.artikel = [];
-  goScreen('s-lager');
+
+  const cnt = barcodeEinkaufState.artikel.length;
+  if(cnt === 0){
+    // Keine Barcodes gescannt - zurück zum Lager
+    goScreen('s-lager');
+    return;
+  }
+
+  // Es gibt gescannte Barcodes - zeige Optionen
+  showBarcodeOptionsDialog(cnt);
+}
+
+function showBarcodeOptionsDialog(count){
+  const optDlg = document.createElement('div');
+  optDlg.id = 'barcode-options-dlg';
+  optDlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:10px';
+
+  const inner = document.createElement('div');
+  inner.style.cssText = 'background:var(--sf);border-radius:var(--r);width:100%;max-width:420px;padding:20px;margin:auto';
+
+  const title = document.createElement('div');
+  title.style.cssText = 'font-weight:700;font-size:16px;margin-bottom:4px';
+  title.textContent = '📊 Barcodes erfasst';
+  inner.appendChild(title);
+
+  const msg = document.createElement('div');
+  msg.style.cssText = 'font-size:14px;color:var(--t2);margin-bottom:16px;line-height:1.6';
+  msg.innerHTML = '✅ <strong>'+count+' Barcodes</strong> gescannt<br/>Wie möchtest du fortfahren?';
+  inner.appendChild(msg);
+
+  const btnContainer = document.createElement('div');
+  btnContainer.style.cssText = 'display:flex;flex-direction:column;gap:8px';
+
+  const reviewBtn = document.createElement('button');
+  reviewBtn.style.cssText = 'width:100%;padding:12px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-weight:600;cursor:pointer;font-size:14px';
+  reviewBtn.textContent = '🔍 Artikel überprüfen';
+  reviewBtn.addEventListener('click', () => {
+    optDlg.remove();
+    startArticleReview();
+  });
+  btnContainer.appendChild(reviewBtn);
+
+  const scanMoreBtn = document.createElement('button');
+  scanMoreBtn.style.cssText = 'width:100%;padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);color:var(--t2);font-weight:600;cursor:pointer;font-size:14px';
+  scanMoreBtn.textContent = '📱 Weiterer Barcode scannen';
+  scanMoreBtn.addEventListener('click', () => {
+    optDlg.remove();
+    startBarcodeCamera();
+  });
+  btnContainer.appendChild(scanMoreBtn);
+
+  const skipBtn = document.createElement('button');
+  skipBtn.style.cssText = 'width:100%;padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:600;cursor:pointer;font-size:14px';
+  skipBtn.textContent = '❌ Barcodes verwerfen & zum Lager';
+  skipBtn.addEventListener('click', () => {
+    optDlg.remove();
+    barcodeEinkaufState.artikel = [];
+    goScreen('s-lager');
+  });
+  btnContainer.appendChild(skipBtn);
+
+  inner.appendChild(btnContainer);
+  optDlg.appendChild(inner);
+  document.body.appendChild(optDlg);
+}
+
+function startArticleReview(){
+  if(barcodeEinkaufState.artikel.length === 0){
+    toast('❌ Keine Barcodes zum Überprüfen');
+    return;
+  }
+  // Initialisiere den Review-State
+  barcodeEinkaufState.reviewIdx = 0;
+  // Konvertiere artikel zu erkannteArtikel Format
+  if(!barcodeEinkaufState.erkannteArtikel){
+    barcodeEinkaufState.erkannteArtikel = barcodeEinkaufState.artikel.map((a,i)=>({
+      ...a,
+      index: i
+    }));
+  }
+  showNextArticleReview();
 }
 
 function finishBarcodeInputAndStartQuittung() {
