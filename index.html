@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.163 — DIAGNOSE: Detaillierte Logs für Barcode-Speicherung -->
+<!-- HAUSHALTBUCH v22.164 — MOBILE-DEBUG: In-App Log-Panel für Handy-Diagnose -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.163"/>
+<meta name="app-version" content="22.164"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,7 +558,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.163';
+const APP_VERSION='22.164';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -571,6 +571,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.164',d:'05.10.2026',items:['📱 MOBILE-DEBUG: In-App Log-Panel statt Browser-Console','✅ Settings → Diagnose-Logs anzeigen (neue Button)','📊 Alle [BarcodeCache] Logs werden automatisch gesammelt','🔧 Toast-Meldungen zeigen GitHub-Sync Status in Echtzeit','📋 Logs können kopiert werden (für Debugging)']},
   {v:'22.163',d:'05.10.2026',items:['🔍 DIAGNOSE: Detaillierte Logs für Barcode-Speicherung','📊 confirmBarcodeAndAdd() loggt jeden Schritt','📊 addScannedBarcodeToCache() zeigt genau wo Barcode bleibt','✅ Nachverfolgung: vorher/nachher Barcodes in Cache','🐛 Findet warum barcodeCache leer bleibt trotz Scans']},
   {v:'22.162',d:'05.10.2026',items:['🔧 BUGFIX: Barcode-String-Konvertierung & localStorage-Fehlerbehandlung','✅ addScannedBarcodeToCache(): Barcode sicher zu String konvertieren','✅ validateBarcode(): String-Konvertierung vor Format-Checks','📊 localStorage-Fehler werden jetzt geloggt (QuotaExceededError etc.)','🐛 Verhindert Fehler wenn Barcode nicht vom Typ String ist']},
   {v:'22.161',d:'04.10.2026',items:['🔧 MEGA-FIX: loadBarcodeCacheFromGH() überschrieb lokale Barcodes mit leeren GitHub-Daten!','❌ PROBLEM BEHOBEN: MERGE statt ÜBERSCHREIBEN','✅ Lokale Barcodes werden BEWAHRT, GitHub-Daten werden hinzugefügt (merge logic)','✅ Sync-Konflikt aufgelöst: lokal gewinnt bei Konflikten','🌐 Barcodes gehen nicht mehr verloren bei GitHub-Sync!']},
@@ -915,6 +916,14 @@ const VERSION_HISTORY=[
   {v:'10.6',d:'07.2026',items:['Sprung-Pfeile ↑↓ in Detailansicht (bei langem Inhalt)']},
   {v:'10.5',d:'07.2026',items:['Etikett-Packungsauswahl bei mehreren MHDs']}
 ];
+function showDebugLogs(){
+  const dlg=document.createElement('div');
+  dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;padding:10px';
+  const content=debugLogs.length>0?debugLogs.map(l=>'<div style="font-size:11px;font-family:monospace;line-height:1.4;color:#0f0;margin:2px 0">'+esc(l)+'</div>').join(''):'<div style="color:#ccc;text-align:center;padding:20px">Keine Logs vorhanden</div>';
+  dlg.innerHTML='<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:500px;max-height:80vh;padding:16px;display:flex;flex-direction:column;overflow:hidden"><div style="font-weight:700;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between"><span>🔧 Barcode-Diagnose ('+debugLogs.length+' Logs)</span><button onclick="this.closest(\'div\').parentElement.remove()" style="background:none;border:none;cursor:pointer;font-size:16px">✕</button></div><div style="flex:1;overflow-y:auto;background:#000;border-radius:var(--rs);padding:8px;color:#0f0;font-family:monospace;font-size:10px;line-height:1.4">'+content+'</div><div style="margin-top:12px;display:flex;gap:8px"><button onclick="debugLogs=[];this.closest(\'div\').parentElement.remove();toast(\'Logs gelöscht\')" style="flex:1;padding:8px;background:#d32f2f;border:none;border-radius:var(--rs);color:#fff;cursor:pointer">Logs löschen</button><button onclick="navigator.clipboard.writeText(debugLogs.join(\'\\n\'));toast(\'In Zwischenablage kopiert!\');this.closest(\'div\').parentElement.remove()" style="flex:1;padding:8px;background:var(--ac);border:none;border-radius:var(--rs);color:#fff;cursor:pointer">Kopieren</button></div></div>';
+  document.body.appendChild(dlg);
+}
+
 function showVersionHistory(){
   const existing=document.getElementById('vh-modal');if(existing)existing.remove();
   const dlg=document.createElement('div');
@@ -1006,14 +1015,18 @@ async function syncBarcodeCacheToGH(){
     console.log('[BarcodeCache] Starte Sync zu GitHub...');
     barcodeCache.lastUpdated=Date.now();
     const content=JSON.stringify(barcodeCache,null,2);
-    console.log('[BarcodeCache] Content zu pushen:',content.length,'bytes,',Object.keys(barcodeCache.barcodes).length,'Barcodes');
+    const barcodeCount=Object.keys(barcodeCache.barcodes).length;
+    console.log('[BarcodeCache] Content zu pushen:',content.length,'bytes,',barcodeCount,'Barcodes');
+    toast('📤 GitHub-Sync läuft... ('+barcodeCount+' Barcodes)');
     const ghFile=await ghGet('barcode-cache.json');
     console.log('[BarcodeCache] GitHub File info:',ghFile?'EXISTS':'NOT_EXISTS');
     const sha=ghFile?ghFile.sha:undefined;
     const result=await ghPut('barcode-cache.json',content,'Barcode-Cache aktualisiert',sha);
-    console.log('[BarcodeCache] ✅ Synced zu GitHub:',Object.keys(barcodeCache.barcodes).length,'Barcodes','— Result:',result);
+    console.log('[BarcodeCache] ✅ Synced zu GitHub:',barcodeCount,'Barcodes','— Result:',result);
+    toast('✅ '+barcodeCount+' Barcodes zu GitHub synced');
   }catch(e){
     console.error('[BarcodeCache] ❌ FEHLER beim Sync zu GitHub:',e.message,e);
+    toast('❌ GitHub-Sync Fehler: '+e.message);
   }
 }
 function addToBarcodeCacheIfNotExists(barcode,data){
@@ -1088,6 +1101,20 @@ function addScannedBarcodeToCache(barcode){
   }
   return false;
 }
+
+// 🔧 DIAGNOSE: In-App Log-Collector für Barcode-Debugging
+let debugLogs=[];
+const MAX_DEBUG_LOGS=50;
+function addDebugLog(msg){
+  const ts=new Date().toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  debugLogs.push('['+ts+'] '+msg);
+  if(debugLogs.length>MAX_DEBUG_LOGS)debugLogs.shift();
+  console.log('[DEBUG-COLLECTOR]',msg);
+}
+// Überschreibe console.log und console.error um Logs zu sammeln
+const origLog=console.log,origError=console.error;
+console.log=function(...args){origLog.apply(console,args);const msg=args.map(a=>typeof a==='object'?JSON.stringify(a):String(a)).join(' ');if(msg.includes('[BarcodeCache]')||msg.includes('[BarcodeConfirm]'))addDebugLog(msg);};
+console.error=function(...args){origError.apply(console,args);const msg=args.map(a=>typeof a==='object'?JSON.stringify(a):String(a)).join(' ');if(msg.includes('[BarcodeCache]')||msg.includes('[BarcodeConfirm]'))addDebugLog('❌ ERROR: '+msg);};
 
 let opt={fotoZwang:false,
   fwDashboard:true,      // Ablauf-Dashboard auf Lager-Screen
@@ -7985,7 +8012,7 @@ function renderSt(){
     renderPufferSektion()
   )+
   settingsGroup('sg-app','⚙️','App & Daten',
-    '<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong style="color:var(--ac);cursor:pointer;text-decoration:underline" onclick="showVersionHistory()">v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button></div>'+
+    '<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong style="color:var(--ac);cursor:pointer;text-decoration:underline" onclick="showVersionHistory()">v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button><button class="bg2" style="width:100%;margin-top:6px;font-size:14px" onclick="showDebugLogs()">🔧 Diagnose-Logs anzeigen</button></div>'+
     '<div class="ss"><div class="ssl">Daten</div><button class="db-btn" onclick="expJ()">'+I.dl+' Lokaler Export (JSON)</button><button class="db-btn" onclick="document.getElementById(\'imp\').click()">'+I.ul+' Lokaler Import (JSON)<input type="file" id="imp" accept=".json" style="display:none" onchange="impJ(event)"/></button><button class="db-btn d" onclick="clearLog()">'+I.trash+' Bewegungsprotokoll löschen</button><button class="db-btn d" onclick="resetAll()">'+I.trash+' Alle Daten löschen</button></div>'
   );
   setTimeout(()=>{suppressAutofill(document.getElementById('s-settings'));},0);
