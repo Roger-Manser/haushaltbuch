@@ -1,4 +1,17 @@
 {
-  "barcodes": {},
-  "lastUpdated": 1791210763692
+  "barcodes": {
+    "7623900204786": {
+      "barcode": "7623900204786",
+      "name": "",
+      "marke": "",
+      "kategorien": "",
+      "description": "",
+      "image": "",
+      "source": "Gescannt (noch nicht gesucht)",
+      "offData": {},
+      "addedAt": 1791210910666,
+      "scannedOnly": true
+    }
+  },
+  "lastUpdated": 1791210910667
 }
