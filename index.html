@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.162 — BARCODE-CACHE: String-Konvertierung und localStorage-Fehlerbehandlung -->
+<!-- HAUSHALTBUCH v22.163 — DIAGNOSE: Detaillierte Logs für Barcode-Speicherung -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.162"/>
+<meta name="app-version" content="22.163"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,7 +558,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.162';
+const APP_VERSION='22.163';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -571,6 +571,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.163',d:'05.10.2026',items:['🔍 DIAGNOSE: Detaillierte Logs für Barcode-Speicherung','📊 confirmBarcodeAndAdd() loggt jeden Schritt','📊 addScannedBarcodeToCache() zeigt genau wo Barcode bleibt','✅ Nachverfolgung: vorher/nachher Barcodes in Cache','🐛 Findet warum barcodeCache leer bleibt trotz Scans']},
   {v:'22.162',d:'05.10.2026',items:['🔧 BUGFIX: Barcode-String-Konvertierung & localStorage-Fehlerbehandlung','✅ addScannedBarcodeToCache(): Barcode sicher zu String konvertieren','✅ validateBarcode(): String-Konvertierung vor Format-Checks','📊 localStorage-Fehler werden jetzt geloggt (QuotaExceededError etc.)','🐛 Verhindert Fehler wenn Barcode nicht vom Typ String ist']},
   {v:'22.161',d:'04.10.2026',items:['🔧 MEGA-FIX: loadBarcodeCacheFromGH() überschrieb lokale Barcodes mit leeren GitHub-Daten!','❌ PROBLEM BEHOBEN: MERGE statt ÜBERSCHREIBEN','✅ Lokale Barcodes werden BEWAHRT, GitHub-Daten werden hinzugefügt (merge logic)','✅ Sync-Konflikt aufgelöst: lokal gewinnt bei Konflikten','🌐 Barcodes gehen nicht mehr verloren bei GitHub-Sync!']},
   {v:'22.160',d:'04.10.2026',items:['🔧 KRITISCHER FIX: Barcodes werden jetzt zu GitHub synchronisiert!','❌ PROBLEM BEHOBEN: addScannedBarcodeToCache() speicherte lokal, synced aber nicht','✅ syncBarcodeCacheToGH() wird jetzt nach jedem Scan aufgerufen','✅ Mobile + Web App teilen jetzt Barcodes via GitHub (beide Richtungen)','🌐 Barcode-Sync funktioniert vollständig end-to-end!']},
@@ -1054,13 +1055,16 @@ function addToBarcodeCacheIfNotExists(barcode,data){
 }
 function addScannedBarcodeToCache(barcode){
   // Füge gerade gescannten Barcode zur persistenten Cache hinzu (ohne API-Daten)
+  console.log('[BarcodeCache] addScannedBarcodeToCache() START: barcode=',barcode,'| typeof:',typeof barcode,'| barcode?.length:',barcode?.length);
   barcode=String(barcode).trim();  // 🔧 Sicher zu String konvertieren
-  console.log('[BarcodeCache] addScannedBarcodeToCache() aufgerufen mit:',barcode,'| Länge:',barcode?.length);
+  console.log('[BarcodeCache] Nach String+trim: barcode=',barcode,'| Länge:',barcode.length,'| isEmpty?',!barcode);
   if(!barcode){
-    console.log('[BarcodeCache] ❌ Barcode ist leer!');
+    console.log('[BarcodeCache] ❌ Barcode ist LEER nach trim()!');
     return false;
   }
+  console.log('[BarcodeCache] Prüfe ob bereits in Cache: barcodeCache.barcodes['+barcode+']=',barcodeCache.barcodes[barcode]);
   if(!barcodeCache.barcodes[barcode]){
+    console.log('[BarcodeCache] 🆕 Barcode nicht in Cache, füge hinzu...');
     barcodeCache.barcodes[barcode]={
       barcode:barcode,
       name:'',
@@ -1073,6 +1077,7 @@ function addScannedBarcodeToCache(barcode){
       addedAt:Date.now(),
       scannedOnly:true
     };
+    console.log('[BarcodeCache] Nach Hinzufügen: barcodeCache.barcodes['+barcode+']=',barcodeCache.barcodes[barcode]);
     saveBarcodeCacheL();
     console.log('[BarcodeCache] ✅ Barcode gescannt (minimal hinzugefügt):',barcode,'| Total in Cache:',Object.keys(barcodeCache.barcodes).length);
     // 🔧 KRITISCH: Synchronisiere sofort zu GitHub!
@@ -8547,15 +8552,19 @@ function resumeScanning() {
 }
 
 function confirmBarcodeAndAdd(barcode, barcodeType) {
+  console.log('[BarcodeConfirm] confirmBarcodeAndAdd() aufgerufen mit barcode:',barcode,'| type:',typeof barcode,'| barcodeType:',barcodeType);
   barcodeEinkaufState.artikel.push({barcode, artikel: null});
   const typeIcon = barcodeType === 'EAN-13' ? '📦' : barcodeType === 'EAN-8' ? '📫' : '🏪';
   toast('✓ '+typeIcon+' '+barcodeType+' hinzugefügt');
 
   // Speichere Barcodes persistent
   saveBarcodeState();
+  console.log('[BarcodeConfirm] Nach saveBarcodeState(): barcodeEinkaufState.artikel.length=',barcodeEinkaufState.artikel.length);
 
   // Füge Barcode auch zur GitHub-Sync Cache hinzu (minimal, ohne API-Daten)
+  console.log('[BarcodeConfirm] Rufe addScannedBarcodeToCache() auf mit:',barcode);
   addScannedBarcodeToCache(barcode);
+  console.log('[BarcodeConfirm] Nach addScannedBarcodeToCache(): barcodeCache.barcodes=',Object.keys(barcodeCache.barcodes).length);
 
   // Update Counter im Dialog
   const counterDiv = document.getElementById('barcode-counter');
