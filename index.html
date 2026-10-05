@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.164 — MOBILE-DEBUG: In-App Log-Panel für Handy-Diagnose -->
+<!-- HAUSHALTBUCH v22.165 — HOTFIX: Endlosschleife im Debug-Collector behoben -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.164"/>
+<meta name="app-version" content="22.165"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -558,7 +558,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.164';
+const APP_VERSION='22.165';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -571,6 +571,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.165',d:'05.10.2026',items:['🔴 HOTFIX: ENDLOSSCHLEIFE im Debug-Collector behoben!','❌ PROBLEM: addDebugLog() → console.log() → addDebugLog() Zirkelbezug','✅ GELÖST: Verwende origLog() statt console.log() in addDebugLog()','🚀 App hängt sich nicht mehr auf wenn Debug-Logs aktiviert']},
   {v:'22.164',d:'05.10.2026',items:['📱 MOBILE-DEBUG: In-App Log-Panel statt Browser-Console','✅ Settings → Diagnose-Logs anzeigen (neue Button)','📊 Alle [BarcodeCache] Logs werden automatisch gesammelt','🔧 Toast-Meldungen zeigen GitHub-Sync Status in Echtzeit','📋 Logs können kopiert werden (für Debugging)']},
   {v:'22.163',d:'05.10.2026',items:['🔍 DIAGNOSE: Detaillierte Logs für Barcode-Speicherung','📊 confirmBarcodeAndAdd() loggt jeden Schritt','📊 addScannedBarcodeToCache() zeigt genau wo Barcode bleibt','✅ Nachverfolgung: vorher/nachher Barcodes in Cache','🐛 Findet warum barcodeCache leer bleibt trotz Scans']},
   {v:'22.162',d:'05.10.2026',items:['🔧 BUGFIX: Barcode-String-Konvertierung & localStorage-Fehlerbehandlung','✅ addScannedBarcodeToCache(): Barcode sicher zu String konvertieren','✅ validateBarcode(): String-Konvertierung vor Format-Checks','📊 localStorage-Fehler werden jetzt geloggt (QuotaExceededError etc.)','🐛 Verhindert Fehler wenn Barcode nicht vom Typ String ist']},
@@ -1102,17 +1103,17 @@ function addScannedBarcodeToCache(barcode){
   return false;
 }
 
-// 🔧 DIAGNOSE: In-App Log-Collector für Barcode-Debugging
+// 🔧 DIAGNOSE: In-App Log-Collector für Barcode-Debugging (FIXED: keine Endlosschleife!)
 let debugLogs=[];
 const MAX_DEBUG_LOGS=50;
+const origLog=console.log,origError=console.error;
 function addDebugLog(msg){
   const ts=new Date().toLocaleTimeString('de-CH',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
   debugLogs.push('['+ts+'] '+msg);
   if(debugLogs.length>MAX_DEBUG_LOGS)debugLogs.shift();
-  console.log('[DEBUG-COLLECTOR]',msg);
+  origLog.apply(console,['[DEBUG-COLLECTOR]',msg]); // 🔧 WICHTIG: origLog, nicht console.log!
 }
 // Überschreibe console.log und console.error um Logs zu sammeln
-const origLog=console.log,origError=console.error;
 console.log=function(...args){origLog.apply(console,args);const msg=args.map(a=>typeof a==='object'?JSON.stringify(a):String(a)).join(' ');if(msg.includes('[BarcodeCache]')||msg.includes('[BarcodeConfirm]'))addDebugLog(msg);};
 console.error=function(...args){origError.apply(console,args);const msg=args.map(a=>typeof a==='object'?JSON.stringify(a):String(a)).join(' ');if(msg.includes('[BarcodeCache]')||msg.includes('[BarcodeConfirm]'))addDebugLog('❌ ERROR: '+msg);};
 
