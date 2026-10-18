@@ -23,7 +23,19 @@
       "offData": {},
       "addedAt": 1791211859328,
       "scannedOnly": true
+    },
+    "7622201451141": {
+      "barcode": "7622201451141",
+      "name": "",
+      "marke": "",
+      "kategorien": "",
+      "description": "",
+      "image": "",
+      "source": "Gescannt (noch nicht gesucht)",
+      "offData": {},
+      "addedAt": 1792328630631,
+      "scannedOnly": true
     }
   },
-  "lastUpdated": 1792328465341
+  "lastUpdated": 1792328630632
 }
