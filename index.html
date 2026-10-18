@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.171';
+const APP_VERSION='22.172';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.172',d:'18.10.2026',items:['🔍 FEATURE: Fuzzy Matching für flexiblere Artikel-Suche!','❌ PROBLEM: "Mini Nuss Stangen" wurde nicht gemappt auf "Mini Nussstaengen"','✅ GELÖST: Normalisierung der Namen (Leerzeichen, Umlaute)','✅ Ä→AE, Ö→OE, Ü→UE, mehrfache Leerzeichen entfernt','✅ "Mini Nuss Stangen" = "Mini Nussstaengen" = "MININUSSSTAENGEN" 🎯']},
   {v:'22.171',d:'18.10.2026',items:['🔧 HOTFIX: Matching-Artikel-Auswahl Bug behoben!','❌ PROBLEM: onclick + esc() führte zu Escaping-Fehlern','✅ GELÖST: Verwende addEventListener statt onclick in Suchbox','✅ DOM-Elemente statt innerHTML für sichere Click-Handler','🎯 Artikel aus Suchbox können jetzt problemlos ausgewählt werden']},
   {v:'22.170',d:'18.10.2026',items:['🎯 FEATURE: Quittungs-Artikel Matching mit Warehouse-Abgleich!','✅ Neue Phase: Nach KI-Extraction → Artikel werden gegen Lager abgeglichen','🔍 Auto-Matching: Suche nach exaktem Namen + Aliases','📝 Alias-Erstellung: Manuelle Match erstellt automatisch neuen Alias','💾 Unmatched-Artikel: Temp-Liste in localStorage für spätere Barcode-Suche','⏭️ Alle Schritte sind überspringbar und abbrechbar','🔄 Workflow: Quittung → KI-Extraction → Warehouse-Matching → Review']},
   {v:'22.169',d:'18.10.2026',items:['🔧 UX-FIX: Redundanter Dialog entfernt!','❌ PROBLEM: Galerie-Button zeigte nochmal Dialog "Kamera/Galerie"','✅ GELÖST: Direkte Aufrufe zu captureQuittungFromCamera/Gallery()','✅ Buttons im Einkauf-Register → sofort Kamera/Datei-Auswahl','✅ Überflüssiger Dialog in Wareneingang entfernt']},
@@ -9997,32 +9998,48 @@ function showNextMatchingDialog() {
   }
 }
 
+// Normalisiere Namen für flexibles Matching (Leerzeichen, Umlaute, etc.)
+function normalizeArticleName(str) {
+  if (!str) return '';
+  return str
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, ' ')  // Mehrfache Leerzeichen → eins
+    .replace(/ä/g, 'ae')   // Umlaute normalisieren
+    .replace(/ö/g, 'oe')
+    .replace(/ü/g, 'ue')
+    .replace(/é/g, 'e')
+    .replace(/è/g, 'e');
+}
+
 function findMatchingWarehouseArticles(kiArticleName) {
   if (!kiArticleName) return [];
 
-  const name = kiArticleName.trim().toLowerCase();
+  const name = normalizeArticleName(kiArticleName);
   const matches = [];
 
   // Durchsuche alle Lager-Artikel
   (S.a || []).forEach(wArticle => {
     if (!wArticle) return;
 
-    // Exact name match
-    if (wArticle.name.toLowerCase() === name) {
+    const articleName = normalizeArticleName(wArticle.name);
+
+    // 1. Exact name match (mit Normalisierung)
+    if (articleName === name) {
       matches.push(wArticle);
       return;
     }
 
-    // Alias match
+    // 2. Alias match (mit Normalisierung)
     const aliases = Array.isArray(wArticle.alias) ? wArticle.alias :
                    (wArticle.alias ? [wArticle.alias] : []);
-    if (aliases.some(a => a.toLowerCase() === name)) {
+    if (aliases.some(a => normalizeArticleName(a) === name)) {
       matches.push(wArticle);
       return;
     }
 
-    // Partial match (name contains query or vice versa)
-    if (wArticle.name.toLowerCase().includes(name) || name.includes(wArticle.name.toLowerCase())) {
+    // 3. Partial match (name contains query oder umgekehrt)
+    if (articleName.includes(name) || name.includes(articleName)) {
       matches.push(wArticle);
     }
   });
@@ -10118,10 +10135,10 @@ function showMatchingSearchbox(kiArticle, suggestedMatches) {
   resultsContainer.style.cssText = 'flex:1;overflow-y:auto;border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:12px;max-height:300px';
 
   // Zeige initial suggested Matches oder alle Artikel
-  const query = searchInput.value.toLowerCase();
+  const query = normalizeArticleName(searchInput.value);
   const allArticles = S.a || [];
   const resultsToShow = suggestedMatches.length > 0 ? suggestedMatches :
-                       (query ? allArticles.filter(a => a.name.toLowerCase().includes(query)) : allArticles.slice(0, 20));
+                       (query ? allArticles.filter(a => normalizeArticleName(a.name).includes(query)) : allArticles.slice(0, 20));
 
   // Render results mit addEventListener statt onclick
   if (resultsToShow.length === 0) {
@@ -10165,9 +10182,9 @@ function showMatchingSearchbox(kiArticle, suggestedMatches) {
 }
 
 function updateMatchingSearchResults(kiArticle) {
-  const query = (document.getElementById('match-search-input')?.value || '').toLowerCase();
+  const query = normalizeArticleName(document.getElementById('match-search-input')?.value || '');
   const allArticles = S.a || [];
-  const results = query ? allArticles.filter(a => a.name.toLowerCase().includes(query)) : allArticles.slice(0, 20);
+  const results = query ? allArticles.filter(a => normalizeArticleName(a.name).includes(query)) : allArticles.slice(0, 20);
 
   const container = document.getElementById('match-search-results');
   if (!container) return;
