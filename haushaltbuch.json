@@ -1507,7 +1507,12 @@
           "ablaufdatum": ""
         }
       ],
-      "kaufort": "Lidl"
+      "kaufort": "Lidl",
+      "alias": [
+        "Halbrahmn UMT 25%",
+        "Halbrahrn UMT 25%",
+        "Halbrahmm UMT 25%"
+      ]
     },
     {
       "id": 38,
@@ -1612,7 +1617,10 @@
         }
       ],
       "geoeffnet": "2026-08-27",
-      "kaufort": "Lidl"
+      "kaufort": "Lidl",
+      "alias": [
+        "Vollrahm UHT 35%"
+      ]
     },
     {
       "id": 39,
@@ -5018,6 +5026,9 @@
       "geoeffnet": "2026-07-17",
       "quittungAliase": [
         "Ölz Mini Nussstangen 3er"
+      ],
+      "alias": [
+        "Ölz Mini Nussstangen 3er"
       ]
     },
     {
@@ -8416,6 +8427,9 @@
       "quittungAliase": [
         "Hähnchenbr. Schnitzel dü",
         "Hähnchenbrustschnitzel"
+      ],
+      "alias": [
+        "Hähnchenbr. Schnitzel dü"
       ]
     },
     {
@@ -12101,6 +12115,49 @@
       "packungen": [],
       "preisHistorie": [],
       "quittungAliase": []
+    },
+    {
+      "id": 306,
+      "name": "Chesterfield Original Box",
+      "marke": "",
+      "kat": "Diverses",
+      "lager": "Küche",
+      "kaufort": "",
+      "menge": 20,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7623900204786",
+      "barcodes": [],
+      "preis": 8.39,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-10-18",
+      "notiz": "Von Quittung erstellt",
+      "foto": "",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 20,
+          "kaufdatum": "2026-10-18",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-18",
+          "preis": 8.39,
+          "menge": 20,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        }
+      ],
+      "quittungAliase": [
+        "Chesterfield Original Bo"
+      ],
+      "letzteEingangHeute": "14:55"
     }
   ],
   "lagerorte": [
@@ -26036,7 +26093,31 @@
       "k": "Gewürze & Saucen",
       "aktion": false,
       "kaufort": "Lidl"
+    },
+    {
+      "t": "ein",
+      "aid": 306,
+      "name": "Chesterfield Original Box",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 20,
+      "einheit": "Stk",
+      "preis": 8.39,
+      "aktion": false,
+      "datum": "2026-10-18",
+      "zeit": 1792328119219
+    },
+    {
+      "aid": 306,
+      "d": "2026-10-18",
+      "m": 20,
+      "p": 8.39,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": ""
     }
   ],
-  "aktualisiert": "2026-10-18T11:33:16.924Z"
+  "aktualisiert": "2026-10-18T13:01:01.133Z"
 }
