@@ -12167,16 +12167,9 @@
   ],
   "einkauf": [
     {
-      "id": 1791608932184,
-      "text": "Zitrone",
+      "id": 1792308674574,
+      "text": "zucker",
       "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1791716290098,
-      "text": "Zimtstange",
-      "menge": "2",
       "einheit": "Stk",
       "checked": false
     }
@@ -26045,5 +26038,5 @@
       "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-10-18T07:30:34.323Z"
+  "aktualisiert": "2026-10-18T11:33:16.924Z"
 }
