@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.175 — Review: gematchte Artikel nur ohne Barcode, Barcode nachtragen -->
+<!-- HAUSHALTBUCH v23.0 — Neuer Einkaufsablauf: Quittung + Live-Barcode-Scanner + echte Buchung, MHD entfernt -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.175"/>
+<meta name="app-version" content="23.0"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.175';
+const APP_VERSION='23.0';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,10 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.0',d:'18.10.2026',items:['🎉 VERSION 23 – Zusammenfassung seit v22.167:','🧾 Quittung aus dem Einkauf-Register: KI erkennt Artikel, Mengen, Preise und Geschäft','🔍 Matching gegen das Lager; gematchte Artikel mit Barcode werden automatisch eingebucht','📱 Live-Barcode-Scanner mit Bestätigung für ungematchte Artikel und Artikel ohne Barcode','🌐 Web-Suche (Open Food Facts / EAN-DB) → neuen Artikel erstellen mit Laden, Menge, Preis','📦 Echte Buchung: Bestand, Einzelpreis nach Rabatt, Laden, Preisverlauf, Log','🧹 MHD/Foodwaste vollständig entfernt – Lagerrotation nach Kaufdatum']},
+  {v:'22.178',d:'18.10.2026',items:['🔴 BUGFIX: Stückzahl aus der Quittung ging verloren – gematchte Artikel wurden nie eingebucht','❌ Ursache: «Einbuchen» und Auto-Übernahme markierten nur, buchten aber weder Bestand noch Preis','✅ Gematchte Positionen: Packung + Bestand + Einzelpreis + Laden + Log-Eintrag','✅ Preis = bezahlter Betrag nach Rabatt ÷ Menge; Gewicht auf Stück-Artikel → 1 Stk','✅ Vorschau-Modus bucht weiterhin nichts (nur Aliase/Barcodes)','🔧 Matching findet jetzt auch quittungAliase (Artikel aus v22.174+)','🔧 Alte Quittungsvorschau: MHD-Pflichtfeld entfernt']},
+  {v:'22.177',d:'18.10.2026',items:['🔴 BUGFIX: Neu erstellte (ungematchte) Artikel hatten keinen Einkaufsladen','❌ Ursache: Quittung startet seit v22.168 ohne Geschäftsauswahl → geschaeft leer','✅ KI liest jetzt den Händler aus dem Quittungskopf («MIGROS Teufen» → Migros)','✅ Erstell-Dialog: neues Feld «Gekauft bei» (vorausgefüllt, änderbar)','✅ Gewähltes Geschäft wird für die weiteren Artikel des Einkaufs übernommen']},
+  {v:'22.176',d:'18.10.2026',items:['🧹 MHD-Aufräumen (Rest von v22.167):','✅ Artikeldetails: Ablaufdatum-Zeile, «Von MHD-Pflicht befreien», «Bei Ablauf ans Ende» entfernt','✅ Packungen überall nach Kaufdatum sortiert (älteste zuerst = zuerst verbrauchen)','✅ Artikel-Formular + Eingangs-Dialoge: MHD-Felder und Haltbarkeits-Puffer ausgeblendet','🔴 BUGFIX: Eingang verlangte bei alten Artikeln weiterhin ein Pflicht-MHD','✅ MHD-Badges in Lagerliste/Details, Dashboard «Bald ablaufend», Sortierung «Nach Ablaufdatum» entfernt (Standard: Zuletzt erfasst)','✅ Etikett: Kaufdatum statt MHD','✅ Einstellungen: Gruppe «Anti-Foodwaste & Haltbarkeit» entfernt, Optionen fest aus']},
   {v:'22.175',d:'18.10.2026',items:['🎯 Review: Gematchte Artikel mit Barcode im Lager werden automatisch übernommen (kein Dialog mehr)','📱 Gematchte Artikel OHNE Barcode: «Barcode scannen & hinzufügen» trägt den Barcode beim Lager-Artikel nach','✅ Alternative: «Einbuchen ohne Barcode»','⚠️ Barcode gehört schon einem anderen Artikel → Auswahl statt stillem Umhängen','🔧 Review-Buttons lösen nicht mehr doppelt aus (touchend entfernt)']},
   {v:'22.174',d:'18.10.2026',items:['📱 FEATURE: Echter Live-Barcode-Scanner (Video + Quagga2) für ungematchte Artikel','✅ Bestätigungsdialog «Ist dieser Barcode richtig?» mit Ja/Nein (Nein = weiterscannen)','✅ Barcode bereits im Lager → Zuweisen statt doppelt erstellen','🌐 Web-Suche (Open Food Facts + EAN-DB parallel, robust)','✏️ Name/Marke/Kategorie/Lagerort vor dem Erstellen anpassbar; nicht gefunden → Name von Quittung','✅ Neuer Artikel mit Menge, Preis, Packung, Log-Eintrag + Quittungs-Alias','🔴 BUGFIX: Doppelte artikelByCode() überschrieb die richtige Suche (nur a.bc) → Barcode-Suche fand normale Artikel nicht','🔧 Versionsnummern + Service-Worker-Cache vereinheitlicht']},
   {v:'22.173',d:'18.10.2026',items:['🎯 MEGA-FEATURE: Ungematched Artikel → Barcode-Scan → Internet-Suche → Erstellen!','✅ Review-Dialog unterscheidet gematched vs ungematched Artikel','✅ Für ungematched: "📱 Barcode scannen" Button statt "Einbuchen"','🔍 Barcode-Scan + Open Food Facts/EAN Database Suche','✅ Gefundene Produktinfo anzeigen zur Bestätigung','✅ OK: Neuer Artikel erstellt + sofort eingebucht!','🔄 Workflow: Quittung → KI → Matching → Review → Barcode → Web-Suche → Erstellen']},
@@ -1134,7 +1138,9 @@ let opt={fotoZwang:false,
   quittungTraining:false, // Trainingsmodus: nur Aliase lernen, kein Warenbestand
   quittungDebug:false,    // Debug-Modus: Step-by-step Interface
 }; // App-Optionen (MHD/Foodwaste entfernt v22.167)
-function loadOpt(){try{const r=localStorage.getItem('hbopt');if(r)opt={...opt,...JSON.parse(r)};}catch(e){}}
+function loadOpt(){try{const r=localStorage.getItem('hbopt');if(r)opt={...opt,...JSON.parse(r)};}catch(e){}
+  ['fwDashboard','fwAuswertung','fwMengenWarnung','fwAnbruch','fwGefrier','fwUeberkauf'].forEach(k=>opt[k]=false); // v22.176: Foodwaste entfernt
+}
 function saveOpt(){try{localStorage.setItem('hbopt',JSON.stringify(opt));}catch(e){}}
 loadOpt();
 loadBarcodeCacheL(); // Barcode-Cache laden
@@ -2000,7 +2006,7 @@ function nav(){
 /* ── Lager ────────────────────────────────────────────────────────── */
 let lf='alle';
 let mindestFilter=false;
-let sortMode='ablauf'; // 'ablauf' | 'name' | 'bestand'
+let sortMode='neu'; // v22.176: 'ablauf' entfernt → Standard 'Zuletzt erfasst'
 
 // Barcode-Scanner für Artikelsuche in der Lagerliste
 function scanLagerSearch(){
@@ -2033,7 +2039,6 @@ function toggleSortDirEinkauf(){
 
 function renderSortBar(){
   const modes=[
-    {id:'ablauf',l:'Nach Ablaufdatum',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'},
     {id:'neu',l:'Zuletzt erfasst',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 8v4l3 3"/><path d="M3.05 11a9 9 0 1 1 .5 4"/><polyline points="3 16 3 11 8 11"/></svg>'},
     {id:'name',l:'Nach Name (A-Z)',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="9" y2="18"/></svg>'},
     {id:'bestand',l:'Nach Bestand',s:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>'},
@@ -2316,21 +2321,15 @@ function showDet(id){
 
   // Packungen anzeigen wenn mehr als eine
   ensurePackungen(a);
-  const sortedPack=a.packungen.filter(p=>p.menge>0).sort((x,y)=>{
-    if(!x.ablaufdatum&&!y.ablaufdatum)return x.kaufdatum.localeCompare(y.kaufdatum);
-    if(!x.ablaufdatum)return 1;if(!y.ablaufdatum)return -1;
-    return x.ablaufdatum.localeCompare(y.ablaufdatum);
-  });
+  // v22.176: Sortierung nach Kaufdatum (älteste zuerst = zuerst verbrauchen), kein MHD mehr
+  const sortedPack=a.packungen.filter(p=>p.menge>0).sort((x,y)=>String(x.kaufdatum||'').localeCompare(String(y.kaufdatum||'')));
   const packHtml=sortedPack.length>1?
     '<div class="il" style="margin-top:14px">'+
     '<div class="ir" style="border-bottom:1px solid var(--bd);font-weight:600;font-size:13px">📦 Packungen ('+sortedPack.length+')</div>'+
     sortedPack.map((p,i)=>{
-      const d=p.ablaufdatum?daysUntil(p.ablaufdatum):null;
-      const badge=p.ablaufdatum?'<span class="exp-badge '+expClass(d)+'" style="margin:0">'+expLabel(d)+'</span>':'';
-      const fi=i===0&&p.ablaufdatum?'🔔 ':'';
-      return '<div class="ir"><div style="flex:1"><div style="font-size:13px;font-weight:500">'+fi+p.menge+' '+esc(a.einheit||'Stk')+
-        (p.ablaufdatum?' · MHD: '+fmtDateCH(p.ablaufdatum):' · kein MHD')+'</div>'+
-        '<div style="font-size:11px;color:var(--t2)">Kauf: '+fmtDateCH(p.kaufdatum)+'</div></div>'+badge+
+      const fi=i===0?'👉 ':'';
+      return '<div class="ir"><div style="flex:1"><div style="font-size:13px;font-weight:500">'+fi+p.menge+' '+esc(a.einheit||'Stk')+'</div>'+
+        '<div style="font-size:11px;color:var(--t2)">Kauf: '+(p.kaufdatum?fmtDateCH(p.kaufdatum):'—')+(i===0?' · zuerst verbrauchen':'')+'</div></div>'+
       '</div>';
     }).join('')+
     '</div>':'';
@@ -2338,12 +2337,6 @@ function showDet(id){
   const extraBcHint=extraBcCount>0?' <span style="font-size:11px;color:var(--ac)">+'+extraBcCount+' weiter'+(extraBcCount===1?'er':'e')+'</span>':'';
   const codeDisplay=(a.barcode?esc(a.barcode):(a.ownCode?esc(a.ownCode)+' <span style="font-size:11px;color:var(--t2)">(eigener Code)</span>':'—'))+extraBcHint;
 
-  // MHD-Checkbox: "Von MHD-Pflicht befreien"
-  const keinMHDCheckbox=a.ablaufdatum?
-    '<label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);font-size:13px">'+
-      '<input type="checkbox" id="det-kein-mhd" '+(a.keinMHD?'checked':'')+' style="width:16px;height:16px;accent-color:var(--ac);cursor:pointer;flex-shrink:0" onchange="toggleKeinMHD('+id+')"/>'+
-      '<span style="flex:1">Von MHD-Pflicht befreien (z.B. Sirup, Essig)</span>'+
-    '</label>':'';
 
   // Rezepte die diesen Artikel verwenden
   const artName=a.name.toLowerCase();
@@ -2360,8 +2353,7 @@ function showDet(id){
       return '<div class="ir" style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="showRezeptDetail(this,'+id+')" data-r=\''+rJson+'\'>'+thumb+'<div><div style="font-size:13px;font-weight:500">'+esc(r.name)+'</div><div style="font-size:11px;color:var(--t2)">'+r.port+' Port. · '+r.min+' min</div></div></div>';
     }).join('')+'</div>':
     '';
-  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div><div class="ir"><span class="ik">'+I.calx+' Ablaufdatum</span>'+(a.ablaufdatum?'<span style="flex:1;text-align:center">'+expBadgeKurz(a)+'</span><span class="iv" style="flex:none">'+fmtDateCH(a.ablaufdatum)+'</span>':'<span class="iv">—</span>')+'</div>'+keinMHDCheckbox+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'" onclick="bestandManuellDialog('+id+')" style="cursor:pointer;text-decoration:underline dotted" title="Antippen zum direkten Eingeben">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+(a.oeffnungsdatum?'<div style="margin-top:14px;padding:10px 12px;background:var(--dl);border-radius:var(--rs);font-size:12px;color:var(--dg)">📂 Geöffnet seit '+fmtDateCH(a.oeffnungsdatum)+'</div>':'')+aliasHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button><button class="acb" style="color:var(--ac)" onclick="openSplitDialog('+id+')">✂ Trennen'+(a.mergeSources&&a.mergeSources.length?' ('+a.mergeSources.length+')':'')+'</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+
-    (a.ablaufdatum?'<div class="acr" style="margin-top:8px"><button class="acb" onclick="toggleAblaufIgnoriert('+id+')" style="'+(a.ablaufIgnoriert?'color:var(--ac)':'')+'">'+(a.ablaufIgnoriert?'↑ Wieder einreihen (Ablauf aktiv)':'↓ Bei Ablauf ans Ende setzen')+'</button></div>':'')+
+  document.getElementById('detail-body').innerHTML=hero+'<div class="db"><div class="dn">'+esc(a.name)+'</div><div class="dbr">'+esc(a.marke||'')+'</div>'+expBanner+'<div class="il"><div class="ir"><span class="ik">'+I.bc+' Barcode</span><span class="iv">'+codeDisplay+'</span></div><div class="ir"><span class="ik">'+I.tag+' Kategorie</span><span class="iv">'+esc(a.kat||'—')+'</span></div><div class="ir"><span class="ik">'+licon(a.lager).replace('20px;height:20px','15px;height:15px')+' Lagerort</span><span class="iv">'+esc(a.lager)+'</span></div><div class="ir"><span class="ik">'+I.cal+' Kaufdatum</span><span class="iv">'+fmtDateCH(a.kaufdatum)+'</span></div>'+preisRow+guenstigstRow+prognoseRow+packRow+'<div class="ir"><span class="ik">'+I.alert+' Mindestbestand</span><span class="iv">'+a.mindest+' '+esc(a.einheit||'Stk')+'</span></div><div class="ir" style="border-bottom:none"><span class="ik">'+I.layers+' Bestand</span><div class="spr"><button class="spb" onclick="chgB('+id+',-1)">&#8722;</button><span class="spv '+bc+'" id="sv-'+id+'" onclick="bestandManuellDialog('+id+')" style="cursor:pointer;text-decoration:underline dotted" title="Antippen zum direkten Eingeben">'+a.menge+'</span><button class="spb" onclick="chgB('+id+',1)">+</button></div></div></div>'+totalHint+ueberkaufHinweis(a)+packHtml+chartHtml+histHtml+rzHtml+(a.oeffnungsdatum?'<div style="margin-top:14px;padding:10px 12px;background:var(--dl);border-radius:var(--rs);font-size:12px;color:var(--dg)">📂 Geöffnet seit '+fmtDateCH(a.oeffnungsdatum)+'</div>':'')+aliasHtml+'<div class="acr" style="margin-top:14px"><button class="acb" onclick="openEtikett('+id+')">'+I.scan.replace('18px;height:18px','16px;height:16px')+' Etikett drucken</button><button class="acb" onclick="toEk('+id+')">'+I.cart+' Einkaufsliste</button></div><div class="acr" style="margin-top:8px"><button class="acb" onclick="openMergeDialog('+id+')">'+I.layers.replace('20px;height:20px','16px;height:16px')+' Zusammenführen</button><button class="acb" style="color:var(--ac)" onclick="openSplitDialog('+id+')">✂ Trennen'+(a.mergeSources&&a.mergeSources.length?' ('+a.mergeSources.length+')':'')+'</button>'+(opt.fwAnbruch?'<button class="acb" onclick="markGeoeffnet('+id+')">📂 Geöffnet</button>':'<button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen</button>')+'</div>'+
     (opt.fwAnbruch?'<div class="acr" style="margin-top:8px"><button class="acb" style="color:var(--wn);border-color:var(--wl)" onclick="openVerworfen('+id+')">🗑 Verworfen (abgelaufen)</button><button class="acb d" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>':'<div class="acr" style="margin-top:8px"><button class="acb d" style="flex:none;width:100%" onclick="delA('+id+')">'+I.trash+' Löschen</button></div>')+(a.notiz?'<div style="margin-top:14px;padding:12px;background:var(--bg);border-radius:var(--rs);font-size:14px;color:var(--t2);border:1px solid var(--bd);">'+esc(a.notiz)+'</div>':'')+'</div>';
   const heroEl=document.getElementById('dh-hero-img');
   if(heroEl)heroEl.addEventListener('click',()=>openLightbox(a.foto));
@@ -2804,7 +2796,7 @@ function showEingangMhdDialog(a){
             '<input type="text" inputmode="decimal" id="eingang-schnell-pr" placeholder="'+(a.preis?('CHF '+a.preis.toFixed(2)+' (letzter)'):'')+'" value="" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/>'+
           '</div>'
         )+
-        '<div class="fd"><label>Ablaufdatum (optional)</label>'+dateField('eingang-schnell-mhd','')+'</div>'+
+        '<div class="fd" style="display:none"><label>Ablaufdatum (optional)</label>'+dateField('eingang-schnell-mhd','')+'</div>'+
       '</div>'+
       '<div style="display:flex;gap:8px">'+
         '<button onclick="document.getElementById(\'pack-dlg\').remove()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
@@ -2887,12 +2879,12 @@ function doEingangSchnell(artikelId){
   addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,a.einheit,preis,false);
   const dlg=document.getElementById('pack-dlg');if(dlg)dlg.remove();
   const preisInfo=preis>0?' · CHF '+preis.toFixed(2):'';
-  toast('+'+fmtMenge(menge)+' '+esc(a.einheit||'Stk')+' eingelagert'+(mhd?' (MHD '+fmtDateCH(mhd)+')':'')+preisInfo);
+  toast('+'+fmtMenge(menge)+' '+esc(a.einheit||'Stk')+' eingelagert'+preisInfo);
   showDet(artikelId);
 }
 function showPackDialog(a,typ){
   const existing=document.getElementById('pack-dlg');if(existing)existing.remove();
-  const aktive=a.packungen.filter(p=>p.menge>0).sort((x,y)=>(x.ablaufdatum||'9999').localeCompare(y.ablaufdatum||'9999'));
+  const aktive=a.packungen.filter(p=>p.menge>0).sort((x,y)=>String(x.kaufdatum||'').localeCompare(String(y.kaufdatum||'')));
   const dlg=document.createElement('div');
   dlg.id='pack-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
@@ -2901,13 +2893,10 @@ function showPackDialog(a,typ){
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">'+'Ausgang: Welche Packung entnehmen?'+'</div>'+
       '<div style="font-size:12px;color:var(--t2);margin-bottom:12px">'+'Empfehlung: Älteste zuerst (FIFO) — ganz oben.'+'</div>'+
       aktive.map(p=>{
-        const mhdTxt=p.ablaufdatum?fmtDateCH(p.ablaufdatum):'ohne MHD';
-        const days=p.ablaufdatum?daysUntil(p.ablaufdatum):null;
-        const daysTxt=days!==null?(days<0?' · <span style="color:var(--dg)">−'+Math.abs(days)+'d</span>':days===0?' · heute':' · <span style="color:var(--ok)">+'+days+'d</span>'):'';
-        const kdTxt=p.kaufdatum?' · gekauft '+fmtDateCH(p.kaufdatum):'';
+        const kdTxt=p.kaufdatum?'Gekauft '+fmtDateCH(p.kaufdatum):'Kaufdatum unbekannt';
         return '<div onclick="doPackChange('+a.id+','+p.id+',\''+ typ +'\')" style="display:flex;align-items:center;justify-content:space-between;padding:14px 10px;border-bottom:1px solid var(--bd);cursor:pointer">'+
           '<div><div style="font-size:14px;font-weight:500">'+fmtMenge(p.menge)+' '+esc(a.einheit||'Stk')+'</div>'+
-          '<div style="font-size:12px;color:var(--t2)">MHD '+mhdTxt+daysTxt+kdTxt+'</div></div>'+
+          '<div style="font-size:12px;color:var(--t2)">'+kdTxt+'</div></div>'+
           '<span style="font-size:12px;color:var(--ac);font-weight:600">'+(typ==='ein'?'+1':'−1')+'</span>'+
         '</div>';
       }).join('')+
@@ -2942,7 +2931,7 @@ function doPackChange(artikelId,packId,typ){
   syncMenge(a);saveL();
   addLogEntry(typ,a.id,a.name,a.lager,a.kat,1,a.einheit,0);
   const dlg=document.getElementById('pack-dlg');if(dlg)dlg.remove();
-  toast(typ==='ein'?'+1 eingelagert (MHD '+(p.ablaufdatum?fmtDateCH(p.ablaufdatum):'—')+')':'−1 entnommen (MHD '+(p.ablaufdatum?fmtDateCH(p.ablaufdatum):'—')+')');
+  toast(typ==='ein'?'+1 eingelagert':'−1 entnommen');
   showDet(artikelId);
 }
 
@@ -3265,8 +3254,8 @@ function openForm(id){
   '<div class="fd"><label>Packungsgrösse <span style="color:var(--t3);font-weight:400">(optional, z.B. 2.5 dl pro Stück)</span></label><div class="ur"><input type="text" inputmode="decimal" id="f-pg" placeholder="z.B. 2.5" value="'+(a&&a.packMenge&&a.packMenge!=='undefined'&&!isNaN(parseFloat(a.packMenge))?esc(a.packMenge):'')+'"/><select id="f-pe">'+epo+'</select></div></div>'+
   '<div class="fd"><label>Kaufpreis pro '+(a&&['kg','g'].includes(a.einheit)?'kg':'Einheit')+' (CHF)</label><input type="text" inputmode="decimal" id="f-pr" placeholder="z.B. 1.95" value="'+(a?esc(a.preisProKg||a.preis||''):'')+'"/><label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg)"><input type="checkbox" id="f-aktion" style="width:18px;height:18px;accent-color:var(--wn);cursor:pointer"/><div><div style="font-size:14px;font-weight:500;color:var(--tx)">Aktionspreis</div><div style="font-size:12px;color:var(--t2)">Wird als Aktion geloggt, kein neuer Standardpreis</div></div></label></div>'+
   '<div class="fd"><label>Lagerort</label><div class="lcw" id="f-lo">'+lc+'</div></div>'+
-  '<div class="tc"><div class="fd"><label>Kaufdatum</label>'+dateField('f-kd',a?a.kaufdatum||todayISO():todayISO())+'</div><div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('f-ad',a?a.ablaufdatum||'':'')+'</div></div>'+
-  '<div class="fd"><label>Haltbarkeit über MHD <span style="color:var(--t3);font-weight:400">(optional, Tage — Richtwert)</span></label><input type="text" inputmode="numeric" id="f-puffer" placeholder="'+(a?getPuffer(a):0)+' (Kategorie-Standard)" value="'+(a&&typeof a.puffer==="number"?a.puffer:"")+'"/><div style="font-size:11px;color:var(--t3);margin-top:4px">Leer = Kategorie-Standard. Richtwerte (Tafel/Verbraucherzentrale): Konserven/Reis/Nudeln/Mehl +365, Butter +21, H-Milch +28, Käse ~14, Brot +2, Wurst/Schinken +5, Eier +21. Fleisch &amp; Fisch sowie frisches Gemüse/Obst: immer 0 (Verbrauchsdatum beachten).</div></div>'+
+  '<div class="fd"><label>Kaufdatum</label>'+dateField('f-kd',a?a.kaufdatum||todayISO():todayISO())+'</div>'+'<div style="display:none">'+dateField('f-ad','')+'</div>'+
+  '<div class="fd" style="display:none"><label>Haltbarkeit über MHD <span style="color:var(--t3);font-weight:400">(optional, Tage — Richtwert)</span></label><input type="text" inputmode="numeric" id="f-puffer" placeholder="'+(a?getPuffer(a):0)+' (Kategorie-Standard)" value="'+(a&&typeof a.puffer==="number"?a.puffer:"")+'"/><div style="font-size:11px;color:var(--t3);margin-top:4px">Leer = Kategorie-Standard. Richtwerte (Tafel/Verbraucherzentrale): Konserven/Reis/Nudeln/Mehl +365, Butter +21, H-Milch +28, Käse ~14, Brot +2, Wurst/Schinken +5, Eier +21. Fleisch &amp; Fisch sowie frisches Gemüse/Obst: immer 0 (Verbrauchsdatum beachten).</div></div>'+
   '<div class="fd"><label>Wo gekauft</label><div class="lcw" id="f-ge">'+S.ge.map(g=>'<button class="chip'+(a&&a.kaufort===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#f-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+'<button class="chip" onclick="addGeschaeft(this)">+ Neu...</button></div></div>'+
   '<div class="fd"><label>Notiz</label><textarea id="f-nt" placeholder="z.B. Bio, Lieblingsmarke...">'+(a?esc(a.notiz||''):'')+'</textarea></div>'+
   '<div class="br"><button class="bg2" onclick="closeForm()">Abbrechen</button>'+(a?'<button class="bg2" style="color:var(--dg);border-color:var(--dl)" onclick="closeForm();delA('+a.id+')">'+I.trash+' Löschen</button>':'')+'<button class="bp" onclick="saveForm()">'+(a?'Speichern':'Hinzufügen')+'</button></div>';
@@ -3551,9 +3540,7 @@ async function openVerworfen(id){
   ensurePackungen(a);
   let rest=menge;
   const sorted=a.packungen.filter(p=>p.menge>0).sort((x,y)=>{
-    if(!x.ablaufdatum&&!y.ablaufdatum)return x.kaufdatum.localeCompare(y.kaufdatum);
-    if(!x.ablaufdatum)return 1;if(!y.ablaufdatum)return -1;
-    return x.ablaufdatum.localeCompare(y.ablaufdatum);
+    return String(x.kaufdatum||'').localeCompare(String(y.kaufdatum||'')); // v22.176: Rotation nach Kaufdatum
   });
   for(const p of sorted){
     if(rest<=0)break;
@@ -3597,6 +3584,7 @@ function applyStoreHint(btn,storeName){
 function checkFrischeHint(val){
   const el=document.getElementById('frische-hint');
   if(!el)return;
+  el.style.display='none';return; // v22.176: MHD entfernt
   const tage=frischeHaltbarkeit(val);
   const adEl=document.getElementById('f-ad');
   const hatMhd=adEl&&adEl.value;
@@ -3922,15 +3910,11 @@ function renderEingangArtikel(found){
     '</div>'+
     // Menge + Kaufdatum
     '<div class="tc" style="margin-bottom:14px"><div class="fd"><label>Menge</label><div class="ur"><input type="number" id="e-mg" min="1" value="1"/><span style="display:flex;align-items:center;padding:0 10px;color:var(--t2);font-size:14px">'+esc(found.einheit||'Stk')+'</span></div></div><div class="fd"><label>Kaufdatum</label>'+dateField('e-kd',todayISO())+'</div></div>'+
-    // Ablaufdatum: Pflicht wenn Artikel schon eines hatte, sonst optional
-    (found.ablaufdatum
-      ? '<div class="fd" style="margin-bottom:14px"><label style="display:flex;align-items:center;gap:6px">'+I.calx+' Ablaufdatum (MHD) <span style="color:var(--dg);font-weight:700">*</span> <span style="font-size:11px;color:var(--dg);background:var(--dl);padding:1px 7px;border-radius:8px">Pflicht</span></label>'+dateField('e-ad','','border-color:var(--dg)')+'<div style="font-size:12px;color:var(--t2);margin-top:4px">Letztes erfasstes Ablaufdatum: '+fmtDateCH(found.ablaufdatum)+'</div></div>'
-      : '<div class="fd" style="margin-bottom:14px"><label style="display:flex;align-items:center;gap:6px">'+I.calx+' Ablaufdatum (MHD) <span style="font-size:11px;color:var(--t3)">(optional, kein bisheriges Datum)</span></label>'+dateField('e-ad','')+'</div>'
-    )+
+    '<div style="display:none">'+dateField('e-ad','')+'</div>'+ // v22.176: MHD entfernt
     '<div class="fd" style="margin-bottom:14px"><label>Wo gekauft</label><div class="lcw" id="e-ge">'+
       S.ge.map(g=>'<button class="chip'+(found.kaufort===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#e-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+
     '</div></div>'+
-    '<button class="bp" style="width:100%;padding:14px;font-size:16px" onclick="confirmEingang('+found.id+','+!!found.ablaufdatum+')">'+
+    '<button class="bp" style="width:100%;padding:14px;font-size:16px" onclick="confirmEingang('+found.id+',false)">'+
       'Eingang bestätigen &nbsp;·&nbsp; '+found.menge+' → <span id="e-vorschau">'+(found.menge+1)+'</span> '+esc(found.einheit||'Stk')+
     '</button>';
 
@@ -4142,10 +4126,7 @@ function showAusgangPackDialog(a,list){
   if(existing)existing.remove();
 
   const sorted=a.packungen.filter(p=>p.menge>0).sort((x,y)=>{
-    if(!x.ablaufdatum&&!y.ablaufdatum)return x.kaufdatum.localeCompare(y.kaufdatum);
-    if(!x.ablaufdatum)return 1;
-    if(!y.ablaufdatum)return -1;
-    return x.ablaufdatum.localeCompare(y.ablaufdatum);
+    return String(x.kaufdatum||'').localeCompare(String(y.kaufdatum||'')); // v22.176: Rotation nach Kaufdatum
   });
 
   const dlg=document.createElement('div');
@@ -4154,17 +4135,17 @@ function showAusgangPackDialog(a,list){
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
     '<div style="font-weight:600;font-size:15px;margin-bottom:4px">'+esc(a.name)+' — Welche Packung?</div>'+
-    '<div style="font-size:12px;color:var(--t2);margin-bottom:14px">Sortiert nach frühestem MHD</div>'+
+    '<div style="font-size:12px;color:var(--t2);margin-bottom:14px">Älteste Packung zuerst (nach Kaufdatum)</div>'+
     sorted.map((p,i)=>{
       const d=p.ablaufdatum?daysUntil(p.ablaufdatum):null;
       const badge=p.ablaufdatum?'<span class="exp-badge '+expClass(d)+'">'+expLabel(d)+'</span>':'';
-      const earliest=i===0&&p.ablaufdatum?'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:4px">Frühestes MHD</span>':'';
+      const earliest=i===0?'<span style="font-size:10px;background:var(--wl);color:var(--wn);border-radius:6px;padding:1px 6px;margin-left:4px">Älteste</span>':'';
       return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd)">'+
         '<div>'+
           '<div style="font-size:14px;font-weight:500">'+
-            (p.ablaufdatum?'MHD: '+fmtDateCH(p.ablaufdatum):'Kein MHD')+earliest+
+            'Kauf: '+(p.kaufdatum?fmtDateCH(p.kaufdatum):'—')+earliest+
           '</div>'+
-          '<div style="font-size:12px;color:var(--t2)">Kauf: '+fmtDateCH(p.kaufdatum)+' · '+p.menge+' '+esc(a.einheit||'Stk')+' · '+badge+'</div>'+
+          '<div style="font-size:12px;color:var(--t2)">'+p.menge+' '+esc(a.einheit||'Stk')+'</div>'+
           '<div style="font-size:11px;color:var(--t2);margin-top:2px">Bestand: '+a.menge+' → <strong>'+(a.menge-1)+'</strong> '+esc(a.einheit||'Stk')+'</div>'+
         '</div>'+
         '<button onclick="ausgangPackAbbuchen(S.a.find(x=>x.id==='+a.id+'),'+p.id+',1,document.getElementById(\'ausgang-list\'));document.getElementById(\'pack-dialog\').remove()" '+
@@ -4280,9 +4261,7 @@ function showEtikettPackDialog(a){
   const existing=document.getElementById('etikett-pack-dlg');
   if(existing)existing.remove();
   const sorted=a.packungen.filter(p=>p.menge>0).sort((x,y)=>{
-    if(!x.ablaufdatum&&!y.ablaufdatum)return x.kaufdatum.localeCompare(y.kaufdatum);
-    if(!x.ablaufdatum)return 1;if(!y.ablaufdatum)return -1;
-    return x.ablaufdatum.localeCompare(y.ablaufdatum);
+    return String(x.kaufdatum||'').localeCompare(String(y.kaufdatum||'')); // v22.176: Rotation nach Kaufdatum
   });
   const dlg=document.createElement('div');
   dlg.id='etikett-pack-dlg';
@@ -4290,14 +4269,14 @@ function showEtikettPackDialog(a){
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:90vw;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
     '<div style="font-weight:600;font-size:15px;margin-bottom:4px">'+esc(a.name)+' — Etikett für welche Packung?</div>'+
-    '<div style="font-size:12px;color:var(--t2);margin-bottom:14px">Das gewählte MHD und Kaufdatum erscheinen auf dem Etikett</div>'+
+    '<div style="font-size:12px;color:var(--t2);margin-bottom:14px">Das Kaufdatum der gewählten Packung erscheint auf dem Etikett</div>'+
     sorted.map((p,i)=>{
       const d=p.ablaufdatum?daysUntil(p.ablaufdatum):null;
       const badge=p.ablaufdatum?'<span class="exp-badge '+expClass(d)+'" style="margin:0">'+expLabel(d)+'</span>':'';
       return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--bd)">'+
         '<div>'+
-          '<div style="font-size:14px;font-weight:500">'+(p.ablaufdatum?'MHD: '+fmtDateCH(p.ablaufdatum):'Kein MHD')+'</div>'+
-          '<div style="font-size:12px;color:var(--t2)">Kauf: '+fmtDateCH(p.kaufdatum)+' · '+p.menge+' '+esc(a.einheit||'Stk')+' '+badge+'</div>'+
+          '<div style="font-size:14px;font-weight:500">Kauf: '+(p.kaufdatum?fmtDateCH(p.kaufdatum):'—')+'</div>'+
+          '<div style="font-size:12px;color:var(--t2)">'+p.menge+' '+esc(a.einheit||'Stk')+'</div>'+
         '</div>'+
         '<button onclick="chooseEtikettPack(\''+esc(p.ablaufdatum||'')+'\',\''+esc(p.kaufdatum||'')+'\')" '+
           'style="background:var(--ac);color:#fff;border:none;border-radius:var(--rs);padding:8px 14px;font-size:13px;cursor:pointer;flex-shrink:0;margin-left:8px">'+
@@ -4354,7 +4333,7 @@ function renderEtikettScreen(){
   const uniqueMhd=[...new Set(aktive.map(p=>p.ablaufdatum||''))];
   const packHinweis=(aktive.length>1&&uniqueMhd.length>1)?
     '<div style="background:var(--al);border:1px solid var(--am);border-radius:var(--rs);padding:10px 12px;margin-bottom:12px;font-size:13px;display:flex;justify-content:space-between;align-items:center">'+
-      '<span>📦 Etikett für Packung: <strong>'+(a.ablaufdatum?'MHD '+fmtDateCH(a.ablaufdatum):'ohne MHD')+'</strong></span>'+
+      '<span>📦 Etikett für Packung: <strong>Kauf '+(a.kaufdatum?fmtDateCH(a.kaufdatum):'—')+'</strong></span>'+
       '<button onclick="showEtikettPackDialog(S.a.find(x=>x.id===etikettArtikelId))" style="background:none;border:none;color:var(--ac);font-size:13px;font-weight:600;cursor:pointer;padding:2px 4px">Ändern</button>'+
     '</div>':'';
 
@@ -4366,7 +4345,7 @@ function renderEtikettScreen(){
     '<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:14px">'+
       '<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><input type="checkbox" id="lbl-show-price" '+(a.preis?'checked':'')+' style="width:16px;height:16px" onchange="renderLabelPreview()"/> Preis anzeigen</label>'+
       '<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><input type="checkbox" id="lbl-show-kaufdatum" '+(a.kaufdatum?'checked':'')+' style="width:16px;height:16px" onchange="renderLabelPreview()"/> Kaufdatum anzeigen</label>'+
-      '<label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--t2)"><input type="checkbox" id="lbl-show-ablauf" '+(a.ablaufdatum?'checked':'')+' style="width:16px;height:16px" onchange="renderLabelPreview()"/> Ablaufdatum (MHD) anzeigen</label>'+
+      '<input type="checkbox" id="lbl-show-ablauf" style="display:none"/>'+
     '</div>'+
     '<button class="bp" style="width:100%;margin-bottom:8px;font-size:16px" onclick="copyLabelToClipboard()">📋 Bild in Zwischenablage kopieren</button>'+
     '<p style="font-size:12px;color:var(--t3);text-align:center;line-height:1.6">Danach Brother iPrint&amp;Label öffnen → Neues Etikett → Bild einfügen</p>';
@@ -5839,14 +5818,13 @@ function setStatPeriod(d){statPeriod=d;renderStat();}
 function renderUeb(){
   const t=S.a.length;
   const w=S.a.filter(a=>a.menge<a.mindest);
-  const expSoon=S.a.filter(a=>a.menge>0&&a.ablaufdatum&&effektiveTage(a)<=7).sort((a,b)=>a.ablaufdatum.localeCompare(b.ablaufdatum));
+  const expSoon=[]; // v22.176: MHD entfernt
   const nm=S.a.map(a=>a.name.toLowerCase());
   const k=(S.rz||[]).filter(r=>(r.zutaten||[]).every(z=>nm.some(n=>n.includes((typeof z==='string'?z:(z.n||z.zutat||'')).toLowerCase())))).length;
   let h='<div class="stg">'+
     '<div class="stc"><div class="stl">Artikel total</div><div class="stn a">'+t+'</div></div>'+
     '<div class="stc"><div class="stl">Kochbar</div><div class="stn ok">'+k+'</div></div>'+
     '<div class="stc"><div class="stl">Mindestbestand</div><div class="stn '+(w.length?'w':'ok')+'">'+w.length+'</div></div>'+
-    '<div class="stc"><div class="stl">Bald ablaufend</div><div class="stn '+(expSoon.length?'w':'ok')+'">'+expSoon.length+'</div></div>'+
   '</div>';
   if(expSoon.length){
     h+='<div class="sh">Bald ablaufend</div>';
@@ -6369,7 +6347,7 @@ function showEkEinbuchungBekannt(ekEntry,artikel){
             '<input type="text" inputmode="decimal" id="ekb-pr" placeholder="'+(artikel.preis?'CHF '+artikel.preis.toFixed(2)+' (letzter)':'')+'\'" value="" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/>'+
           '</div>'
         )+
-        '<div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('ekb-mhd','')+'</div>'+
+        '<div class="fd" style="display:none"><label>Ablaufdatum (MHD)</label>'+dateField('ekb-mhd','')+'</div>'+
       '</div>'+
       '<div style="display:flex;gap:8px">'+
         '<button onclick="document.getElementById(\'ek-einbuch-dlg\').remove()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
@@ -6535,7 +6513,6 @@ function showEkArtikelInfo(artikelId){
           '<div style="display:flex;justify-content:space-between"><span style="color:var(--t2)">Letzter Preis</span><span style="font-weight:500">'+preisInfo+'</span></div>'+
           (a.kaufort?'<div style="display:flex;justify-content:space-between"><span style="color:var(--t2)">Kaufort</span><span style="font-weight:500">'+esc(a.kaufort)+'</span></div>':'')+
           (a.lager?'<div style="display:flex;justify-content:space-between"><span style="color:var(--t2)">Lagerort</span><span style="font-weight:500">'+esc(a.lager)+'</span></div>':'')+
-          (a.ablaufdatum?'<div style="display:flex;justify-content:space-between"><span style="color:var(--t2)">MHD</span><span>'+expBadgeKurz(a)+' '+fmtDateCH(a.ablaufdatum)+'</span></div>':'')+
         '</div>'+
         '<button onclick="document.getElementById(\'ek-info-dlg\').remove()" style="width:100%;margin-top:14px;padding:11px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Schliessen</button>'+
       '</div>'+
@@ -6722,7 +6699,7 @@ function processCheckedItemsShowDialogAuto(artikel,idx,allChecked){
           '<button onclick="addNewKaufort(\'pei-kaufort\')" style="padding:11px 14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:14px;cursor:pointer;font-weight:600">+</button>'+
         '</div>'+
         '</div>'+
-        '<div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('pei-mhd','')+'</div>'+
+        '<div class="fd" style="display:none"><label>Ablaufdatum (MHD)</label>'+dateField('pei-mhd','')+'</div>'+
       '</div>'+
       '<div style="display:flex;gap:8px">'+
         '<button onclick="document.getElementById(\'process-einbuch-dlg\').remove();processCheckedItems('+idx+'+1,window._allChecked)" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Überspringen</button>'+
@@ -6794,7 +6771,7 @@ function processCheckedItemsShowDialog(ekEntry,artikel,idx,allChecked){
           '<button onclick="addNewKaufort(\'pei-kaufort\')" style="padding:11px 14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:14px;cursor:pointer;font-weight:600">+</button>'+
         '</div>'+
         '</div>'+
-        '<div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('pei-mhd','')+'</div>'+
+        '<div class="fd" style="display:none"><label>Ablaufdatum (MHD)</label>'+dateField('pei-mhd','')+'</div>'+
       '</div>'+
       '<div style="display:flex;gap:8px">'+
         '<button onclick="document.getElementById(\'process-einbuch-dlg\').remove();processCheckedItems('+idx+'+1,allChecked)" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Überspringen</button>'+
@@ -6922,9 +6899,7 @@ function invConfirm(){
     }else{
       let rest=-diff;
       const sorted=a.packungen.filter(p=>p.menge>0).sort((x,y)=>{
-        if(!x.ablaufdatum&&!y.ablaufdatum)return x.kaufdatum.localeCompare(y.kaufdatum);
-        if(!x.ablaufdatum)return 1;if(!y.ablaufdatum)return -1;
-        return x.ablaufdatum.localeCompare(y.ablaufdatum);
+        return String(x.kaufdatum||'').localeCompare(String(y.kaufdatum||'')); // v22.176: Rotation nach Kaufdatum
       });
       for(const p of sorted){
         if(rest<=0)break;
@@ -6996,7 +6971,7 @@ function renderInvCapture(){
             '<div style="flex:1;min-width:0">'+
               '<div style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+(displayName||'<span style="font-family:monospace;color:var(--t3)">'+esc(e.barcode)+'</span>')+'</div>'+
               '<div style="font-size:11px;color:var(--t3);font-family:monospace">'+esc(e.barcode)+(e.marke?' · '+esc(e.marke):'')+'</div>'+
-              '<div style="font-size:12px;color:var(--t2)">'+fmtMenge(e.menge)+' Stk'+(e.mhd?' · MHD '+fmtDateCH(e.mhd):'')+' · '+statusLabel+'</div>'+
+              '<div style="font-size:12px;color:var(--t2)">'+fmtMenge(e.menge)+' Stk'+' · '+statusLabel+'</div>'+
             '</div>'+
             '<button onclick="editInvBufferEntry('+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:5px 9px;cursor:pointer;font-size:12px;color:var(--ac)">✏️</button>'+
             '<button onclick="delInvBufferEntry('+i+')" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:5px 9px;cursor:pointer;font-size:12px;color:var(--dg)">✕</button>'+
@@ -7042,7 +7017,7 @@ function askInvMengeMhd(barcode,editIndex){
         '</div></div>'+
       '<div class="tc" style="margin-bottom:10px">'+
         '<div class="fd"><label>Anzahl (Packungen)</label><input type="text" inputmode="decimal" id="invcap-mg" value="'+(cur?esc(String(cur.menge)):'1')+'" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:17px;text-align:right;font-weight:600"/></div>'+
-        '<div class="fd"><label>Ablaufdatum (MHD)</label>'+dateField('invcap-mhd',cur&&cur.mhd?cur.mhd:'')+'</div>'+
+        '<div class="fd" style="display:none"><label>Ablaufdatum (MHD)</label>'+dateField('invcap-mhd',cur&&cur.mhd?cur.mhd:'')+'</div>'+
       '</div>'+
       '<div class="fd" style="margin-bottom:14px"><label>Packungsgrösse (optional)</label><div style="display:flex;gap:8px"><input type="text" inputmode="decimal" id="invcap-pg" placeholder="z.B. 250" value="'+(cur&&cur.pkgMenge?esc(String(cur.pkgMenge)):'')+'" style="flex:1;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:15px;text-align:right"/><select id="invcap-pe" style="width:90px;padding:11px 6px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:14px">'+
         ['','g','kg','ml','dl','l','Stk'].map(u=>'<option value="'+u+'"'+(cur&&cur.pkgEinheit===u?' selected':'')+'>'+(u||'—')+'</option>').join('')+
@@ -7247,7 +7222,7 @@ function lagerKiScan(){
       '<div style="font-size:22px;text-align:center;margin-bottom:8px">📷</div>'+
       '<div style="font-weight:700;font-size:17px;margin-bottom:8px;text-align:center">Produktfoto KI-Analyse</div>'+
       '<div style="font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:14px">'+
-        '<b>Claude KI</b> erkennt Name, Marke, Kategorie, Barcode und MHD.<br>'+
+        '<b>Claude KI</b> erkennt Name, Marke, Kategorie und Barcode.<br>'+
         'Du kannst <b>Vorder- und Rückseite</b> hinzufügen für bessere Erkennung.<br><br>'+
         '<span style="color:var(--t3);font-size:12px">⚠️ Benötigt API-Key (Einstellungen). Kostet ein paar Cent.</span>'+
       '</div>'+
@@ -7975,7 +7950,7 @@ function renderSt(){
     '</label></div>'+
     '<p style="font-size:12px;color:var(--t3);margin-top:6px;line-height:1.5">Neue Artikel können nur mit Foto gespeichert werden.</p>'+
     '<button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="openInvCapture()">📥 Inventar erfassen (Barcodes sammeln)</button>'+
-    '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Barcodes mit Anzahl und MHD zwischenspeichern, dann einzeln ins Lager übernehmen.'+(invBuffer.length?' <strong style="color:var(--ac)">'+invBuffer.length+' im Zwischenspeicher.</strong>':'')+'</p>'+
+    '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Barcodes mit Anzahl zwischenspeichern, dann einzeln ins Lager übernehmen.'+(invBuffer.length?' <strong style="color:var(--ac)">'+invBuffer.length+' im Zwischenspeicher.</strong>':'')+'</p>'+
     '<button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="openInventur()">📋 Inventur starten</button>'+
     '<p style="font-size:12px;color:var(--t3);margin-top:4px;line-height:1.5">Alle Artikel durchgehen und Bestände abgleichen.</p>'+
     '<button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="openMindestManager()">⚠ Mindestbestände verwalten</button>'+
@@ -7989,16 +7964,6 @@ function renderSt(){
     optToggle('quittungDebug','🔧 Debug-Modus (Step-by-Step)','Öffnet ein Step-by-Step Interface zum Debuggen des Quittungs-Scans. Jeder Schritt kann einzeln ausgeführt werden.')+
     '<div style="font-size:11px;color:var(--ac);background:var(--ol);padding:8px;border-radius:var(--rs);margin:8px 0;border-left:3px solid var(--ac)">🔧 Debug-Modus: Parse → Matching → Vorschau → Buchen — jeder Schritt isoliert.</div>'+
     renderAliasUebersicht()
-  )+
-  settingsGroup('sg-foodwaste','♻️','Anti-Foodwaste & Haltbarkeit',
-    '<p style="font-size:12px;color:var(--t3);margin:0 0 12px;line-height:1.5">Funktionen gegen Lebensmittelverschwendung — einzeln ein-/ausschaltbar.</p>'+
-    optToggle('fwDashboard','⏰ Ablauf-Dashboard','Zeigt oben in der Lagerliste, was in den nächsten 3 Tagen verbraucht werden sollte.')+
-    optToggle('fwAuswertung','🔍 Foodwaste-Muster','Auswertung in der Statistik: welche Artikel/Kategorien du am häufigsten wegwirfst.')+
-    optToggle('fwMengenWarnung','💡 Mengen-Warnung beim Einkauf','Hinweis, wenn du einen oft verworfenen Artikel auf die Einkaufsliste setzt.')+
-    optToggle('fwAnbruch','📂 Anbruch-Verwaltung','«Geöffnet»-Knopf im Artikel verkürzt die Haltbarkeit passend zur Kategorie.')+
-    optToggle('fwGefrier','❄️ Gefrier-Empfehlung','Schlägt bei bald ablaufenden, einfrierbaren Artikeln das Einfrieren vor.')+
-    optToggle('fwUeberkauf','📊 Überkauf-Erkennung','Erkennt aus der Kaufhistorie, wenn du mehr kaufst als verbrauchst.')+
-    renderPufferSektion()
   )+
   settingsGroup('sg-app','⚙️','App & Daten',
     '<div class="ss"><div class="ssl">App</div><div class="lmi"><span style="flex:1">Version</span><strong style="color:var(--ac);cursor:pointer;text-decoration:underline" onclick="showVersionHistory()">v'+APP_VERSION+'</strong></div><div class="lmi"><span style="flex:1">Build</span><span>'+APP_BUILD+'</span></div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="checkForUpdate()">'+I.dl.replace('18px;height:18px','15px;height:15px')+' Nach Updates suchen</button><button class="bg2" style="width:100%;margin-top:6px;font-size:14px" onclick="showDebugLogs()">🔧 Diagnose-Logs anzeigen</button></div>'+
@@ -8664,13 +8629,15 @@ function showNextArticleReview(){
     if(!ka||!ka.warehouseArticle)break;
     const lagerArt=umLagerArtikel(ka);
     if(!umHatBarcode(lagerArt))break;
+    umBucheQuittungsPosition(ka);
     umUebernehmeReviewArtikel(ai);
     barcodeEinkaufState.reviewIdx=ai+1;
     autoCnt++;
   }
   if(autoCnt>0){
+    saveL();
     saveBarcodeState();
-    toast('✅ '+autoCnt+' gematchte Artikel mit Barcode automatisch übernommen');
+    toast((opt.quittungPreview?'👁️ Vorschau: ':'✅ ')+autoCnt+' gematchte Artikel '+(opt.quittungPreview?'erkannt (nicht gebucht)':'automatisch eingebucht'));
   }
 
   const idx=barcodeEinkaufState.reviewIdx||0;
@@ -8767,6 +8734,13 @@ function showNextArticleReview(){
 function confirmArticleReview(){
   const dlg=document.getElementById('article-review-dlg');
   if(dlg)dlg.remove();
+  // v22.178: Gematchte Quittungsposition tatsächlich einbuchen
+  const kaB=(barcodeEinkaufState.erkannteArtikel||[])[barcodeEinkaufState.reviewIdx||0];
+  if(kaB&&kaB.warehouseArticle&&umBucheQuittungsPosition(kaB)){
+    saveL();
+    const w=umQuittungsWerte(kaB,kaB.warehouseArticle.einheit);
+    toast('✅ '+kaB.warehouseArticle.name+' +'+fmtMenge(w.menge)+' eingebucht');
+  }
 
   // Kopiere Änderungen zurück zum Haupt-Array
   const idx=barcodeEinkaufState.reviewIdx||0;
@@ -8816,6 +8790,57 @@ function umUebernehmeReviewArtikel(i){
   if(ka&&barcodeEinkaufState.artikel&&barcodeEinkaufState.artikel[ka.index]){
     barcodeEinkaufState.artikel[ka.index]={...barcodeEinkaufState.artikel[ka.index],...ka};
   }
+}
+
+// v22.177: "MIGROS Teufen" → "Migros" (bestehende Geschäftsliste bevorzugen)
+function umMatchGeschaeft(name){
+  const raw = String(name || '').trim();
+  if (!raw) return '';
+  const n = raw.toLowerCase();
+  const list = (S.ge && S.ge.length) ? S.ge : GD;
+  const hit = list.find(g => g.toLowerCase() === n) ||
+              list.find(g => n.includes(g.toLowerCase()) || g.toLowerCase().includes(n));
+  return hit || raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase();
+}
+
+// v22.178: Menge/Preis aus der Quittungsposition (Preis nach Rabatt = bezahlt)
+function umQuittungsWerte(ka, einheitZiel){
+  let menge = Number(String(ka.menge ?? 1).replace(',', '.'));
+  if (!(menge > 0)) menge = 1;
+  // Gewichtsposition (z.B. 0.85 kg) auf Stück-Artikel → 1 Stück
+  if (einheitZiel && !isDecUnit(einheitZiel) && !Number.isInteger(menge)) menge = Math.max(1, Math.round(menge));
+  const netto = Number(ka.preis_netto);
+  const total = (netto > 0 ? netto : Number(ka.preis_brutto)) || 0;
+  const einzelpreis = menge > 0 ? Math.round((total / menge) * 100) / 100 : total;
+  return { menge, total, einzelpreis };
+}
+
+// v22.178: Gematchte Quittungsposition wirklich ins Lager buchen (Bestand, Preis, Laden, Log)
+function umBucheQuittungsPosition(ka){
+  if (!ka || ka.gebucht) return false;
+  const a = umLagerArtikel(ka);
+  if (!a) return false;
+  if (opt.quittungPreview) {
+    console.log('[Buchung] Vorschau-Modus – nicht gebucht: ' + a.name);
+    ka.gebucht = true;
+    return false;
+  }
+  const { menge, einzelpreis } = umQuittungsWerte(ka, a.einheit);
+  const datum = todayISO();
+  const kaufort = barcodeEinkaufState.geschaeft || '';
+  ensurePackungen(a);
+  a.packungen.push({ id: newPackId(), menge, kaufdatum: datum, ablaufdatum: '' });
+  syncMenge(a);
+  a.kaufdatum = datum;
+  if (kaufort) a.kaufort = kaufort;
+  if (!a.preisHistorie) a.preisHistorie = [];
+  a.preisHistorie.push({ datum, preis: einzelpreis, menge, einheit: a.einheit || 'Stk', typ: 'ein', aktion: false, kaufort });
+  if (einzelpreis > 0) a.preis = einzelpreis;
+  addLogEntry('ein', a.id, a.name, a.lager, a.kat, menge, a.einheit || 'Stk', einzelpreis, false, true);
+  ka.gebucht = true;
+  ka.warehouseArticle = a;
+  console.log('[Buchung] ' + a.name + ' +' + menge + ' @ CHF ' + einzelpreis + ' (' + kaufort + ')');
+  return true;
 }
 
 function umCurrentArtikel(){
@@ -9229,6 +9254,17 @@ function showUnmatchedArticleConfirmation(kiArtikel, barcode, onlineInfo) {
   katSel.value = kats.includes(kiArtikel.kat) ? kiArtikel.kat : (kats.includes('Diverses') ? 'Diverses' : kats[0]);
   content.appendChild(katSel);
 
+  content.appendChild(mkLabel('Gekauft bei'));
+  const geSel = document.createElement('select');
+  geSel.style.cssText = fieldCss;
+  const geList = [...((S.ge && S.ge.length) ? S.ge : GD)];
+  const geAkt = barcodeEinkaufState.geschaeft || '';
+  if (geAkt && !geList.includes(geAkt)) geList.unshift(geAkt);
+  const geLeer = document.createElement('option'); geLeer.value = ''; geLeer.textContent = '— unbekannt —'; geSel.appendChild(geLeer);
+  geList.forEach(g => { const o = document.createElement('option'); o.value = g; o.textContent = g; geSel.appendChild(o); });
+  geSel.value = geAkt;
+  content.appendChild(geSel);
+
   content.appendChild(mkLabel('Lagerort'));
   const lagerSel = document.createElement('select');
   lagerSel.style.cssText = fieldCss;
@@ -9236,8 +9272,9 @@ function showUnmatchedArticleConfirmation(kiArtikel, barcode, onlineInfo) {
   lagers.forEach(l => { const o = document.createElement('option'); o.value = l; o.textContent = l; lagerSel.appendChild(o); });
   content.appendChild(lagerSel);
 
-  const menge = Number(kiArtikel.menge) || 1;
-  const total = Number(kiArtikel.preis_brutto) || 0;
+  const qwInfo = umQuittungsWerte(kiArtikel, kiArtikel.einheit || 'Stk');
+  const menge = qwInfo.menge;
+  const total = qwInfo.total;
   const info = document.createElement('div');
   info.style.cssText = 'margin-top:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:8px;font-size:12px;color:var(--t2);line-height:1.6';
   const rows = [
@@ -9263,7 +9300,7 @@ function showUnmatchedArticleConfirmation(kiArtikel, barcode, onlineInfo) {
     if (!name) { toast('⚠️ Bitte Namen eingeben'); nameIn.focus(); return; }
     dlg.remove();
     createAndBookUnmatchedArticle(kiArtikel, barcode, onlineInfo, {
-      name, marke: markeIn.value.trim(), kat: katSel.value, lager: lagerSel.value
+      name, marke: markeIn.value.trim(), kat: katSel.value, lager: lagerSel.value, kaufort: geSel.value
     });
   }));
   row.appendChild(umBtn('⏭️ Überspringen', 'var(--dl)', 'var(--dg)', () => { dlg.remove(); skipArticleReview(); }, 'border:1px solid var(--dg)'));
@@ -9275,11 +9312,13 @@ function showUnmatchedArticleConfirmation(kiArtikel, barcode, onlineInfo) {
 
 function createAndBookUnmatchedArticle(kiArtikel, barcode, onlineInfo, form) {
   form = form || {};
-  const menge = Number(kiArtikel.menge) || 1;
   const einheit = kiArtikel.einheit || 'Stk';
-  const total = Number(kiArtikel.preis_brutto) || 0;
-  const einzelpreis = menge > 0 ? Math.round((total / menge) * 100) / 100 : total;
-  const kaufort = barcodeEinkaufState.geschaeft || '';
+  const vorschau = !!opt.quittungPreview;
+  const qw = umQuittungsWerte(kiArtikel, einheit);
+  const menge = vorschau ? 0 : qw.menge;
+  const einzelpreis = qw.einzelpreis;
+  const kaufort = (form.kaufort !== undefined ? form.kaufort : barcodeEinkaufState.geschaeft) || '';
+  if (kaufort && !barcodeEinkaufState.geschaeft) barcodeEinkaufState.geschaeft = kaufort; // für nächste Artikel vorschlagen
   const datum = todayISO();
 
   const newId = S.nid++;
@@ -9302,7 +9341,7 @@ function createAndBookUnmatchedArticle(kiArtikel, barcode, onlineInfo, form) {
     notiz: 'Von Quittung erstellt' + (onlineInfo && onlineInfo.source ? ' (' + onlineInfo.source + ')' : ''),
     foto: (onlineInfo && onlineInfo.image) || '',
     fotoPath: '',
-    packungen: [{ id: newPackId(), menge, kaufdatum: datum, ablaufdatum: '' }],
+    packungen: menge > 0 ? [{ id: newPackId(), menge, kaufdatum: datum, ablaufdatum: '' }] : [],
     preisHistorie: [],
     quittungAliase: []
   };
@@ -9310,11 +9349,11 @@ function createAndBookUnmatchedArticle(kiArtikel, barcode, onlineInfo, form) {
   umAddQuittungAlias(newArticle, kiArtikel.name);
 
   S.a.push(newArticle);
-  addLogEntry('ein', newId, newArticle.name, newArticle.lager, newArticle.kat, menge, einheit, einzelpreis, false);
+  if (menge > 0) addLogEntry('ein', newId, newArticle.name, newArticle.lager, newArticle.kat, menge, einheit, einzelpreis, false);
   try { addScannedBarcodeToCache(barcode); } catch (e) { console.warn('[UnmatchedCreate] Barcode-Cache:', e.message); }
   saveL();
 
-  toast('✅ Erstellt & eingebucht: ' + newArticle.name);
+  toast(vorschau ? '👁️ Vorschau: Artikel angelegt, nicht eingebucht' : '✅ Erstellt & eingebucht: ' + newArticle.name + ' (' + fmtMenge(menge) + ' ' + einheit + ')');
   console.log('[UnmatchedCreate] Artikel erstellt mit ID: ' + newId);
 
   kiArtikel.warehouseArticle = newArticle;
@@ -10434,6 +10473,7 @@ async function handleQuittungFile(e) {
       'Analysiere diese Quittung/Kassenbon und extrahiere alle gekauften Artikel.\n' +
       'Antworte NUR mit JSON (kein Markdown):\n' +
       '{\n' +
+      '  "geschaeft": "Name des Geschäfts/Händlers (z.B. Migros, Coop, Lidl) oder leer",\n' +
       '  "artikel": [\n' +
       '    {"name":"Artikel-Name","menge":1,"preis_brutto":10.50,"rabatt":0,"preis_netto":10.50,"einheit":"Stk"}\n' +
       '  ]\n' +
@@ -10446,6 +10486,7 @@ async function handleQuittungFile(e) {
       '- preis_netto: preis_brutto - rabatt\n' +
       '- einheit: Stk/kg/g/l/ml etc.\n' +
       '- WICHTIG: Extrahiere AUCH Barcode-Nummern falls sichtbar (13-stellig EAN, oder 4-20 Ziffern intern)\n' +
+      '- geschaeft: Händlername aus dem Quittungskopf (nur die Kette, ohne Filiale/Adresse)\n' +
       '- Nur echte Produkte, keine Steuern/Gesamtsumme als Artikel';
 
     const fetchStart = Date.now();
@@ -10522,6 +10563,13 @@ async function handleQuittungFile(e) {
 
     console.log('[Quittung] Quittungs-Text gespeichert, Länge:', barcodeEinkaufState.quittungText.length);
     toast('✅ Quittung analysiert!');
+
+    // v22.177: Geschäft von Quittung übernehmen (Quittung-Start ohne Geschäftsauswahl)
+    if (!barcodeEinkaufState.geschaeft && parsed.geschaeft) {
+      barcodeEinkaufState.geschaeft = umMatchGeschaeft(parsed.geschaeft);
+      console.log('[Quittung] Geschäft erkannt: ' + parsed.geschaeft + ' → ' + barcodeEinkaufState.geschaeft);
+      if (barcodeEinkaufState.geschaeft) toast('🏪 Geschäft: ' + barcodeEinkaufState.geschaeft);
+    }
 
     // Speichere die erkannten Artikel für Review
     barcodeEinkaufState.erkannteArtikel = parsed.artikel || [];
@@ -10625,7 +10673,10 @@ function findMatchingWarehouseArticles(kiArticleName) {
     // 2. Alias match (mit Normalisierung)
     const aliases = Array.isArray(wArticle.alias) ? wArticle.alias :
                    (wArticle.alias ? [wArticle.alias] : []);
-    if (aliases.some(a => normalizeArticleName(a) === name)) {
+    // v22.178: auch quittungAliase (String oder Array) berücksichtigen
+    const qa = typeof wArticle.quittungAliase === 'string' ? wArticle.quittungAliase.split('\n') :
+               (Array.isArray(wArticle.quittungAliase) ? wArticle.quittungAliase : []);
+    if (aliases.concat(qa).some(a => a && normalizeArticleName(a) === name)) {
       matches.push(wArticle);
       return;
     }
@@ -11580,7 +11631,7 @@ function startQuittungArtikel(idx){
     return renderQuittungSuche(idx);
   }
   // MHD-Abfrage: IMMER für Quittungsscan-Eingabe (nicht nur wenn Artikel es hat)
-  const showMHD=true;
+  const showMHD=false; // v22.178: MHD entfernt
 
   // Duplikat-Warnung: heute bereits gebucht?
   let duplikatWarnung='';
@@ -11673,10 +11724,7 @@ function confirmQuittungArtikel(idx,hasExisting,existingId){
     console.log('  MHD Input: value=', ablaufdatum);
   }
 
-  // MHD-Validierung: IMMER erforderlich bei Quittungsscan
-  if(!ablaufdatum){
-    toast('Bitte Ablaufdatum (MHD) eingeben');return;
-  }
+  // v22.178: MHD-Pflicht entfernt (alte Quittungsvorschau)
 
   if(opt.quittungTraining){
     // TRAININGSMODUS: nur Alias speichern, kein Warenbestand ändern
@@ -11946,7 +11994,8 @@ const ANBRUCH_HALTBARKEIT={
 function anbruchHaltbarkeit(kat){return ANBRUCH_HALTBARKEIT[kat]!==undefined?ANBRUCH_HALTBARKEIT[kat]:5;}
 
 // Kompaktes Ablauf-Badge für Detailzeile: rot mit − wenn abgelaufen, grün mit + wenn haltbar
-function expBadgeKurz(a){
+function expBadgeKurz(a){return ''; // v22.176: MHD entfernt
+
   const roh=daysUntil(a.ablaufdatum);
   if(roh===null)return '';
   const puffer=getPuffer(a);
@@ -12006,14 +12055,16 @@ function expLabel(days){
   if(days===1)return 'läuft morgen ab';
   return 'noch '+days+' Tage';
 }
-function expBadge(iso){
+function expBadge(iso){return ''; // v22.176: MHD entfernt
+
   if(!iso)return '';
   const d=daysUntil(iso);
   const cls=expClass(d);
   return '<span class="exp-badge '+cls+'">'+expLabel(d)+'</span>';
 }
 // Puffer-bewusstes Badge: berücksichtigt Haltbarkeits-Richtwert der Kategorie/Artikels
-function expBadgeA(a){
+function expBadgeA(a){return ''; // v22.176: MHD entfernt
+
   if(!a.ablaufdatum)return '';
   const roh=daysUntil(a.ablaufdatum);
   const puffer=getPuffer(a);
