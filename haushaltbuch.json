@@ -26408,7 +26408,73 @@
       "aktion": false,
       "datum": "2026-10-18",
       "zeit": 1792329040167
+    },
+    {
+      "aid": 306,
+      "d": "2026-10-18",
+      "m": 20,
+      "p": 8.39,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 307,
+      "d": "2026-10-18",
+      "m": 1,
+      "p": 4.95,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 308,
+      "d": "2026-10-18",
+      "m": 1,
+      "p": 1.19,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 309,
+      "d": "2026-10-18",
+      "m": 1,
+      "p": 5.95,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 310,
+      "d": "2026-10-18",
+      "m": 1,
+      "p": 2.99,
+      "t": "ein",
+      "e": "g",
+      "k": "Getränke",
+      "aktion": false,
+      "kaufort": ""
+    },
+    {
+      "aid": 311,
+      "d": "2026-10-18",
+      "m": 2,
+      "p": 2.47,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": ""
     }
   ],
-  "aktualisiert": "2026-10-18T13:19:24.937Z"
+  "aktualisiert": "2026-10-18T13:31:21.184Z"
 }
