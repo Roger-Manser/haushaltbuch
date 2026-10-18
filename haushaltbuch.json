@@ -8217,7 +8217,10 @@
       "barcodes": [
         "20631321"
       ],
-      "quittungAliase": "Mozzarella Stange"
+      "quittungAliase": "Mozzarella Stange",
+      "alias": [
+        "Mozzarella Stange (2x 2.99)"
+      ]
     },
     {
       "id": 223,
@@ -12157,7 +12160,94 @@
       "quittungAliase": [
         "Chesterfield Original Bo"
       ],
-      "letzteEingangHeute": "14:55"
+      "letzteEingangHeute": "14:55",
+      "alias": [
+        "Chesterfield Original Bo"
+      ]
+    },
+    {
+      "id": 307,
+      "name": "Oreo Double Cream Trio",
+      "marke": "",
+      "kat": "Diverses",
+      "lager": "Kühlschrank oben",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7622201451141",
+      "barcodes": [],
+      "preis": 4.95,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-10-18",
+      "notiz": "Von Quittung erstellt",
+      "foto": "",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-10-18",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-18",
+          "preis": 4.95,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "15:03"
+    },
+    {
+      "id": 308,
+      "name": "Spaghetti di Gragnano IGP",
+      "marke": "Italiamo, Lidl",
+      "kat": "Diverses",
+      "lager": "Kühlschrank oben",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "20470142",
+      "barcodes": [],
+      "preis": 1.19,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-10-18",
+      "notiz": "Von Quittung erstellt (Open Food Facts)",
+      "foto": "https://images.openfoodfacts.org/images/products/000/002/047/0142/front_it.28.400.jpg",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-10-18",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-18",
+          "preis": 1.19,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        }
+      ],
+      "quittungAliase": [
+        "Spaghetti"
+      ],
+      "letzteEingangHeute": "15:04"
     }
   ],
   "lagerorte": [
@@ -26117,7 +26207,33 @@
       "k": "Diverses",
       "aktion": false,
       "kaufort": ""
+    },
+    {
+      "t": "ein",
+      "aid": 307,
+      "name": "Oreo Double Cream Trio",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 4.95,
+      "aktion": false,
+      "datum": "2026-10-18",
+      "zeit": 1792328630628
+    },
+    {
+      "t": "ein",
+      "aid": 308,
+      "name": "Spaghetti di Gragnano IGP",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 1.19,
+      "aktion": false,
+      "datum": "2026-10-18",
+      "zeit": 1792328697135
     }
   ],
-  "aktualisiert": "2026-10-18T13:01:01.133Z"
+  "aktualisiert": "2026-10-18T13:05:30.934Z"
 }
