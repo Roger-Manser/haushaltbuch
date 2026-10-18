@@ -1,5 +1,22 @@
 {
   "barcodes": {
+    "20470142": {
+      "barcode": "20470142",
+      "name": "Spaghetti di Gragnano IGP",
+      "marke": "Italiamo, Lidl",
+      "kategorien": "Spaghetti di grano duro",
+      "description": "Spaghetti di Gragnano IGP",
+      "image": "https://images.openfoodfacts.org/images/products/000/002/047/0142/front_it.28.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "Spaghetti di Gragnano IGP",
+        "brands": "Italiamo, Lidl",
+        "categories": "Spaghetti di grano duro",
+        "quantity": "500 g",
+        "generic_name": ""
+      },
+      "addedAt": 1792328689621
+    },
     "7623900204786": {
       "barcode": "7623900204786",
       "name": "",
@@ -37,5 +54,5 @@
       "scannedOnly": true
     }
   },
-  "lastUpdated": 1792328630632
+  "lastUpdated": 1792328689622
 }
