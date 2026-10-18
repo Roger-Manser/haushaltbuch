@@ -1290,7 +1290,10 @@
         }
       ],
       "kaufort": "Lidl",
-      "packungen": []
+      "packungen": [],
+      "alias": [
+        "ASC Ger. Forellenfilets"
+      ]
     },
     {
       "id": 33,
@@ -2820,7 +2823,10 @@
           "kaufort": "Lidl"
         }
       ],
-      "packungen": []
+      "packungen": [],
+      "alias": [
+        "Salametto Milano"
+      ]
     },
     {
       "id": 66,
@@ -8432,7 +8438,8 @@
         "Hähnchenbrustschnitzel"
       ],
       "alias": [
-        "Hähnchenbr. Schnitzel dü"
+        "Hähnchenbr. Schnitzel dü",
+        "Hähnchenbrustschnitzel dü"
       ]
     },
     {
@@ -11470,6 +11477,9 @@
           "kaufdatum": "2026-09-17",
           "ablaufdatum": "2026-12-22"
         }
+      ],
+      "alias": [
+        "Strolghino-Salami Stück"
       ]
     },
     {
@@ -12117,13 +12127,16 @@
       "fotoPath": "",
       "packungen": [],
       "preisHistorie": [],
-      "quittungAliase": []
+      "quittungAliase": [],
+      "alias": [
+        "Espressokapseln Viola XX"
+      ]
     },
     {
       "id": 306,
       "name": "Chesterfield Original Box",
       "marke": "",
-      "kat": "Diverses",
+      "kat": "Genussmittel",
       "lager": "Küche",
       "kaufort": "",
       "menge": 20,
@@ -12133,11 +12146,11 @@
       "barcodes": [],
       "preis": 8.39,
       "packMenge": 0,
-      "packEinheit": "",
+      "packEinheit": "dl",
       "kaufdatum": "2026-10-18",
       "notiz": "Von Quittung erstellt",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792329302121_1000072419.png?t=1792329315870",
+      "fotoPath": "1792329302121_1000072419.png",
       "packungen": [
         {
           "id": 1,
@@ -12163,15 +12176,16 @@
       "letzteEingangHeute": "14:55",
       "alias": [
         "Chesterfield Original Bo"
-      ]
+      ],
+      "ablaufdatum": ""
     },
     {
       "id": 307,
       "name": "Oreo Double Cream Trio",
       "marke": "",
       "kat": "Diverses",
-      "lager": "Kühlschrank oben",
-      "kaufort": "",
+      "lager": "Vorratsschrank",
+      "kaufort": "Lidl",
       "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
@@ -12179,11 +12193,11 @@
       "barcodes": [],
       "preis": 4.95,
       "packMenge": 0,
-      "packEinheit": "",
+      "packEinheit": "dl",
       "kaufdatum": "2026-10-18",
       "notiz": "Von Quittung erstellt",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792329233158_1000072418.jpg?t=1792329249925",
+      "fotoPath": "1792329233158_1000072418.jpg",
       "packungen": [
         {
           "id": 1,
@@ -12204,7 +12218,8 @@
         }
       ],
       "quittungAliase": [],
-      "letzteEingangHeute": "15:03"
+      "letzteEingangHeute": "15:03",
+      "ablaufdatum": ""
     },
     {
       "id": 308,
@@ -12248,6 +12263,132 @@
         "Spaghetti"
       ],
       "letzteEingangHeute": "15:04"
+    },
+    {
+      "id": 309,
+      "name": "familia c.m. plus Origin",
+      "marke": "Familia",
+      "kat": "Gemüse & Früchte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7610023050819",
+      "barcodes": [],
+      "preis": 5.95,
+      "packMenge": 600,
+      "packEinheit": "g",
+      "kaufdatum": "2026-10-18",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792329052128_off.jpg?t=1792329077507",
+      "fotoPath": "1792329052128_off.jpg",
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-10-18",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-18",
+          "preis": 5.95,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "15:09",
+      "ablaufdatum": ""
+    },
+    {
+      "id": 310,
+      "name": "Granola Super Berry",
+      "marke": "Crownfield",
+      "kat": "Getränke",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "g",
+      "mindest": 0,
+      "barcode": "4335619267459",
+      "barcodes": [],
+      "preis": 2.99,
+      "packMenge": 500,
+      "packEinheit": "g",
+      "kaufdatum": "2026-10-18",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792329149119_off.jpg?t=1792329157765",
+      "fotoPath": "1792329149119_off.jpg",
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-10-18",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-18",
+          "preis": 2.99,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "15:10",
+      "ablaufdatum": ""
+    },
+    {
+      "id": 311,
+      "name": "Frischkäse Schnittlauch",
+      "marke": "Fraicho",
+      "kat": "Milchprodukte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4061464218505",
+      "barcodes": [],
+      "preis": 2.47,
+      "packMenge": 150,
+      "packEinheit": "g",
+      "kaufdatum": "2026-10-18",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792329119151_off.jpg?t=1792329138920",
+      "fotoPath": "1792329119151_off.jpg",
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-10-18",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-18",
+          "preis": 2.47,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "15:10",
+      "ablaufdatum": ""
     }
   ],
   "lagerorte": [
@@ -26198,17 +26339,6 @@
       "zeit": 1792328119219
     },
     {
-      "aid": 306,
-      "d": "2026-10-18",
-      "m": 20,
-      "p": 8.39,
-      "t": "ein",
-      "e": "Stk",
-      "k": "Diverses",
-      "aktion": false,
-      "kaufort": ""
-    },
-    {
       "t": "ein",
       "aid": 307,
       "name": "Oreo Double Cream Trio",
@@ -26233,7 +26363,46 @@
       "aktion": false,
       "datum": "2026-10-18",
       "zeit": 1792328697135
+    },
+    {
+      "t": "ein",
+      "aid": 309,
+      "name": "familia c.m. plus Origin",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 5.95,
+      "aktion": false,
+      "datum": "2026-10-18",
+      "zeit": 1792328988682
+    },
+    {
+      "t": "ein",
+      "aid": 310,
+      "name": "Granola Super Berry",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.99,
+      "aktion": false,
+      "datum": "2026-10-18",
+      "zeit": 1792329009673
+    },
+    {
+      "t": "ein",
+      "aid": 311,
+      "name": "Frischkäse Schnittlauch",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.47,
+      "aktion": false,
+      "datum": "2026-10-18",
+      "zeit": 1792329040167
     }
   ],
-  "aktualisiert": "2026-10-18T13:05:30.934Z"
+  "aktualisiert": "2026-10-18T13:18:58.417Z"
 }
