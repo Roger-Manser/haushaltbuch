@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.174 — FEATURE: Live-Barcode-Scanner für ungematchte Artikel + Bestätigung + Web-Suche -->
+<!-- HAUSHALTBUCH v22.175 — Review: gematchte Artikel nur ohne Barcode, Barcode nachtragen -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.174"/>
+<meta name="app-version" content="22.175"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.174';
+const APP_VERSION='22.175';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.175',d:'18.10.2026',items:['🎯 Review: Gematchte Artikel mit Barcode im Lager werden automatisch übernommen (kein Dialog mehr)','📱 Gematchte Artikel OHNE Barcode: «Barcode scannen & hinzufügen» trägt den Barcode beim Lager-Artikel nach','✅ Alternative: «Einbuchen ohne Barcode»','⚠️ Barcode gehört schon einem anderen Artikel → Auswahl statt stillem Umhängen','🔧 Review-Buttons lösen nicht mehr doppelt aus (touchend entfernt)']},
   {v:'22.174',d:'18.10.2026',items:['📱 FEATURE: Echter Live-Barcode-Scanner (Video + Quagga2) für ungematchte Artikel','✅ Bestätigungsdialog «Ist dieser Barcode richtig?» mit Ja/Nein (Nein = weiterscannen)','✅ Barcode bereits im Lager → Zuweisen statt doppelt erstellen','🌐 Web-Suche (Open Food Facts + EAN-DB parallel, robust)','✏️ Name/Marke/Kategorie/Lagerort vor dem Erstellen anpassbar; nicht gefunden → Name von Quittung','✅ Neuer Artikel mit Menge, Preis, Packung, Log-Eintrag + Quittungs-Alias','🔴 BUGFIX: Doppelte artikelByCode() überschrieb die richtige Suche (nur a.bc) → Barcode-Suche fand normale Artikel nicht','🔧 Versionsnummern + Service-Worker-Cache vereinheitlicht']},
   {v:'22.173',d:'18.10.2026',items:['🎯 MEGA-FEATURE: Ungematched Artikel → Barcode-Scan → Internet-Suche → Erstellen!','✅ Review-Dialog unterscheidet gematched vs ungematched Artikel','✅ Für ungematched: "📱 Barcode scannen" Button statt "Einbuchen"','🔍 Barcode-Scan + Open Food Facts/EAN Database Suche','✅ Gefundene Produktinfo anzeigen zur Bestätigung','✅ OK: Neuer Artikel erstellt + sofort eingebucht!','🔄 Workflow: Quittung → KI → Matching → Review → Barcode → Web-Suche → Erstellen']},
   {v:'22.172',d:'18.10.2026',items:['🔍 FEATURE: Fuzzy Matching für flexiblere Artikel-Suche!','❌ PROBLEM: "Mini Nuss Stangen" wurde nicht gemappt auf "Mini Nussstaengen"','✅ GELÖST: Normalisierung der Namen (Leerzeichen, Umlaute)','✅ Ä→AE, Ö→OE, Ü→UE, mehrfache Leerzeichen entfernt','✅ "Mini Nuss Stangen" = "Mini Nussstaengen" = "MININUSSSTAENGEN" 🎯']},
@@ -8654,6 +8655,24 @@ function showNextArticleReview(){
     }));
   }
 
+  // v22.175: Gematchte Artikel, deren Lager-Artikel schon einen Barcode hat,
+  // brauchen keinen Review → automatisch übernehmen (wie "Einbuchen")
+  let autoCnt=0;
+  while(true){
+    const ai=barcodeEinkaufState.reviewIdx||0;
+    const ka=barcodeEinkaufState.erkannteArtikel[ai];
+    if(!ka||!ka.warehouseArticle)break;
+    const lagerArt=umLagerArtikel(ka);
+    if(!umHatBarcode(lagerArt))break;
+    umUebernehmeReviewArtikel(ai);
+    barcodeEinkaufState.reviewIdx=ai+1;
+    autoCnt++;
+  }
+  if(autoCnt>0){
+    saveBarcodeState();
+    toast('✅ '+autoCnt+' gematchte Artikel mit Barcode automatisch übernommen');
+  }
+
   const idx=barcodeEinkaufState.reviewIdx||0;
   const artikel=barcodeEinkaufState.erkannteArtikel[idx];
   if(!artikel){
@@ -8698,7 +8717,7 @@ function showNextArticleReview(){
 
   const st=document.createElement('div');
   st.style.cssText='background:'+(isMatched?'#10b981':'#ef4444')+';border:1px solid '+(isMatched?'#059669':'#dc2626')+';border-radius:var(--rs);padding:12px;margin-bottom:12px;font-size:13px;color:#fff;font-weight:500';
-  st.textContent=isMatched?'✅ Im Lager gemappt: '+artikel.warehouseArticle.name:'⚠️ Nicht gemappt! Barcode-Scan zum Erstellen erforderlich';
+  st.textContent=isMatched?'✅ Im Lager gemappt: '+artikel.warehouseArticle.name+' — 📱 noch kein Barcode hinterlegt':'⚠️ Nicht gemappt! Barcode-Scan zum Erstellen erforderlich';
   content.appendChild(st);
 
   const det=document.createElement('div');
@@ -8716,13 +8735,17 @@ function showNextArticleReview(){
     b.style.cssText='display:block;width:100%;padding:12px;margin-bottom:8px;background:'+c+';color:#fff;font-weight:600;cursor:pointer;font-size:16px;box-sizing:border-box;text-align:center;border-radius:6px;pointer-events:auto;transition:opacity 0.2s';
     b.textContent=txt;
     b.addEventListener('click',(e)=>{e.stopPropagation();h();});
-    b.addEventListener('touchend',(e)=>{e.stopPropagation();h();});
     return b;
   };
 
   if (isMatched) {
-    // Gematched Artikel - Normal einbuchen
-    btns.appendChild(mkBtn('btn-einbuchen','✅ Einbuchen','#10b981',confirmArticleReview));
+    // v22.175: Gematcht, aber Lager-Artikel ohne Barcode → Barcode nachtragen
+    btns.appendChild(mkBtn('btn-scan-barcode','📱 Barcode scannen & hinzufügen','#8b5cf6',()=>{
+      const dlg=document.getElementById('article-review-dlg');
+      if(dlg)dlg.remove();
+      scanBarcodeForUnmatchedArticle();
+    }));
+    btns.appendChild(mkBtn('btn-einbuchen','✅ Einbuchen ohne Barcode','#10b981',confirmArticleReview));
     btns.appendChild(mkBtn('btn-vergleich','🔍 Vergleich','#3b82f6',compareWithScannedBarcodes));
   } else {
     // Unmatched Artikel - Barcode scannen zum Erstellen
@@ -8778,6 +8801,23 @@ function umBtn(txt, bg, fg, handler, extraCss){
   return b;
 }
 
+// v22.175: aktueller Lager-Artikel (frisch aus S.a, nicht die gespeicherte Kopie)
+function umLagerArtikel(ka){
+  if(!ka||!ka.warehouseArticle)return null;
+  return S.a.find(a=>a.id===ka.warehouseArticle.id)||ka.warehouseArticle;
+}
+function umHatBarcode(a){
+  if(!a)return false;
+  return !!(a.barcode||a.ownCode||(Array.isArray(a.barcodes)&&a.barcodes.some(Boolean))||(Array.isArray(a.bc)&&a.bc.some(Boolean)));
+}
+// Wie confirmArticleReview, aber ohne Dialog/Weiterschalten
+function umUebernehmeReviewArtikel(i){
+  const ka=barcodeEinkaufState.erkannteArtikel[i];
+  if(ka&&barcodeEinkaufState.artikel&&barcodeEinkaufState.artikel[ka.index]){
+    barcodeEinkaufState.artikel[ka.index]={...barcodeEinkaufState.artikel[ka.index],...ka};
+  }
+}
+
 function umCurrentArtikel(){
   const idx = barcodeEinkaufState.reviewIdx || 0;
   return (barcodeEinkaufState.erkannteArtikel || [])[idx] || null;
@@ -8818,7 +8858,7 @@ async function scanBarcodeForUnmatchedArticle() {
   t1.textContent = '📱 Barcode scannen';
   const t2 = document.createElement('div');
   t2.style.cssText = 'font-size:13px;color:#ddd;margin-top:4px';
-  t2.textContent = 'Quittung: ' + (kiArtikel.name || 'Unbekannt');
+  t2.textContent = 'Quittung: ' + (kiArtikel.name || 'Unbekannt') + (kiArtikel.warehouseArticle ? '  →  Lager: ' + kiArtikel.warehouseArticle.name : '');
   const t3 = document.createElement('div');
   t3.id = 'unmatched-scan-status';
   t3.style.cssText = 'font-size:12px;color:#aaa;margin-top:4px';
@@ -9017,6 +9057,12 @@ function onUnmatchedBarcodeDetected(rawCode, manual){
 async function searchBarcodeForUnmatchedArticle(kiArtikel, barcode) {
   if (!kiArtikel) { toast('❌ Artikel nicht gefunden'); return; }
 
+  // v22.175: Gematchter Artikel ohne Barcode → Barcode nachtragen + einbuchen
+  if (kiArtikel.warehouseArticle) {
+    addBarcodeToMatchedArticle(kiArtikel, barcode);
+    return;
+  }
+
   // Barcode schon einem Lager-Artikel zugeordnet? → zuweisen statt doppelt erstellen
   const known = artikelByCode(barcode);
   if (known) {
@@ -9038,6 +9084,55 @@ async function searchBarcodeForUnmatchedArticle(kiArtikel, barcode) {
   if (best) toast('✅ Gefunden: ' + best.name);
   else toast('ℹ️ Nicht im Netz gefunden – Name von Quittung verwenden');
   showUnmatchedArticleConfirmation(kiArtikel, barcode, best);
+}
+
+function addBarcodeToMatchedArticle(kiArtikel, barcode){
+  const ziel = umLagerArtikel(kiArtikel);
+  if (!ziel) { toast('❌ Lager-Artikel nicht gefunden'); showNextArticleReview(); return; }
+  const anderer = artikelByCode(barcode);
+  if (anderer && anderer.id !== ziel.id) {
+    // Barcode gehört bereits einem anderen Artikel → nicht still umhängen
+    const dlg = document.createElement('div');
+    dlg.id = 'unmatched-known-dlg';
+    dlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px';
+    const inner = document.createElement('div');
+    inner.style.cssText = 'background:var(--sf);border-radius:var(--r);width:100%;max-width:440px;padding:20px';
+    const h = document.createElement('div');
+    h.style.cssText = 'font-weight:700;font-size:16px;margin-bottom:10px';
+    h.textContent = '⚠️ Barcode bereits vergeben';
+    const p = document.createElement('div');
+    p.style.cssText = 'font-size:14px;line-height:1.6;margin-bottom:16px';
+    p.textContent = 'Der Barcode ' + barcode + ' gehört schon zu «' + anderer.name + '», nicht zu «' + ziel.name + '». Welcher Artikel ist richtig?';
+    inner.appendChild(h); inner.appendChild(p);
+    const col = document.createElement('div');
+    col.style.cssText = 'display:flex;flex-direction:column;gap:8px';
+    col.appendChild(umBtn('🔗 «' + anderer.name + '» verwenden', '#10b981', '#fff', () => {
+      dlg.remove();
+      umAddQuittungAlias(anderer, kiArtikel.name);
+      kiArtikel.warehouseArticle = anderer;
+      kiArtikel.barcode = barcode;
+      saveL();
+      toast('🔗 Umgemappt auf: ' + anderer.name);
+      confirmArticleReview();
+    }));
+    col.appendChild(umBtn('✅ Bei «' + ziel.name + '» bleiben (ohne Barcode)', '#3b82f6', '#fff', () => { dlg.remove(); confirmArticleReview(); }));
+    col.appendChild(umBtn('📱 Nochmals scannen', '#8b5cf6', '#fff', () => { dlg.remove(); scanBarcodeForUnmatchedArticle(); }));
+    inner.appendChild(col);
+    dlg.appendChild(inner);
+    document.body.appendChild(dlg);
+    return;
+  }
+  if (!ziel.barcode) ziel.barcode = barcode;
+  else {
+    if (!Array.isArray(ziel.barcodes)) ziel.barcodes = [];
+    if (ziel.barcode !== barcode && !ziel.barcodes.includes(barcode)) ziel.barcodes.push(barcode);
+  }
+  kiArtikel.barcode = barcode;
+  kiArtikel.warehouseArticle = ziel;
+  try { addScannedBarcodeToCache(barcode); } catch (e) { console.warn('[MatchedBarcode] Cache:', e.message); }
+  saveL();
+  toast('✅ Barcode zu «' + ziel.name + '» hinzugefügt');
+  confirmArticleReview(); // einbuchen + nächster Artikel
 }
 
 function showUnmatchedKnownArticle(kiArtikel, barcode, known){
