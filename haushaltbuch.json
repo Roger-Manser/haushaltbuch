@@ -12355,7 +12355,7 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "",
-      "menge": 1,
+      "menge": 2,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "4061464218505",
@@ -12370,6 +12370,12 @@
       "packungen": [
         {
           "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-10-18",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 6,
           "menge": 1,
           "kaufdatum": "2026-10-18",
           "ablaufdatum": ""
@@ -26404,5 +26410,5 @@
       "zeit": 1792329040167
     }
   ],
-  "aktualisiert": "2026-10-18T13:18:58.417Z"
+  "aktualisiert": "2026-10-18T13:19:24.937Z"
 }
