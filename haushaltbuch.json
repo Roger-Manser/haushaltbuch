@@ -2225,7 +2225,7 @@
       "kat": "Gewürze & Saucen",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610100034084",
@@ -2282,16 +2282,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        }
-      ],
-      "packungen": [
+        },
         {
-          "id": 14,
+          "datum": "2026-10-10",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-09-17",
-          "ablaufdatum": "2027-03-20"
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
+      "packungen": [],
       "quittungAliase": [
         "Thomy Mayon.Franç.Duo"
       ],
@@ -12165,9 +12167,16 @@
   ],
   "einkauf": [
     {
-      "id": 1789896198590,
-      "text": "Birchermüsli",
+      "id": 1791608932184,
+      "text": "Zitrone",
       "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1791716290098,
+      "text": "Zimtstange",
+      "menge": "2",
       "einheit": "Stk",
       "checked": false
     }
@@ -26010,7 +26019,31 @@
       "k": "Konserven & Trockenware",
       "aktion": false,
       "kaufort": "Migros"
+    },
+    {
+      "t": "aus",
+      "aid": 53,
+      "name": "Mayonaise",
+      "lager": "Kühlschrank oben",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-10-10",
+      "zeit": 1791608681227
+    },
+    {
+      "aid": 53,
+      "d": "2026-10-10",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-10-05T14:46:29.819Z"
+  "aktualisiert": "2026-10-18T07:30:34.323Z"
 }
