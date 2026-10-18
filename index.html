@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.172';
+const APP_VERSION='22.173';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.173',d:'18.10.2026',items:['🎯 MEGA-FEATURE: Ungematched Artikel → Barcode-Scan → Internet-Suche → Erstellen!','✅ Review-Dialog unterscheidet gematched vs ungematched Artikel','✅ Für ungematched: "📱 Barcode scannen" Button statt "Einbuchen"','🔍 Barcode-Scan + Open Food Facts/EAN Database Suche','✅ Gefundene Produktinfo anzeigen zur Bestätigung','✅ OK: Neuer Artikel erstellt + sofort eingebucht!','🔄 Workflow: Quittung → KI → Matching → Review → Barcode → Web-Suche → Erstellen']},
   {v:'22.172',d:'18.10.2026',items:['🔍 FEATURE: Fuzzy Matching für flexiblere Artikel-Suche!','❌ PROBLEM: "Mini Nuss Stangen" wurde nicht gemappt auf "Mini Nussstaengen"','✅ GELÖST: Normalisierung der Namen (Leerzeichen, Umlaute)','✅ Ä→AE, Ö→OE, Ü→UE, mehrfache Leerzeichen entfernt','✅ "Mini Nuss Stangen" = "Mini Nussstaengen" = "MININUSSSTAENGEN" 🎯']},
   {v:'22.171',d:'18.10.2026',items:['🔧 HOTFIX: Matching-Artikel-Auswahl Bug behoben!','❌ PROBLEM: onclick + esc() führte zu Escaping-Fehlern','✅ GELÖST: Verwende addEventListener statt onclick in Suchbox','✅ DOM-Elemente statt innerHTML für sichere Click-Handler','🎯 Artikel aus Suchbox können jetzt problemlos ausgewählt werden']},
   {v:'22.170',d:'18.10.2026',items:['🎯 FEATURE: Quittungs-Artikel Matching mit Warehouse-Abgleich!','✅ Neue Phase: Nach KI-Extraction → Artikel werden gegen Lager abgeglichen','🔍 Auto-Matching: Suche nach exaktem Namen + Aliases','📝 Alias-Erstellung: Manuelle Match erstellt automatisch neuen Alias','💾 Unmatched-Artikel: Temp-Liste in localStorage für spätere Barcode-Suche','⏭️ Alle Schritte sind überspringbar und abbrechbar','🔄 Workflow: Quittung → KI-Extraction → Warehouse-Matching → Review']},
@@ -8682,9 +8683,12 @@ function showNextArticleReview(){
   s.textContent='KI hat diesen Artikel erkannt';
   content.appendChild(s);
 
+  // Prüfe ob Artikel beim Matching gemappt wurde (warehouseArticle gespeichert)
+  const isMatched = !!artikel.warehouseArticle;
+
   const st=document.createElement('div');
-  st.style.cssText='background:'+(isInDB?'#10b981':'#ef4444')+';border:1px solid '+(isInDB?'#059669':'#dc2626')+';border-radius:var(--rs);padding:12px;margin-bottom:12px;font-size:13px;color:#fff;font-weight:500';
-  st.textContent=isInDB?'✅ Im Lager gefunden: '+bekannterArtikel.name:'⚠️ Nicht in Datenbank! Artikel unbekannt oder andere Bezeichnung';
+  st.style.cssText='background:'+(isMatched?'#10b981':'#ef4444')+';border:1px solid '+(isMatched?'#059669':'#dc2626')+';border-radius:var(--rs);padding:12px;margin-bottom:12px;font-size:13px;color:#fff;font-weight:500';
+  st.textContent=isMatched?'✅ Im Lager gemappt: '+artikel.warehouseArticle.name:'⚠️ Nicht gemappt! Barcode-Scan zum Erstellen erforderlich';
   content.appendChild(st);
 
   const det=document.createElement('div');
@@ -8705,8 +8709,20 @@ function showNextArticleReview(){
     b.addEventListener('touchend',(e)=>{e.stopPropagation();h();});
     return b;
   };
-  btns.appendChild(mkBtn('btn-einbuchen','✅ Einbuchen','#10b981',confirmArticleReview));
-  btns.appendChild(mkBtn('btn-vergleich','🔍 Vergleich','#3b82f6',compareWithScannedBarcodes));
+
+  if (isMatched) {
+    // Gematched Artikel - Normal einbuchen
+    btns.appendChild(mkBtn('btn-einbuchen','✅ Einbuchen','#10b981',confirmArticleReview));
+    btns.appendChild(mkBtn('btn-vergleich','🔍 Vergleich','#3b82f6',compareWithScannedBarcodes));
+  } else {
+    // Unmatched Artikel - Barcode scannen zum Erstellen
+    btns.appendChild(mkBtn('btn-scan-barcode','📱 Barcode scannen','#8b5cf6',()=>{
+      const dlg=document.getElementById('article-review-dlg');
+      if(dlg)dlg.remove();
+      scanBarcodeForUnmatchedArticle();
+    }));
+  }
+
   const lb=mkBtn('btn-ueberspringen','⏭️ Überspringen','#ef4444',skipArticleReview);
   lb.style.marginBottom='0';
   btns.appendChild(lb);
@@ -8734,6 +8750,261 @@ function confirmArticleReview(){
   barcodeEinkaufState.reviewIdx=(barcodeEinkaufState.reviewIdx||0)+1;
   saveBarcodeState();  // Speichere nach jeder Bestätigung
   showNextArticleReview();
+}
+
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ * UNGEMATCHED ARTIKEL: Barcode-Scan → Internet-Suche → Erstellen
+ * ═══════════════════════════════════════════════════════════════════
+ */
+
+function scanBarcodeForUnmatchedArticle() {
+  const idx = barcodeEinkaufState.reviewIdx || 0;
+  const artikel = barcodeEinkaufState.erkannteArtikel[idx];
+
+  if (!artikel) {
+    toast('❌ Artikel nicht gefunden');
+    return;
+  }
+
+  // Öffne Barcode-Scanner für diesen unmatched Artikel
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.capture = 'environment';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      handleUnmatchedArticleBarcodeFile(file, artikel);
+    }
+  };
+  input.click();
+}
+
+async function handleUnmatchedArticleBarcodeFile(file, kiArtikel) {
+  toast('📸 Barcode wird gescannt...');
+  console.log('[UnmatchedBarcode] Verarbeite Datei: ' + file.name);
+
+  try {
+    // Lese Bild als Base64
+    const b64 = await new Promise((res, rej) => {
+      const r = new FileReader();
+      r.onload = () => res(r.result.split(',')[1]);
+      r.onerror = () => rej(new Error('Datei konnte nicht gelesen werden'));
+      r.readAsDataURL(file);
+    });
+
+    toast('🔍 Erkenne Barcode...');
+
+    // Nutze existierende Barcode-Erkennungslogik oder einfach manuelle Eingabe
+    // Für jetzt: Zeige Dialog zum Barcode eingeben
+    showUnmatchedArticleBarcodeInput(kiArtikel, null);
+
+  } catch (err) {
+    console.error('[UnmatchedBarcode] Fehler:', err);
+    toast('❌ Fehler beim Lesen der Datei');
+  }
+}
+
+function showUnmatchedArticleBarcodeInput(kiArtikel, detectedBarcode) {
+  const dlg = document.createElement('div');
+  dlg.id = 'unmatched-barcode-input-dlg';
+  dlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:10px;pointer-events:auto';
+
+  const inner = document.createElement('div');
+  inner.style.cssText = 'background:var(--sf);border-radius:var(--r);width:100%;max-width:500px;padding:20px;pointer-events:auto';
+
+  const title = document.createElement('div');
+  title.style.cssText = 'font-weight:700;font-size:16px;margin-bottom:12px';
+  title.textContent = '📱 Barcode eingeben';
+  inner.appendChild(title);
+
+  const info = document.createElement('div');
+  info.style.cssText = 'font-size:13px;color:var(--t2);margin-bottom:12px';
+  info.textContent = 'Artikel: ' + esc(kiArtikel.name);
+  inner.appendChild(info);
+
+  const input = document.createElement('input');
+  input.id = 'unmatched-barcode-input';
+  input.type = 'text';
+  input.placeholder = 'Barcode (13-stellig oder beliebig)...';
+  input.value = detectedBarcode || '';
+  input.style.cssText = 'width:100%;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);font-family:monospace;font-size:14px;margin-bottom:12px;box-sizing:border-box';
+  inner.appendChild(input);
+
+  const btnContainer = document.createElement('div');
+  btnContainer.style.cssText = 'display:flex;gap:8px';
+
+  const confirmBtn = document.createElement('button');
+  confirmBtn.style.cssText = 'flex:1;padding:12px;background:#8b5cf6;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px';
+  confirmBtn.textContent = '🔍 Suchen';
+  confirmBtn.addEventListener('click', () => {
+    const barcode = document.getElementById('unmatched-barcode-input')?.value;
+    if (!barcode) {
+      toast('⚠️ Bitte Barcode eingeben');
+      return;
+    }
+    dlg.remove();
+    searchBarcodeForUnmatchedArticle(kiArtikel, barcode);
+  });
+  btnContainer.appendChild(confirmBtn);
+
+  const cancelBtn = document.createElement('button');
+  cancelBtn.style.cssText = 'flex:1;padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:600;cursor:pointer;font-size:14px';
+  cancelBtn.textContent = '⏭️ Überspringen';
+  cancelBtn.addEventListener('click', () => {
+    dlg.remove();
+    skipArticleReview();
+  });
+  btnContainer.appendChild(cancelBtn);
+
+  inner.appendChild(btnContainer);
+  dlg.appendChild(inner);
+  document.body.appendChild(dlg);
+
+  input.focus();
+}
+
+async function searchBarcodeForUnmatchedArticle(kiArtikel, barcode) {
+  toast('🌐 Suche im Netz...');
+  console.log('[UnmatchedSearch] Suche Barcode: ' + barcode);
+
+  try {
+    // Suche in beiden Quellen
+    const results = await Promise.all([
+      searchOpenFoodFacts(barcode),
+      searchEANDatabase(barcode)
+    ]).catch(() => [null, null]);
+
+    const bestResult = results.find(r => r !== null);
+
+    if (bestResult) {
+      showUnmatchedArticleConfirmation(kiArtikel, barcode, bestResult);
+    } else {
+      toast('❌ Barcode nicht im Netz gefunden - Artikel überspringen');
+      skipArticleReview();
+    }
+  } catch (err) {
+    console.error('[UnmatchedSearch] Fehler:', err);
+    toast('❌ Fehler bei der Suche');
+  }
+}
+
+function showUnmatchedArticleConfirmation(kiArtikel, barcode, onlineInfo) {
+  const dlg = document.createElement('div');
+  dlg.id = 'unmatched-confirm-dlg';
+  dlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:10px;pointer-events:auto;overflow-y:auto';
+
+  const inner = document.createElement('div');
+  inner.style.cssText = 'background:var(--sf);border-radius:var(--r);width:100%;max-width:500px;max-height:85vh;display:flex;flex-direction:column;padding:20px;pointer-events:auto;margin:auto';
+
+  const title = document.createElement('div');
+  title.style.cssText = 'font-weight:700;font-size:16px;margin-bottom:12px';
+  title.textContent = '✅ Produktinfo gefunden';
+  inner.appendChild(title);
+
+  const content = document.createElement('div');
+  content.style.cssText = 'flex:1;overflow-y:auto;margin-bottom:12px';
+
+  if (onlineInfo.image) {
+    const img = document.createElement('img');
+    img.src = onlineInfo.image;
+    img.style.cssText = 'width:100%;max-height:150px;object-fit:contain;border-radius:var(--rs);margin-bottom:12px';
+    content.appendChild(img);
+  }
+
+  const name = document.createElement('div');
+  name.style.cssText = 'font-weight:600;font-size:15px;margin-bottom:8px;color:var(--ok)';
+  name.textContent = esc(onlineInfo.name || 'Unbekannt');
+  content.appendChild(name);
+
+  const marke = document.createElement('div');
+  marke.style.cssText = 'font-size:12px;color:var(--t2);margin-bottom:8px';
+  marke.textContent = esc(onlineInfo.marke || '');
+  content.appendChild(marke);
+
+  if (onlineInfo.description) {
+    const desc = document.createElement('div');
+    desc.style.cssText = 'font-size:12px;color:var(--t2);margin-bottom:8px;line-height:1.4';
+    desc.textContent = esc(onlineInfo.description.substring(0, 200));
+    content.appendChild(desc);
+  }
+
+  const info = document.createElement('div');
+  info.style.cssText = 'background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:8px;font-size:12px;color:var(--t2)';
+  info.innerHTML = '<div><strong>Barcode:</strong> ' + esc(barcode) + '</div><div><strong>Quelle:</strong> ' + esc(onlineInfo.source || 'Online') + '</div>';
+  content.appendChild(info);
+
+  inner.appendChild(content);
+
+  const btnContainer = document.createElement('div');
+  btnContainer.style.cssText = 'display:flex;gap:8px';
+
+  const okBtn = document.createElement('button');
+  okBtn.style.cssText = 'flex:1;padding:12px;background:#10b981;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px';
+  okBtn.textContent = '✅ OK - Erstellen & Einbuchen';
+  okBtn.addEventListener('click', () => {
+    dlg.remove();
+    createAndBookUnmatchedArticle(kiArtikel, barcode, onlineInfo);
+  });
+  btnContainer.appendChild(okBtn);
+
+  const skipBtn = document.createElement('button');
+  skipBtn.style.cssText = 'flex:1;padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:600;cursor:pointer;font-size:14px';
+  skipBtn.textContent = '⏭️ Überspringen';
+  skipBtn.addEventListener('click', () => {
+    dlg.remove();
+    skipArticleReview();
+  });
+  btnContainer.appendChild(skipBtn);
+
+  inner.appendChild(btnContainer);
+  dlg.appendChild(inner);
+  document.body.appendChild(dlg);
+}
+
+function createAndBookUnmatchedArticle(kiArtikel, barcode, onlineInfo) {
+  console.log('[UnmatchedCreate] Erstelle neuen Artikel: ' + onlineInfo.name);
+
+  // Erstelle neuen Artikel mit den Online-Daten
+  const newArticle = {
+    id: generateNewArticleId(),
+    name: onlineInfo.name || kiArtikel.name || 'Neuer Artikel',
+    marke: onlineInfo.marke || '',
+    kat: onlineInfo.kategorien || 'Diverses',
+    bc: [barcode],
+    menge: kiArtikel.menge || 0,
+    mindest: 0,
+    lager: barcodeEinkaufState.geschaeft || '',
+    einheit: kiArtikel.einheit || 'Stk',
+    preis: 0,
+    kaufdatum: todayISO(),
+    kaufort: barcodeEinkaufState.geschaeft || '',
+    notiz: 'Von Quittung erstellt'
+  };
+
+  if (onlineInfo.image) {
+    newArticle.foto = onlineInfo.image;
+  }
+
+  // Speichere neuen Artikel in Datenbank
+  S.a.push(newArticle);
+  saveL();
+
+  toast('✅ Artikel erstellt: ' + newArticle.name);
+  console.log('[UnmatchedCreate] Artikel erstellt mit ID: ' + newArticle.id);
+
+  // Speichere in Recognition für später
+  const idx = barcodeEinkaufState.reviewIdx || 0;
+  const artikel = barcodeEinkaufState.erkannteArtikel[idx];
+  artikel.warehouseArticle = newArticle;
+  artikel.matched = true;
+
+  // Weiter zum nächsten Artikel
+  barcodeEinkaufState.reviewIdx = (barcodeEinkaufState.reviewIdx || 0) + 1;
+  saveBarcodeState();
+
+  setTimeout(() => showNextArticleReview(), 300);
 }
 
 function assignArticleReview(){
