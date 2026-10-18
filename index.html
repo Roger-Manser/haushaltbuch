@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.169 — UX-FIX: Redundanter Dialog entfernt, direkte Kamera/Galerie-Auswahl -->
+<!-- HAUSHALTBUCH v22.174 — FEATURE: Live-Barcode-Scanner für ungematchte Artikel + Bestätigung + Web-Suche -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.169"/>
+<meta name="app-version" content="22.174"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.173';
+const APP_VERSION='22.174';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.174',d:'18.10.2026',items:['📱 FEATURE: Echter Live-Barcode-Scanner (Video + Quagga2) für ungematchte Artikel','✅ Bestätigungsdialog «Ist dieser Barcode richtig?» mit Ja/Nein (Nein = weiterscannen)','✅ Barcode bereits im Lager → Zuweisen statt doppelt erstellen','🌐 Web-Suche (Open Food Facts + EAN-DB parallel, robust)','✏️ Name/Marke/Kategorie/Lagerort vor dem Erstellen anpassbar; nicht gefunden → Name von Quittung','✅ Neuer Artikel mit Menge, Preis, Packung, Log-Eintrag + Quittungs-Alias','🔴 BUGFIX: Doppelte artikelByCode() überschrieb die richtige Suche (nur a.bc) → Barcode-Suche fand normale Artikel nicht','🔧 Versionsnummern + Service-Worker-Cache vereinheitlicht']},
   {v:'22.173',d:'18.10.2026',items:['🎯 MEGA-FEATURE: Ungematched Artikel → Barcode-Scan → Internet-Suche → Erstellen!','✅ Review-Dialog unterscheidet gematched vs ungematched Artikel','✅ Für ungematched: "📱 Barcode scannen" Button statt "Einbuchen"','🔍 Barcode-Scan + Open Food Facts/EAN Database Suche','✅ Gefundene Produktinfo anzeigen zur Bestätigung','✅ OK: Neuer Artikel erstellt + sofort eingebucht!','🔄 Workflow: Quittung → KI → Matching → Review → Barcode → Web-Suche → Erstellen']},
   {v:'22.172',d:'18.10.2026',items:['🔍 FEATURE: Fuzzy Matching für flexiblere Artikel-Suche!','❌ PROBLEM: "Mini Nuss Stangen" wurde nicht gemappt auf "Mini Nussstaengen"','✅ GELÖST: Normalisierung der Namen (Leerzeichen, Umlaute)','✅ Ä→AE, Ö→OE, Ü→UE, mehrfache Leerzeichen entfernt','✅ "Mini Nuss Stangen" = "Mini Nussstaengen" = "MININUSSSTAENGEN" 🎯']},
   {v:'22.171',d:'18.10.2026',items:['🔧 HOTFIX: Matching-Artikel-Auswahl Bug behoben!','❌ PROBLEM: onclick + esc() führte zu Escaping-Fehlern','✅ GELÖST: Verwende addEventListener statt onclick in Suchbox','✅ DOM-Elemente statt innerHTML für sichere Click-Handler','🎯 Artikel aus Suchbox können jetzt problemlos ausgewählt werden']},
@@ -2507,11 +2508,20 @@ function newPackId(){return nextPackId++;}
 function artikelByCode(code){
   if(!code)return null;
   const c=String(code).trim();
-  return S.a.find(a=>
-    (a.barcode&&a.barcode===c)||
-    (a.ownCode&&a.ownCode===c)||
-    (Array.isArray(a.barcodes)&&a.barcodes.includes(c))
-  )||null;
+  const codesOf=a=>{
+    const l=[];
+    if(a.barcode)l.push(String(a.barcode));
+    if(a.ownCode)l.push(String(a.ownCode));
+    if(Array.isArray(a.barcodes))a.barcodes.forEach(b=>{if(b)l.push(String(b));});
+    if(Array.isArray(a.bc))a.bc.forEach(b=>{if(b)l.push(String(b));}); // Altdaten v22.15x–22.173
+    return l;
+  };
+  const exact=S.a.find(a=>codesOf(a).includes(c));
+  if(exact)return exact;
+  // Fallback: führende Nullen ignorieren (UPC-A ↔ EAN-13)
+  const n=c.replace(/^0+/,'');
+  if(!n)return null;
+  return S.a.find(a=>codesOf(a).some(b=>b.replace(/^0+/,'')===n))||null;
 }
 // Alle Codes eines Artikels als Array
 function alleCodes(a){
@@ -8754,256 +8764,472 @@ function confirmArticleReview(){
 
 /**
  * ═══════════════════════════════════════════════════════════════════
- * UNGEMATCHED ARTIKEL: Barcode-Scan → Internet-Suche → Erstellen
+ * UNGEMATCHED ARTIKEL (v22.174): Live-Scan → Bestätigen → Web-Suche → Erstellen
  * ═══════════════════════════════════════════════════════════════════
  */
 
-function scanBarcodeForUnmatchedArticle() {
-  const idx = barcodeEinkaufState.reviewIdx || 0;
-  const artikel = barcodeEinkaufState.erkannteArtikel[idx];
+// Kleiner Helfer: Button ohne Inline-onclick (nur click, kein touchend → kein Doppel-Auslösen)
+function umBtn(txt, bg, fg, handler, extraCss){
+  const b = document.createElement('button');
+  b.type = 'button';
+  b.textContent = txt;
+  b.style.cssText = 'flex:1;padding:12px;border:none;border-radius:var(--rs);font-weight:600;cursor:pointer;font-size:14px;background:'+bg+';color:'+fg+';'+(extraCss||'');
+  b.addEventListener('click', (e) => { e.stopPropagation(); handler(); });
+  return b;
+}
 
-  if (!artikel) {
-    toast('❌ Artikel nicht gefunden');
+function umCurrentArtikel(){
+  const idx = barcodeEinkaufState.reviewIdx || 0;
+  return (barcodeEinkaufState.erkannteArtikel || [])[idx] || null;
+}
+
+// Schritt 1: Echter Live-Scanner (Video-Stream + Quagga2)
+async function scanBarcodeForUnmatchedArticle() {
+  const kiArtikel = umCurrentArtikel();
+  if (!kiArtikel) { toast('❌ Artikel nicht gefunden'); return; }
+
+  closeUnmatchedScanner(); // evtl. alter Scanner
+
+  const dlg = document.createElement('div');
+  dlg.id = 'unmatched-scan-dlg';
+  dlg.style.cssText = 'position:fixed;inset:0;background:#000;z-index:9500;overflow:hidden';
+
+  const video = document.createElement('video');
+  video.setAttribute('playsinline', '');
+  video.muted = true;
+  video.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:10;background:#000';
+  dlg.appendChild(video);
+
+  const loading = document.createElement('div');
+  loading.style.cssText = 'position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;color:#888;font-size:14px;text-align:center;padding:20px';
+  loading.textContent = '📹 Kamera startet...';
+  dlg.appendChild(loading);
+
+  // Zielrahmen
+  const frame = document.createElement('div');
+  frame.style.cssText = 'position:absolute;left:10%;right:10%;top:30%;height:22%;border:3px solid rgba(139,92,246,.9);border-radius:12px;z-index:20;box-shadow:0 0 0 9999px rgba(0,0,0,.35);pointer-events:none';
+  dlg.appendChild(frame);
+
+  // Kopfzeile mit Artikelname
+  const top = document.createElement('div');
+  top.style.cssText = 'position:absolute;top:0;left:0;right:0;z-index:30;padding:14px 16px;padding-top:calc(14px + env(safe-area-inset-top));background:linear-gradient(to bottom,rgba(0,0,0,.9),rgba(0,0,0,0));color:#fff;text-align:center';
+  const t1 = document.createElement('div');
+  t1.style.cssText = 'font-weight:700;font-size:15px';
+  t1.textContent = '📱 Barcode scannen';
+  const t2 = document.createElement('div');
+  t2.style.cssText = 'font-size:13px;color:#ddd;margin-top:4px';
+  t2.textContent = 'Quittung: ' + (kiArtikel.name || 'Unbekannt');
+  const t3 = document.createElement('div');
+  t3.id = 'unmatched-scan-status';
+  t3.style.cssText = 'font-size:12px;color:#aaa;margin-top:4px';
+  t3.textContent = 'Barcode in den Rahmen halten';
+  top.appendChild(t1); top.appendChild(t2); top.appendChild(t3);
+  dlg.appendChild(top);
+
+  // Fusszeile: manuelle Eingabe + Buttons
+  const bottom = document.createElement('div');
+  bottom.style.cssText = 'position:absolute;bottom:0;left:0;right:0;z-index:30;padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom));background:linear-gradient(to top,rgba(0,0,0,.95),rgba(0,0,0,.75));display:flex;flex-direction:column;gap:10px';
+  const manRow = document.createElement('div');
+  manRow.style.cssText = 'display:flex;gap:6px';
+  const manInput = document.createElement('input');
+  manInput.type = 'text';
+  manInput.inputMode = 'numeric';
+  manInput.placeholder = 'oder Barcode eintippen...';
+  manInput.autocomplete = 'off';
+  manInput.style.cssText = 'flex:1;min-width:0;padding:10px;border:1px solid #555;border-radius:var(--rs);background:#222;color:#fff;font-family:monospace;font-size:14px';
+  const manBtn = umBtn('OK', '#8b5cf6', '#fff', () => {
+    const v = manInput.value.trim();
+    if (!v) { toast('⚠️ Bitte Barcode eingeben'); return; }
+    onUnmatchedBarcodeDetected(v, true);
+  }, 'flex:0 0 auto;padding:10px 16px');
+  manInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') manBtn.click(); });
+  manRow.appendChild(manInput); manRow.appendChild(manBtn);
+  bottom.appendChild(manRow);
+
+  const btnRow = document.createElement('div');
+  btnRow.style.cssText = 'display:flex;gap:6px';
+  btnRow.appendChild(umBtn('← Zurück', '#333', '#ccc', () => {
+    closeUnmatchedScanner();
+    showNextArticleReview(); // gleicher Artikel erneut im Review
+  }, 'border:1px solid #555'));
+  btnRow.appendChild(umBtn('⏭️ Überspringen', '#ef4444', '#fff', () => {
+    closeUnmatchedScanner();
+    skipArticleReview();
+  }));
+  bottom.appendChild(btnRow);
+  dlg.appendChild(bottom);
+
+  const canvas = document.createElement('canvas');
+  canvas.style.display = 'none';
+  dlg.appendChild(canvas);
+  document.body.appendChild(dlg);
+
+  // Scanner-Zustand
+  const st = { stream: null, timer: null, paused: false, busy: false, lastCode: '', lastCodeTime: 0 };
+  dlg.__state = st;
+  dlg.__cleanup = () => {
+    if (st.timer) clearInterval(st.timer);
+    st.timer = null;
+    if (st.stream) st.stream.getTracks().forEach(t => t.stop());
+    st.stream = null;
+  };
+  dlg.__pause = () => { st.paused = true; };
+  dlg.__resume = () => {
+    st.paused = false; st.lastCode = ''; st.lastCodeTime = 0;
+    const s = document.getElementById('unmatched-scan-status');
+    if (s) s.textContent = 'Barcode in den Rahmen halten';
+    if (video.paused) video.play().catch(() => {});
+  };
+
+  try {
+    st.stream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: 'environment', width: { ideal: 1280 }, height: { ideal: 720 } }
+    });
+    // Dialog in der Zwischenzeit geschlossen?
+    if (!document.getElementById('unmatched-scan-dlg')) { st.stream.getTracks().forEach(t => t.stop()); return; }
+    video.srcObject = st.stream;
+    try { await video.play(); } catch (e) { console.log('[UnmatchedScan] play():', e.message); }
+  } catch (err) {
+    console.error('[UnmatchedScan] Kamera-Fehler:', err.name, err.message);
+    video.style.display = 'none';
+    frame.style.display = 'none';
+    loading.innerHTML = '❌ Kamera nicht verfügbar<br><small>Barcode unten eintippen</small>';
+    manInput.focus();
     return;
   }
 
-  // Öffne Barcode-Scanner für diesen unmatched Artikel
-  const input = document.createElement('input');
-  input.type = 'file';
-  input.accept = 'image/*';
-  input.capture = 'environment';
-  input.onchange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      handleUnmatchedArticleBarcodeFile(file, artikel);
-    }
-  };
-  input.click();
-}
-
-async function handleUnmatchedArticleBarcodeFile(file, kiArtikel) {
-  toast('📸 Barcode wird gescannt...');
-  console.log('[UnmatchedBarcode] Verarbeite Datei: ' + file.name);
-
-  try {
-    // Lese Bild als Base64
-    const b64 = await new Promise((res, rej) => {
-      const r = new FileReader();
-      r.onload = () => res(r.result.split(',')[1]);
-      r.onerror = () => rej(new Error('Datei konnte nicht gelesen werden'));
-      r.readAsDataURL(file);
-    });
-
-    toast('🔍 Erkenne Barcode...');
-
-    // Nutze existierende Barcode-Erkennungslogik oder einfach manuelle Eingabe
-    // Für jetzt: Zeige Dialog zum Barcode eingeben
-    showUnmatchedArticleBarcodeInput(kiArtikel, null);
-
-  } catch (err) {
-    console.error('[UnmatchedBarcode] Fehler:', err);
-    toast('❌ Fehler beim Lesen der Datei');
+  if (typeof Quagga === 'undefined') {
+    loading.textContent = '⚠️ Scanner-Bibliothek nicht geladen – Barcode eintippen';
+    return;
   }
+
+  const ctx = canvas.getContext('2d');
+  st.timer = setInterval(() => {
+    if (st.paused || st.busy) return;
+    if (video.readyState < 2 || !video.videoWidth) return;
+    // Nur den Bereich um den Zielrahmen auswerten (schneller + genauer)
+    const vw = video.videoWidth, vh = video.videoHeight;
+    const sy = Math.floor(vh * 0.2), sh = Math.floor(vh * 0.45);
+    canvas.width = vw; canvas.height = sh;
+    try { ctx.drawImage(video, 0, sy, vw, sh, 0, 0, vw, sh); } catch (e) { return; }
+    st.busy = true;
+    try {
+      Quagga.decodeSingle({
+        src: canvas.toDataURL('image/jpeg', 0.85),
+        numOfWorkers: 0,
+        locate: true,
+        inputStream: { size: 1024 },
+        decoder: { readers: ['ean_reader', 'ean_8_reader', 'upc_reader', 'code_128_reader'] }
+      }, (result) => {
+        st.busy = false;
+        if (st.paused) return;
+        const code = result && result.codeResult && result.codeResult.code;
+        if (!code) return;
+        const now = Date.now();
+        const v = validateBarcode(code);
+        // EAN mit gültiger Prüfziffer: sofort übernehmen.
+        // Andere Codes: erst nach 2 identischen Lesungen (gegen Fehlerkennungen).
+        if (v.valid && (code.length === 13 || code.length === 8)) {
+          onUnmatchedBarcodeDetected(code, false);
+        } else if (code === st.lastCode && now - st.lastCodeTime < 2000) {
+          onUnmatchedBarcodeDetected(code, false);
+        } else {
+          st.lastCode = code; st.lastCodeTime = now;
+          const s = document.getElementById('unmatched-scan-status');
+          if (s) s.textContent = 'Erkenne... ' + code;
+        }
+      });
+    } catch (e) {
+      st.busy = false;
+    }
+  }, 250);
 }
 
-function showUnmatchedArticleBarcodeInput(kiArtikel, detectedBarcode) {
+function closeUnmatchedScanner(){
+  const dlg = document.getElementById('unmatched-scan-dlg');
+  if (dlg) {
+    if (dlg.__cleanup) dlg.__cleanup();
+    dlg.remove();
+  }
+  const c = document.getElementById('unmatched-bc-confirm-dlg');
+  if (c) c.remove();
+}
+
+// Schritt 2: Bestätigungsdialog "Ist dieser Barcode richtig?"
+function onUnmatchedBarcodeDetected(rawCode, manual){
+  const code = String(rawCode).trim();
+  const scanDlg = document.getElementById('unmatched-scan-dlg');
+  if (scanDlg && scanDlg.__pause) scanDlg.__pause();
+
+  const v = validateBarcode(code);
+  if (!v.valid && !manual) {
+    // Fehlerkennung beim Live-Scan → einfach weiterscannen
+    if (scanDlg && scanDlg.__resume) scanDlg.__resume();
+    return;
+  }
+  if (navigator.vibrate) { try { navigator.vibrate(80); } catch (e) {} }
+
+  const old = document.getElementById('unmatched-bc-confirm-dlg');
+  if (old) old.remove();
+
   const dlg = document.createElement('div');
-  dlg.id = 'unmatched-barcode-input-dlg';
-  dlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:10px;pointer-events:auto';
-
+  dlg.id = 'unmatched-bc-confirm-dlg';
+  dlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9600;display:flex;align-items:center;justify-content:center;padding:16px';
   const inner = document.createElement('div');
-  inner.style.cssText = 'background:var(--sf);border-radius:var(--r);width:100%;max-width:500px;padding:20px;pointer-events:auto';
+  inner.style.cssText = 'background:var(--sf);border-radius:var(--r);width:100%;max-width:420px;padding:20px;text-align:center';
 
-  const title = document.createElement('div');
-  title.style.cssText = 'font-weight:700;font-size:16px;margin-bottom:12px';
-  title.textContent = '📱 Barcode eingeben';
-  inner.appendChild(title);
+  const q = document.createElement('div');
+  q.style.cssText = 'font-weight:700;font-size:16px;margin-bottom:12px';
+  q.textContent = 'Ist dieser Barcode richtig?';
+  inner.appendChild(q);
 
-  const info = document.createElement('div');
-  info.style.cssText = 'font-size:13px;color:var(--t2);margin-bottom:12px';
-  info.textContent = 'Artikel: ' + esc(kiArtikel.name);
-  inner.appendChild(info);
+  const bc = document.createElement('div');
+  bc.style.cssText = 'font-family:monospace;font-size:24px;font-weight:700;letter-spacing:2px;padding:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:8px;word-break:break-all';
+  bc.textContent = code;
+  inner.appendChild(bc);
 
-  const input = document.createElement('input');
-  input.id = 'unmatched-barcode-input';
-  input.type = 'text';
-  input.placeholder = 'Barcode (13-stellig oder beliebig)...';
-  input.value = detectedBarcode || '';
-  input.style.cssText = 'width:100%;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);font-family:monospace;font-size:14px;margin-bottom:12px;box-sizing:border-box';
-  inner.appendChild(input);
+  const hint = document.createElement('div');
+  hint.style.cssText = 'font-size:12px;color:' + (v.valid ? 'var(--t2)' : 'var(--dg)') + ';margin-bottom:16px';
+  hint.textContent = v.valid ? ((v.type || 'Code') + ' ✓') : ('⚠️ ' + v.reason);
+  inner.appendChild(hint);
 
-  const btnContainer = document.createElement('div');
-  btnContainer.style.cssText = 'display:flex;gap:8px';
-
-  const confirmBtn = document.createElement('button');
-  confirmBtn.style.cssText = 'flex:1;padding:12px;background:#8b5cf6;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px';
-  confirmBtn.textContent = '🔍 Suchen';
-  confirmBtn.addEventListener('click', () => {
-    const barcode = document.getElementById('unmatched-barcode-input')?.value;
-    if (!barcode) {
-      toast('⚠️ Bitte Barcode eingeben');
-      return;
-    }
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:8px';
+  row.appendChild(umBtn('❌ Nein', 'var(--dl)', 'var(--dg)', () => {
     dlg.remove();
-    searchBarcodeForUnmatchedArticle(kiArtikel, barcode);
-  });
-  btnContainer.appendChild(confirmBtn);
-
-  const cancelBtn = document.createElement('button');
-  cancelBtn.style.cssText = 'flex:1;padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:600;cursor:pointer;font-size:14px';
-  cancelBtn.textContent = '⏭️ Überspringen';
-  cancelBtn.addEventListener('click', () => {
+    const s = document.getElementById('unmatched-scan-dlg');
+    if (s && s.__resume) s.__resume();
+  }, 'border:1px solid var(--dg)'));
+  const yes = umBtn('✅ Ja', '#10b981', '#fff', () => {
     dlg.remove();
-    skipArticleReview();
+    closeUnmatchedScanner();
+    searchBarcodeForUnmatchedArticle(umCurrentArtikel(), code);
   });
-  btnContainer.appendChild(cancelBtn);
+  if (!v.valid) { yes.disabled = true; yes.style.opacity = '.4'; yes.style.cursor = 'not-allowed'; }
+  row.appendChild(yes);
+  inner.appendChild(row);
 
-  inner.appendChild(btnContainer);
   dlg.appendChild(inner);
   document.body.appendChild(dlg);
-
-  input.focus();
 }
 
+// Schritt 3: Bekannt im Lager? Sonst Web-Suche
 async function searchBarcodeForUnmatchedArticle(kiArtikel, barcode) {
+  if (!kiArtikel) { toast('❌ Artikel nicht gefunden'); return; }
+
+  // Barcode schon einem Lager-Artikel zugeordnet? → zuweisen statt doppelt erstellen
+  const known = artikelByCode(barcode);
+  if (known) {
+    showUnmatchedKnownArticle(kiArtikel, barcode, known);
+    return;
+  }
+
   toast('🌐 Suche im Netz...');
   console.log('[UnmatchedSearch] Suche Barcode: ' + barcode);
-
+  let best = null;
   try {
-    // Suche in beiden Quellen
-    const results = await Promise.all([
-      searchOpenFoodFacts(barcode),
-      searchEANDatabase(barcode)
-    ]).catch(() => [null, null]);
-
-    const bestResult = results.find(r => r !== null);
-
-    if (bestResult) {
-      showUnmatchedArticleConfirmation(kiArtikel, barcode, bestResult);
-    } else {
-      toast('❌ Barcode nicht im Netz gefunden - Artikel überspringen');
-      skipArticleReview();
-    }
+    // allSettled: ein Fehler in einer Quelle blockiert die andere nicht mehr
+    const res = await Promise.allSettled([searchOpenFoodFacts(barcode), searchEANDatabase(barcode)]);
+    const found = res.filter(r => r.status === 'fulfilled' && r.value && r.value.name && r.value.name !== 'Unbekannt').map(r => r.value);
+    best = found[0] || null;
   } catch (err) {
     console.error('[UnmatchedSearch] Fehler:', err);
-    toast('❌ Fehler bei der Suche');
   }
+  if (best) toast('✅ Gefunden: ' + best.name);
+  else toast('ℹ️ Nicht im Netz gefunden – Name von Quittung verwenden');
+  showUnmatchedArticleConfirmation(kiArtikel, barcode, best);
+}
+
+function showUnmatchedKnownArticle(kiArtikel, barcode, known){
+  const dlg = document.createElement('div');
+  dlg.id = 'unmatched-known-dlg';
+  dlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:16px';
+  const inner = document.createElement('div');
+  inner.style.cssText = 'background:var(--sf);border-radius:var(--r);width:100%;max-width:440px;padding:20px';
+  const h = document.createElement('div');
+  h.style.cssText = 'font-weight:700;font-size:16px;margin-bottom:10px';
+  h.textContent = '📦 Barcode bereits im Lager';
+  inner.appendChild(h);
+  const p = document.createElement('div');
+  p.style.cssText = 'font-size:14px;line-height:1.6;margin-bottom:16px';
+  p.textContent = 'Der Barcode ' + barcode + ' gehört zu «' + known.name + '». Quittungsposition «' + (kiArtikel.name || '') + '» diesem Artikel zuweisen?';
+  inner.appendChild(p);
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:8px';
+  row.appendChild(umBtn('🔗 Zuweisen', '#10b981', '#fff', () => {
+    dlg.remove();
+    umAddQuittungAlias(known, kiArtikel.name);
+    kiArtikel.warehouseArticle = known;
+    kiArtikel.barcode = barcode;
+    saveL();
+    saveBarcodeState();
+    toast('🔗 Zugewiesen: ' + known.name);
+    showNextArticleReview(); // jetzt als "gemappt" → Einbuchen möglich
+  }));
+  row.appendChild(umBtn('⏭️ Überspringen', 'var(--dl)', 'var(--dg)', () => { dlg.remove(); skipArticleReview(); }, 'border:1px solid var(--dg)'));
+  inner.appendChild(row);
+  dlg.appendChild(inner);
+  document.body.appendChild(dlg);
+}
+
+// Quittungs-Alias sicher hinzufügen (String/Array normalisieren)
+function umAddQuittungAlias(art, alias){
+  alias = String(alias || '').trim();
+  if (!art || !alias) return;
+  let list = art.quittungAliase;
+  if (typeof list === 'string') list = list.split('\n').map(s => s.trim()).filter(Boolean);
+  if (!Array.isArray(list)) list = [];
+  if (!list.some(x => x.toLowerCase() === alias.toLowerCase()) && alias.toLowerCase() !== String(art.name || '').toLowerCase()) {
+    list.push(alias);
+  }
+  art.quittungAliase = list;
 }
 
 function showUnmatchedArticleConfirmation(kiArtikel, barcode, onlineInfo) {
   const dlg = document.createElement('div');
   dlg.id = 'unmatched-confirm-dlg';
-  dlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:10px;pointer-events:auto;overflow-y:auto';
+  dlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:10px;overflow-y:auto';
 
   const inner = document.createElement('div');
-  inner.style.cssText = 'background:var(--sf);border-radius:var(--r);width:100%;max-width:500px;max-height:85vh;display:flex;flex-direction:column;padding:20px;pointer-events:auto;margin:auto';
+  inner.style.cssText = 'background:var(--sf);border-radius:var(--r);width:100%;max-width:500px;max-height:90vh;display:flex;flex-direction:column;padding:20px;margin:auto';
 
   const title = document.createElement('div');
   title.style.cssText = 'font-weight:700;font-size:16px;margin-bottom:12px';
-  title.textContent = '✅ Produktinfo gefunden';
+  title.textContent = onlineInfo ? '✅ Produktinfo gefunden' : '🆕 Neuen Artikel erstellen';
   inner.appendChild(title);
 
   const content = document.createElement('div');
   content.style.cssText = 'flex:1;overflow-y:auto;margin-bottom:12px';
 
-  if (onlineInfo.image) {
+  if (onlineInfo && onlineInfo.image) {
     const img = document.createElement('img');
     img.src = onlineInfo.image;
     img.style.cssText = 'width:100%;max-height:150px;object-fit:contain;border-radius:var(--rs);margin-bottom:12px';
+    img.onerror = () => img.remove();
     content.appendChild(img);
   }
 
-  const name = document.createElement('div');
-  name.style.cssText = 'font-weight:600;font-size:15px;margin-bottom:8px;color:var(--ok)';
-  name.textContent = esc(onlineInfo.name || 'Unbekannt');
-  content.appendChild(name);
+  const mkLabel = (txt) => { const l = document.createElement('div'); l.style.cssText = 'font-size:12px;color:var(--t2);margin:8px 0 4px'; l.textContent = txt; return l; };
+  const fieldCss = 'width:100%;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;box-sizing:border-box;background:var(--bg);color:var(--tx)';
 
-  const marke = document.createElement('div');
-  marke.style.cssText = 'font-size:12px;color:var(--t2);margin-bottom:8px';
-  marke.textContent = esc(onlineInfo.marke || '');
-  content.appendChild(marke);
+  content.appendChild(mkLabel('Name'));
+  const nameIn = document.createElement('input');
+  nameIn.type = 'text';
+  nameIn.value = (onlineInfo && onlineInfo.name) || kiArtikel.name || '';
+  nameIn.style.cssText = fieldCss;
+  content.appendChild(nameIn);
 
-  if (onlineInfo.description) {
-    const desc = document.createElement('div');
-    desc.style.cssText = 'font-size:12px;color:var(--t2);margin-bottom:8px;line-height:1.4';
-    desc.textContent = esc(onlineInfo.description.substring(0, 200));
-    content.appendChild(desc);
-  }
+  content.appendChild(mkLabel('Marke'));
+  const markeIn = document.createElement('input');
+  markeIn.type = 'text';
+  markeIn.value = (onlineInfo && onlineInfo.marke) || '';
+  markeIn.style.cssText = fieldCss;
+  content.appendChild(markeIn);
 
+  content.appendChild(mkLabel('Kategorie'));
+  const katSel = document.createElement('select');
+  katSel.style.cssText = fieldCss;
+  const kats = (S.ka && S.ka.length) ? S.ka : KD;
+  kats.forEach(k => { const o = document.createElement('option'); o.value = k; o.textContent = k; katSel.appendChild(o); });
+  katSel.value = kats.includes(kiArtikel.kat) ? kiArtikel.kat : (kats.includes('Diverses') ? 'Diverses' : kats[0]);
+  content.appendChild(katSel);
+
+  content.appendChild(mkLabel('Lagerort'));
+  const lagerSel = document.createElement('select');
+  lagerSel.style.cssText = fieldCss;
+  const lagers = (S.lo && S.lo.length) ? S.lo : LD;
+  lagers.forEach(l => { const o = document.createElement('option'); o.value = l; o.textContent = l; lagerSel.appendChild(o); });
+  content.appendChild(lagerSel);
+
+  const menge = Number(kiArtikel.menge) || 1;
+  const total = Number(kiArtikel.preis_brutto) || 0;
   const info = document.createElement('div');
-  info.style.cssText = 'background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:8px;font-size:12px;color:var(--t2)';
-  info.innerHTML = '<div><strong>Barcode:</strong> ' + esc(barcode) + '</div><div><strong>Quelle:</strong> ' + esc(onlineInfo.source || 'Online') + '</div>';
+  info.style.cssText = 'margin-top:12px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:8px;font-size:12px;color:var(--t2);line-height:1.6';
+  const rows = [
+    ['Barcode', barcode],
+    ['Quittung', kiArtikel.name || '–'],
+    ['Menge', menge + ' ' + (kiArtikel.einheit || 'Stk')],
+    ['Preis', total ? 'CHF ' + total.toFixed(2) : '–'],
+    ['Quelle', onlineInfo ? (onlineInfo.source || 'Online') : 'Quittung']
+  ];
+  rows.forEach(([k, val]) => {
+    const r = document.createElement('div');
+    const b = document.createElement('strong'); b.textContent = k + ': ';
+    r.appendChild(b); r.appendChild(document.createTextNode(val));
+    info.appendChild(r);
+  });
   content.appendChild(info);
-
   inner.appendChild(content);
 
-  const btnContainer = document.createElement('div');
-  btnContainer.style.cssText = 'display:flex;gap:8px';
-
-  const okBtn = document.createElement('button');
-  okBtn.style.cssText = 'flex:1;padding:12px;background:#10b981;border:none;border-radius:var(--rs);color:#fff;font-weight:600;cursor:pointer;font-size:14px';
-  okBtn.textContent = '✅ OK - Erstellen & Einbuchen';
-  okBtn.addEventListener('click', () => {
+  const row = document.createElement('div');
+  row.style.cssText = 'display:flex;gap:8px';
+  row.appendChild(umBtn('✅ Erstellen & Einbuchen', '#10b981', '#fff', () => {
+    const name = nameIn.value.trim();
+    if (!name) { toast('⚠️ Bitte Namen eingeben'); nameIn.focus(); return; }
     dlg.remove();
-    createAndBookUnmatchedArticle(kiArtikel, barcode, onlineInfo);
-  });
-  btnContainer.appendChild(okBtn);
+    createAndBookUnmatchedArticle(kiArtikel, barcode, onlineInfo, {
+      name, marke: markeIn.value.trim(), kat: katSel.value, lager: lagerSel.value
+    });
+  }));
+  row.appendChild(umBtn('⏭️ Überspringen', 'var(--dl)', 'var(--dg)', () => { dlg.remove(); skipArticleReview(); }, 'border:1px solid var(--dg)'));
+  inner.appendChild(row);
 
-  const skipBtn = document.createElement('button');
-  skipBtn.style.cssText = 'flex:1;padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:600;cursor:pointer;font-size:14px';
-  skipBtn.textContent = '⏭️ Überspringen';
-  skipBtn.addEventListener('click', () => {
-    dlg.remove();
-    skipArticleReview();
-  });
-  btnContainer.appendChild(skipBtn);
-
-  inner.appendChild(btnContainer);
   dlg.appendChild(inner);
   document.body.appendChild(dlg);
 }
 
-function createAndBookUnmatchedArticle(kiArtikel, barcode, onlineInfo) {
-  console.log('[UnmatchedCreate] Erstelle neuen Artikel: ' + onlineInfo.name);
+function createAndBookUnmatchedArticle(kiArtikel, barcode, onlineInfo, form) {
+  form = form || {};
+  const menge = Number(kiArtikel.menge) || 1;
+  const einheit = kiArtikel.einheit || 'Stk';
+  const total = Number(kiArtikel.preis_brutto) || 0;
+  const einzelpreis = menge > 0 ? Math.round((total / menge) * 100) / 100 : total;
+  const kaufort = barcodeEinkaufState.geschaeft || '';
+  const datum = todayISO();
 
-  // Erstelle neuen Artikel mit den Online-Daten
+  const newId = S.nid++;
   const newArticle = {
-    id: generateNewArticleId(),
-    name: onlineInfo.name || kiArtikel.name || 'Neuer Artikel',
-    marke: onlineInfo.marke || '',
-    kat: onlineInfo.kategorien || 'Diverses',
-    bc: [barcode],
-    menge: kiArtikel.menge || 0,
+    id: newId,
+    name: form.name || (onlineInfo && onlineInfo.name) || kiArtikel.name || 'Neuer Artikel',
+    marke: form.marke || '',
+    kat: form.kat || 'Diverses',
+    lager: form.lager || (S.lo && S.lo[0]) || '',
+    kaufort,
+    menge,
+    einheit,
     mindest: 0,
-    lager: barcodeEinkaufState.geschaeft || '',
-    einheit: kiArtikel.einheit || 'Stk',
-    preis: 0,
-    kaufdatum: todayISO(),
-    kaufort: barcodeEinkaufState.geschaeft || '',
-    notiz: 'Von Quittung erstellt'
+    barcode: barcode,       // Hauptbarcode (kanonisches Feld)
+    barcodes: [],
+    preis: einzelpreis,
+    packMenge: 0,
+    packEinheit: '',
+    kaufdatum: datum,
+    notiz: 'Von Quittung erstellt' + (onlineInfo && onlineInfo.source ? ' (' + onlineInfo.source + ')' : ''),
+    foto: (onlineInfo && onlineInfo.image) || '',
+    fotoPath: '',
+    packungen: [{ id: newPackId(), menge, kaufdatum: datum, ablaufdatum: '' }],
+    preisHistorie: [],
+    quittungAliase: []
   };
+  // Quittungsname als Alias → nächstes Mal automatisch gematched
+  umAddQuittungAlias(newArticle, kiArtikel.name);
 
-  if (onlineInfo.image) {
-    newArticle.foto = onlineInfo.image;
-  }
-
-  // Speichere neuen Artikel in Datenbank
   S.a.push(newArticle);
+  addLogEntry('ein', newId, newArticle.name, newArticle.lager, newArticle.kat, menge, einheit, einzelpreis, false);
+  try { addScannedBarcodeToCache(barcode); } catch (e) { console.warn('[UnmatchedCreate] Barcode-Cache:', e.message); }
   saveL();
 
-  toast('✅ Artikel erstellt: ' + newArticle.name);
-  console.log('[UnmatchedCreate] Artikel erstellt mit ID: ' + newArticle.id);
+  toast('✅ Erstellt & eingebucht: ' + newArticle.name);
+  console.log('[UnmatchedCreate] Artikel erstellt mit ID: ' + newId);
 
-  // Speichere in Recognition für später
-  const idx = barcodeEinkaufState.reviewIdx || 0;
-  const artikel = barcodeEinkaufState.erkannteArtikel[idx];
-  artikel.warehouseArticle = newArticle;
-  artikel.matched = true;
+  kiArtikel.warehouseArticle = newArticle;
+  kiArtikel.artikel = newArticle;   // processAllBarcodes überspringt bereits verarbeitete
+  kiArtikel.barcode = barcode;
+  kiArtikel.matched = true;
+  kiArtikel.gebucht = true;
 
-  // Weiter zum nächsten Artikel
   barcodeEinkaufState.reviewIdx = (barcodeEinkaufState.reviewIdx || 0) + 1;
   saveBarcodeState();
-
   setTimeout(() => showNextArticleReview(), 300);
 }
 
@@ -10728,22 +10954,7 @@ function finishBarcodeEinkauf(){
   goScreen('s-lager');
 }
 
-function artikelByCode(barcode){
-  if(!barcode)return null;
-
-  // Genaue Suche zuerst
-  const exact=S.a.find(a=>(a.bc||[]).includes(barcode));
-  if(exact)return exact;
-
-  // Falls nicht exakt gefunden, versuche mit normalisierten Barcodes
-  // (z.B. führende Nullen entfernen für EAN)
-  const normalized=barcode.replace(/^0+/,'');
-  if(normalized && normalized!==barcode){
-    return S.a.find(a=>(a.bc||[]).some(bc=>bc.replace(/^0+/,'')==normalized));
-  }
-
-  return null;
-}
+// v22.174: doppelte artikelByCode()-Definition (nur a.bc) entfernt – siehe zentrale Version oben
 
 /* ── Quittung scannen (Claude Vision) ────────────────────────────── */
 let quittungItems=[]; // erkannte Artikel von der Quittung
