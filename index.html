@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v22.168 — UI-REORGANISATION: Quittung-Button aus Toolbar ins Einkauf-Register -->
+<!-- HAUSHALTBUCH v22.169 — UX-FIX: Redundanter Dialog entfernt, direkte Kamera/Galerie-Auswahl -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="22.168"/>
+<meta name="app-version" content="22.169"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -367,9 +367,7 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
   <div class="ftp">
     <button class="bkb" onclick="closeEingang()"><svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg></button>
     <span class="ftl">Wareneingang</span>
-    <button class="ib" onclick="openQuittung()" title="Quittung scannen" style="color:var(--ac)">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/><line x1="13" y1="13" x2="17" y2="13"/><line x1="13" y1="17" x2="17" y2="17"/></svg>
-    </button>
+    <!-- v22.169: Quittung-Button entfernt (jetzt im Einkauf-Register) -->
   </div>
   <div class="fb" id="eingang-body"></div>
 </div>
@@ -453,15 +451,14 @@ button,input,select,textarea{font-family:inherit;font-size:inherit}
       <span>🔍 Barcode scannen</span>
     </button>
     <div style="display:flex;gap:12px">
-      <button onclick="captureBarcodeQuittung('camera')" style="flex:1;padding:16px;background:var(--am);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;flex-direction:column">
+      <button onclick="captureQuittungFromCamera()" style="flex:1;padding:16px;background:var(--am);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;flex-direction:column">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
         <span>📸 Kamera</span>
       </button>
-      <button onclick="document.getElementById('quittung-file-input').click()" style="flex:1;padding:16px;background:var(--am);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;flex-direction:column">
+      <button onclick="captureQuittungFromGallery()" style="flex:1;padding:16px;background:var(--am);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;flex-direction:column">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
         <span>🖼️ Galerie</span>
       </button>
-      <input type="file" id="quittung-file-input" style="display:none" accept="image/*" onchange="captureBarcodeQuittung('file',event)"/>
     </div>
   </div>
 </div>
@@ -563,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.168';
+const APP_VERSION='22.170';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -576,6 +573,8 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.170',d:'18.10.2026',items:['🎯 FEATURE: Quittungs-Artikel Matching mit Warehouse-Abgleich!','✅ Neue Phase: Nach KI-Extraction → Artikel werden gegen Lager abgeglichen','🔍 Auto-Matching: Suche nach exaktem Namen + Aliases','📝 Alias-Erstellung: Manuelle Match erstellt automatisch neuen Alias','💾 Unmatched-Artikel: Temp-Liste in localStorage für spätere Barcode-Suche','⏭️ Alle Schritte sind überspringbar und abbrechbar','🔄 Workflow: Quittung → KI-Extraction → Warehouse-Matching → Review']},
+  {v:'22.169',d:'18.10.2026',items:['🔧 UX-FIX: Redundanter Dialog entfernt!','❌ PROBLEM: Galerie-Button zeigte nochmal Dialog "Kamera/Galerie"','✅ GELÖST: Direkte Aufrufe zu captureQuittungFromCamera/Gallery()','✅ Buttons im Einkauf-Register → sofort Kamera/Datei-Auswahl','✅ Überflüssiger Dialog in Wareneingang entfernt']},
   {v:'22.168',d:'18.10.2026',items:['🎨 UI-REORGANISATION: Einkauf-Register verbessert','✅ "Quittung scannen"-Button aus Toolbar entfernt','✅ Zwei große Buttons im Einkauf-Register hinzugefügt:','   📸 Quittung fotografieren (Kamera)','   🖼️ Quittung aus Bild (Galerie)','✅ Bessere Discoverability: User sieht sofort die Optionen']},
   {v:'22.167',d:'18.10.2026',items:['🔴 MEGA-REFACTOR: MHD + Foodwaste komplett entfernt!','✅ Alle Foodwaste-Optionen (fwDashboard, fwGefrier, etc.) gelöscht','✅ MHD-Eingabefelder aus allen Dialogen entfernt','✅ "Ablaufdatum-Dashboard" deaktiviert','✅ Nur noch Einkaufsdatum (kaufdatum) für Lagerrotation','✅ Alte MHD-Daten werden ignoriert bei Load']},
   {v:'22.166',d:'05.10.2026',items:['🔧 HOTFIX: Diagnose-Modal auf Handy behoben','✅ Overlay-Klick schließt Debug-Log-Modal','✅ Größerer Close-Button (einfacher zu treffen)','✅ Alle Modal-Buttons schließen korrekt']},
@@ -8087,6 +8086,8 @@ function saveBarcodeState(){
       erkannteArtikel:barcodeEinkaufState.erkannteArtikel,
       geschaeft:barcodeEinkaufState.geschaeft,
       reviewIdx:barcodeEinkaufState.reviewIdx,
+      matchingIdx:barcodeEinkaufState.matchingIdx||0,
+      unmatchedArticles:barcodeEinkaufState.unmatchedArticles||[],
       onlineDaten:barcodeEinkaufState.onlineDaten||{},
       apiCache:barcodeEinkaufState.apiCache||{}
     }));
@@ -8106,6 +8107,8 @@ function loadBarcodeState(){
       barcodeEinkaufState.erkannteArtikel=data.erkannteArtikel||[];
       barcodeEinkaufState.geschaeft=data.geschaeft||'';
       barcodeEinkaufState.reviewIdx=data.reviewIdx||0;
+      barcodeEinkaufState.matchingIdx=data.matchingIdx||0;
+      barcodeEinkaufState.unmatchedArticles=data.unmatchedArticles||[];
       barcodeEinkaufState.onlineDaten=data.onlineDaten||{};
       barcodeEinkaufState.apiCache=data.apiCache||{};
       console.log('[Persist] Barcodes geladen: '+barcodeEinkaufState.artikel.length+' Artikel mit allen Daten (Internet, Foto, Preis, Shop)');
@@ -9928,16 +9931,349 @@ async function handleQuittungFile(e) {
 
     // Speichere die erkannten Artikel für Review
     barcodeEinkaufState.erkannteArtikel = parsed.artikel || [];
-    console.log('[Quittung] ' + barcodeEinkaufState.erkannteArtikel.length + ' Artikel zum Review gespeichert');
+    barcodeEinkaufState.matchingIdx = 0;  // Reset für Matching-Loop
+    barcodeEinkaufState.unmatchedArticles = [];  // Temp-Liste für ungematched Artikel
+    console.log('[Quittung] ' + barcodeEinkaufState.erkannteArtikel.length + ' Artikel zum Matching gespeichert');
 
-    // Zeige Artikel-Review-Dialog
-    setTimeout(() => showNextArticleReview(), 500);
+    // Starte Matching-Dialog für Quittungs-Artikel
+    setTimeout(() => startReceiptArticleMatching(), 500);
 
   } catch (err) {
     console.error('[Quittung] Fehler:', err);
     toast('❌ Fehler: ' + err.message);
     barcodeEinkaufState.quittungText = '';
   }
+}
+
+/**
+ * ═══════════════════════════════════════════════════════════════════
+ * MATCHING-PHASE: Quittungs-Artikel mit Lager abgleichen
+ * ═══════════════════════════════════════════════════════════════════
+ */
+
+function startReceiptArticleMatching() {
+  loadL(); // Stelle sicher dass S.a geladen ist
+
+  if (!barcodeEinkaufState.erkannteArtikel || barcodeEinkaufState.erkannteArtikel.length === 0) {
+    toast('❌ Keine Artikel zum Matching');
+    return;
+  }
+
+  barcodeEinkaufState.matchingIdx = 0;
+  toast('🔍 Starte Artikel-Matching (' + barcodeEinkaufState.erkannteArtikel.length + ' Artikel)');
+  console.log('[Matching] Start: ' + barcodeEinkaufState.erkannteArtikel.length + ' KI-Artikel zu matching');
+
+  showNextMatchingDialog();
+}
+
+function showNextMatchingDialog() {
+  const idx = barcodeEinkaufState.matchingIdx || 0;
+  const artikel = barcodeEinkaufState.erkannteArtikel[idx];
+
+  // Alle Artikel gematched - go to review
+  if (!artikel) {
+    finishReceiptArticleMatching();
+    return;
+  }
+
+  const total = barcodeEinkaufState.erkannteArtikel.length;
+
+  toast('🔍 [' + (idx+1) + '/' + total + '] Matching: ' + (artikel.name || 'Artikel') + '...');
+  console.log('[Matching] [' + (idx+1) + '/' + total + '] Artikel: ' + artikel.name);
+
+  // Versuche automatisch zu matchen
+  const matches = findMatchingWarehouseArticles(artikel.name);
+
+  if (matches.length === 1) {
+    // Genau ein Match gefunden - zeige Bestätigungs-Dialog
+    showMatchConfirmDialog(matches[0], artikel);
+  } else if (matches.length > 1) {
+    // Mehrere Matches - zeige Suchbox mit Vorschlägen
+    showMatchingSearchbox(artikel, matches);
+  } else {
+    // Kein Match - zeige Suchbox für manuelle Suche
+    showMatchingSearchbox(artikel, []);
+  }
+}
+
+function findMatchingWarehouseArticles(kiArticleName) {
+  if (!kiArticleName) return [];
+
+  const name = kiArticleName.trim().toLowerCase();
+  const matches = [];
+
+  // Durchsuche alle Lager-Artikel
+  (S.a || []).forEach(wArticle => {
+    if (!wArticle) return;
+
+    // Exact name match
+    if (wArticle.name.toLowerCase() === name) {
+      matches.push(wArticle);
+      return;
+    }
+
+    // Alias match
+    const aliases = Array.isArray(wArticle.alias) ? wArticle.alias :
+                   (wArticle.alias ? [wArticle.alias] : []);
+    if (aliases.some(a => a.toLowerCase() === name)) {
+      matches.push(wArticle);
+      return;
+    }
+
+    // Partial match (name contains query or vice versa)
+    if (wArticle.name.toLowerCase().includes(name) || name.includes(wArticle.name.toLowerCase())) {
+      matches.push(wArticle);
+    }
+  });
+
+  return matches;
+}
+
+function showMatchConfirmDialog(warehouseArticle, kiArticle) {
+  const dlg = document.createElement('div');
+  dlg.id = 'match-confirm-dlg';
+  dlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:10px;pointer-events:auto';
+
+  const inner = document.createElement('div');
+  inner.style.cssText = 'background:var(--sf);border-radius:var(--r);width:100%;max-width:500px;padding:20px;pointer-events:auto';
+
+  const title = document.createElement('div');
+  title.style.cssText = 'font-weight:700;font-size:16px;margin-bottom:12px';
+  title.textContent = '✅ Match gefunden!';
+  inner.appendChild(title);
+
+  const info = document.createElement('div');
+  info.style.cssText = 'background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:12px;margin-bottom:16px;font-size:13px;line-height:1.6';
+  info.innerHTML =
+    '<div style="font-weight:600;color:var(--ok);margin-bottom:8px">KI erkannt:</div>' +
+    '<div style="margin-bottom:12px">' + esc(kiArticle.name) + '</div>' +
+    '<div style="font-weight:600;color:#10b981;margin-bottom:8px">Lager-Artikel:</div>' +
+    '<div style="margin-bottom:8px"><strong>' + esc(warehouseArticle.name) + '</strong></div>' +
+    '<div style="font-size:12px;color:var(--t2)">' + esc(warehouseArticle.marke || '') + ' • ' + esc(warehouseArticle.kat || '') + '</div>';
+  inner.appendChild(info);
+
+  const btnContainer = document.createElement('div');
+  btnContainer.style.cssText = 'display:flex;gap:8px';
+
+  const confirmBtn = document.createElement('button');
+  confirmBtn.style.cssText = 'flex:1;padding:12px;background:#10b981;color:#fff;border:none;border-radius:var(--rs);font-weight:600;cursor:pointer;font-size:14px';
+  confirmBtn.textContent = '✅ Bestätigen';
+  confirmBtn.addEventListener('click', () => {
+    dlg.remove();
+    confirmReceiptArticleMatch(warehouseArticle, kiArticle);
+  });
+  btnContainer.appendChild(confirmBtn);
+
+  const skipBtn = document.createElement('button');
+  skipBtn.style.cssText = 'flex:1;padding:12px;background:var(--bd);color:var(--t2);border:none;border-radius:var(--rs);font-weight:600;cursor:pointer;font-size:14px';
+  skipBtn.textContent = '⏭️ Nein, suchen';
+  skipBtn.addEventListener('click', () => {
+    dlg.remove();
+    showMatchingSearchbox(kiArticle, []);
+  });
+  btnContainer.appendChild(skipBtn);
+
+  inner.appendChild(btnContainer);
+  dlg.appendChild(inner);
+  document.body.appendChild(dlg);
+}
+
+function showMatchingSearchbox(kiArticle, suggestedMatches) {
+  const dlg = document.createElement('div');
+  dlg.id = 'match-search-dlg';
+  dlg.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:9000;display:flex;align-items:center;justify-content:center;padding:10px;pointer-events:auto;overflow-y:auto';
+
+  const inner = document.createElement('div');
+  inner.style.cssText = 'background:var(--sf);border-radius:var(--r);width:100%;max-width:500px;max-height:85vh;display:flex;flex-direction:column;padding:20px;pointer-events:auto;margin:auto';
+
+  const title = document.createElement('div');
+  title.style.cssText = 'font-weight:700;font-size:16px;margin-bottom:4px';
+  title.textContent = '🔍 Artikel zuweisen';
+  inner.appendChild(title);
+
+  const subtitle = document.createElement('div');
+  subtitle.style.cssText = 'font-size:13px;color:var(--t2);margin-bottom:12px';
+  subtitle.textContent = 'KI hat erkannt: ' + esc(kiArticle.name);
+  inner.appendChild(subtitle);
+
+  // Suchbox
+  const searchContainer = document.createElement('div');
+  searchContainer.style.cssText = 'margin-bottom:12px';
+
+  const searchInput = document.createElement('input');
+  searchInput.id = 'match-search-input';
+  searchInput.type = 'text';
+  searchInput.placeholder = 'Nach Artikel suchen...';
+  searchInput.style.cssText = 'width:100%;padding:10px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;box-sizing:border-box';
+  searchInput.addEventListener('input', () => {
+    updateMatchingSearchResults(kiArticle);
+  });
+  searchContainer.appendChild(searchInput);
+  inner.appendChild(searchContainer);
+
+  // Ergebnisse-Container
+  const resultsContainer = document.createElement('div');
+  resultsContainer.id = 'match-search-results';
+  resultsContainer.style.cssText = 'flex:1;overflow-y:auto;border:1px solid var(--bd);border-radius:var(--rs);margin-bottom:12px;max-height:300px';
+
+  // Zeige initial suggested Matches oder alle Artikel
+  const query = searchInput.value.toLowerCase();
+  const allArticles = S.a || [];
+  const resultsToShow = suggestedMatches.length > 0 ? suggestedMatches :
+                       (query ? allArticles.filter(a => a.name.toLowerCase().includes(query)) : allArticles.slice(0, 20));
+
+  resultsContainer.innerHTML = resultsToShow.length === 0 ?
+    '<div style="padding:12px;text-align:center;color:var(--t2);font-size:13px">Keine Artikel gefunden</div>' :
+    resultsToShow.map(a =>
+      '<div onclick="selectMatchingArticle(\'' + esc(a.id) + '\', \'' + esc(kiArticle.name) + '\')" ' +
+      'style="padding:10px;border-bottom:1px solid var(--bd);cursor:pointer;background:var(--bg);hover-background:var(--hl)">' +
+        '<div style="font-weight:600;color:var(--ok)">' + esc(a.name) + '</div>' +
+        '<div style="font-size:12px;color:var(--t2)">' + esc(a.marke || '') + ' • ' + esc(a.kat || '') + '</div>' +
+      '</div>'
+    ).join('');
+
+  inner.appendChild(resultsContainer);
+
+  // Buttons
+  const btnContainer = document.createElement('div');
+  btnContainer.style.cssText = 'display:flex;gap:8px';
+
+  const skipBtn = document.createElement('button');
+  skipBtn.style.cssText = 'flex:1;padding:12px;background:var(--dl);border:1px solid var(--dg);border-radius:var(--rs);color:var(--dg);font-weight:600;cursor:pointer;font-size:14px';
+  skipBtn.textContent = '⏭️ Überspringen';
+  skipBtn.addEventListener('click', () => {
+    dlg.remove();
+    skipReceiptArticle(kiArticle);
+  });
+  btnContainer.appendChild(skipBtn);
+
+  inner.appendChild(btnContainer);
+  dlg.appendChild(inner);
+  document.body.appendChild(dlg);
+
+  // Focus auf Suchbox
+  searchInput.focus();
+}
+
+function updateMatchingSearchResults(kiArticle) {
+  const query = (document.getElementById('match-search-input')?.value || '').toLowerCase();
+  const allArticles = S.a || [];
+  const results = query ? allArticles.filter(a => a.name.toLowerCase().includes(query)) : allArticles.slice(0, 20);
+
+  const container = document.getElementById('match-search-results');
+  if (!container) return;
+
+  container.innerHTML = results.length === 0 ?
+    '<div style="padding:12px;text-align:center;color:var(--t2);font-size:13px">Keine Artikel gefunden</div>' :
+    results.map(a =>
+      '<div onclick="selectMatchingArticle(\'' + esc(a.id) + '\', \'' + esc(kiArticle.name) + '\')" ' +
+      'style="padding:10px;border-bottom:1px solid var(--bd);cursor:pointer;background:var(--bg);hover-background:var(--hl)">' +
+        '<div style="font-weight:600;color:var(--ok)">' + esc(a.name) + '</div>' +
+        '<div style="font-size:12px;color:var(--t2)">' + esc(a.marke || '') + ' • ' + esc(a.kat || '') + '</div>' +
+      '</div>'
+    ).join('');
+}
+
+function selectMatchingArticle(warehouseArticleId, kiArticleName) {
+  const dlg = document.getElementById('match-search-dlg');
+  if (dlg) dlg.remove();
+
+  const warehouseArticle = (S.a || []).find(a => a.id === warehouseArticleId);
+  if (!warehouseArticle) {
+    toast('❌ Artikel nicht gefunden');
+    return;
+  }
+
+  confirmReceiptArticleMatch(warehouseArticle, {name: kiArticleName});
+}
+
+function confirmReceiptArticleMatch(warehouseArticle, kiArticle) {
+  const idx = barcodeEinkaufState.matchingIdx || 0;
+  const artikel = barcodeEinkaufState.erkannteArtikel[idx];
+
+  if (!artikel) return;
+
+  // Speichere den matched Warehouse-Artikel
+  artikel.warehouseArticle = warehouseArticle;
+  artikel.matched = true;
+
+  toast('✅ Zugewiesen: ' + warehouseArticle.name);
+  console.log('[Matching] [' + (idx+1) + '] Zugewiesen zu: ' + warehouseArticle.name);
+
+  // Erstelle Alias wenn KI-Name unterschiedlich ist
+  if (kiArticle.name && kiArticle.name.toLowerCase() !== warehouseArticle.name.toLowerCase()) {
+    saveReceiptArticleAlias(warehouseArticle, kiArticle.name);
+  }
+
+  // Weiter zum nächsten Artikel
+  barcodeEinkaufState.matchingIdx = (barcodeEinkaufState.matchingIdx || 0) + 1;
+  saveBarcodeState();
+
+  setTimeout(() => showNextMatchingDialog(), 300);
+}
+
+function skipReceiptArticle(kiArticle) {
+  const idx = barcodeEinkaufState.matchingIdx || 0;
+  const artikel = barcodeEinkaufState.erkannteArtikel[idx];
+
+  if (!artikel) return;
+
+  // Speichere als unmatched in temp-Liste
+  artikel.matched = false;
+  if (!barcodeEinkaufState.unmatchedArticles) {
+    barcodeEinkaufState.unmatchedArticles = [];
+  }
+  barcodeEinkaufState.unmatchedArticles.push(artikel);
+
+  toast('⏭️ Artikel übersprungen (speichert für später)');
+  console.log('[Matching] Artikel übersprungen: ' + artikel.name);
+
+  // Weiter zum nächsten Artikel
+  barcodeEinkaufState.matchingIdx = (barcodeEinkaufState.matchingIdx || 0) + 1;
+  saveBarcodeState();
+
+  setTimeout(() => showNextMatchingDialog(), 300);
+}
+
+function saveReceiptArticleAlias(warehouseArticle, kiArticleName) {
+  if (!warehouseArticle || !kiArticleName) return;
+
+  const normalizedName = kiArticleName.trim().toLowerCase();
+
+  // Existiert Alias schon?
+  let aliases = Array.isArray(warehouseArticle.alias) ? warehouseArticle.alias :
+               (warehouseArticle.alias ? [warehouseArticle.alias] : []);
+
+  if (aliases.some(a => a.toLowerCase() === normalizedName)) {
+    console.log('[Alias] Alias existiert schon: ' + normalizedName);
+    return;
+  }
+
+  // Füge neuen Alias hinzu
+  aliases.push(kiArticleName);
+  warehouseArticle.alias = aliases;
+
+  console.log('[Alias] Neuer Alias erstellt: ' + kiArticleName + ' → ' + warehouseArticle.name);
+  toast('📝 Alias erstellt: ' + kiArticleName);
+}
+
+function finishReceiptArticleMatching() {
+  console.log('[Matching] Fertig! ' + barcodeEinkaufState.erkannteArtikel.length + ' Artikel gematched');
+
+  // Speichere unmatched Artikel in localStorage für später
+  if (barcodeEinkaufState.unmatchedArticles && barcodeEinkaufState.unmatchedArticles.length > 0) {
+    try {
+      localStorage.setItem('receiptUnmatchedArticles',
+        JSON.stringify(barcodeEinkaufState.unmatchedArticles));
+      console.log('[Matching] ' + barcodeEinkaufState.unmatchedArticles.length + ' unmatched Artikel in localStorage gespeichert');
+    } catch (e) {
+      console.warn('[Matching] Fehler beim Speichern ungematched Artikel:', e.message);
+    }
+  }
+
+  // Weiter zum Review-Dialog
+  toast('✅ Matching abgeschlossen! Weiter zum Review...');
+  setTimeout(() => showNextArticleReview(), 500);
 }
 
 async function processAllBarcodes() {
