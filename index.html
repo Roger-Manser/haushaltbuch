@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='22.170';
+const APP_VERSION='22.171';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'22.171',d:'18.10.2026',items:['🔧 HOTFIX: Matching-Artikel-Auswahl Bug behoben!','❌ PROBLEM: onclick + esc() führte zu Escaping-Fehlern','✅ GELÖST: Verwende addEventListener statt onclick in Suchbox','✅ DOM-Elemente statt innerHTML für sichere Click-Handler','🎯 Artikel aus Suchbox können jetzt problemlos ausgewählt werden']},
   {v:'22.170',d:'18.10.2026',items:['🎯 FEATURE: Quittungs-Artikel Matching mit Warehouse-Abgleich!','✅ Neue Phase: Nach KI-Extraction → Artikel werden gegen Lager abgeglichen','🔍 Auto-Matching: Suche nach exaktem Namen + Aliases','📝 Alias-Erstellung: Manuelle Match erstellt automatisch neuen Alias','💾 Unmatched-Artikel: Temp-Liste in localStorage für spätere Barcode-Suche','⏭️ Alle Schritte sind überspringbar und abbrechbar','🔄 Workflow: Quittung → KI-Extraction → Warehouse-Matching → Review']},
   {v:'22.169',d:'18.10.2026',items:['🔧 UX-FIX: Redundanter Dialog entfernt!','❌ PROBLEM: Galerie-Button zeigte nochmal Dialog "Kamera/Galerie"','✅ GELÖST: Direkte Aufrufe zu captureQuittungFromCamera/Gallery()','✅ Buttons im Einkauf-Register → sofort Kamera/Datei-Auswahl','✅ Überflüssiger Dialog in Wareneingang entfernt']},
   {v:'22.168',d:'18.10.2026',items:['🎨 UI-REORGANISATION: Einkauf-Register verbessert','✅ "Quittung scannen"-Button aus Toolbar entfernt','✅ Zwei große Buttons im Einkauf-Register hinzugefügt:','   📸 Quittung fotografieren (Kamera)','   🖼️ Quittung aus Bild (Galerie)','✅ Bessere Discoverability: User sieht sofort die Optionen']},
@@ -10122,15 +10123,23 @@ function showMatchingSearchbox(kiArticle, suggestedMatches) {
   const resultsToShow = suggestedMatches.length > 0 ? suggestedMatches :
                        (query ? allArticles.filter(a => a.name.toLowerCase().includes(query)) : allArticles.slice(0, 20));
 
-  resultsContainer.innerHTML = resultsToShow.length === 0 ?
-    '<div style="padding:12px;text-align:center;color:var(--t2);font-size:13px">Keine Artikel gefunden</div>' :
-    resultsToShow.map(a =>
-      '<div onclick="selectMatchingArticle(\'' + esc(a.id) + '\', \'' + esc(kiArticle.name) + '\')" ' +
-      'style="padding:10px;border-bottom:1px solid var(--bd);cursor:pointer;background:var(--bg);hover-background:var(--hl)">' +
+  // Render results mit addEventListener statt onclick
+  if (resultsToShow.length === 0) {
+    resultsContainer.innerHTML = '<div style="padding:12px;text-align:center;color:var(--t2);font-size:13px">Keine Artikel gefunden</div>';
+  } else {
+    resultsToShow.forEach((a, idx) => {
+      const resultDiv = document.createElement('div');
+      resultDiv.style.cssText = 'padding:10px;border-bottom:1px solid var(--bd);cursor:pointer;background:var(--bg)';
+      resultDiv.innerHTML =
         '<div style="font-weight:600;color:var(--ok)">' + esc(a.name) + '</div>' +
-        '<div style="font-size:12px;color:var(--t2)">' + esc(a.marke || '') + ' • ' + esc(a.kat || '') + '</div>' +
-      '</div>'
-    ).join('');
+        '<div style="font-size:12px;color:var(--t2)">' + esc(a.marke || '') + ' • ' + esc(a.kat || '') + '</div>';
+
+      resultDiv.addEventListener('click', () => {
+        selectMatchingArticle(a.id, kiArticle.name);
+      });
+      resultsContainer.appendChild(resultDiv);
+    });
+  }
 
   inner.appendChild(resultsContainer);
 
@@ -10163,15 +10172,25 @@ function updateMatchingSearchResults(kiArticle) {
   const container = document.getElementById('match-search-results');
   if (!container) return;
 
-  container.innerHTML = results.length === 0 ?
-    '<div style="padding:12px;text-align:center;color:var(--t2);font-size:13px">Keine Artikel gefunden</div>' :
-    results.map(a =>
-      '<div onclick="selectMatchingArticle(\'' + esc(a.id) + '\', \'' + esc(kiArticle.name) + '\')" ' +
-      'style="padding:10px;border-bottom:1px solid var(--bd);cursor:pointer;background:var(--bg);hover-background:var(--hl)">' +
+  // Clear und neuaufbau mit addEventListener
+  container.innerHTML = '';
+
+  if (results.length === 0) {
+    container.innerHTML = '<div style="padding:12px;text-align:center;color:var(--t2);font-size:13px">Keine Artikel gefunden</div>';
+  } else {
+    results.forEach(a => {
+      const resultDiv = document.createElement('div');
+      resultDiv.style.cssText = 'padding:10px;border-bottom:1px solid var(--bd);cursor:pointer;background:var(--bg)';
+      resultDiv.innerHTML =
         '<div style="font-weight:600;color:var(--ok)">' + esc(a.name) + '</div>' +
-        '<div style="font-size:12px;color:var(--t2)">' + esc(a.marke || '') + ' • ' + esc(a.kat || '') + '</div>' +
-      '</div>'
-    ).join('');
+        '<div style="font-size:12px;color:var(--t2)">' + esc(a.marke || '') + ' • ' + esc(a.kat || '') + '</div>';
+
+      resultDiv.addEventListener('click', () => {
+        selectMatchingArticle(a.id, kiArticle.name);
+      });
+      container.appendChild(resultDiv);
+    });
+  }
 }
 
 function selectMatchingArticle(warehouseArticleId, kiArticleName) {
