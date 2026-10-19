@@ -6,14 +6,14 @@
       "marke": "Landi",
       "kat": "Genussmittel",
       "lager": "Schlof",
-      "menge": 2,
+      "menge": 3,
       "einheit": "Kiste",
       "mindest": 2,
       "barcode": "7611703611962",
       "preis": 25.2,
       "packMenge": 6,
       "packEinheit": "Flasche",
-      "kaufdatum": "2026-09-19",
+      "kaufdatum": "2026-10-19",
       "ablaufdatum": "2052-09-30",
       "notiz": "DE - Nährwert und Zutatenverzeichnis Zutaten: Trauben, rektifiziertes Traubenmostkonzentrat, Saccharose, Säureregulatoren: Apfelsäure, Milchsäure, Weinsäure, Stabilisatoren: Citronensäure, Hefe-Mannoproteine zur Weinsteinstabilisierung, Kaliumpolyaspartat, Metaweinsäure, Antioxidantien: Kaliumsorbat, L-Ascorbinsäure, Sulfite, Gase und Packgase: unter Schutzatmosphäre abgefüllt\n 100 ml enthalten durchschnittlich Energie Fett ..davon gesättigte Fettsäuren Kohlenhydrate ..davon Zucker Eiweiss Salz 307 kJ (73 kcal) 0 g 0 g 1.3 g 0.5 g 0 g 0 g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781961271197_17819612557295906724604013972.jpg?t=1791130431730",
@@ -169,6 +169,15 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-10-19",
+          "preis": 25.2,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
       "packungen": [
@@ -177,11 +186,20 @@
           "menge": 2,
           "kaufdatum": "2026-09-19",
           "ablaufdatum": "2052-09-30"
+        },
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-10-19",
+          "ablaufdatum": ""
         }
       ],
       "kaufort": "Landi",
       "barcodes": [
         "7611703211964"
+      ],
+      "alias": [
+        "25998 Grüner Veltliner 6x75cl"
       ]
     },
     {
@@ -11817,15 +11835,15 @@
       "kat": "Genussmittel",
       "lager": "Schlof",
       "kaufort": "Landi",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Kiste",
       "mindest": 0,
       "barcode": "7611330258981",
       "barcodes": [],
-      "preis": 27,
+      "preis": 34.2,
       "packMenge": 6,
       "packEinheit": "Flasche",
-      "kaufdatum": "2026-09-19",
+      "kaufdatum": "2026-10-19",
       "ablaufdatum": "2049-09-30",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1789810025163_17898100158268291851405590605948.jpg?t=1791130431730",
@@ -11848,10 +11866,29 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-10-19",
+          "preis": 34.2,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
       "letzteEingangHeute": "11:28",
-      "packungen": []
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-10-19",
+          "ablaufdatum": ""
+        }
+      ],
+      "alias": [
+        "114619 Lemanic Rouge 6 x 75 cl"
+      ]
     },
     {
       "id": 299,
@@ -12395,6 +12432,113 @@
       "quittungAliase": [],
       "letzteEingangHeute": "15:10",
       "ablaufdatum": ""
+    },
+    {
+      "id": 312,
+      "name": "113003 Aechmea Blue Rain P12 c",
+      "marke": "",
+      "kat": "Diverses",
+      "lager": "Küche",
+      "kaufort": "Landi",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7611331130033",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-10-19",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792420479476_17924204670133643592936550665065.jpg?t=1792420490580",
+      "fotoPath": "1792420479476_17924204670133643592936550665065.jpg",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-10-19",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-19",
+          "preis": 14.95,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "16:32",
+      "ablaufdatum": ""
+    },
+    {
+      "id": 313,
+      "name": "C7398 Basilikum gross P14 cm",
+      "marke": "",
+      "kat": "Diverses",
+      "lager": "Küche",
+      "kaufort": "Landi",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7611330073980",
+      "barcodes": [],
+      "preis": 3.95,
+      "packMenge": 0,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-10-19",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792420430952_17924204238597038244507220978613.jpg?t=1792420452066",
+      "fotoPath": "1792420430952_17924204238597038244507220978613.jpg",
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-10-19",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-19",
+          "preis": 3.95,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "16:33",
+      "ablaufdatum": ""
+    },
+    {
+      "id": 314,
+      "name": "Epicuro Merlot Primitivo",
+      "marke": "",
+      "kat": "Genussmittel",
+      "lager": "Schlof",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Flasche",
+      "mindest": 0,
+      "barcode": "8021904363116",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 7.5,
+      "packEinheit": "dl",
+      "kaufdatum": "2026-10-19",
+      "ablaufdatum": "",
+      "notiz": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792426721825_off.jpg?t=1792426765390",
+      "fotoPath": "1792426721825_off.jpg",
+      "preisHistorie": [],
+      "packungen": []
     }
   ],
   "lagerorte": [
@@ -26474,7 +26618,103 @@
       "k": "Milchprodukte",
       "aktion": false,
       "kaufort": ""
+    },
+    {
+      "t": "ein",
+      "aid": 312,
+      "name": "113003 Aechmea Blue Rain P12 c",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 14.95,
+      "aktion": false,
+      "datum": "2026-10-19",
+      "zeit": 1792420378185
+    },
+    {
+      "t": "ein",
+      "aid": 313,
+      "name": "C7398 Basilikum gross P14 cm",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 3.95,
+      "aktion": false,
+      "datum": "2026-10-19",
+      "zeit": 1792420399746
+    },
+    {
+      "t": "ein",
+      "aid": 298,
+      "name": "Weisswein Lemanic",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 34.2,
+      "aktion": false,
+      "datum": "2026-10-19",
+      "zeit": 1792420400081
+    },
+    {
+      "t": "ein",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 25.2,
+      "aktion": false,
+      "datum": "2026-10-19",
+      "zeit": 1792420400082
+    },
+    {
+      "aid": 2,
+      "d": "2026-10-19",
+      "m": 1,
+      "p": 25.2,
+      "t": "ein",
+      "e": "Kiste",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Landi"
+    },
+    {
+      "aid": 298,
+      "d": "2026-10-19",
+      "m": 1,
+      "p": 34.2,
+      "t": "ein",
+      "e": "Kiste",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Landi"
+    },
+    {
+      "aid": 312,
+      "d": "2026-10-19",
+      "m": 1,
+      "p": 14.95,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Landi"
+    },
+    {
+      "aid": 313,
+      "d": "2026-10-19",
+      "m": 1,
+      "p": 3.95,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Landi"
     }
   ],
-  "aktualisiert": "2026-10-18T13:31:21.184Z"
+  "aktualisiert": "2026-10-19T16:20:38.080Z"
 }
