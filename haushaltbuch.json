@@ -1384,15 +1384,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-10-24",
-          "preis": 2.99,
-          "menge": 2,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -9106,15 +9097,6 @@
           "einheit": "Pkg",
           "typ": "ein",
           "aktion": true,
-          "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-10-24",
-          "preis": 3.49,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
           "kaufort": "Lidl"
         },
         {
@@ -27534,5 +27516,5 @@
       "zeit": 1792825230376
     }
   ],
-  "aktualisiert": "2026-10-24T07:14:37.413Z"
+  "aktualisiert": "2026-10-24T07:14:49.490Z"
 }
