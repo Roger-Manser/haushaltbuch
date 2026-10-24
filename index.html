@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.3 — Lagerliste zeigt Kaufpreis statt Kilopreis -->
+<!-- HAUSHALTBUCH v23.5 — 5-Rappen-Rundung pro Laden (Lidl/Aldi ohne) -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.3"/>
+<meta name="app-version" content="23.5"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.3';
+const APP_VERSION='23.5';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,8 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.5',d:'24.10.2026',items:['🪙 5-Rappen-Rundung: Kaufpreis aus Kilopreis × Gewicht wird auf 0.05 gerundet (z.B. 0.56 kg × 28.50 = 15.95)','✅ Lidl und Aldi runden nicht (genau auf 1 Rappen)','⚙️ Stammdaten → Einkaufsläden: Schalter «0.05 / 0.01» pro Laden','✅ Gilt für Lagerliste, Details, Laden-Modus und Kaufpreis-Rechner; Quittungsbeträge bleiben wie gedruckt','🔄 Einstellung wird mit GitHub synchronisiert']},
+  {v:'23.4',d:'24.10.2026',items:['⚖️ Gewichtsartikel: mehrere Stück am selben Tag (z.B. Speck 0.56 kg + 0.87 kg) werden einzeln angezeigt','✅ Lagerliste: je Stück Gewicht · Kaufpreis (Kilopreis)','✅ Details: neue Zeile «Letzter Einkauf» mit allen Stücken, Datum, Laden und Total','✅ Einzelnes Stück: «CHF 15.96 (0.56 kg · 28.50/kg)»']},
   {v:'23.3',d:'24.10.2026',items:['💰 Lagerliste: zeigt den Kaufpreis des letzten Einkaufs statt des Kilopreises (z.B. «CHF 15.96 (0.56 kg)»)','✅ Stück-Artikel: weiterhin Stückpreis','🔧 Neue Buchungen speichern den bezahlten Betrag («betrag») im Preisverlauf – Quittung, Laden-Modus, Einkaufsliste','✅ Ältere Einträge werden anhand des bekannten Kilopreises richtig eingeordnet']},
   {v:'23.2',d:'24.10.2026',items:['🔴 BUGFIX Duplikat-Prüfung: verglich nur Datum + Typ → 2× Speck am selben Tag (0.56 kg / 0.87 kg) galt als doppelt','✅ Duplikat nur noch, wenn Datum, Typ, Menge, Preis, Laden und Aktion identisch sind','🔴 BUGFIX: Log-Bereinigung suchte falsche Felder (l.d/l.m) → Preisverlauf und Log liefen auseinander','✅ Liste im Dialog zeigt jetzt Menge, Einheit und Preis','✅ Quittung: «Duplikat erkannt» nur, wenn heute dieselbe Menge schon gebucht wurde']},
   {v:'23.1',d:'24.10.2026',items:['🏪 NEU: Einstellungen → Stammdaten → «Einkaufsläden»: hinzufügen, umbenennen, löschen, sortieren','✅ Umbenennen überträgt auf alle Artikel, Preisverlauf und Filter; gleicher Name → zusammenführen','🛒 Einkaufsliste: ✕ auch bei automatischen Einträgen (unter Mindestbestand) – entfernt OHNE Einbuchen','✅ Ausgeblendete Artikel erscheinen wieder, sobald sich Bestand/Mindestbestand ändert («👁 wieder anzeigen» möglich)','✅ Einbuchungs-Dialog manueller Einträge: «Ohne Einbuchen von Liste entfernen»','✅ Laden-Modus: «Nicht kaufen – von Liste entfernen»','🔧 Abbrechen im Einbuchungs-Dialog setzt das Häkchen zurück']},
@@ -982,6 +984,19 @@ const APP_BUILD='2026-06-23d';
 const LD=['Kühlschrank','Gefrierschrank','Vorratsschrank','Keller','Küche'];
 const KD=['Milchprodukte','Fleisch & Fisch','Gemüse & Früchte','Tiefkühl','Getränke','Konserven & Trockenware','Backwaren & Brot','Gewürze & Saucen','Süsswaren','Reinigung & Pflege','Diverses'];
 const GD=['Migros','Coop','Lidl','Aldi','Denner','Volg','Online'];
+// v23.5: Geschäfte, die Positionsbeträge NICHT auf 5 Rappen runden (alle anderen runden)
+const GE_OHNE_RUNDUNG=['Lidl','Aldi'];
+function geRundet(laden){
+  const l=String(laden||'').trim().toLowerCase();
+  if(!l)return true;
+  const liste=(typeof S!=='undefined'&&S.geOhneRundung)?S.geOhneRundung:GE_OHNE_RUNDUNG;
+  return !liste.some(g=>{const x=String(g).toLowerCase();return l===x||l.includes(x);}); // «Lidl Schweiz» → Lidl
+}
+// Betrag aus Kilopreis × Gewicht: auf 0.05 runden, ausser beim Laden ohne Rundung
+function rundeBetrag(betrag,laden){
+  const b=Number(betrag)||0;
+  return geRundet(laden)?Math.round(b*20)/20:Math.round(b*100)/100;
+}
 const ED=['Stk','kg','g','l','dl','ml','Pkg','Bund','Dose','Flasche'];
 const KICON='<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:13px;height:13px;stroke:currentColor"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>';
 
@@ -1156,7 +1171,7 @@ loadInvBuffer();
 let dirty=localStorage.getItem('hb_dirty')==='1';
 
 function loadL(){
-  try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ge=d.ge||[...GD];S.ek=d.ek||[];S.eko=d.eko||{};S.rz=d.rz||[];S.log=d.log||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);}}catch(e){}
+  try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ge=d.ge||[...GD];S.geOhneRundung=d.geOhneRundung||[...GE_OHNE_RUNDUNG];S.ek=d.ek||[];S.eko=d.eko||{};S.rz=d.rz||[];S.log=d.log||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);}}catch(e){}
   // Migration: alte kombinierte Mengen-Strings ("1,5 dl") in menge+einheit trennen
   (S.ek||[]).forEach(e=>{
     if(e.menge&&!e.einheit){
@@ -1486,7 +1501,7 @@ async function doSync(){
     // 🎯 FIX v22.83: Stelle sicher dass alle Mengen vor dem Upload aktuell sind!
     S.a.forEach(a => syncMenge(a));
     
-    const exp={artikel:S.a.map(a=>({...a})),lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,geschaefte:S.ge||[],einkauf:S.ek,einkaufOverrides:S.eko||{},log:S.log||[],aktualisiert:new Date().toISOString()};
+    const exp={artikel:S.a.map(a=>({...a})),lagerorte:S.lo,kategorien:S.ka,einheiten:S.ei,geschaefte:S.ge||[],geschaefteOhneRundung:S.geOhneRundung||[...GE_OHNE_RUNDUNG],einkauf:S.ek,einkaufOverrides:S.eko||{},log:S.log||[],aktualisiert:new Date().toISOString()};
     
     // DEBUG: Logge Artikel mit packungen=[] (ausgebucht)
     const ausgebucht=exp.artikel.filter(a=>a.packungen&&a.packungen.length===0);
@@ -1619,7 +1634,7 @@ async function loadFromGH(){
         toast('⚠️ '+lokalNurLokal.length+' lokale Artikel in GitHub gefunden und beibehalten');
       }
       
-      S.a=ghArtikel;S.ge=d.geschaefte||[...GD];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.eko=d.einkaufOverrides||{};S.log=d.log||[];
+      S.a=ghArtikel;S.ge=d.geschaefte||[...GD];S.geOhneRundung=d.geschaefteOhneRundung||S.geOhneRundung||[...GE_OHNE_RUNDUNG];S.lo=d.lagerorte||[...LD];S.ka=d.kategorien||[...KD];S.ei=d.einheiten||[...ED];S.ek=d.einkauf||[];S.eko=d.einkaufOverrides||{};S.log=d.log||[];
       // Foto-URLs mit Cache-Buster aktualisieren (raw.githubusercontent.com cached)
       const ts=Date.now();
       S.a.forEach(a=>{
@@ -2151,16 +2166,44 @@ function kaufBetrag(a,h){
   const mKg=a.einheit==='g'?m/1000:m;
   const k=Number(a.preisProKg||a.preis)||0;               // bekannter Kilopreis
   if(!(mKg>0))return p;
-  if(k>0)return Math.abs(p-k)<=Math.abs(p-k*mKg)?Math.round(p*mKg*100)/100:p;
+  if(k>0)return Math.abs(p-k)<=Math.abs(p-k*mKg)?rundeBetrag(p*mKg,h.kaufort||a.kaufort):p;
   return p;
 }
+// v23.4: Mehrere Stück mit unterschiedlichem Gewicht → jeden Einkauf einzeln (Gewicht, Kaufpreis, Kilopreis)
+function letzteEinkaeufe(a){
+  const alle=(a.preisHistorie||[]).filter(x=>(x.typ||'ein')==='ein'&&(x.betrag>0||x.preis>0));
+  if(!alle.length)return [];
+  const tag=alle[alle.length-1].datum;
+  const gew=['kg','g'].includes(a.einheit);
+  return alle.filter(x=>x.datum===tag).map(h=>{
+    const betrag=kaufBetrag(a,h);
+    const m=Number(h.menge)||0;
+    const mKg=a.einheit==='g'?m/1000:m;
+    const p=Number(h.preis)||0;
+    // Kilopreis: gespeicherten Preis nehmen, wenn er der Kilopreis ist (betrag ≈ preis × kg) – sonst zurückrechnen
+    const kg=!gew||!(mKg>0)?0:(Math.abs(betrag-p*mKg)<0.026?p:Math.round(betrag/mKg*100)/100);
+    return {datum:h.datum,menge:m,betrag,kgPreis:kg,kaufort:h.kaufort||''};
+  });
+}
+function chf(x){return 'CHF '+Number(x).toFixed(2);}
 function arPreisText(a){
   const h=letzterEinkauf(a);
   if(!h)return a.preis?'CHF '+a.preis.toFixed(2):'';
   const b=kaufBetrag(a,h);
   if(!(b>0))return '';
   const gew=['kg','g'].includes(a.einheit)&&h.menge>0;
-  return 'CHF '+b.toFixed(2)+(gew?' ('+fmtMenge(h.menge)+' '+esc(a.einheit)+')':'');
+  if(!gew)return chf(b);
+  const ek=letzteEinkaeufe(a);
+  if(ek.length<=1)return chf(b)+' ('+fmtMenge(h.menge)+' '+esc(a.einheit)+(ek[0]&&ek[0].kgPreis?' · '+ek[0].kgPreis.toFixed(2)+'/kg':'')+')';
+  return '';  // mehrere Stücke → eigene Zeile (arPreisZeile)
+}
+function arPreisZeile(a){
+  if(!['kg','g'].includes(a.einheit))return '';
+  const ek=letzteEinkaeufe(a);
+  if(ek.length<2)return '';
+  return '<div class="am" style="margin-top:2px;line-height:1.5">'+ek.map(e=>
+    '<span style="display:inline-block;margin-right:8px;white-space:nowrap">🛒 '+fmtMenge(e.menge)+' '+esc(a.einheit)+' · <strong>'+chf(e.betrag)+'</strong>'+(e.kgPreis?' <span style="color:var(--t3)">('+e.kgPreis.toFixed(2)+'/kg)</span>':'')+'</span>'
+  ).join('')+'</div>';
 }
 function arRow(a){
   const bc=a.menge===0?'lo':a.menge<a.mindest?'wn':'ok';
@@ -2170,7 +2213,7 @@ function arRow(a){
   const eb=(a.ablaufdatum&&a.menge>0)?expBadgeA(a):'';
   const unitLabel=a.packMenge>0?esc(a.einheit||'Stk'):esc(a.einheit||'Stk');
   const aufListe=S.ek.some(e=>e.text.toLowerCase()===a.name.toLowerCase()&&!e.checked);
-  return '<div class="ar" id="ar-'+a.id+'" onclick="showDet('+a.id+')">'+th+'<div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+meta+'</div>'+eb+'</div>'+
+  return '<div class="ar" id="ar-'+a.id+'" onclick="showDet('+a.id+')">'+th+'<div class="ai"><div class="an">'+esc(a.name)+'</div><div class="am">'+meta+'</div>'+arPreisZeile(a)+eb+'</div>'+
     '<button onclick="event.stopPropagation();toEk('+a.id+')" title="Auf Einkaufsliste" style="background:none;border:none;cursor:pointer;padding:8px 6px;color:'+(aufListe?'var(--ok)':'var(--t3)')+';flex-shrink:0;display:flex;align-items:center">'+
       (aufListe
         ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:19px;height:19px"><polyline points="20 6 9 17 4 12"/></svg>'
@@ -2195,7 +2238,15 @@ function showDet(id){
   const gefrierHinweis=''; // v22.167: Gefrier-Empfehlung entfernt
   const expBanner=''; // v22.167: Ablaufdatum-Banner entfernt
   const preisLabel=['kg','g'].includes(a.einheit)?'Preis/kg':'Preis/Einheit';
-  const preisRow=a.preis?'<div class="ir"><span class="ik">'+I.cart+' '+preisLabel+'</span><span class="iv">CHF '+a.preis.toFixed(2)+'</span></div>':'';
+  let preisRow=a.preis?'<div class="ir"><span class="ik">'+I.cart+' '+preisLabel+'</span><span class="iv">CHF '+a.preis.toFixed(2)+'</span></div>':'';
+  // v23.4: Letzter Einkauf – bei Gewichtsartikeln jedes Stück mit Gewicht, Kaufpreis und Kilopreis
+  const ekL=letzteEinkaeufe(a);
+  if(ekL.length&&['kg','g'].includes(a.einheit)){
+    preisRow+='<div class="ir" style="align-items:flex-start"><span class="ik">🧾 Letzter Einkauf'+(ekL.length>1?' ('+ekL.length+' Stück)':'')+'<br><span style="font-size:11px;color:var(--t3);font-weight:400">'+fmtDateCH(ekL[0].datum)+(ekL[0].kaufort?' · '+esc(ekL[0].kaufort):'')+'</span></span>'+
+      '<span class="iv" style="text-align:right;line-height:1.6">'+ekL.map(e=>fmtMenge(e.menge)+' '+esc(a.einheit)+' · <strong>'+chf(e.betrag)+'</strong>'+(e.kgPreis?' <span style="color:var(--t3);font-size:12px">('+e.kgPreis.toFixed(2)+'/kg)</span>':'')).join('<br>')+
+      (ekL.length>1?'<br><span style="font-size:12px;color:var(--t2)">Total '+fmtMenge(Math.round(ekL.reduce((x,e)=>x+e.menge,0)*1000)/1000)+' '+esc(a.einheit)+' · '+chf(ekL.reduce((x,e)=>x+e.betrag,0))+'</span>':'')+
+      '</span></div>';
+  }
   const pinfo=packInfo(a);
   const ptotal=packTotal(a);
   const packRow=(pinfo&&!pinfo.includes('undefined'))?'<div class="ir"><span class="ik">'+I.pkg.replace('20px;height:20px','15px;height:15px')+' Packungsgrösse</span><span class="iv">'+esc(pinfo.split('/')[0])+' pro '+esc(a.einheit||'Stk')+'</span></div>':'';
@@ -2344,6 +2395,7 @@ function showDet(id){
   setTimeout(updateJumpBtns,150);
 }
 function editPreisHistorie(artikelId,idx){
+  window._vheIdx=idx; // v23.5: für Rundung nach Laden des Eintrags
   const a=S.a.find(x=>x.id===artikelId);
   if(!a||!a.preisHistorie||!a.preisHistorie[idx])return;
   const h=a.preisHistorie[idx];
@@ -2396,6 +2448,8 @@ function editPreisHistorie(artikelId,idx){
 
 function vheKalkulieren(artikelId){
   const a=S.a.find(x=>x.id===artikelId);if(!a)return;
+  const hV=(a.preisHistorie||[])[window._vheIdx];
+  const ladenEkb=(hV&&hV.kaufort)||a.kaufort||'';
   const kgEl=document.getElementById('vhe-kgpreis');
   const prEl=document.getElementById('vhe-pr');
   const mgEl=document.getElementById('vhe-mg');
@@ -2404,7 +2458,7 @@ function vheKalkulieren(artikelId){
   const menge=parseDecimal(mgEl.value)||0;
   if(kgPreis>0&&menge>0){
     const faktor=a.einheit==='g'?menge/1000:menge;
-    prEl.value=(kgPreis*faktor).toFixed(2);
+    prEl.value=rundeBetrag(kgPreis*faktor,ladenEkb).toFixed(2); // v23.5: 5-Rp.-Rundung je Laden
     prEl.style.color='var(--ok)';
   }else{
     prEl.value='';
@@ -6264,7 +6318,7 @@ function finishLadenModus(){
     a.kaufdatum=k.datum;
     if(k.kaufort)a.kaufort=k.kaufort;
     if(!a.preisHistorie)a.preisHistorie=[];
-    a.preisHistorie.push({datum:k.datum,preis:k.preis,betrag:Math.round(k.preis*(a.einheit==='g'?k.menge/1000:k.menge)*100)/100,menge:k.menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:k.kaufort||''});
+    a.preisHistorie.push({datum:k.datum,preis:k.preis,betrag:['kg','g'].includes(a.einheit)?rundeBetrag(k.preis*(a.einheit==='g'?k.menge/1000:k.menge),k.kaufort||a.kaufort):Math.round(k.preis*k.menge*100)/100,menge:k.menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:k.kaufort||''});
     if(k.preis>0)a.preis=k.preis;
     addLogEntry('ein',a.id,a.name,a.lager,a.kat,k.menge,a.einheit,k.preis,false,true);
   });
@@ -6392,6 +6446,7 @@ function showEkEinbuchungBekannt(ekEntry,artikel){
 
 function ekbKalkulieren(artikelId){
   const a=S.a.find(x=>x.id===artikelId);if(!a)return;
+  const ladenEkb=a.kaufort||'';
   const kgEl=document.getElementById('ekb-kgpreis');
   const prEl=document.getElementById('ekb-pr');
   const mgEl=document.getElementById('ekb-mg');
@@ -6400,7 +6455,7 @@ function ekbKalkulieren(artikelId){
   const menge=parseDecimal(mgEl.value)||0;
   if(kgPreis>0&&menge>0){
     const faktor=a.einheit==='g'?menge/1000:menge;
-    prEl.value=(kgPreis*faktor).toFixed(2);
+    prEl.value=rundeBetrag(kgPreis*faktor,ladenEkb).toFixed(2); // v23.5: 5-Rp.-Rundung je Laden
     prEl.style.color='var(--ok)';
   }else{
     prEl.value='';
@@ -7967,7 +8022,7 @@ function renderSt(){
   settingsGroup('sg-stamm','📋','Stammdaten',
     '<div class="ss"><div class="ssl">Lagerorte</div><div>'+S.lo.map((l,i)=>'<div class="lmi">'+licon(l).replace('20px;height:20px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(l)+'</span><button onclick="editLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=LD.length?'<button onclick="delLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addLo()">+ Neuer Lagerort</button></div>'+
     '<div class="ss"><div class="ssl">Kategorien</div><div>'+S.ka.map((k,i)=>'<div class="lmi">'+KICON.replace('13px;height:13px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(k)+'</span><button onclick="editKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=KD.length?'<button onclick="delKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addKat()">+ Neue Kategorie</button></div>'+
-    '<div class="ss"><div class="ssl">Einkaufsläden</div><div>'+(S.ge||[]).map((g,i)=>'<div class="lmi"><span style="font-size:16px;width:18px;text-align:center">🏪</span> <span style="flex:1;margin-left:6px">'+esc(g)+' <span style="font-size:11px;color:var(--t3)">'+geAnzahlArtikel(g)+'</span></span>'+'<button onclick="geMove('+i+',-1)" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;padding:0 4px;'+(i===0?'visibility:hidden':'')+'" title="Nach oben">▲</button>'+'<button onclick="geMove('+i+',1)" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;padding:0 4px;'+(i===S.ge.length-1?'visibility:hidden':'')+'" title="Nach unten">▼</button>'+'<button onclick="editGe('+i+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin:0 4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+'<button onclick="delGe('+i+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1" title="Löschen">&#x2715;</button></div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addGe()">+ Neuer Laden</button></div>'+
+    '<div class="ss"><div class="ssl">Einkaufsläden</div><div>'+(S.ge||[]).map((g,i)=>'<div class="lmi"><span style="font-size:16px;width:18px;text-align:center">🏪</span> <span style="flex:1;margin-left:6px">'+esc(g)+' <span style="font-size:11px;color:var(--t3)">'+geAnzahlArtikel(g)+'</span></span>'+'<button onclick="geRundungToggle('+i+')" title="Rundet Positionsbeträge auf 5 Rappen?" style="font-size:11px;padding:2px 7px;margin-right:4px;border-radius:8px;cursor:pointer;border:1px solid '+(geRundet(g)?'var(--ok)':'var(--bd)')+';background:'+(geRundet(g)?'var(--ol)':'var(--bg)')+';color:'+(geRundet(g)?'var(--ok)':'var(--t3)')+'">'+(geRundet(g)?'0.05':'0.01')+'</button>'+'<button onclick="geMove('+i+',-1)" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;padding:0 4px;'+(i===0?'visibility:hidden':'')+'" title="Nach oben">▲</button>'+'<button onclick="geMove('+i+',1)" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;padding:0 4px;'+(i===S.ge.length-1?'visibility:hidden':'')+'" title="Nach unten">▼</button>'+'<button onclick="editGe('+i+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin:0 4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+'<button onclick="delGe('+i+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1" title="Löschen">&#x2715;</button></div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addGe()">+ Neuer Laden</button><p style="font-size:12px;color:var(--t3);margin-top:8px;line-height:1.5">0.05 = Laden rundet Positionsbeträge auf 5 Rappen · 0.01 = keine Rundung (z.B. Lidl, Aldi). Antippen zum Umschalten.</p></div>'+
     '<div class="ss"><div class="ssl">Einheiten</div><div>'+S.ei.map((u,i)=>'<div class="lmi"><span style="flex:1">'+esc(u)+'</span>'+(i>=ED.length?'<button onclick="delEinheit(\''+esc(u)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addEinheitSettings()">+ Neue Einheit</button></div>'+
     '<div class="ss"><div class="ssl">Quittungs-Aliase</div><button class="db-btn" onclick="openAliasManager()" style="width:100%">✎ Alias verwalten</button><p style="font-size:12px;color:var(--t3);margin-top:8px">Erstelle oder bearbeite Aliase für Quittungstext-Matching. Beispiel: «TN Vollmilch 3.5%» → «Vollmilch»</p></div>'
   )+
@@ -8039,6 +8094,7 @@ function geErsetzen(alt,neu){
     (a.preisHistorie||[]).forEach(p=>{if(p.kaufort===alt)p.kaufort=neu;});
   });
   (S.log||[]).forEach(e=>{if(e.kaufort===alt)e.kaufort=neu;});
+  if(S.geOhneRundung)S.geOhneRundung=S.geOhneRundung.map(x=>x===alt?neu:x);
   if(typeof ekShopFilter!=='undefined'&&ekShopFilter===alt)ekShopFilter=neu;
   if(typeof barcodeEinkaufState!=='undefined'&&barcodeEinkaufState.geschaeft===alt)barcodeEinkaufState.geschaeft=neu;
 }
@@ -8050,6 +8106,15 @@ function delGe(i){
   S.ge.splice(i,1);
   if(typeof ekShopFilter!=='undefined'&&ekShopFilter===g)ekShopFilter='alle';
   saveL();renderSt();toast('Laden gelöscht');
+}
+function geRundungToggle(i){
+  const g=S.ge[i];if(g===undefined)return;
+  if(!S.geOhneRundung)S.geOhneRundung=[...GE_OHNE_RUNDUNG];
+  const gl=g.toLowerCase();
+  if(geRundet(g))S.geOhneRundung.push(g);
+  else S.geOhneRundung=S.geOhneRundung.filter(x=>!(gl===String(x).toLowerCase()||gl.includes(String(x).toLowerCase())));
+  saveL();renderSt();
+  toast(geRundet(g)?'«'+g+'» rundet auf 5 Rappen':'«'+g+'» rundet nicht (genau auf 1 Rappen)');
 }
 function geMove(i,d){const j=i+d;if(j<0||j>=S.ge.length)return;[S.ge[i],S.ge[j]]=[S.ge[j],S.ge[i]];saveL();renderSt();}
 function addKat(){const n=prompt('Neue Kategorie:');if(!n||!n.trim())return;const nm=n.trim();if(!S.ka.includes(nm)){S.ka.push(nm);saveL();}renderSt();}
