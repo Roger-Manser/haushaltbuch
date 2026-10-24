@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.5 — 5-Rappen-Rundung pro Laden (Lidl/Aldi ohne) -->
+<!-- HAUSHALTBUCH v23.6 — Aktionspreise in der Übersicht orange -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.5"/>
+<meta name="app-version" content="23.6"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.5';
+const APP_VERSION='23.6';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.6',d:'24.10.2026',items:['🏷️ Lagerliste: Preis orange, wenn der letzte Einkauf ein Aktionspreis war','✅ Mehrere Stücke: jedes Stück einzeln orange, wenn Aktion','✅ Details «Letzter Einkauf»: Aktionspreise orange mit 🏷️','🧾 Quittung: Position mit Rabatt wird als Aktion gebucht (wird nicht zum Standardpreis)']},
   {v:'23.5',d:'24.10.2026',items:['🪙 5-Rappen-Rundung: Kaufpreis aus Kilopreis × Gewicht wird auf 0.05 gerundet (z.B. 0.56 kg × 28.50 = 15.95)','✅ Lidl und Aldi runden nicht (genau auf 1 Rappen)','⚙️ Stammdaten → Einkaufsläden: Schalter «0.05 / 0.01» pro Laden','✅ Gilt für Lagerliste, Details, Laden-Modus und Kaufpreis-Rechner; Quittungsbeträge bleiben wie gedruckt','🔄 Einstellung wird mit GitHub synchronisiert']},
   {v:'23.4',d:'24.10.2026',items:['⚖️ Gewichtsartikel: mehrere Stück am selben Tag (z.B. Speck 0.56 kg + 0.87 kg) werden einzeln angezeigt','✅ Lagerliste: je Stück Gewicht · Kaufpreis (Kilopreis)','✅ Details: neue Zeile «Letzter Einkauf» mit allen Stücken, Datum, Laden und Total','✅ Einzelnes Stück: «CHF 15.96 (0.56 kg · 28.50/kg)»']},
   {v:'23.3',d:'24.10.2026',items:['💰 Lagerliste: zeigt den Kaufpreis des letzten Einkaufs statt des Kilopreises (z.B. «CHF 15.96 (0.56 kg)»)','✅ Stück-Artikel: weiterhin Stückpreis','🔧 Neue Buchungen speichern den bezahlten Betrag («betrag») im Preisverlauf – Quittung, Laden-Modus, Einkaufsliste','✅ Ältere Einträge werden anhand des bekannten Kilopreises richtig eingeordnet']},
@@ -2182,19 +2183,21 @@ function letzteEinkaeufe(a){
     const p=Number(h.preis)||0;
     // Kilopreis: gespeicherten Preis nehmen, wenn er der Kilopreis ist (betrag ≈ preis × kg) – sonst zurückrechnen
     const kg=!gew||!(mKg>0)?0:(Math.abs(betrag-p*mKg)<0.026?p:Math.round(betrag/mKg*100)/100);
-    return {datum:h.datum,menge:m,betrag,kgPreis:kg,kaufort:h.kaufort||''};
+    return {datum:h.datum,menge:m,betrag,kgPreis:kg,kaufort:h.kaufort||'',aktion:!!h.aktion};
   });
 }
 function chf(x){return 'CHF '+Number(x).toFixed(2);}
+// v23.6: Aktionspreise orange
+function aktionSpan(html,aktion){return aktion?'<span style="color:var(--wn);font-weight:600" title="Aktionspreis">'+html+'</span>':html;}
 function arPreisText(a){
   const h=letzterEinkauf(a);
-  if(!h)return a.preis?'CHF '+a.preis.toFixed(2):'';
+  if(!h)return a.preis?chf(a.preis):'';
   const b=kaufBetrag(a,h);
   if(!(b>0))return '';
   const gew=['kg','g'].includes(a.einheit)&&h.menge>0;
-  if(!gew)return chf(b);
+  if(!gew)return aktionSpan(chf(b),h.aktion);
   const ek=letzteEinkaeufe(a);
-  if(ek.length<=1)return chf(b)+' ('+fmtMenge(h.menge)+' '+esc(a.einheit)+(ek[0]&&ek[0].kgPreis?' · '+ek[0].kgPreis.toFixed(2)+'/kg':'')+')';
+  if(ek.length<=1)return aktionSpan(chf(b)+' ('+fmtMenge(h.menge)+' '+esc(a.einheit)+(ek[0]&&ek[0].kgPreis?' · '+ek[0].kgPreis.toFixed(2)+'/kg':'')+')',h.aktion);
   return '';  // mehrere Stücke → eigene Zeile (arPreisZeile)
 }
 function arPreisZeile(a){
@@ -2202,7 +2205,7 @@ function arPreisZeile(a){
   const ek=letzteEinkaeufe(a);
   if(ek.length<2)return '';
   return '<div class="am" style="margin-top:2px;line-height:1.5">'+ek.map(e=>
-    '<span style="display:inline-block;margin-right:8px;white-space:nowrap">🛒 '+fmtMenge(e.menge)+' '+esc(a.einheit)+' · <strong>'+chf(e.betrag)+'</strong>'+(e.kgPreis?' <span style="color:var(--t3)">('+e.kgPreis.toFixed(2)+'/kg)</span>':'')+'</span>'
+    '<span style="display:inline-block;margin-right:8px;white-space:nowrap">🛒 '+fmtMenge(e.menge)+' '+esc(a.einheit)+' · '+aktionSpan('<strong>'+chf(e.betrag)+'</strong>'+(e.kgPreis?' ('+e.kgPreis.toFixed(2)+'/kg)':''),e.aktion)+'</span>'
   ).join('')+'</div>';
 }
 function arRow(a){
@@ -2243,7 +2246,7 @@ function showDet(id){
   const ekL=letzteEinkaeufe(a);
   if(ekL.length&&['kg','g'].includes(a.einheit)){
     preisRow+='<div class="ir" style="align-items:flex-start"><span class="ik">🧾 Letzter Einkauf'+(ekL.length>1?' ('+ekL.length+' Stück)':'')+'<br><span style="font-size:11px;color:var(--t3);font-weight:400">'+fmtDateCH(ekL[0].datum)+(ekL[0].kaufort?' · '+esc(ekL[0].kaufort):'')+'</span></span>'+
-      '<span class="iv" style="text-align:right;line-height:1.6">'+ekL.map(e=>fmtMenge(e.menge)+' '+esc(a.einheit)+' · <strong>'+chf(e.betrag)+'</strong>'+(e.kgPreis?' <span style="color:var(--t3);font-size:12px">('+e.kgPreis.toFixed(2)+'/kg)</span>':'')).join('<br>')+
+      '<span class="iv" style="text-align:right;line-height:1.6">'+ekL.map(e=>fmtMenge(e.menge)+' '+esc(a.einheit)+' · '+aktionSpan('<strong>'+chf(e.betrag)+'</strong>'+(e.kgPreis?' <span style="font-size:12px">('+e.kgPreis.toFixed(2)+'/kg)</span>':'')+(e.aktion?' 🏷️':''),e.aktion)).join('<br>')+
       (ekL.length>1?'<br><span style="font-size:12px;color:var(--t2)">Total '+fmtMenge(Math.round(ekL.reduce((x,e)=>x+e.menge,0)*1000)/1000)+' '+esc(a.einheit)+' · '+chf(ekL.reduce((x,e)=>x+e.betrag,0))+'</span>':'')+
       '</span></div>';
   }
@@ -8966,9 +8969,10 @@ function umBucheQuittungsPosition(ka){
   a.kaufdatum = datum;
   if (kaufort) a.kaufort = kaufort;
   if (!a.preisHistorie) a.preisHistorie = [];
-  a.preisHistorie.push({ datum, preis: einzelpreis, betrag: umQuittungsWerte(ka, a.einheit).total, menge, einheit: a.einheit || 'Stk', typ: 'ein', aktion: false, kaufort });
-  if (einzelpreis > 0) a.preis = einzelpreis;
-  addLogEntry('ein', a.id, a.name, a.lager, a.kat, menge, a.einheit || 'Stk', einzelpreis, false, true);
+  const istAktion = Number(ka.rabatt) > 0; // v23.6: Rabatt auf Quittung = Aktion
+  a.preisHistorie.push({ datum, preis: einzelpreis, betrag: umQuittungsWerte(ka, a.einheit).total, menge, einheit: a.einheit || 'Stk', typ: 'ein', aktion: istAktion, kaufort });
+  if (einzelpreis > 0 && !istAktion) a.preis = einzelpreis; // Aktionspreis wird nicht Standardpreis
+  addLogEntry('ein', a.id, a.name, a.lager, a.kat, menge, a.einheit || 'Stk', einzelpreis, istAktion, true);
   ka.gebucht = true;
   ka.warehouseArticle = a;
   console.log('[Buchung] ' + a.name + ' +' + menge + ' @ CHF ' + einzelpreis + ' (' + kaufort + ')');
@@ -9484,7 +9488,7 @@ function createAndBookUnmatchedArticle(kiArtikel, barcode, onlineInfo, form) {
   if (menge > 0) {
     addLogEntry('ein', newId, newArticle.name, newArticle.lager, newArticle.kat, menge, einheit, einzelpreis, false);
     const ph = newArticle.preisHistorie[newArticle.preisHistorie.length - 1];
-    if (ph) { ph.betrag = qw.total; ph.kaufort = kaufort; }
+    if (ph) { ph.betrag = qw.total; ph.kaufort = kaufort; ph.aktion = Number(kiArtikel.rabatt) > 0; }
   }
   try { addScannedBarcodeToCache(barcode); } catch (e) { console.warn('[UnmatchedCreate] Barcode-Cache:', e.message); }
   saveL();
