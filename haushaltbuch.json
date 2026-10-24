@@ -12886,7 +12886,7 @@
       "marke": "BREITENMOSER",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "kaufort": "Breitenmose4",
+      "kaufort": "Breitenmoser",
       "menge": 545,
       "einheit": "g",
       "mindest": 0,
@@ -12921,7 +12921,7 @@
           "einheit": "g",
           "typ": "ein",
           "aktion": false,
-          "kaufort": "Breitenmose4"
+          "kaufort": "Breitenmoser"
         }
       ],
       "quittungAliase": [],
@@ -13259,7 +13259,7 @@
     "Geschenk",
     "Rita Eisenring",
     "Getränkemarkt Zil",
-    "Breitenmose4"
+    "Breitenmoser"
   ],
   "einkauf": [],
   "einkaufOverrides": {
@@ -27716,7 +27716,282 @@
       "aktion": false,
       "datum": "2026-10-24",
       "zeit": 1792829882682
+    },
+    {
+      "aid": 33,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 2.99,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 53,
+      "d": "2026-10-24",
+      "m": 2,
+      "p": 4.69,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 65,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 4.95,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 132,
+      "d": "2026-10-24",
+      "m": 0.242,
+      "p": 1.4,
+      "t": "ein",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 190,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 1.99,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Konserven & Trockenware",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 222,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 2.99,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 223,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 6.89,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 234,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 3.49,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 234,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 236,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 1.89,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 244,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 1.59,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 245,
+      "d": "2026-10-24",
+      "m": 1.048,
+      "p": 2.8,
+      "t": "ein",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 249,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 7.49,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 254,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 2.75,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 306,
+      "d": "2026-10-24",
+      "m": 20,
+      "p": 8.19,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 315,
+      "d": "2026-10-24",
+      "m": 0.73,
+      "p": 4,
+      "t": "ein",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Spar"
+    },
+    {
+      "aid": 316,
+      "d": "2026-10-24",
+      "m": 0.268,
+      "p": 0.8,
+      "t": "ein",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Spar"
+    },
+    {
+      "aid": 317,
+      "d": "2026-10-24",
+      "m": 544,
+      "p": 17.95,
+      "t": "ein",
+      "e": "g",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Breitenmoser"
+    },
+    {
+      "aid": 318,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 1.49,
+      "t": "ein",
+      "e": "kg",
+      "k": "Süsswaren",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 319,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 1.99,
+      "t": "ein",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 320,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 8.95,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Reinigung & Pflege",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 322,
+      "d": "2026-10-24",
+      "m": 0.649,
+      "p": 19.5,
+      "t": "ein",
+      "e": "kg",
+      "k": "Fleisch & Fisch",
+      "aktion": true,
+      "kaufort": "Migros"
+    },
+    {
+      "aid": 322,
+      "d": "2026-10-24",
+      "m": 0.677,
+      "p": 13.2,
+      "t": "ein",
+      "e": "kg",
+      "k": "Fleisch & Fisch",
+      "aktion": true,
+      "kaufort": "Migros"
+    },
+    {
+      "aid": 323,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 2.9,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Migros"
+    },
+    {
+      "aid": 324,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 4.2,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Migros"
     }
   ],
-  "aktualisiert": "2026-10-24T08:25:27.499Z"
+  "aktualisiert": "2026-10-24T08:26:06.990Z"
 }
