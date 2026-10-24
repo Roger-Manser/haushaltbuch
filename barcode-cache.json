@@ -1,5 +1,17 @@
 {
   "barcodes": {
+    "20238537": {
+      "barcode": "20238537",
+      "name": "",
+      "marke": "",
+      "kategorien": "",
+      "description": "",
+      "image": "",
+      "source": "Gescannt (noch nicht gesucht)",
+      "offData": {},
+      "addedAt": 1792825188576,
+      "scannedOnly": true
+    },
     "20470142": {
       "barcode": "20470142",
       "name": "Spaghetti di Gragnano IGP",
@@ -174,5 +186,5 @@
       "scannedOnly": true
     }
   },
-  "lastUpdated": 1792825149644
+  "lastUpdated": 1792825188579
 }
