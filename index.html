@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.8 — Einkaufssumme: alle Positionen, richtiger Betrag bei Gewichtsartikeln -->
+<!-- HAUSHALTBUCH v23.9 — Entfernte Einkaufslisten-Artikel bleiben ganz weg -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.8"/>
+<meta name="app-version" content="23.9"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.8';
+const APP_VERSION='23.9';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.9',d:'24.10.2026',items:['🛒 Einkaufsliste: mit ✕ entfernte Artikel bleiben ganz weg (kein Wiederauftauchen bei Bestandsänderung, kein «wieder anzeigen»)','✅ Erst wenn der Artikel wieder eingekauft ist (Bestand ≥ Mindestbestand) und später erneut darunter fällt, erscheint er wieder','✅ Gilt auch für «Nicht kaufen» im Laden-Modus']},
   {v:'23.8',d:'24.10.2026',items:['🔴 BUGFIX Einkaufssumme (Lager, «Zuletzt erfasst»): zählte pro Artikel nur den ERSTEN Einkauf → 2. Speck fehlte','🔴 BUGFIX: rechnete immer Preis × Menge – bei Gewichtsartikeln mit gespeichertem Kaufpreis falsch (15.96 × 0.56)','✅ Summe = bezahlter Betrag aller Positionen des Tages beim Laden','✅ Kopfzeile zeigt bei mehreren Stück zusätzlich die Anzahl Positionen']},
   {v:'23.7',d:'24.10.2026',items:['📱 Zurück-Button verlässt die App nicht mehr','🔴 Ursache: Chrome überspringt Verlaufseinträge ohne Berührung → erster Zurück-Druck schloss die App','✅ Schutz wird bei jeder Berührung neu gesetzt','✅ Zurück schliesst den obersten Dialog – auch alle neuen (Scanner, Laden-Modus, Einkaufsliste …)','✅ Quittungs-/Review-Ablauf wird nicht mittendrin abgebrochen (Hinweis statt Schliessen)','✅ Andere Tabs → zurück zum Lager; im Lager: Hinweis «App verlassen?» statt Beenden']},
   {v:'23.6',d:'24.10.2026',items:['🏷️ Lagerliste: Preis orange, wenn der letzte Einkauf ein Aktionspreis war','✅ Mehrere Stücke: jedes Stück einzeln orange, wenn Aktion','✅ Details «Letzter Einkauf»: Aktionspreise orange mit 🏷️','🧾 Quittung: Position mit Rabatt wird als Aktion gebucht (wird nicht zum Standardpreis)']},
@@ -6149,8 +6150,7 @@ function renderEk(){
       '<button class="eid" title="Von Liste entfernen (nicht einbuchen)" onclick="event.stopPropagation();ekAusblenden('+a.id+')">&#x2715;</button>'+
     '</div>';
   }).join(''):'<div style="color:var(--t3);font-size:13px;padding:4px 0 12px">Alle Artikel im Soll</div>';
-  const ausgebl=ekAusgeblendetListe().length;
-  if(ausgebl)h+='<button onclick="ekAusgeblendeteAnzeigen()" style="background:none;border:none;color:var(--t3);font-size:12px;cursor:pointer;padding:2px 0 10px;text-decoration:underline">👁 '+ausgebl+' ausgeblendete'+(ausgebl===1?'n Artikel':' Artikel')+' wieder anzeigen</button>';
+
   h+='<div class="sh">Manuell</div><div class="mir"><input type="text" id="mi-i" placeholder="Artikel hinzufügen..." onkeydown="if(event.key===\'Enter\')addM()"/><button onclick="addM()">+</button></div><div id="mi-l">';
   S.ek.forEach(e=>{
     const matchA=S.a.find(a=>a.name.toLowerCase()===e.text.toLowerCase());
@@ -6341,14 +6341,23 @@ function finishLadenModus(){
 function ckA(id,v){const el=document.getElementById('eia-'+id);if(el)el.classList.toggle('ck',v);}
 // v23.1: Automatische Einträge (unter Mindestbestand) ohne Einbuchen von der Liste entfernen.
 // Ausgeblendet bleibt der Artikel, bis sich sein Bestand oder Mindestbestand ändert.
+// v23.9: Entfernt = ganz weg, bis der Artikel wieder eingekauft ist (Bestand ≥ Mindestbestand).
+// Fällt er danach erneut unter den Mindestbestand, erscheint er wieder normal.
 function ekIstAusgeblendet(a){
   const ov=(S.eko||{})[a.id];
-  if(!ov||!ov.ausgeblendet)return false;
-  if(ov.ausgeblendetMenge===a.menge&&ov.ausgeblendetMindest===a.mindest)return true;
-  delete ov.ausgeblendet;delete ov.ausgeblendetMenge;delete ov.ausgeblendetMindest; // Bestand geändert → wieder anzeigen
-  return false;
+  return !!(ov&&ov.ausgeblendet);
+}
+function ekAusblendungAufraeumen(){
+  let geaendert=false;
+  Object.keys(S.eko||{}).forEach(id=>{
+    const ov=S.eko[id];if(!ov||!ov.ausgeblendet)return;
+    const a=S.a.find(x=>String(x.id)===String(id));
+    if(!a||a.menge>=a.mindest){delete S.eko[id];geaendert=true;} // wieder eingekauft oder gelöscht → Markierung weg
+  });
+  if(geaendert)saveL();
 }
 function ekAutoListe(mitFilter){
+  ekAusblendungAufraeumen();
   return S.a.filter(a=>a.menge<a.mindest&&!ekIstAusgeblendet(a)&&(!mitFilter||ekShopFilter==='alle'||a.kaufort===ekShopFilter));
 }
 function ekAusgeblendetListe(){return S.a.filter(a=>a.menge<a.mindest&&ekIstAusgeblendet(a));}
@@ -6356,10 +6365,10 @@ function ekAusblenden(id){
   const a=S.a.find(x=>x.id===id);if(!a)return;
   if(!S.eko)S.eko={};
   const ov=S.eko[id]||(S.eko[id]={});
-  ov.ausgeblendet=true;ov.ausgeblendetMenge=a.menge;ov.ausgeblendetMindest=a.mindest;
+  ov.ausgeblendet=true;
   delete ov.menge;delete ov.einheit;
   saveL();renderEk();
-  toast('🗑 «'+a.name+'» von der Liste entfernt — erscheint wieder, wenn sich der Bestand ändert');
+  toast('🗑 «'+a.name+'» von der Einkaufsliste entfernt');
 }
 function ekAusgeblendeteAnzeigen(){
   ekAusgeblendetListe().forEach(a=>{const ov=S.eko[a.id];delete ov.ausgeblendet;delete ov.ausgeblendetMenge;delete ov.ausgeblendetMindest;});
