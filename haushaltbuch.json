@@ -13145,15 +13145,6 @@
           "datum": "2026-10-24",
           "preis": 2.9,
           "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Migros"
-        },
-        {
-          "datum": "2026-10-24",
-          "preis": 2.9,
-          "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
           "aktion": false,
@@ -13192,15 +13183,6 @@
         }
       ],
       "preisHistorie": [
-        {
-          "datum": "2026-10-24",
-          "preis": 4.2,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Migros"
-        },
         {
           "datum": "2026-10-24",
           "preis": 4.2,
@@ -27736,5 +27718,5 @@
       "zeit": 1792829882682
     }
   ],
-  "aktualisiert": "2026-10-24T08:18:25.412Z"
+  "aktualisiert": "2026-10-24T08:25:27.499Z"
 }
