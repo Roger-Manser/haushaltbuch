@@ -12074,15 +12074,15 @@
       "kat": "Genussmittel",
       "lager": "Schlof",
       "kaufort": "Landi",
-      "menge": 1,
+      "menge": 3,
       "einheit": "Kiste",
       "mindest": 0,
       "barcode": "7611330258981",
       "barcodes": [],
-      "preis": 34.2,
+      "preis": 0,
       "packMenge": 6,
       "packEinheit": "Flasche",
-      "kaufdatum": "2026-10-19",
+      "kaufdatum": "2026-10-24",
       "ablaufdatum": "2049-09-30",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1789810025163_17898100158268291851405590605948.jpg?t=1791130431730",
@@ -12107,11 +12107,21 @@
           "kaufort": "Landi"
         },
         {
-          "datum": "2026-10-19",
-          "preis": 34.2,
-          "menge": 1,
+          "datum": "2026-10-24",
+          "preis": 27,
+          "betrag": 54,
+          "menge": 2,
           "einheit": "Kiste",
           "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-10-24",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Kiste",
+          "typ": "aus",
           "aktion": false,
           "kaufort": "Landi"
         }
@@ -12119,14 +12129,21 @@
       "letzteEingangHeute": "11:28",
       "packungen": [
         {
-          "id": 3,
+          "id": 1,
           "menge": 1,
-          "kaufdatum": "2026-10-19",
+          "kaufdatum": "2026-10-24",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 2,
+          "menge": 2,
+          "kaufdatum": "2026-10-24",
           "ablaufdatum": ""
         }
       ],
       "alias": [
-        "114619 Lemanic Rouge 6 x 75 cl"
+        "114619 Lemanic Rouge 6 x 75 cl",
+        "25898 Chasselas Lemanic 6x75cl"
       ]
     },
     {
@@ -28005,7 +28022,46 @@
       "k": "Gemüse & Früchte",
       "aktion": false,
       "kaufort": "Migros"
+    },
+    {
+      "t": "ein",
+      "aid": 298,
+      "name": "Weisswein Lemanic",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 34.2,
+      "aktion": false,
+      "datum": "2026-10-24",
+      "zeit": 1792843929861
+    },
+    {
+      "t": "ein",
+      "aid": 298,
+      "name": "Weisswein Lemanic",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 2,
+      "einheit": "Kiste",
+      "preis": 27,
+      "aktion": false,
+      "datum": "2026-10-24",
+      "zeit": 1792843929862
+    },
+    {
+      "t": "aus",
+      "aid": 298,
+      "name": "Weisswein Lemanic",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Kiste",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-10-24",
+      "zeit": 1792843960587
     }
   ],
-  "aktualisiert": "2026-10-24T09:05:12.897Z"
+  "aktualisiert": "2026-10-24T12:13:14.462Z"
 }
