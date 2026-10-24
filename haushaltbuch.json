@@ -28061,7 +28061,29 @@
       "aktion": false,
       "datum": "2026-10-24",
       "zeit": 1792843960587
+    },
+    {
+      "aid": 298,
+      "d": "2026-10-24",
+      "m": 2,
+      "p": 27,
+      "t": "ein",
+      "e": "Kiste",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Landi"
+    },
+    {
+      "aid": 298,
+      "d": "2026-10-24",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Kiste",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Landi"
     }
   ],
-  "aktualisiert": "2026-10-24T12:13:14.462Z"
+  "aktualisiert": "2026-10-24T12:25:50.064Z"
 }
