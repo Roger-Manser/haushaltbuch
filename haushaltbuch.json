@@ -9022,7 +9022,7 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "20631666",
@@ -9107,15 +9107,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-10-24",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
-        {
-          "id": 1,
-          "menge": 1,
-          "kaufdatum": "2026-09-17",
-          "ablaufdatum": "2026-10-03"
-        },
         {
           "id": 11,
           "menge": 1,
@@ -13051,6 +13054,166 @@
       "quittungAliase": [],
       "letzteEingangHeute": "09:00",
       "ablaufdatum": ""
+    },
+    {
+      "id": 322,
+      "name": "Kochspeck geräuchert",
+      "marke": "",
+      "kat": "Fleisch & Fisch",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Migros",
+      "menge": 1.326,
+      "einheit": "kg",
+      "mindest": 0,
+      "barcode": "2165447012653",
+      "barcodes": [],
+      "preis": 19.5,
+      "packMenge": 1,
+      "packEinheit": "kg",
+      "kaufdatum": "2026-10-24",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792829750890_1000072668.jpg?t=1792829781859",
+      "fotoPath": "1792829750890_1000072668.jpg",
+      "packungen": [
+        {
+          "id": 24,
+          "menge": 0.649,
+          "kaufdatum": "2026-10-24",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 27,
+          "menge": 0.677,
+          "kaufdatum": "2026-10-24",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-24",
+          "preis": 19.5,
+          "menge": 0.649,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-10-24",
+          "preis": 13.2,
+          "menge": 0.677,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Migros"
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "10:18",
+      "ablaufdatum": "",
+      "preisProKg": 19.5
+    },
+    {
+      "id": 323,
+      "name": "IPS Bohnen fein 750G TK",
+      "marke": "FARMER'S BEST",
+      "kat": "Gemüse & Früchte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610247589119",
+      "barcodes": [],
+      "preis": 2.9,
+      "packMenge": 750,
+      "packEinheit": "g",
+      "kaufdatum": "2026-10-24",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792829712316_1000072665.jpg?t=1792829735986",
+      "fotoPath": "1792829712316_1000072665.jpg",
+      "packungen": [
+        {
+          "id": 25,
+          "menge": 1,
+          "kaufdatum": "2026-10-24",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-24",
+          "preis": 2.9,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-10-24",
+          "preis": 2.9,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "10:11",
+      "ablaufdatum": ""
+    },
+    {
+      "id": 324,
+      "name": "Gartenerbsen 750g TK",
+      "marke": "Farmer's Best",
+      "kat": "Gemüse & Früchte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Migros",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7613312454398",
+      "barcodes": [],
+      "preis": 4.2,
+      "packMenge": 750,
+      "packEinheit": "g",
+      "kaufdatum": "2026-10-24",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792829685213_1000072662.jpg?t=1792829696664",
+      "fotoPath": "1792829685213_1000072662.jpg",
+      "packungen": [
+        {
+          "id": 26,
+          "menge": 1,
+          "kaufdatum": "2026-10-24",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-24",
+          "preis": 4.2,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        },
+        {
+          "datum": "2026-10-24",
+          "preis": 4.2,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Migros"
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "10:11",
+      "ablaufdatum": ""
     }
   ],
   "lagerorte": [
@@ -13116,29 +13279,7 @@
     "Getränkemarkt Zil",
     "Breitenmose4"
   ],
-  "einkauf": [
-    {
-      "id": 1792308674574,
-      "text": "zucker",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1792812095562,
-      "text": "papiertaschentücher",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1792826067774,
-      "text": "Tilsiter",
-      "menge": "1",
-      "einheit": "Pkg",
-      "checked": false
-    }
-  ],
+  "einkauf": [],
   "einkaufOverrides": {
     "221": {
       "menge": "2"
@@ -27514,7 +27655,86 @@
       "aktion": false,
       "datum": "2026-10-24",
       "zeit": 1792825230376
+    },
+    {
+      "t": "aus",
+      "aid": 234,
+      "name": "Tilsiter",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-10-24",
+      "zeit": 1792827035156
+    },
+    {
+      "t": "ein",
+      "aid": 321,
+      "name": "Kochspeck geräuchert",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 0.677,
+      "einheit": "kg",
+      "preis": 19.5,
+      "aktion": false,
+      "datum": "2026-10-24",
+      "zeit": 1792829442773,
+      "geloescht": true
+    },
+    {
+      "t": "ein",
+      "aid": 322,
+      "name": "Kochspeck geräuchert",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 0.649,
+      "einheit": "kg",
+      "preis": 19.49,
+      "aktion": false,
+      "datum": "2026-10-24",
+      "zeit": 1792829464973
+    },
+    {
+      "t": "ein",
+      "aid": 323,
+      "name": "IPS Bohnen fein 750G",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.9,
+      "aktion": false,
+      "datum": "2026-10-24",
+      "zeit": 1792829485118
+    },
+    {
+      "t": "ein",
+      "aid": 324,
+      "name": "Gartenerbsen 750g",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 4.2,
+      "aktion": false,
+      "datum": "2026-10-24",
+      "zeit": 1792829503257
+    },
+    {
+      "t": "ein",
+      "aid": 322,
+      "name": "Kochspeck geräuchert",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 0.677,
+      "einheit": "kg",
+      "preis": 13.2,
+      "aktion": false,
+      "datum": "2026-10-24",
+      "zeit": 1792829882682
     }
   ],
-  "aktualisiert": "2026-10-24T07:14:49.490Z"
+  "aktualisiert": "2026-10-24T08:18:25.412Z"
 }
