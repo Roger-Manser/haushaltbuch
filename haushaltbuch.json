@@ -12539,6 +12539,141 @@
       "fotoPath": "1792426721825_off.jpg",
       "preisHistorie": [],
       "packungen": []
+    },
+    {
+      "id": 315,
+      "name": "SELLERIEKNOLLEN",
+      "marke": "",
+      "kat": "Gemüse & Früchte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Spar",
+      "menge": 1,
+      "einheit": "kg",
+      "mindest": 0,
+      "barcode": "2200394004006",
+      "barcodes": [],
+      "preis": 5.5,
+      "packMenge": 1,
+      "packEinheit": "kg",
+      "kaufdatum": "2026-10-24",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792824341173_1000072646.jpg?t=1792824402048",
+      "fotoPath": "1792824341173_1000072646.jpg",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-10-24",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-24",
+          "preis": 4,
+          "menge": 0.73,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "08:42",
+      "ablaufdatum": "",
+      "preisProKg": 5.5
+    },
+    {
+      "id": 316,
+      "name": "KAROTTEN",
+      "marke": "",
+      "kat": "Gemüse & Früchte",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Spar",
+      "menge": 1,
+      "einheit": "kg",
+      "mindest": 0,
+      "barcode": "2200350000806",
+      "barcodes": [],
+      "preis": 2.9,
+      "packMenge": 1,
+      "packEinheit": "kg",
+      "kaufdatum": "2026-10-24",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792824435688_1000072645.webp?t=1792824474582",
+      "fotoPath": "1792824435688_1000072645.webp",
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-10-24",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-24",
+          "preis": 0.8,
+          "menge": 0.268,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "08:42",
+      "ablaufdatum": "",
+      "preisProKg": 2.9
+    },
+    {
+      "id": 317,
+      "name": "Hackfleisch zweierlei",
+      "marke": "BREITENMOSER",
+      "kat": "Fleisch & Fisch",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Breitenmose4",
+      "menge": 545,
+      "einheit": "g",
+      "mindest": 0,
+      "barcode": "2100555017954",
+      "barcodes": [],
+      "preis": 33,
+      "packMenge": 1,
+      "packEinheit": "kg",
+      "kaufdatum": "2026-10-24",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792824607073_1000072647.jpg?t=1792824637974",
+      "fotoPath": "1792824607073_1000072647.jpg",
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-10-24",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 4,
+          "menge": 544,
+          "kaufdatum": "2026-10-24",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-24",
+          "preis": 17.95,
+          "menge": 544,
+          "einheit": "g",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Breitenmose4"
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "08:53",
+      "ablaufdatum": "",
+      "preisProKg": 33
     }
   ],
   "lagerorte": [
@@ -12601,12 +12736,20 @@
     "Spar",
     "Geschenk",
     "Rita Eisenring",
-    "Getränkemarkt Zil"
+    "Getränkemarkt Zil",
+    "Breitenmose4"
   ],
   "einkauf": [
     {
       "id": 1792308674574,
       "text": "zucker",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1792812095562,
+      "text": "papiertaschentücher",
       "menge": "1",
       "einheit": "Stk",
       "checked": false
@@ -26714,7 +26857,59 @@
       "k": "Diverses",
       "aktion": false,
       "kaufort": "Landi"
+    },
+    {
+      "t": "ein",
+      "aid": 315,
+      "name": "SELLERIEKNOLLEN",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 4,
+      "aktion": false,
+      "datum": "2026-10-24",
+      "zeit": 1792824153121
+    },
+    {
+      "t": "ein",
+      "aid": 316,
+      "name": "KAROTTEN",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0.8,
+      "aktion": false,
+      "datum": "2026-10-24",
+      "zeit": 1792824170975
+    },
+    {
+      "t": "ein",
+      "aid": 317,
+      "name": "BREITENMOSER",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 17.95,
+      "aktion": false,
+      "datum": "2026-10-24",
+      "zeit": 1792824194199
+    },
+    {
+      "t": "ein",
+      "aid": 317,
+      "name": "Hackfleisch zweierlei",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 544,
+      "einheit": "g",
+      "preis": 17.95,
+      "aktion": false,
+      "datum": "2026-10-24",
+      "zeit": 1792824831851
     }
   ],
-  "aktualisiert": "2026-10-19T16:21:40.273Z"
+  "aktualisiert": "2026-10-24T06:54:26.616Z"
 }
