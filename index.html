@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.0 — Neuer Einkaufsablauf: Quittung + Live-Barcode-Scanner + echte Buchung, MHD entfernt -->
+<!-- HAUSHALTBUCH v23.3 — Lagerliste zeigt Kaufpreis statt Kilopreis -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.0"/>
+<meta name="app-version" content="23.3"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.0';
+const APP_VERSION='23.3';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,9 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.3',d:'24.10.2026',items:['💰 Lagerliste: zeigt den Kaufpreis des letzten Einkaufs statt des Kilopreises (z.B. «CHF 15.96 (0.56 kg)»)','✅ Stück-Artikel: weiterhin Stückpreis','🔧 Neue Buchungen speichern den bezahlten Betrag («betrag») im Preisverlauf – Quittung, Laden-Modus, Einkaufsliste','✅ Ältere Einträge werden anhand des bekannten Kilopreises richtig eingeordnet']},
+  {v:'23.2',d:'24.10.2026',items:['🔴 BUGFIX Duplikat-Prüfung: verglich nur Datum + Typ → 2× Speck am selben Tag (0.56 kg / 0.87 kg) galt als doppelt','✅ Duplikat nur noch, wenn Datum, Typ, Menge, Preis, Laden und Aktion identisch sind','🔴 BUGFIX: Log-Bereinigung suchte falsche Felder (l.d/l.m) → Preisverlauf und Log liefen auseinander','✅ Liste im Dialog zeigt jetzt Menge, Einheit und Preis','✅ Quittung: «Duplikat erkannt» nur, wenn heute dieselbe Menge schon gebucht wurde']},
+  {v:'23.1',d:'24.10.2026',items:['🏪 NEU: Einstellungen → Stammdaten → «Einkaufsläden»: hinzufügen, umbenennen, löschen, sortieren','✅ Umbenennen überträgt auf alle Artikel, Preisverlauf und Filter; gleicher Name → zusammenführen','🛒 Einkaufsliste: ✕ auch bei automatischen Einträgen (unter Mindestbestand) – entfernt OHNE Einbuchen','✅ Ausgeblendete Artikel erscheinen wieder, sobald sich Bestand/Mindestbestand ändert («👁 wieder anzeigen» möglich)','✅ Einbuchungs-Dialog manueller Einträge: «Ohne Einbuchen von Liste entfernen»','✅ Laden-Modus: «Nicht kaufen – von Liste entfernen»','🔧 Abbrechen im Einbuchungs-Dialog setzt das Häkchen zurück']},
   {v:'23.0',d:'18.10.2026',items:['🎉 VERSION 23 – Zusammenfassung seit v22.167:','🧾 Quittung aus dem Einkauf-Register: KI erkennt Artikel, Mengen, Preise und Geschäft','🔍 Matching gegen das Lager; gematchte Artikel mit Barcode werden automatisch eingebucht','📱 Live-Barcode-Scanner mit Bestätigung für ungematchte Artikel und Artikel ohne Barcode','🌐 Web-Suche (Open Food Facts / EAN-DB) → neuen Artikel erstellen mit Laden, Menge, Preis','📦 Echte Buchung: Bestand, Einzelpreis nach Rabatt, Laden, Preisverlauf, Log','🧹 MHD/Foodwaste vollständig entfernt – Lagerrotation nach Kaufdatum']},
   {v:'22.178',d:'18.10.2026',items:['🔴 BUGFIX: Stückzahl aus der Quittung ging verloren – gematchte Artikel wurden nie eingebucht','❌ Ursache: «Einbuchen» und Auto-Übernahme markierten nur, buchten aber weder Bestand noch Preis','✅ Gematchte Positionen: Packung + Bestand + Einzelpreis + Laden + Log-Eintrag','✅ Preis = bezahlter Betrag nach Rabatt ÷ Menge; Gewicht auf Stück-Artikel → 1 Stk','✅ Vorschau-Modus bucht weiterhin nichts (nur Aliase/Barcodes)','🔧 Matching findet jetzt auch quittungAliase (Artikel aus v22.174+)','🔧 Alte Quittungsvorschau: MHD-Pflichtfeld entfernt']},
   {v:'22.177',d:'18.10.2026',items:['🔴 BUGFIX: Neu erstellte (ungematchte) Artikel hatten keinen Einkaufsladen','❌ Ursache: Quittung startet seit v22.168 ohne Geschäftsauswahl → geschaeft leer','✅ KI liest jetzt den Händler aus dem Quittungskopf («MIGROS Teufen» → Migros)','✅ Erstell-Dialog: neues Feld «Gekauft bei» (vorausgefüllt, änderbar)','✅ Gewähltes Geschäft wird für die weiteren Artikel des Einkaufs übernommen']},
@@ -1319,113 +1322,64 @@ async function uploadFoto(b64,fn){
   return 'https://raw.githubusercontent.com/'+gh.own+'/'+gh.repo+'/'+gh.br+'/'+path+'?t='+Date.now();
 }
 
-async function showDeduplicateDialog(){
-  // Manueller Trigger für Deduplizierung (z.B. von Button in Einstellungen)
-  const dups=findDuplicates();
-  if(!dups.length){
-    toast('✓ Keine Duplikate gefunden');
-    return;
-  }
-  
-  const msg='🔄 Deduplizierung\n\n'+dups.length+' doppelte Einträge gefunden:\n\n'+
-    dups.slice(0,15).map(d=>'• '+esc(d.artikel)+' ('+d.datum+')').join('\n')+
-    (dups.length>15?'\n...und '+(dups.length-15)+' weitere':'');
-  
-  if(!confirm(msg+'\n\nJetzt löschen?'))return;
-  
-  // Führe Deduplizierung durch
-  let removed=0;
-  S.a.forEach(a=>{
-    if(!a.preisHistorie||a.preisHistorie.length<2)return;
-    const seen=new Map();
-    const keep=[];
-    a.preisHistorie.forEach((h,idx)=>{
-      const key=(h.datum||'')+'|'+(h.typ||'ein');
-      if(!seen.has(key)){
-        seen.set(key,true);
-        keep.push(h);
-      }else{
-        const logIdx=S.log.findIndex(l=>
-          l.aid===a.id&&l.d===h.datum&&Math.abs((l.m||0)-(h.menge||0))<0.01&&l.t===(h.typ||'ein')
-        );
-        if(logIdx>=0){
-          S.log.splice(logIdx,1);
-          removed++;
-        }
-      }
-    });
-    a.preisHistorie=keep;
-  });
-  
-  if(removed>0){
-    saveL();
-    toast('✓ '+removed+' doppelte Einträge gelöscht');
-    renderLager();
-  }
+// v23.2: Duplikat = ALLE Felder gleich (Datum, Typ, Menge, Preis, Laden, Aktion).
+// Früher nur Datum+Typ → 2× Speck am selben Tag (0.56 kg / 0.87 kg) galt fälschlich als doppelt.
+function dupNum(x){const n=Number(x);return isFinite(n)?Math.round(n*1000)/1000:0;}
+function dupKey(h){
+  return [h.datum||'',h.typ||'ein',dupNum(h.menge),dupNum(h.preis),String(h.kaufort||'').trim().toLowerCase(),h.aktion?1:0].join('|');
 }
-
 function findDuplicates(){
-  // Findet alle Duplikate vor dem Löschen
   const duplicates=[];
   S.a.forEach(a=>{
     if(!a.preisHistorie||a.preisHistorie.length<2)return;
-    const seen=new Map();
-    a.preisHistorie.forEach((h,idx)=>{
-      const key=(h.datum||'')+'|'+(h.typ||'ein');
-      if(!seen.has(key)){
-        seen.set(key,true);
-      }else{
-        duplicates.push({artikel:a.name,datum:h.datum,typ:h.typ||'ein',menge:h.menge,preis:h.preis});
-      }
+    const seen=new Set();
+    a.preisHistorie.forEach(h=>{
+      const k=dupKey(h);
+      if(seen.has(k))duplicates.push({artikel:a.name,datum:h.datum,typ:h.typ||'ein',menge:h.menge,einheit:h.einheit||a.einheit||'',preis:h.preis});
+      else seen.add(k);
     });
   });
   return duplicates;
 }
-
-async function deduplicatePreisHistorie(){
-  // Findet doppelte Einträge, zeigt Dialog, dann löscht
-  const dups=findDuplicates();
-  if(!dups.length){
-    return;
-  }
-  
-  // Zeige Dialog mit Duplikaten
-  const msg='Es wurden '+dups.length+' doppelte Einträge gefunden:\n\n'+
-    dups.slice(0,10).map(d=>'• '+esc(d.artikel)+' ('+d.datum+', '+d.menge+' '+d.typ+')').join('\n')+
-    (dups.length>10?'\n... und '+(dups.length-10)+' weitere':'');
-  
-  if(!await confirmDialog(msg,'Ja, löschen','Nein, behalten')){
-    return;
-  }
-  
-  // Jetzt wirklich löschen
+// Entfernt exakte Duplikate aus preisHistorie und je einen passenden Log-Eintrag
+function removeDuplicates(){
   let removed=0;
+  if(!S.log)S.log=[];
   S.a.forEach(a=>{
     if(!a.preisHistorie||a.preisHistorie.length<2)return;
-    const seen=new Map();
+    const seen=new Set();
     const keep=[];
-    a.preisHistorie.forEach((h,idx)=>{
-      const key=(h.datum||'')+'|'+(h.typ||'ein');
-      if(!seen.has(key)){
-        seen.set(key,true);
-        keep.push(h);
-      }else{
-        const logIdx=S.log.findIndex(l=>
-          l.aid===a.id&&l.d===h.datum&&Math.abs((l.m||0)-(h.menge||0))<0.01&&l.t===(h.typ||'ein')
-        );
-        if(logIdx>=0){
-          S.log.splice(logIdx,1);
-          removed++;
-        }
-      }
+    a.preisHistorie.forEach(h=>{
+      const k=dupKey(h);
+      if(!seen.has(k)){seen.add(k);keep.push(h);return;}
+      removed++;
+      // passenden Log-Eintrag (gleicher Artikel, Datum, Typ, Menge) ebenfalls entfernen – nur wenn mehr als einer existiert
+      const typ=h.typ||'ein';
+      const passt=l=>l.aid===a.id&&l.datum===h.datum&&l.t===typ&&Math.abs((Number(l.menge)||0)-(Number(h.menge)||0))<0.001;
+      const treffer=S.log.reduce((acc,l,i)=>passt(l)?acc.concat(i):acc,[]);
+      if(treffer.length>1)S.log.splice(treffer[treffer.length-1],1);
     });
     a.preisHistorie=keep;
   });
-  
-  if(removed>0){
-    saveL();
-    toast('✓ '+removed+' doppelte Einträge gelöscht');
-  }
+  return removed;
+}
+function dupListe(dups,max){
+  return dups.slice(0,max).map(d=>'• '+d.artikel+' ('+d.datum+', '+fmtMenge(d.menge)+' '+d.einheit+(d.preis?', CHF '+Number(d.preis).toFixed(2):'')+')').join('\n')+
+    (dups.length>max?'\n… und '+(dups.length-max)+' weitere':'');
+}
+async function showDeduplicateDialog(){
+  const dups=findDuplicates();
+  if(!dups.length){toast('✓ Keine Duplikate gefunden');return;}
+  if(!await confirmDialog('🔄 '+dups.length+' exakt doppelte Einträge gefunden\n(gleiches Datum, Menge, Preis und Laden):\n\n'+dupListe(dups,15)+'\n\nJetzt löschen?','Ja, löschen','Nein, behalten'))return;
+  const removed=removeDuplicates();
+  if(removed>0){saveL();toast('✓ '+removed+' doppelte Einträge gelöscht');renderLager();}
+}
+async function deduplicatePreisHistorie(){
+  const dups=findDuplicates();
+  if(!dups.length)return;
+  if(!await confirmDialog('Es wurden '+dups.length+' exakt doppelte Einträge gefunden\n(gleiches Datum, Menge, Preis und Laden):\n\n'+dupListe(dups,10),'Ja, löschen','Nein, behalten'))return;
+  const removed=removeDuplicates();
+  if(removed>0){saveL();toast('✓ '+removed+' doppelte Einträge gelöscht');}
 }
 
 function repairLogFromPreisHistorie(){
@@ -2182,11 +2136,37 @@ function relTime(a){
   if(tag<30)return 'vor '+Math.floor(tag/7)+' Woche'+(Math.floor(tag/7)===1?'':'n');
   return fmtDateCH(new Date(ms).toISOString().slice(0,10));
 }
+// v23.3: Kaufpreis (bezahlter Betrag) des letzten Einkaufs.
+// Gewichtsartikel: preisHistorie.preis ist je nach Buchungsweg Kilopreis ODER Gesamtbetrag →
+// neuere Einträge haben «betrag»; ältere werden über den bekannten Kilopreis eingeordnet.
+function letzterEinkauf(a){
+  const h=(a.preisHistorie||[]).filter(x=>(x.typ||'ein')==='ein'&&(x.betrag>0||x.preis>0));
+  return h.length?h[h.length-1]:null;
+}
+function kaufBetrag(a,h){
+  if(!h)return 0;
+  if(h.betrag>0)return h.betrag;
+  const p=Number(h.preis)||0,m=Number(h.menge)||0;
+  if(!['kg','g'].includes(a.einheit))return p;            // Stück-Artikel: Stückpreis
+  const mKg=a.einheit==='g'?m/1000:m;
+  const k=Number(a.preisProKg||a.preis)||0;               // bekannter Kilopreis
+  if(!(mKg>0))return p;
+  if(k>0)return Math.abs(p-k)<=Math.abs(p-k*mKg)?Math.round(p*mKg*100)/100:p;
+  return p;
+}
+function arPreisText(a){
+  const h=letzterEinkauf(a);
+  if(!h)return a.preis?'CHF '+a.preis.toFixed(2):'';
+  const b=kaufBetrag(a,h);
+  if(!(b>0))return '';
+  const gew=['kg','g'].includes(a.einheit)&&h.menge>0;
+  return 'CHF '+b.toFixed(2)+(gew?' ('+fmtMenge(h.menge)+' '+esc(a.einheit)+')':'');
+}
 function arRow(a){
   const bc=a.menge===0?'lo':a.menge<a.mindest?'wn':'ok';
   const th=a.foto?'<div class="at has-photo" data-thumb-id="'+a.id+'"><img src="'+esc(a.foto)+'" loading="lazy"/></div>':'<div class="at">'+I.pkg.replace('20px;height:20px','22px;height:22px')+'</div>';
   const pinfo=packInfo(a);
-  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'')+(a.preis?' · CHF '+a.preis.toFixed(2):'')+(a.kaufdatum?' · '+fmtDateCH(a.kaufdatum):'')+(a.kaufort?' · '+esc(a.kaufort):'');
+  const meta=esc(a.lager)+(a.marke?' · '+esc(a.marke):'')+(pinfo?' · à '+esc(pinfo.split('/')[0]):'')+(arPreisText(a)?' · '+arPreisText(a):'')+(a.kaufdatum?' · '+fmtDateCH(a.kaufdatum):'')+(a.kaufort?' · '+esc(a.kaufort):'');
   const eb=(a.ablaufdatum&&a.menge>0)?expBadgeA(a):'';
   const unitLabel=a.packMenge>0?esc(a.einheit||'Stk'):esc(a.einheit||'Stk');
   const aufListe=S.ek.some(e=>e.text.toLowerCase()===a.name.toLowerCase()&&!e.checked);
@@ -6077,7 +6057,7 @@ function renderEk(){
   // Shop-Filter Chips
   const shopChipsEl=document.getElementById('ek-shop-chips');
   if(shopChipsEl){
-    const usedShops=[...new Set(S.a.filter(a=>a.menge<a.mindest&&a.kaufort).map(a=>a.kaufort))];
+    const usedShops=[...new Set(ekAutoListe(false).filter(a=>a.kaufort).map(a=>a.kaufort))];
     if(usedShops.length>0){
       shopChipsEl.innerHTML=['alle',...usedShops].map(g=>'<button class="chip'+(ekShopFilter===g?' on':'')+'" onclick="setEkShopFilter(\''+esc(g)+'\')">'+esc(g==='alle'?'Alle Geschäfte':g)+'</button>').join('');
       shopChipsEl.style.display='flex';
@@ -6085,7 +6065,7 @@ function renderEk(){
       shopChipsEl.innerHTML='';shopChipsEl.style.display='none';
     }
   }
-  const auto=S.a.filter(a=>a.menge<a.mindest&&(ekShopFilter==='alle'||a.kaufort===ekShopFilter));
+  const auto=ekAutoListe(true);
   const hasItems=auto.length>0||S.ek.length>0;
   let h='';
   // Laden-Modus Button (nur wenn Einträge vorhanden)
@@ -6101,8 +6081,11 @@ function renderEk(){
       '<div style="flex:1;min-width:0" onclick="showEkArtikelInfo('+a.id+')"><div class="eit" style="color:var(--ac)">'+esc(a.name)+'</div><div class="eis">'+esc(a.lager)+(a.kaufort?' · '+esc(a.kaufort):'')+'</div></div>'+
       '<input type="text" inputmode="decimal" value="'+esc(mg)+'" onchange="setEkoMenge('+a.id+',this.value)" onclick="event.stopPropagation()" style="width:54px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);text-align:right;flex-shrink:0"/>'+
       '<select onchange="setEkoEinheit('+a.id+',this.value)" onclick="event.stopPropagation()" style="width:66px;padding:6px 4px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);flex-shrink:0">'+ekEinheitOptions(eh)+'</select>'+
+      '<button class="eid" title="Von Liste entfernen (nicht einbuchen)" onclick="event.stopPropagation();ekAusblenden('+a.id+')">&#x2715;</button>'+
     '</div>';
   }).join(''):'<div style="color:var(--t3);font-size:13px;padding:4px 0 12px">Alle Artikel im Soll</div>';
+  const ausgebl=ekAusgeblendetListe().length;
+  if(ausgebl)h+='<button onclick="ekAusgeblendeteAnzeigen()" style="background:none;border:none;color:var(--t3);font-size:12px;cursor:pointer;padding:2px 0 10px;text-decoration:underline">👁 '+ausgebl+' ausgeblendete'+(ausgebl===1?'n Artikel':' Artikel')+' wieder anzeigen</button>';
   h+='<div class="sh">Manuell</div><div class="mir"><input type="text" id="mi-i" placeholder="Artikel hinzufügen..." onkeydown="if(event.key===\'Enter\')addM()"/><button onclick="addM()">+</button></div><div id="mi-l">';
   S.ek.forEach(e=>{
     const matchA=S.a.find(a=>a.name.toLowerCase()===e.text.toLowerCase());
@@ -6131,7 +6114,7 @@ function closeLadenModus(){
   renderEk();
 }
 function renderLadenModus(){
-  const auto=S.a.filter(a=>a.menge<a.mindest&&(ekShopFilter==='alle'||a.kaufort===ekShopFilter));
+  const auto=ekAutoListe(true);
   // Nach Laden-Reihenfolge sortieren
   const sorted=auto.slice().sort((a,b)=>{
     const ia=LADEN_REIHENFOLGE.indexOf(a.kat),ib=LADEN_REIHENFOLGE.indexOf(b.kat);
@@ -6225,6 +6208,7 @@ function showLadenKaufDialog(id){
         '<button onclick="document.getElementById(\'laden-kauf-dlg\').remove()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
         '<button onclick="confirmLadenKauf('+a.id+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Gekauft</button>'+
       '</div>'+
+      '<button onclick="ladenNichtGekauft('+a.id+')" style="width:100%;margin-top:8px;padding:10px;background:none;border:1px solid var(--dg);border-radius:var(--rs);font-size:13px;cursor:pointer;color:var(--dg)">🗑 Nicht kaufen — von Liste entfernen</button>'+
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
@@ -6280,7 +6264,7 @@ function finishLadenModus(){
     a.kaufdatum=k.datum;
     if(k.kaufort)a.kaufort=k.kaufort;
     if(!a.preisHistorie)a.preisHistorie=[];
-    a.preisHistorie.push({datum:k.datum,preis:k.preis,menge:k.menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:k.kaufort||''});
+    a.preisHistorie.push({datum:k.datum,preis:k.preis,betrag:Math.round(k.preis*(a.einheit==='g'?k.menge/1000:k.menge)*100)/100,menge:k.menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:k.kaufort||''});
     if(k.preis>0)a.preis=k.preis;
     addLogEntry('ein',a.id,a.name,a.lager,a.kat,k.menge,a.einheit,k.preis,false,true);
   });
@@ -6290,6 +6274,47 @@ function finishLadenModus(){
   renderLager();
 }
 function ckA(id,v){const el=document.getElementById('eia-'+id);if(el)el.classList.toggle('ck',v);}
+// v23.1: Automatische Einträge (unter Mindestbestand) ohne Einbuchen von der Liste entfernen.
+// Ausgeblendet bleibt der Artikel, bis sich sein Bestand oder Mindestbestand ändert.
+function ekIstAusgeblendet(a){
+  const ov=(S.eko||{})[a.id];
+  if(!ov||!ov.ausgeblendet)return false;
+  if(ov.ausgeblendetMenge===a.menge&&ov.ausgeblendetMindest===a.mindest)return true;
+  delete ov.ausgeblendet;delete ov.ausgeblendetMenge;delete ov.ausgeblendetMindest; // Bestand geändert → wieder anzeigen
+  return false;
+}
+function ekAutoListe(mitFilter){
+  return S.a.filter(a=>a.menge<a.mindest&&!ekIstAusgeblendet(a)&&(!mitFilter||ekShopFilter==='alle'||a.kaufort===ekShopFilter));
+}
+function ekAusgeblendetListe(){return S.a.filter(a=>a.menge<a.mindest&&ekIstAusgeblendet(a));}
+function ekAusblenden(id){
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  if(!S.eko)S.eko={};
+  const ov=S.eko[id]||(S.eko[id]={});
+  ov.ausgeblendet=true;ov.ausgeblendetMenge=a.menge;ov.ausgeblendetMindest=a.mindest;
+  delete ov.menge;delete ov.einheit;
+  saveL();renderEk();
+  toast('🗑 «'+a.name+'» von der Liste entfernt — erscheint wieder, wenn sich der Bestand ändert');
+}
+function ekAusgeblendeteAnzeigen(){
+  ekAusgeblendetListe().forEach(a=>{const ov=S.eko[a.id];delete ov.ausgeblendet;delete ov.ausgeblendetMenge;delete ov.ausgeblendetMindest;});
+  saveL();renderEk();toast('👁 Ausgeblendete Artikel wieder auf der Liste');
+}
+// Manuelle Einträge: aus Einbuchungs-Dialog heraus ohne Buchung entfernen
+function ekEntfernenOhneBuchung(ekId){
+  const e=S.ek.find(x=>x.id===ekId);
+  S.ek=S.ek.filter(x=>x.id!==ekId);saveL();
+  const d=document.getElementById('ek-einbuch-dlg');if(d)d.remove();
+  renderEk();
+  toast('🗑 «'+(e?e.text:'Eintrag')+'» entfernt (nicht eingebucht)');
+}
+function ekDlgAbbrechen(){const d=document.getElementById('ek-einbuch-dlg');if(d)d.remove();renderEk();}
+function ladenNichtGekauft(id){
+  const d=document.getElementById('laden-kauf-dlg');if(d)d.remove();
+  delete ladenChecked[id];
+  ekAusblenden(id);
+  renderLadenModus();
+}
 function addGeschaeft(btn){
   const n=prompt('Neues Geschäft:');if(!n||!n.trim())return;
   const nm=n.trim();if(!S.ge.includes(nm)){S.ge.push(nm);saveL();}
@@ -6350,9 +6375,10 @@ function showEkEinbuchungBekannt(ekEntry,artikel){
         '<div class="fd" style="display:none"><label>Ablaufdatum (MHD)</label>'+dateField('ekb-mhd','')+'</div>'+
       '</div>'+
       '<div style="display:flex;gap:8px">'+
-        '<button onclick="document.getElementById(\'ek-einbuch-dlg\').remove()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
+        '<button onclick="ekDlgAbbrechen()" style="flex:1;padding:12px;border:1px solid var(--bd);background:var(--bg);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Abbrechen</button>'+
         '<button onclick="doEkEinbuchungBekannt('+ekEntry.id+','+artikel.id+')" style="flex:2;padding:12px;background:var(--ok);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer">✓ Einbuchen</button>'+
       '</div>'+
+      '<button onclick="ekEntfernenOhneBuchung('+ekEntry.id+')" style="width:100%;margin-top:8px;padding:10px;background:none;border:1px solid var(--dg);border-radius:var(--rs);font-size:13px;cursor:pointer;color:var(--dg)">🗑 Ohne Einbuchen von Liste entfernen</button>'+
     '</div>';
   // Wrap innerhtml in max-width container
   const wrapper=document.createElement('div');
@@ -6399,7 +6425,8 @@ function doEkEinbuchungBekannt(ekId,artikelId){
   a.packungen.push({id:newPackId(),menge,kaufdatum:todayISO(),ablaufdatum:mhd});
   syncMenge(a);
   if(!a.preisHistorie)a.preisHistorie=[];
-  a.preisHistorie.push({datum:todayISO(),preis,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:a.kaufort||''});
+  const istGewEk=['kg','g'].includes(a.einheit);
+  a.preisHistorie.push({datum:todayISO(),preis,betrag:istGewEk&&prEl&&prEl.value?preis:Math.round(preis*menge*100)/100,menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:a.kaufort||''});
   addLogEntry('ein',a.id,a.name,a.lager,a.kat,menge,a.einheit,preis,false,true);
   // Einkaufslisteneintrag löschen (nicht nur abhaken)
   const eIdx=S.ek.findIndex(x=>x.id===ekId);
@@ -6423,7 +6450,8 @@ function showEkEinbuchungNeu(ekEntry){
       '<div style="display:flex;flex-direction:column;gap:8px">'+
         '<button onclick="doEkNeuMitScan('+ekEntry.id+')" style="padding:14px;background:var(--ac);color:#fff;border:none;border-radius:var(--rs);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">'+I.scan+' Barcode scannen &amp; anlegen</button>'+
         '<button onclick="doEkNeuOhneScan('+ekEntry.id+')" style="padding:12px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2)">Ohne Barcode manuell anlegen</button>'+
-        '<button onclick="document.getElementById(\'ek-einbuch-dlg\').remove()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Abbrechen</button>'+
+        '<button onclick="ekEntfernenOhneBuchung('+ekEntry.id+')" style="padding:10px;background:none;border:1px solid var(--dg);border-radius:var(--rs);font-size:13px;cursor:pointer;color:var(--dg)">🗑 Ohne Einbuchen von Liste entfernen</button>'+
+        '<button onclick="ekDlgAbbrechen()" style="padding:10px;background:none;border:none;font-size:13px;cursor:pointer;color:var(--t3)">Abbrechen</button>'+
       '</div>'+
     '</div>';
   // Wrap innerhtml in max-width container
@@ -7939,6 +7967,7 @@ function renderSt(){
   settingsGroup('sg-stamm','📋','Stammdaten',
     '<div class="ss"><div class="ssl">Lagerorte</div><div>'+S.lo.map((l,i)=>'<div class="lmi">'+licon(l).replace('20px;height:20px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(l)+'</span><button onclick="editLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=LD.length?'<button onclick="delLo(\''+esc(l)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addLo()">+ Neuer Lagerort</button></div>'+
     '<div class="ss"><div class="ssl">Kategorien</div><div>'+S.ka.map((k,i)=>'<div class="lmi">'+KICON.replace('13px;height:13px','18px;height:18px')+' <span style="flex:1;margin-left:6px">'+esc(k)+'</span><button onclick="editKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin-right:4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+(i>=KD.length?'<button onclick="delKat(\''+esc(k)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addKat()">+ Neue Kategorie</button></div>'+
+    '<div class="ss"><div class="ssl">Einkaufsläden</div><div>'+(S.ge||[]).map((g,i)=>'<div class="lmi"><span style="font-size:16px;width:18px;text-align:center">🏪</span> <span style="flex:1;margin-left:6px">'+esc(g)+' <span style="font-size:11px;color:var(--t3)">'+geAnzahlArtikel(g)+'</span></span>'+'<button onclick="geMove('+i+',-1)" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;padding:0 4px;'+(i===0?'visibility:hidden':'')+'" title="Nach oben">▲</button>'+'<button onclick="geMove('+i+',1)" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;padding:0 4px;'+(i===S.ge.length-1?'visibility:hidden':'')+'" title="Nach unten">▼</button>'+'<button onclick="editGe('+i+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px;line-height:1;margin:0 4px" title="Umbenennen"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:14px;height:14px;stroke:currentColor"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>'+'<button onclick="delGe('+i+')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1" title="Löschen">&#x2715;</button></div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addGe()">+ Neuer Laden</button></div>'+
     '<div class="ss"><div class="ssl">Einheiten</div><div>'+S.ei.map((u,i)=>'<div class="lmi"><span style="flex:1">'+esc(u)+'</span>'+(i>=ED.length?'<button onclick="delEinheit(\''+esc(u)+'\')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:16px;line-height:1">&#x2715;</button>':'')+'</div>').join('')+'</div><button class="bg2" style="width:100%;margin-top:8px;font-size:14px" onclick="addEinheitSettings()">+ Neue Einheit</button></div>'+
     '<div class="ss"><div class="ssl">Quittungs-Aliase</div><button class="db-btn" onclick="openAliasManager()" style="width:100%">✎ Alias verwalten</button><p style="font-size:12px;color:var(--t3);margin-top:8px">Erstelle oder bearbeite Aliase für Quittungstext-Matching. Beispiel: «TN Vollmilch 3.5%» → «Vollmilch»</p></div>'
   )+
@@ -7985,6 +8014,44 @@ function editLo(l){
   (S.log||[]).forEach(e=>{if(e.lager===l)e.lager=nm;});
   saveL();renderSt();toast('Lagerort umbenannt');
 }
+// v23.1: Einkaufsläden verwalten (Umbenennen überträgt auf Artikel, Preisverlauf, Filter)
+function geAnzahlArtikel(g){const n=S.a.filter(a=>a.kaufort===g).length;return n?'('+n+' Artikel)':'';}
+function addGe(){const n=prompt('Neuer Einkaufsladen:');if(!n||!n.trim())return;const nm=n.trim();
+  if(!S.ge)S.ge=[];
+  if(S.ge.some(x=>x.toLowerCase()===nm.toLowerCase())){alert('Laden «'+nm+'» existiert bereits.');return;}
+  S.ge.push(nm);saveL();renderSt();toast('Laden hinzugefügt');}
+function editGe(i){
+  const alt=S.ge[i];if(alt===undefined)return;
+  const n=prompt('Laden umbenennen:',alt);if(!n||!n.trim()||n.trim()===alt)return;
+  const nm=n.trim();
+  const dup=S.ge.findIndex((x,j)=>j!==i&&x.toLowerCase()===nm.toLowerCase());
+  if(dup>=0){
+    if(!confirm('Laden «'+S.ge[dup]+'» existiert bereits.\n\n«'+alt+'» damit zusammenführen?'))return;
+    geErsetzen(alt,S.ge[dup]);S.ge.splice(i,1);
+    saveL();renderSt();toast('«'+alt+'» mit «'+S.ge[dup<i?dup:dup-1]+'» zusammengeführt');return;
+  }
+  S.ge[i]=nm;geErsetzen(alt,nm);
+  saveL();renderSt();toast('Laden umbenannt');
+}
+function geErsetzen(alt,neu){
+  S.a.forEach(a=>{
+    if(a.kaufort===alt)a.kaufort=neu;
+    (a.preisHistorie||[]).forEach(p=>{if(p.kaufort===alt)p.kaufort=neu;});
+  });
+  (S.log||[]).forEach(e=>{if(e.kaufort===alt)e.kaufort=neu;});
+  if(typeof ekShopFilter!=='undefined'&&ekShopFilter===alt)ekShopFilter=neu;
+  if(typeof barcodeEinkaufState!=='undefined'&&barcodeEinkaufState.geschaeft===alt)barcodeEinkaufState.geschaeft=neu;
+}
+function delGe(i){
+  const g=S.ge[i];if(g===undefined)return;
+  const n=S.a.filter(a=>a.kaufort===g).length;
+  const msg=n?'Laden «'+g+'» wird bei '+n+' Artikel'+(n===1?'':'n')+' verwendet.\n\nTrotzdem aus der Auswahl löschen? (Die Artikel behalten ihren Eintrag «'+g+'».)':'Laden «'+g+'» löschen?';
+  if(!confirm(msg))return;
+  S.ge.splice(i,1);
+  if(typeof ekShopFilter!=='undefined'&&ekShopFilter===g)ekShopFilter='alle';
+  saveL();renderSt();toast('Laden gelöscht');
+}
+function geMove(i,d){const j=i+d;if(j<0||j>=S.ge.length)return;[S.ge[i],S.ge[j]]=[S.ge[j],S.ge[i]];saveL();renderSt();}
 function addKat(){const n=prompt('Neue Kategorie:');if(!n||!n.trim())return;const nm=n.trim();if(!S.ka.includes(nm)){S.ka.push(nm);saveL();}renderSt();}
 function delKat(k){if(S.a.some(a=>a.kat===k)){alert('Kategorie «'+k+'» wird noch verwendet.');return;}S.ka=S.ka.filter(x=>x!==k);saveL();renderSt();}
 function addEinheitSettings(){const n=prompt('Neue Einheit (z.B. Sack, Karton):');if(!n||!n.trim())return;const nm=n.trim();if(!S.ei.includes(nm)){S.ei.push(nm);saveL();}renderSt();}
@@ -8834,7 +8901,7 @@ function umBucheQuittungsPosition(ka){
   a.kaufdatum = datum;
   if (kaufort) a.kaufort = kaufort;
   if (!a.preisHistorie) a.preisHistorie = [];
-  a.preisHistorie.push({ datum, preis: einzelpreis, menge, einheit: a.einheit || 'Stk', typ: 'ein', aktion: false, kaufort });
+  a.preisHistorie.push({ datum, preis: einzelpreis, betrag: umQuittungsWerte(ka, a.einheit).total, menge, einheit: a.einheit || 'Stk', typ: 'ein', aktion: false, kaufort });
   if (einzelpreis > 0) a.preis = einzelpreis;
   addLogEntry('ein', a.id, a.name, a.lager, a.kat, menge, a.einheit || 'Stk', einzelpreis, false, true);
   ka.gebucht = true;
@@ -9349,7 +9416,11 @@ function createAndBookUnmatchedArticle(kiArtikel, barcode, onlineInfo, form) {
   umAddQuittungAlias(newArticle, kiArtikel.name);
 
   S.a.push(newArticle);
-  if (menge > 0) addLogEntry('ein', newId, newArticle.name, newArticle.lager, newArticle.kat, menge, einheit, einzelpreis, false);
+  if (menge > 0) {
+    addLogEntry('ein', newId, newArticle.name, newArticle.lager, newArticle.kat, menge, einheit, einzelpreis, false);
+    const ph = newArticle.preisHistorie[newArticle.preisHistorie.length - 1];
+    if (ph) { ph.betrag = qw.total; ph.kaufort = kaufort; }
+  }
   try { addScannedBarcodeToCache(barcode); } catch (e) { console.warn('[UnmatchedCreate] Barcode-Cache:', e.message); }
   saveL();
 
@@ -11635,11 +11706,14 @@ function startQuittungArtikel(idx){
 
   // Duplikat-Warnung: heute bereits gebucht?
   let duplikatWarnung='';
-  if(existing&&existing.letzteEingangHeute){
+  // v23.2: nur warnen, wenn HEUTE dieselbe Menge schon eingebucht wurde (2× Speck 0.56/0.87 kg = kein Duplikat)
+  const itMenge=dupNum(String(it.menge??1).replace(',','.'));
+  const heuteGleich=existing?(existing.preisHistorie||[]).find(h=>h.datum===todayISO()&&(h.typ||'ein')==='ein'&&dupNum(h.menge)===itMenge):null;
+  if(existing&&heuteGleich&&existing.letzteEingangHeute){
     duplikatWarnung='<div style="background:var(--wl);border:1px solid #f59e0b;border-radius:var(--rs);padding:10px 12px;margin-bottom:14px;color:var(--wn)">'+
       '<div style="font-weight:600;font-size:13px;display:flex;align-items:center;gap:6px">⚠️ Duplikat erkannt</div>'+
       '<div style="font-size:12px;margin-top:4px;line-height:1.4">'+
-        'Du hast «<strong>'+esc(existing.name)+'</strong>» heute um <strong>'+existing.letzteEingangHeute+'</strong> Uhr bereits gebucht.'+
+        'Du hast «<strong>'+esc(existing.name)+'</strong>» heute um <strong>'+existing.letzteEingangHeute+'</strong> Uhr bereits mit derselben Menge ('+fmtMenge(heuteGleich.menge)+' '+esc(existing.einheit||'Stk')+') gebucht.'+
         '<br><br>'+
         'Möchtest du diesen Artikel <strong>wirklich nochmal</strong> einbuchen?'+
       '</div>'+
