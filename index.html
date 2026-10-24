@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.6 — Aktionspreise in der Übersicht orange -->
+<!-- HAUSHALTBUCH v23.8 — Einkaufssumme: alle Positionen, richtiger Betrag bei Gewichtsartikeln -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.6"/>
+<meta name="app-version" content="23.8"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.6';
+const APP_VERSION='23.8';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,8 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.8',d:'24.10.2026',items:['🔴 BUGFIX Einkaufssumme (Lager, «Zuletzt erfasst»): zählte pro Artikel nur den ERSTEN Einkauf → 2. Speck fehlte','🔴 BUGFIX: rechnete immer Preis × Menge – bei Gewichtsartikeln mit gespeichertem Kaufpreis falsch (15.96 × 0.56)','✅ Summe = bezahlter Betrag aller Positionen des Tages beim Laden','✅ Kopfzeile zeigt bei mehreren Stück zusätzlich die Anzahl Positionen']},
+  {v:'23.7',d:'24.10.2026',items:['📱 Zurück-Button verlässt die App nicht mehr','🔴 Ursache: Chrome überspringt Verlaufseinträge ohne Berührung → erster Zurück-Druck schloss die App','✅ Schutz wird bei jeder Berührung neu gesetzt','✅ Zurück schliesst den obersten Dialog – auch alle neuen (Scanner, Laden-Modus, Einkaufsliste …)','✅ Quittungs-/Review-Ablauf wird nicht mittendrin abgebrochen (Hinweis statt Schliessen)','✅ Andere Tabs → zurück zum Lager; im Lager: Hinweis «App verlassen?» statt Beenden']},
   {v:'23.6',d:'24.10.2026',items:['🏷️ Lagerliste: Preis orange, wenn der letzte Einkauf ein Aktionspreis war','✅ Mehrere Stücke: jedes Stück einzeln orange, wenn Aktion','✅ Details «Letzter Einkauf»: Aktionspreise orange mit 🏷️','🧾 Quittung: Position mit Rabatt wird als Aktion gebucht (wird nicht zum Standardpreis)']},
   {v:'23.5',d:'24.10.2026',items:['🪙 5-Rappen-Rundung: Kaufpreis aus Kilopreis × Gewicht wird auf 0.05 gerundet (z.B. 0.56 kg × 28.50 = 15.95)','✅ Lidl und Aldi runden nicht (genau auf 1 Rappen)','⚙️ Stammdaten → Einkaufsläden: Schalter «0.05 / 0.01» pro Laden','✅ Gilt für Lagerliste, Details, Laden-Modus und Kaufpreis-Rechner; Quittungsbeträge bleiben wie gedruckt','🔄 Einstellung wird mit GitHub synchronisiert']},
   {v:'23.4',d:'24.10.2026',items:['⚖️ Gewichtsartikel: mehrere Stück am selben Tag (z.B. Speck 0.56 kg + 0.87 kg) werden einzeln angezeigt','✅ Lagerliste: je Stück Gewicht · Kaufpreis (Kilopreis)','✅ Details: neue Zeile «Letzter Einkauf» mit allen Stücken, Datum, Laden und Total','✅ Einzelnes Stück: «CHF 15.96 (0.56 kg · 28.50/kg)»']},
@@ -2107,23 +2109,20 @@ function renderLager(){
     // Gruppen in sortierten Reihenfolge rendern
     Object.values(gruppen).forEach(g=>{
       const datumStr=g.datum==='???'?'Datum unbekannt':fmtDateCH(g.datum);
-      const gesamtpreis=g.artikel.reduce((sum,a)=>{
-        // Finde den preisHistorie-Eintrag für diesen Einkauf (passt Datum + Ort)
-        const eintrag=(a.preisHistorie||[]).find(h=>
-          h.typ==='ein'&&
+      // v23.8: ALLE Einkäufe des Tages beim Laden zählen (2× Speck mit verschiedenem Gewicht) – mit bezahltem Betrag
+      let positionen=0;
+      const gesamtpreis=Math.round(g.artikel.reduce((sum,a)=>{
+        const eintraege=(a.preisHistorie||[]).filter(h=>
+          (h.typ||'ein')==='ein'&&
           (h.datum===g.datum||h.kaufdatum===g.datum)&&
-          (h.kaufort===g.ort||h.kaufort===g.ort)
+          (!h.kaufort||h.kaufort===g.ort||g.ort==='unbekannt')
         );
-        if(eintrag){
-          const preis=eintrag.preis||0;
-          const menge=eintrag.menge||1;
-          return sum+(preis*menge);
-        }
-        return sum;
-      },0);
+        positionen+=eintraege.length;
+        return sum+eintraege.reduce((s2,h)=>s2+positionsBetrag(a,h),0);
+      },0)*100)/100;
       rows+='<div style="padding:12px 14px;background:var(--bg2);border-bottom:1px solid var(--bd);font-size:13px;font-weight:600;color:var(--t2);display:flex;justify-content:space-between;align-items:center">'+
         '<span>📅 '+esc(datumStr)+' · 🏪 '+esc(g.ort)+'</span>'+
-        '<span style="color:var(--t3);font-size:12px;font-weight:400">('+g.artikel.length+' Artikel · CHF '+gesamtpreis.toFixed(2)+')'+'</span>'+
+        '<span style="color:var(--t3);font-size:12px;font-weight:400">('+g.artikel.length+' Artikel'+(positionen>g.artikel.length?' / '+positionen+' Pos.':'')+' · CHF '+gesamtpreis.toFixed(2)+')'+'</span>'+
         '</div>'+
         g.artikel.map(a=>arRow(a)).join('');
     });
@@ -2159,6 +2158,13 @@ function letzterEinkauf(a){
   const h=(a.preisHistorie||[]).filter(x=>(x.typ||'ein')==='ein'&&(x.betrag>0||x.preis>0));
   return h.length?h[h.length-1]:null;
 }
+// v23.8: Bezahlter Betrag einer Einkaufsposition (für Summen): Gewicht → Kaufpreis, Stück → Stückpreis × Anzahl
+function positionsBetrag(a,h){
+  if(!h)return 0;
+  if(h.betrag>0)return h.betrag;
+  if(['kg','g'].includes(a.einheit))return kaufBetrag(a,h);
+  return (Number(h.preis)||0)*(Number(h.menge)||1);
+}
 function kaufBetrag(a,h){
   if(!h)return 0;
   if(h.betrag>0)return h.betrag;
@@ -2182,7 +2188,9 @@ function letzteEinkaeufe(a){
     const mKg=a.einheit==='g'?m/1000:m;
     const p=Number(h.preis)||0;
     // Kilopreis: gespeicherten Preis nehmen, wenn er der Kilopreis ist (betrag ≈ preis × kg) – sonst zurückrechnen
-    const kg=!gew||!(mKg>0)?0:(Math.abs(betrag-p*mKg)<0.026?p:Math.round(betrag/mKg*100)/100);
+    let kg=!gew||!(mKg>0)?0:(Math.abs(betrag-p*mKg)<0.026?p:Math.round(betrag/mKg*100)/100);
+    const kRef=Number(a.preisProKg||a.preis)||0;
+    if(kg&&kRef&&Math.abs(betrag-kRef*mKg)<0.026)kg=kRef; // Abweichung nur durch Rundung → bekannter Kilopreis
     return {datum:h.datum,menge:m,betrag,kgPreis:kg,kaufort:h.kaufort||'',aktion:!!h.aktion};
   });
 }
@@ -12270,7 +12278,7 @@ nav();sdot(gh.tok?'dt':'ok');renderLager();updateOnlineStatus();
 // API-Guthaben-Warnung beim Start prüfen
 setTimeout(()=>checkAiGuthabenWarnung(),2000);
 // Android Zurück-Button einrichten
-setupBackButton();
+// v23.7: setupBackButton() wird nach seiner Definition aufgerufen (weiter unten)
 // Autofill-Unterdrückung: initial + bei neu eingefügten Feldern (Dialoge)
 suppressAutofill();
 try{
@@ -12289,57 +12297,97 @@ try{
 const vBadge=document.getElementById('app-version-badge');
 if(vBadge){vBadge.textContent='v'+APP_VERSION;vBadge.style.cursor='pointer';vBadge.style.color='var(--ac)';vBadge.style.textDecoration='underline';vBadge.onclick=showVersionHistory;}
 
-// Android Zurück-Button: einmaliger pushState beim Start
-// Wenn Zurück gedrückt wird, prüfen wir was offen ist und handeln entsprechend
+// ═══ v23.7: Android Zurück-Button – App wird nie verlassen ═══
+// Chrome überspringt Verlaufseinträge, die ohne Nutzerinteraktion angelegt wurden.
+// Deshalb wird der Schutz-Eintrag bei jeder Berührung (falls nötig) neu gesetzt.
+let _backArmed=false;
+function armBackGuard(force){
+  if(_backArmed)return;
+  const ua=navigator.userActivation;
+  const aktiv=!ua||ua.isActive;            // nur mit echter Berührung zählt der Eintrag für Chrome
+  if(!aktiv&&force!==true)return;
+  try{history.pushState({hbGuard:Date.now()},'',location.href);_backArmed=aktiv;}catch(e){}
+}
+// Abläufe, die nicht mittendrin per Zurück verschwinden dürfen (Quittung/Review)
+const BACK_FLOW_DLGS=new Set(['article-review-dlg','match-confirm-dlg','match-search-dlg','assign-article-dlg','unmatched-confirm-dlg','unmatched-known-dlg','receipt-preview-dlg','process-einbuch-dlg','barcode-quittung-dlg','shop-selection-dlg','barcode-confirm-dlg']);
+// Spezielle Schliess-Aktionen
+const BACK_CLOSE={
+  'confirm-dlg':()=>{const d=document.getElementById('confirm-dlg');if(d)d.remove();if(window._confirmRes)window._confirmRes(false);},
+  'unmatched-bc-confirm-dlg':()=>{document.getElementById('unmatched-bc-confirm-dlg').remove();const sc=document.getElementById('unmatched-scan-dlg');if(sc&&sc.__resume)sc.__resume();},
+  'unmatched-scan-dlg':()=>{closeUnmatchedScanner();showNextArticleReview();},
+  'barcode-camera-dlg':()=>closeBarcodeCamera(),
+  'quittung-info-dlg':()=>closeQuittungDialog(),
+  'ek-einbuch-dlg':()=>ekDlgAbbrechen(),
+  'app-exit-dlg':()=>document.getElementById('app-exit-dlg').remove()
+};
+function istSichtbar(el){
+  if(!el||!el.isConnected)return false;
+  const cs=getComputedStyle(el);
+  return cs.display!=='none'&&cs.visibility!=='hidden';
+}
+function obersterDialog(){
+  const kand=[...document.body.children].filter(el=>el.id&&/(dlg|dialog|modal)/i.test(el.id)&&istSichtbar(el));
+  if(!kand.length)return null;
+  // höchster z-index, bei Gleichstand der zuletzt eingefügte
+  return kand.reduce((best,el)=>{const z=parseInt(getComputedStyle(el).zIndex)||0;const bz=parseInt(getComputedStyle(best).zIndex)||0;return z>=bz?el:best;});
+}
+function handleBack(){
+  // 1. Bild-Vollansicht
+  const lb=document.getElementById('lightbox');
+  if(lb&&lb.classList.contains('show')){closeLightbox();return;}
+  // 2. Oberster Dialog
+  const d=obersterDialog();
+  if(d){
+    if(BACK_FLOW_DLGS.has(d.id)){toast('ℹ️ Bitte im Dialog eine Option wählen');return;}
+    if(BACK_CLOSE[d.id]){try{BACK_CLOSE[d.id]();}catch(e){d.remove();}return;}
+    if(d.__cleanup)try{d.__cleanup();}catch(e){}
+    d.remove();return;
+  }
+  // 3. Vollbild-Overlays
+  const ov=[['laden-overlay',closeLadenModus],['invcap-overlay',closeInvCapture],['inventur-overlay',closeInventur],['quittung-overlay',closeQuittung],['lager-scan-overlay',closeLagerScan]];
+  for(const [id,fn] of ov){const el=document.getElementById(id);if(istSichtbar(el)){fn();return;}}
+  // 4. Unterseite → vorherige Seite
+  if(screenStack.length>0){
+    const prev=screenStack.pop();
+    if(qRunning)closeScanner();
+    document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
+    document.getElementById(prev).classList.add('on');
+    cur=prev;nav();
+    if(prev==='s-lager')renderLager();
+    else if(prev==='s-rezepte')renderRezepte();
+    else if(prev==='s-einkauf')renderEk();
+    else if(prev==='s-settings')renderSt();
+    return;
+  }
+  // 5. Anderer Tab → zurück zum Lager
+  if(cur!=='s-lager'){goScreen('s-lager');return;}
+  // 6. Oberste Ebene → Hinweis statt App verlassen
+  const exitDlg=document.createElement('div');
+  exitDlg.id='app-exit-dlg';
+  exitDlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9900;display:flex;align-items:center;justify-content:center;padding:20px';
+  exitDlg.innerHTML=
+    '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:320px;overflow:hidden">'+
+      '<div style="padding:20px 20px 8px;font-size:15px;font-weight:600;text-align:center">App verlassen?</div>'+
+      '<div style="padding:0 20px 16px;font-size:13px;color:var(--t2);text-align:center;line-height:1.5">Home-Button drücken oder nach oben wischen zum Minimieren.</div>'+
+      '<div style="display:flex;border-top:1px solid var(--bd)">'+
+        '<button onclick="document.getElementById(\'app-exit-dlg\').remove()" style="flex:1;padding:16px;background:none;border:none;font-size:15px;font-weight:700;cursor:pointer;color:var(--ac)">OK, hier bleiben</button>'+
+      '</div>'+
+    '</div>';
+  exitDlg.addEventListener('click',e=>{if(e.target===exitDlg)exitDlg.remove();});
+  document.body.appendChild(exitDlg);
+}
 function setupBackButton(){
-  history.pushState(null,'',location.pathname);
-  window.addEventListener('popstate',function onBack(){
-    history.pushState(null,'',location.pathname);
-
-    // 1. Offene Dialoge schliessen — ABER nicht app-exit-dlg hier
-    const dialoge=['confirm-dlg','pack-dlg','merge-dlg','split-dlg','bestand-dlg',
-      'ek-einbuch-dlg','ek-info-dlg','inv-missing-dlg','vh-modal','mindest-mgr-dlg','vh-edit-dlg','quittung-info-dlg','kiscan-info-dlg','foto-wahl-dlg'];
-    for(const id of dialoge){
-      const el=document.getElementById(id);
-      if(el&&el.parentNode){el.remove();return;}
-    }
-
-    // 2. App-Exit-Dialog offen → schliessen (nächstes Zurück geht dann normal weiter)
-    const exitEl=document.getElementById('app-exit-dlg');
-    if(exitEl&&exitEl.parentNode){exitEl.remove();return;}
-
-    // 3. Kamera schliessen
-    const camOvl=document.getElementById('lager-scan-overlay');
-    if(camOvl&&camOvl.style.display!=='none'){closeLagerScan();return;}
-
-    // 4. Screen-Stack zurück
-    if(screenStack.length>0){
-      const prev=screenStack.pop();
-      if(qRunning)closeScanner();
-      document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
-      document.getElementById(prev).classList.add('on');
-      cur=prev;nav();
-      if(prev==='s-lager')renderLager();
-      else if(prev==='s-rezepte')renderRezepte();
-      else if(prev==='s-einkauf')renderEk();
-      return;
-    }
-
-    // 5. Stack leer = oberste Ebene → App-Exit Dialog anzeigen
-    const exitDlg=document.createElement('div');
-    exitDlg.id='app-exit-dlg';
-    exitDlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9900;display:flex;align-items:center;justify-content:center;padding:20px';
-    exitDlg.innerHTML=
-      '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:320px;overflow:hidden">'+
-        '<div style="padding:20px 20px 8px;font-size:15px;font-weight:600;text-align:center">App verlassen?</div>'+
-        '<div style="padding:0 20px 16px;font-size:13px;color:var(--t2);text-align:center;line-height:1.5">Home-Button drücken oder nach oben wischen zum Minimieren.</div>'+
-        '<div style="display:flex;border-top:1px solid var(--bd)">'+
-          '<button onclick="document.getElementById(\'app-exit-dlg\').remove()" style="flex:1;padding:16px;background:none;border:none;font-size:15px;font-weight:700;cursor:pointer;color:var(--ac)">OK</button>'+
-        '</div>'+
-      '</div>';
-    document.body.appendChild(exitDlg);
+  // Schutz bei jeder Interaktion sicherstellen (Chrome «history manipulation intervention»)
+  // Touch: Aktivierung erst bei touchend/click; Maus/Tastatur: pointerdown/keydown
+  ['pointerdown','pointerup','touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,()=>armBackGuard(),{capture:true,passive:true}));
+  armBackGuard(true);
+  window.addEventListener('popstate',function(){
+    _backArmed=false;
+    armBackGuard(true); // sofort neu setzen (gilt spätestens nach der nächsten Berührung)
+    try{handleBack();}catch(e){console.warn('[Back]',e);}
   });
 }
+setupBackButton();
 
 (function(){
   const action=new URLSearchParams(location.search).get('action');
