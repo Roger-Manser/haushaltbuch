@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.12 — Neue Lagerorte erscheinen sofort als Filter -->
+<!-- HAUSHALTBUCH v23.13 — Online-Produktsuche repariert, Produktbilder übernehmen -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.12"/>
+<meta name="app-version" content="23.13"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.12';
+const APP_VERSION='23.13';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.13',d:'31.10.2026',items:['🔴 BUGFIX «Produktdaten online suchen» (Artikel bearbeiten): meldete immer «keine Verbindung?»','❌ Ursache: OFF antwortet bei unbekanntem Barcode mit HTTP 404 → wurde als Verbindungsfehler gewertet','✅ Klare Meldungen: gefunden / nicht gefunden / echter Verbindungsfehler (mit Grund)','🌐 Sucht jetzt auch in Open Products Facts, Open Beauty Facts, Open Pet Food Facts (Haushalt, Kosmetik, Tierfutter)','🖼️ Produktbild: wird beim Barcode-Einkauf übernommen; im Formular notfalls als Bild-URL, wenn der Download blockiert ist','🔧 Barcode-Cache: Platzhalter ohne Name/Bild verhindern die Online-Suche nicht mehr']},
   {v:'23.12',d:'31.10.2026',items:['🔴 BUGFIX: Neuer Lagerort erschien nicht als Filter im Lager (nur Orte mit Artikeln wurden gezeigt)','✅ Alle Lagerorte als Filter – noch leere Orte abgeschwächt','✅ Umbenennen/Löschen eines Lagerorts führt den aktiven Filter mit','🔧 Lagerorte mit Apostroph im Namen funktionieren als Filter']},
   {v:'23.11',d:'31.10.2026',items:['🔴 BUGFIX: Bei vielen Duplikaten war das Fenster zu klein – Schaltflächen nicht mehr sichtbar','✅ Bestätigungsdialoge: Text scrollt, «Ja/Nein» bleiben immer unten sichtbar (gilt für alle Bestätigungen)','✅ Duplikat-Dialog zeigt jetzt alle Einträge (scrollbar) statt nur die ersten 10–15']},
   {v:'23.10',d:'24.10.2026',items:['🔴 BUGFIX: Zähler «Einkaufsliste» in der unteren Leiste zählte entfernte (✕) Artikel mit','✅ Zählt jetzt genau die Einträge, die in der Liste stehen','✅ Wird nach Entfernen/Hinzufügen/Einbuchen sofort aktualisiert']},
@@ -1819,19 +1820,55 @@ function closeScanner(){
 }
 
 /* ── Open Food Facts Lookup ───────────────────────────────────────── */
+// v23.13: Zentrale Produktsuche. Unterscheidet «nicht gefunden» (HTTP 404 / status 0) von Verbindungsfehlern
+// und sucht nach Lebensmitteln auch in Open Products/Beauty/Pet Food Facts (Haushalt, Kosmetik, Tierfutter).
+const OFF_QUELLEN=[
+  ['https://world.openfoodfacts.org','Open Food Facts'],
+  ['https://world.openproductsfacts.org','Open Products Facts'],
+  ['https://world.openbeautyfacts.org','Open Beauty Facts'],
+  ['https://world.openpetfoodfacts.org','Open Pet Food Facts']
+];
+async function offProduktSuchen(barcode){
+  barcode=String(barcode||'').trim();
+  let fehler=0,letzterFehler='';
+  for(const [basis,quelle] of OFF_QUELLEN){
+    try{
+      const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),15000);
+      const r=await fetch(basis+'/api/v0/product/'+encodeURIComponent(barcode)+'.json',{signal:ctl.signal});
+      clearTimeout(to);
+      if(r.status===404)continue;                               // nicht in dieser Datenbank
+      if(!r.ok){fehler++;letzterFehler='HTTP '+r.status;continue;}
+      const data=await r.json();
+      if(data&&data.status===1&&data.product)return {status:'ok',product:data.product,quelle};
+    }catch(e){fehler++;letzterFehler=e.name==='AbortError'?'Zeitüberschreitung':(/failed to fetch|network|load failed/i.test(e.message||'')?'keine Verbindung zum Server':(e.message||'Netzwerkfehler'));}
+  }
+  if(fehler===OFF_QUELLEN.length)return {status:'error',fehler:letzterFehler};
+  return {status:'notfound'};
+}
+function offBild(p){
+  return (p&&(p.image_front_url||p.image_url||p.image_front_small_url||(p.selected_images&&p.selected_images.front&&p.selected_images.front.display&&Object.values(p.selected_images.front.display)[0])))||'';
+}
 async function lookupOFF(barcode,statusElId){
   const statusEl=document.getElementById(statusElId);
   if(!barcode){if(statusEl){statusEl.className='lookup-status err';statusEl.innerHTML='Bitte zuerst einen Barcode eingeben.';}return null;}
   if(statusEl){statusEl.className='lookup-status busy';statusEl.innerHTML='<span class="spn" style="width:14px;height:14px;border-width:2px"></span> Suche Produktdaten...';}
-  try{
-    const r=await fetch('https://world.openfoodfacts.org/api/v2/product/'+encodeURIComponent(barcode)+'.json');
-    if(!r.ok)throw new Error('HTTP '+r.status);
-    const data=await r.json();
-    if(data.status!==1||!data.product){
-      if(statusEl){statusEl.className='lookup-status err';statusEl.innerHTML=I.xc+' Kein Produkt zu diesem Barcode gefunden.';}
-      return null;
+  const such=await offProduktSuchen(barcode);
+  if(such.status==='error'){
+    if(statusEl){statusEl.className='lookup-status err';statusEl.innerHTML=I.xc+' Online-Suche fehlgeschlagen ('+esc(such.fehler||'keine Verbindung')+'). Bitte später nochmals versuchen.';}
+    return null;
+  }
+  if(such.status==='notfound'){
+    // Fallback: Daten aus dem eigenen Barcode-Cache (z.B. früher gescannt/gesucht)
+    const c=(typeof barcodeCache!=='undefined'&&barcodeCache.barcodes)?barcodeCache.barcodes[barcode]:null;
+    if(c&&c.name){
+      if(statusEl){statusEl.className='lookup-status ok';statusEl.innerHTML=I.chk+' Aus eigenem Barcode-Speicher: '+esc(c.name);}
+      return {name:c.name,marke:c.marke||'',foto:c.image||'',kat:'',pkgMenge:'',pkgEinheit:'',labels:[],naehr:null,nutriscore:'',stores:[]};
     }
-    const p=data.product;
+    if(statusEl){statusEl.className='lookup-status err';statusEl.innerHTML=I.xc+' Kein Produkt zu diesem Barcode gefunden (Open Food/Products/Beauty Facts).';}
+    return null;
+  }
+  try{
+    const p=such.product;
     // Menge + Einheit aus quantity/product_quantity ableiten
     let pkgMenge='',pkgEinheit='';
     if(p.product_quantity&&p.product_quantity_unit){
@@ -1865,7 +1902,8 @@ async function lookupOFF(barcode,statusElId){
     const result={
       name:p.product_name_de||p.product_name||p.generic_name||'',
       marke:p.brands?p.brands.split(',')[0].trim():'',
-      foto:p.image_front_url||p.image_url||'',
+      foto:offBild(p),
+      quelle:such.quelle,
       kat:mapOFFCategory(p.categories_tags||[]),
       pkgMenge,pkgEinheit,
       labels,
@@ -1873,17 +1911,19 @@ async function lookupOFF(barcode,statusElId){
       nutriscore:(p.nutriscore_grade||'').toUpperCase(),
       stores:storesRaw,
     };
+    try{if(typeof addToBarcodeCacheIfNotExists==='function'&&result.name)addToBarcodeCacheIfNotExists(barcode,{name:result.name,marke:result.marke,image:result.foto,source:such.quelle});}catch(e){}
     if(statusEl){
       const extras=[];
       if(pkgMenge)extras.push(pkgMenge+' '+pkgEinheit);
       if(labels.length)extras.push(labels.join(', '));
       if(storesRaw.length)extras.push('Kaufort: '+storesRaw.join(', '));
       statusEl.className='lookup-status ok';
-      statusEl.innerHTML=I.chk+' Produkt gefunden: '+esc(result.name||barcode)+(extras.length?' <span style="color:var(--t2)">('+esc(extras.join(' · '))+')</span>':'');
+      statusEl.innerHTML=I.chk+' Produkt gefunden'+(such.quelle&&such.quelle!=='Open Food Facts'?' ('+esc(such.quelle)+')':'')+': '+esc(result.name||barcode)+(extras.length?' <span style="color:var(--t2)">('+esc(extras.join(' · '))+')</span>':'');
     }
     return result;
   }catch(e){
-    if(statusEl){statusEl.className='lookup-status err';statusEl.innerHTML=I.xc+' Online-Suche fehlgeschlagen (keine Verbindung?).';}
+    console.warn('[OFF] Auswertung fehlgeschlagen:',e);
+    if(statusEl){statusEl.className='lookup-status err';statusEl.innerHTML=I.xc+' Produktdaten konnten nicht gelesen werden ('+esc(e.message||'Fehler')+').';}
     return null;
   }
 }
@@ -3237,7 +3277,7 @@ function toEk(id){
 }
 
 /* ── Form ─────────────────────────────────────────────────────────── */
-let editId=null,fb64='',ffn='';
+let editId=null,fb64='',ffn='',fUrlExt=''; // v23.13: fUrlExt = Online-Bild als URL
 let formExtraBarcodes=[]; // Zusatz-Barcodes im Formular
 
 function renderExtraBarcodes(){
@@ -3283,7 +3323,7 @@ function removeExtraBarcode(i){
   renderExtraBarcodes();
 }
 function openForm(id){
-  editId=id||null;fb64='';ffn='';
+  editId=id||null;fb64='';ffn='';fUrlExt='';
   const a=id?S.a.find(x=>x.id===id):null;
   formExtraBarcodes=(a&&Array.isArray(a.barcodes))?[...a.barcodes]:[];
   document.getElementById('form-title').textContent=a?'Artikel bearbeiten':'Neuer Artikel';
@@ -3408,20 +3448,17 @@ async function doLookupForm(){
       }
     }
   }
+  // v23.13: Online-Bild übernehmen – zuerst als Datei (für GitHub-Upload), sonst direkt als URL
   if(result.foto&&!fb64){
+    const zeigen=src=>{const i=document.getElementById('ppi');if(i)i.src=src;const pz=document.getElementById('pz');if(pz)pz.style.display='none';const pw=document.getElementById('ppw');if(pw)pw.style.display='block';};
     try{
       const imgR=await fetch(result.foto);
+      if(!imgR.ok)throw new Error('HTTP '+imgR.status);
       const blob=await imgR.blob();
-      const reader=new FileReader();
-      reader.onload=ev=>{
-        fb64=ev.target.result;
-        ffn=Date.now()+'_off.jpg';
-        document.getElementById('ppi').src=fb64;
-        document.getElementById('pz').style.display='none';
-        document.getElementById('ppw').style.display='block';
-      };
-      reader.readAsDataURL(blob);
-    }catch(e){}
+      await new Promise((ok,nok)=>{const reader=new FileReader();reader.onload=ev=>{fb64=ev.target.result;ffn=Date.now()+'_off.jpg';fUrlExt='';zeigen(fb64);ok();};reader.onerror=nok;reader.readAsDataURL(blob);});
+    }catch(e){
+      fUrlExt=result.foto; zeigen(result.foto);   // Bildserver erlaubt keinen Download → Bild-URL verwenden
+    }
   }
 }
 function showFotoWahl(){
@@ -3481,7 +3518,7 @@ function onPh(ev){
   rd.readAsDataURL(file);
 }
 function rmPh(){
-  fb64='';ffn='';
+  fb64='';ffn='';fUrlExt='';
   document.getElementById('ppw').style.display='none';
   document.getElementById('pz').style.display='flex';
   document.getElementById('ppi').src='';
@@ -3709,6 +3746,7 @@ async function saveForm(){
     try{furl=await uploadFoto(fb64,ffn);fpth=ffn;}
     catch(e){hideLdr();toast('Foto-Upload fehlgeschlagen: '+e.message.slice(0,40));furl=fb64;fpth=ffn;}
   }else if(fb64){furl=fb64;fpth=ffn;}
+  else if(fUrlExt){furl=fUrlExt;fpth='';}   // v23.13: Online-Bild (URL)
   else if(editId){const ex=S.a.find(x=>x.id===editId);if(ex){furl=ex.foto||'';fpth=ex.fotoPath||'';}}
   const preis=parseDecimal(document.getElementById('f-pr').value)||0;
   const isAktion=document.getElementById('f-aktion')&&document.getElementById('f-aktion').checked;
@@ -9819,8 +9857,9 @@ async function searchOpenFoodFacts(barcode){
     return barcodeEinkaufState.apiCache[barcode];
   }
 
-  // Prüfe persistenten Barcode-Cache von GitHub
-  if(barcodeCache.barcodes[barcode]){
+  // Prüfe persistenten Barcode-Cache von GitHub (v23.13: nur vollständige Einträge mit Name UND Bild)
+  const _c=barcodeCache.barcodes[barcode];
+  if(_c&&!_c.scannedOnly&&_c.name&&_c.image){
     console.log('[OpenFoodFacts] Ergebnis aus Barcode-Cache:', barcode);
     const cached=barcodeCache.barcodes[barcode];
     const result={
@@ -9837,60 +9876,25 @@ async function searchOpenFoodFacts(barcode){
     return result;
   }
 
-  // Retry-Logik: max 3 Versuche mit erhöhtem Timeout
-  for(let attempt=1;attempt<=3;attempt++){
-    try{
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 20000); // 20 Sekunden
-      const r = await fetch('https://world.openfoodfacts.org/api/v0/product/'+encodeURIComponent(barcode)+'.json', {
-        signal: controller.signal,
-        headers: { 'User-Agent': 'Haushaltbuch/22.137' }
-      });
-      clearTimeout(timeoutId);
-
-      if(!r.ok){
-        if(attempt<3){
-          console.log('[OpenFoodFacts] Versuch',attempt,'fehlgeschlagen, retry...');
-          await new Promise(resolve => setTimeout(resolve, 1000));
-          continue;
-        }
-        return null;
-      }
-
-      const data = await r.json();
-      if(data.status===1&&data.product){
-        const prod = data.product;
-        const imageUrl = prod.image_front_url || prod.image_url || '';
-        const result = {
-          name: prod.product_name || 'Unbekannt',
-          marke: prod.brands || '',
-          kategorien: prod.categories || '',
-          description: prod.product_name || '',
-          image: imageUrl,
-          source: 'Open Food Facts',
-          offData: {
-            product_name: prod.product_name || '',
-            brands: prod.brands || '',
-            categories: prod.categories || '',
-            quantity: prod.quantity || '',
-            generic_name: prod.generic_name || ''
-          }
-        };
-        // Speichere in Session-Cache und persistentem Barcode-Cache
-        barcodeEinkaufState.apiCache[barcode] = result;
-        addToBarcodeCacheIfNotExists(barcode, result);
-        return result;
-      }
-      return null;
-    }catch(e){
-      console.log('[OpenFoodFacts] Versuch',attempt,'Fehler:', e.message);
-      if(attempt<3){
-        await new Promise(resolve => setTimeout(resolve, 1000));
-      }else{
-        return null;
-      }
-    }
+  // v23.13: zentrale Suche über Open Food/Products/Beauty/Pet Food Facts
+  const such=await offProduktSuchen(barcode);
+  if(such.status==='ok'){
+    const prod=such.product;
+    const result={
+      name: prod.product_name_de || prod.product_name || prod.generic_name || 'Unbekannt',
+      marke: prod.brands ? String(prod.brands).split(',')[0].trim() : '',
+      kategorien: prod.categories || '',
+      description: prod.product_name || '',
+      image: offBild(prod),
+      source: such.quelle,
+      offData: { product_name: prod.product_name || '', brands: prod.brands || '', categories: prod.categories || '', quantity: prod.quantity || '', generic_name: prod.generic_name || '' }
+    };
+    barcodeEinkaufState.apiCache[barcode] = result;
+    addToBarcodeCacheIfNotExists(barcode, result);
+    return result;
   }
+  // Nicht gefunden / Fehler: unvollständigen Cache-Eintrag als Notlösung, wenn er wenigstens einen Namen hat
+  if(_c&&_c.name)return {name:_c.name,marke:_c.marke,kategorien:_c.kategorien,description:_c.description,image:_c.image,source:_c.source||'Barcode-Cache',offData:_c.offData||{}};
   return null;
 }
 
@@ -9901,8 +9905,9 @@ async function searchEANDatabase(barcode){
     return barcodeEinkaufState.apiCache[barcode];
   }
 
-  // Prüfe persistenten Barcode-Cache von GitHub
-  if(barcodeCache.barcodes[barcode]){
+  // Prüfe persistenten Barcode-Cache von GitHub (v23.13: nur vollständige Einträge mit Name UND Bild)
+  const _c=barcodeCache.barcodes[barcode];
+  if(_c&&!_c.scannedOnly&&_c.name&&_c.image){
     console.log('[EANDatabase] Ergebnis aus Barcode-Cache:', barcode);
     const cached=barcodeCache.barcodes[barcode];
     const result={
@@ -11178,7 +11183,8 @@ async function processAllBarcodes() {
               ablaufdatum: '',
               kaufdatum: todayISO(),
               kaufort: barcodeEinkaufState.geschaeft || '',
-              notiz: 'zuletzt erfasst'
+              notiz: 'zuletzt erfasst',
+              foto: offBild(p)   // v23.13: Produktbild übernehmen
             };
             item.artikel = newArticle;
             item.inQuittung = quittungText.includes(item.barcode) || quittungText.includes(newArticle.name.toUpperCase());
