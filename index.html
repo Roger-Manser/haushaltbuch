@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.11 — Bestätigungsdialog: Schaltflächen immer sichtbar, Text scrollt -->
+<!-- HAUSHALTBUCH v23.12 — Neue Lagerorte erscheinen sofort als Filter -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.11"/>
+<meta name="app-version" content="23.12"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.11';
+const APP_VERSION='23.12';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.12',d:'31.10.2026',items:['🔴 BUGFIX: Neuer Lagerort erschien nicht als Filter im Lager (nur Orte mit Artikeln wurden gezeigt)','✅ Alle Lagerorte als Filter – noch leere Orte abgeschwächt','✅ Umbenennen/Löschen eines Lagerorts führt den aktiven Filter mit','🔧 Lagerorte mit Apostroph im Namen funktionieren als Filter']},
   {v:'23.11',d:'31.10.2026',items:['🔴 BUGFIX: Bei vielen Duplikaten war das Fenster zu klein – Schaltflächen nicht mehr sichtbar','✅ Bestätigungsdialoge: Text scrollt, «Ja/Nein» bleiben immer unten sichtbar (gilt für alle Bestätigungen)','✅ Duplikat-Dialog zeigt jetzt alle Einträge (scrollbar) statt nur die ersten 10–15']},
   {v:'23.10',d:'24.10.2026',items:['🔴 BUGFIX: Zähler «Einkaufsliste» in der unteren Leiste zählte entfernte (✕) Artikel mit','✅ Zählt jetzt genau die Einträge, die in der Liste stehen','✅ Wird nach Entfernen/Hinzufügen/Einbuchen sofort aktualisiert']},
   {v:'23.9',d:'24.10.2026',items:['🛒 Einkaufsliste: mit ✕ entfernte Artikel bleiben ganz weg (kein Wiederauftauchen bei Bestandsänderung, kein «wieder anzeigen»)','✅ Erst wenn der Artikel wieder eingekauft ist (Bestand ≥ Mindestbestand) und später erneut darunter fällt, erscheint er wieder','✅ Gilt auch für «Nicht kaufen» im Laden-Modus']},
@@ -2047,9 +2048,11 @@ function renderLager(){
   if(cb)cb.textContent=S.a.length+' Artikel';
   renderSortBar();
   const bar=document.getElementById('lager-chips');
-  const used=[...new Set(S.a.map(x=>x.lager))];
-  const tabs=['alle',...S.lo.filter(l=>used.includes(l))];
-  bar.innerHTML=tabs.map(l=>'<button class="chip'+(lf===l?' on':'')+'" onclick="setLF(\''+esc(l)+'\')">'+
+  // v23.12: alle Lagerorte als Filter (auch neue/leere), plus Lagerorte von Artikeln, die nicht in der Liste stehen
+  const used=[...new Set(S.a.map(x=>x.lager).filter(Boolean))];
+  const tabs=['alle',...S.lo,...used.filter(l=>!S.lo.includes(l))];
+  if(lf!=='alle'&&!tabs.includes(lf))lf='alle';
+  bar.innerHTML=tabs.map(l=>'<button class="chip'+(lf===l?' on':'')+'" data-l="'+esc(l)+'" onclick="setLF(this.dataset.l)"'+(l!=='alle'&&!used.includes(l)&&lf!==l?' style="opacity:.55"':'')+'>'+
     (l==='alle'?'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:12px;height:12px;stroke:currentColor"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg> Alle':lsm(l)+' '+esc(l))+'</button>').join('')+
     '<button class="chip'+(mindestFilter?' on':'')+'" onclick="mindestFilter=!mindestFilter;renderLager()" style="'+(mindestFilter?'':'')+'">'+
     '<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:12px;height:12px;stroke:currentColor"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg> Mindestbestand</button>';
@@ -8083,12 +8086,13 @@ function renderSt(){
 
 function saveGHcfg(){gh={tok:document.getElementById('gh-t').value.trim(),own:document.getElementById('gh-o').value.trim(),repo:document.getElementById('gh-r').value.trim(),br:document.getElementById('gh-b').value.trim()||'main',rzrepo:document.getElementById('gh-rz').value.trim()||''};saveGH();toast('GitHub gespeichert');renderSt();}
 function addLo(){const n=prompt('Neuer Lagerort:');if(!n||!n.trim())return;const nm=n.trim();if(!S.lo.includes(nm)){S.lo.push(nm);saveL();}renderSt();}
-function delLo(n){if(S.a.some(a=>a.lager===n)){alert('Lagerort «'+n+'» wird noch verwendet.');return;}S.lo=S.lo.filter(l=>l!==n);saveL();renderSt();}
+function delLo(n){if(S.a.some(a=>a.lager===n)){alert('Lagerort «'+n+'» wird noch verwendet.');return;}S.lo=S.lo.filter(l=>l!==n);if(lf===n)lf='alle';saveL();renderSt();}
 function editLo(l){
   const n=prompt('Lagerort umbenennen:',l);if(!n||!n.trim()||n.trim()===l)return;
   const nm=n.trim();
   if(S.lo.includes(nm)){alert('Lagerort «'+nm+'» existiert bereits.');return;}
   S.lo=S.lo.map(x=>x===l?nm:x);
+  if(lf===l)lf=nm; // v23.12
   S.a.forEach(a=>{if(a.lager===l)a.lager=nm;});
   (S.log||[]).forEach(e=>{if(e.lager===l)e.lager=nm;});
   saveL();renderSt();toast('Lagerort umbenannt');
