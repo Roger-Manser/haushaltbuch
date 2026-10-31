@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.10 — Zähler Einkaufsliste in der unteren Leiste korrigiert -->
+<!-- HAUSHALTBUCH v23.11 — Bestätigungsdialog: Schaltflächen immer sichtbar, Text scrollt -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.10"/>
+<meta name="app-version" content="23.11"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.10';
+const APP_VERSION='23.11';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.11',d:'31.10.2026',items:['🔴 BUGFIX: Bei vielen Duplikaten war das Fenster zu klein – Schaltflächen nicht mehr sichtbar','✅ Bestätigungsdialoge: Text scrollt, «Ja/Nein» bleiben immer unten sichtbar (gilt für alle Bestätigungen)','✅ Duplikat-Dialog zeigt jetzt alle Einträge (scrollbar) statt nur die ersten 10–15']},
   {v:'23.10',d:'24.10.2026',items:['🔴 BUGFIX: Zähler «Einkaufsliste» in der unteren Leiste zählte entfernte (✕) Artikel mit','✅ Zählt jetzt genau die Einträge, die in der Liste stehen','✅ Wird nach Entfernen/Hinzufügen/Einbuchen sofort aktualisiert']},
   {v:'23.9',d:'24.10.2026',items:['🛒 Einkaufsliste: mit ✕ entfernte Artikel bleiben ganz weg (kein Wiederauftauchen bei Bestandsänderung, kein «wieder anzeigen»)','✅ Erst wenn der Artikel wieder eingekauft ist (Bestand ≥ Mindestbestand) und später erneut darunter fällt, erscheint er wieder','✅ Gilt auch für «Nicht kaufen» im Laden-Modus']},
   {v:'23.8',d:'24.10.2026',items:['🔴 BUGFIX Einkaufssumme (Lager, «Zuletzt erfasst»): zählte pro Artikel nur den ERSTEN Einkauf → 2. Speck fehlte','🔴 BUGFIX: rechnete immer Preis × Menge – bei Gewichtsartikeln mit gespeichertem Kaufpreis falsch (15.96 × 0.56)','✅ Summe = bezahlter Betrag aller Positionen des Tages beim Laden','✅ Kopfzeile zeigt bei mehreren Stück zusätzlich die Anzahl Positionen']},
@@ -1390,14 +1391,14 @@ function dupListe(dups,max){
 async function showDeduplicateDialog(){
   const dups=findDuplicates();
   if(!dups.length){toast('✓ Keine Duplikate gefunden');return;}
-  if(!await confirmDialog('🔄 '+dups.length+' exakt doppelte Einträge gefunden\n(gleiches Datum, Menge, Preis und Laden):\n\n'+dupListe(dups,15)+'\n\nJetzt löschen?','Ja, löschen','Nein, behalten'))return;
+  if(!await confirmDialog('🔄 '+dups.length+' exakt doppelte Einträge gefunden\n(gleiches Datum, Menge, Preis und Laden):\n\n'+dupListe(dups,500)+'\n\nJetzt löschen?','Ja, löschen','Nein, behalten'))return;
   const removed=removeDuplicates();
   if(removed>0){saveL();toast('✓ '+removed+' doppelte Einträge gelöscht');renderLager();}
 }
 async function deduplicatePreisHistorie(){
   const dups=findDuplicates();
   if(!dups.length)return;
-  if(!await confirmDialog('Es wurden '+dups.length+' exakt doppelte Einträge gefunden\n(gleiches Datum, Menge, Preis und Laden):\n\n'+dupListe(dups,10),'Ja, löschen','Nein, behalten'))return;
+  if(!await confirmDialog('Es wurden '+dups.length+' exakt doppelte Einträge gefunden\n(gleiches Datum, Menge, Preis und Laden):\n\n'+dupListe(dups,500),'Ja, löschen','Nein, behalten'))return;
   const removed=removeDuplicates();
   if(removed>0){saveL();toast('✓ '+removed+' doppelte Einträge gelöscht');}
 }
@@ -12060,28 +12061,34 @@ function fmtMenge(m){const n=parseFloat(m)||0;return Math.abs(n-Math.round(n))<0
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 // Eigener Bestätigungs-Dialog: ersetzt browser confirm() mit Ja/Nein
 function confirmDialog(msg,jaTxt,neinTxt){
+  // v23.11: Text scrollt, Schaltflächen bleiben immer sichtbar (auch bei sehr langen Listen)
   return new Promise(res=>{
     const existing=document.getElementById('confirm-dlg');if(existing)existing.remove();
     const dlg=document.createElement('div');
     dlg.id='confirm-dlg';
-    dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9900;display:flex;align-items:center;justify-content:center;padding:20px';
-    const lines=msg.split('\n').map(l=>l?'<div style="margin-bottom:4px">'+esc(l)+'</div>':'<div style="height:6px"></div>').join('');
-    dlg.innerHTML=
-      '<div style="background:var(--sf);border-radius:var(--r);width:100%;max-width:360px;overflow:hidden">'+
-        '<div style="padding:20px 20px 16px;font-size:14px;line-height:1.6;color:var(--tx)">'+lines+'</div>'+
-        '<div style="display:flex;border-top:1px solid var(--bd)">'+
-          '<button onclick="document.getElementById(\'confirm-dlg\').remove();window._confirmRes(false)" style="flex:1;padding:15px;background:none;border:none;border-right:1px solid var(--bd);font-size:15px;cursor:pointer;color:var(--t2)">'+esc(neinTxt||'Nein')+'</button>'+
-          '<button onclick="document.getElementById(\'confirm-dlg\').remove();window._confirmRes(true)" style="flex:1;padding:15px;background:none;border:none;font-size:15px;font-weight:700;cursor:pointer;color:var(--ac)">'+esc(jaTxt||'Ja')+'</button>'+
-        '</div>'+
-      '</div>';
-    window._confirmRes=res;
-    // Wrap innerhtml in max-width container
-  const wrapper=document.createElement('div');
-  wrapper.style.cssText='width:100%;max-width:420px;max-height:85vh;overflow:hidden;display:flex;flex-direction:column;border-radius:var(--r);background:var(--sf);margin:auto';
-  wrapper.innerHTML=dlg.innerHTML;
-  dlg.innerHTML='';
-  dlg.appendChild(wrapper);
-  document.body.appendChild(dlg);
+    dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9900;display:flex;align-items:center;justify-content:center;padding:16px;padding-top:calc(16px + env(safe-area-inset-top));padding-bottom:calc(16px + env(safe-area-inset-bottom))';
+    const lines=String(msg||'').split('\n').map(l=>l?'<div style="margin-bottom:4px">'+esc(l)+'</div>':'<div style="height:6px"></div>').join('');
+    const box=document.createElement('div');
+    box.style.cssText='background:var(--sf);border-radius:var(--r);width:100%;max-width:420px;max-height:85vh;max-height:calc(100dvh - 32px);display:flex;flex-direction:column;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.25)';
+    const txt=document.createElement('div');
+    txt.style.cssText='flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:20px 20px 16px;font-size:14px;line-height:1.6;color:var(--tx);word-break:break-word';
+    txt.innerHTML=lines;
+    const btns=document.createElement('div');
+    btns.style.cssText='flex:0 0 auto;display:flex;border-top:1px solid var(--bd);background:var(--sf)';
+    const fertig=v=>{dlg.remove();res(v);};
+    const nein=document.createElement('button');
+    nein.type='button';nein.textContent=neinTxt||'Nein';
+    nein.style.cssText='flex:1;padding:15px;background:none;border:none;border-right:1px solid var(--bd);font-size:15px;cursor:pointer;color:var(--t2)';
+    nein.addEventListener('click',()=>fertig(false));
+    const ja=document.createElement('button');
+    ja.type='button';ja.textContent=jaTxt||'Ja';
+    ja.style.cssText='flex:1;padding:15px;background:none;border:none;font-size:15px;font-weight:700;cursor:pointer;color:var(--ac)';
+    ja.addEventListener('click',()=>fertig(true));
+    btns.appendChild(nein);btns.appendChild(ja);
+    box.appendChild(txt);box.appendChild(btns);
+    dlg.appendChild(box);
+    window._confirmRes=v=>{const d=document.getElementById('confirm-dlg');if(d)d.remove();res(v);}; // für Zurück-Button
+    document.body.appendChild(dlg);
   });
 }
 
