@@ -13213,6 +13213,231 @@
       "quittungAliase": [],
       "letzteEingangHeute": "10:11",
       "ablaufdatum": ""
+    },
+    {
+      "id": 325,
+      "name": "Wellauer Original 140g (9436)",
+      "marke": "",
+      "kat": "Genussmittel",
+      "lager": "Küche",
+      "kaufort": "Wellauer",
+      "menge": 1,
+      "einheit": "Dose",
+      "mindest": 0,
+      "barcode": "7610483050015",
+      "barcodes": [],
+      "preis": 26.9,
+      "packMenge": 140,
+      "packEinheit": "g",
+      "kaufdatum": "2026-10-31",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1793442627421_1793442617949603340740376752931.jpg?t=1793442657965",
+      "fotoPath": "1793442627421_1793442617949603340740376752931.jpg",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-10-31",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-31",
+          "preis": 26.9,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Wellauer",
+          "betrag": 26.9
+        },
+        {
+          "datum": "2026-10-31",
+          "preis": 26.9,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        },
+        {
+          "datum": "2026-10-31",
+          "preis": 26.9,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Wellauer"
+        },
+        {
+          "datum": "2026-10-31",
+          "preis": 26.9,
+          "menge": 1,
+          "einheit": "Dose",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Wellauer"
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "11:25",
+      "ablaufdatum": ""
+    },
+    {
+      "id": 326,
+      "name": "187 Pod Miami Vice 2ml (16021)",
+      "marke": "",
+      "kat": "Genussmittel",
+      "lager": "Küche",
+      "kaufort": "Wellauer",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4262435961806",
+      "barcodes": [],
+      "preis": 4.9,
+      "packMenge": 1,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-10-31",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1793442891542_17934428853964221853085421194180.jpg?t=1793442909658",
+      "fotoPath": "1793442891542_17934428853964221853085421194180.jpg",
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-10-31",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-31",
+          "preis": 4.9,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Wellauer",
+          "betrag": 4.9
+        },
+        {
+          "datum": "2026-10-31",
+          "preis": 4.9,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Wellauer"
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "11:25",
+      "ablaufdatum": ""
+    },
+    {
+      "id": 327,
+      "name": "187 Device Graffiti (16688)",
+      "marke": "",
+      "kat": "Genussmittel",
+      "lager": "Küche",
+      "kaufort": "Wellauer",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4262435962568",
+      "barcodes": [],
+      "preis": 8.9,
+      "packMenge": 1,
+      "packEinheit": "Stk",
+      "kaufdatum": "2026-10-31",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1793442947814_17934429394255173824549997010233.jpg?t=1793442957514",
+      "fotoPath": "1793442947814_17934429394255173824549997010233.jpg",
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-10-31",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-31",
+          "preis": 8.9,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Wellauer",
+          "betrag": 8.9
+        },
+        {
+          "datum": "2026-10-31",
+          "preis": 8.9,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Wellauer"
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "11:26",
+      "ablaufdatum": ""
+    },
+    {
+      "id": 328,
+      "name": "Wellauer High Volume Classic 74 (9481)",
+      "marke": "",
+      "kat": "Diverses",
+      "lager": "Küche",
+      "kaufort": "Wellauer",
+      "menge": 1,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "7610483066641",
+      "barcodes": [],
+      "preis": 14.9,
+      "packMenge": 74,
+      "packEinheit": "g",
+      "kaufdatum": "2026-10-31",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1793442532633_17934425255644053701175698611891.jpg?t=1793442539114",
+      "fotoPath": "1793442532633_17934425255644053701175698611891.jpg",
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-10-31",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-10-31",
+          "preis": 14.9,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": ""
+        },
+        {
+          "datum": "2026-10-31",
+          "preis": 14.9,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Wellauer"
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "11:26",
+      "ablaufdatum": ""
     }
   ],
   "lagerorte": [
@@ -13226,7 +13451,8 @@
     "Gang unten",
     "Garten",
     "Bad unten",
-    "Bad oben"
+    "Bad oben",
+    "Obergeschoss"
   ],
   "kategorien": [
     "Milchprodukte",
@@ -13276,13 +13502,22 @@
     "Geschenk",
     "Rita Eisenring",
     "Getränkemarkt Zil",
-    "Breitenmoser"
+    "Breitenmoser",
+    "Wellauer"
   ],
   "geschaefteOhneRundung": [
     "Lidl",
     "Aldi"
   ],
-  "einkauf": [],
+  "einkauf": [
+    {
+      "id": 1793368192791,
+      "text": "mozzarella Gewürz",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    }
+  ],
   "einkaufOverrides": {
     "1": {
       "ausgeblendet": true,
@@ -28083,7 +28318,103 @@
       "k": "Genussmittel",
       "aktion": false,
       "kaufort": "Landi"
+    },
+    {
+      "t": "ein",
+      "aid": 325,
+      "name": "Wellauer Original 140g (9436)",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 26.9,
+      "aktion": false,
+      "datum": "2026-10-31",
+      "zeit": 1793442301318
+    },
+    {
+      "t": "ein",
+      "aid": 326,
+      "name": "187 Pod Miami Vice 2ml (16021)",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 4.9,
+      "aktion": false,
+      "datum": "2026-10-31",
+      "zeit": 1793442348423
+    },
+    {
+      "t": "ein",
+      "aid": 327,
+      "name": "187 Device Graffiti (16688)",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 8.9,
+      "aktion": false,
+      "datum": "2026-10-31",
+      "zeit": 1793442377638
+    },
+    {
+      "t": "ein",
+      "aid": 328,
+      "name": "Wellauer High Volume Classic 74 (9481)",
+      "lager": "Küche",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 14.9,
+      "aktion": false,
+      "datum": "2026-10-31",
+      "zeit": 1793442396892
+    },
+    {
+      "aid": 325,
+      "d": "2026-10-31",
+      "m": 1,
+      "p": 26.9,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Wellauer"
+    },
+    {
+      "aid": 326,
+      "d": "2026-10-31",
+      "m": 1,
+      "p": 4.9,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Wellauer"
+    },
+    {
+      "aid": 327,
+      "d": "2026-10-31",
+      "m": 1,
+      "p": 8.9,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Wellauer"
+    },
+    {
+      "aid": 328,
+      "d": "2026-10-31",
+      "m": 1,
+      "p": 14.9,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Wellauer"
     }
   ],
-  "aktualisiert": "2026-10-25T09:46:12.409Z"
+  "aktualisiert": "2026-10-31T10:37:48.666Z"
 }
