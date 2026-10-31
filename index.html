@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.15 — Produktsuche nach Name mit Bildauswahl -->
+<!-- HAUSHALTBUCH v23.16 — Alexa: Einkaufsliste per Sprache (Eingang alexa-einkauf.json) -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.15"/>
+<meta name="app-version" content="23.16"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.15';
+const APP_VERSION='23.16';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.16',d:'31.10.2026',items:['🗣️ NEU: Alexa-Anbindung – «Alexa, öffne mein Haushaltbuch» → «Füge Milch hinzu»','✅ Alexa schreibt in alexa-einkauf.json; die App übernimmt Einträge beim Start, beim Öffnen der Einkaufsliste und beim Zurückkehren in die App','✅ Gleicher Artikel nochmals → Menge wird erhöht; «Lösche …» entfernt Einträge (auch automatische)','✅ Datei wird erst nach erfolgreichem Sync geleert → alle Geräte erhalten die Einträge, keine Doppelten','🗣️ Per Alexa hinzugefügte Einträge sind markiert']},
   {v:'23.15',d:'31.10.2026',items:['🔎 NEU: Produktsuche nach Name – für Artikel, deren Barcode nicht erfasst ist','✅ Artikel bearbeiten: Knopf «🔎 Nach Name suchen» neben «Produktdaten online suchen»','✅ Quittung → neuer Artikel: «🔎 Bild per Name suchen» im Erstell-Dialog','🖼️ Trefferliste mit Bildern (Lebensmittel + Haushalt), antippen übernimmt Bild (und Name/Marke, falls leer)','✅ Barcode des Artikels bleibt unverändert','🔧 Überlastete Suche (503) wird automatisch 1× wiederholt']},
   {v:'23.14',d:'31.10.2026',items:['🔴 Ursache gefunden: Open Food Facts sperrt nach ~10 schnellen Anfragen (HTTP 429) – im Browser als «keine Verbindung» sichtbar','✅ Mindestabstand 1.2 s zwischen Anfragen, keine Mehrfach-Wiederholungen mehr','✅ Bei Sperre: klare Meldung «zu viele Anfragen – in ca. 60 s nochmals» und 1 Minute Pause','✅ Bereits gesuchte Barcodes werden pro Sitzung nicht erneut abgefragt','✅ Produktname auch aus anderen Sprachen (z.B. wenn nur französisch erfasst)','🔧 Barcode-Einkauf nutzt dieselbe gedrosselte Suche']},
   {v:'23.13',d:'31.10.2026',items:['🔴 BUGFIX «Produktdaten online suchen» (Artikel bearbeiten): meldete immer «keine Verbindung?»','❌ Ursache: OFF antwortet bei unbekanntem Barcode mit HTTP 404 → wurde als Verbindungsfehler gewertet','✅ Klare Meldungen: gefunden / nicht gefunden / echter Verbindungsfehler (mit Grund)','🌐 Sucht jetzt auch in Open Products Facts, Open Beauty Facts, Open Pet Food Facts (Haushalt, Kosmetik, Tierfutter)','🖼️ Produktbild: wird beim Barcode-Einkauf übernommen; im Formular notfalls als Bild-URL, wenn der Download blockiert ist','🔧 Barcode-Cache: Platzhalter ohne Name/Bild verhindern die Online-Suche nicht mehr']},
@@ -1206,6 +1207,7 @@ function loadL(){
   // checkDataVersionOnStartup().catch(e=>console.error('Data version check fehlgeschlagen:',e));
   // Barcode-Cache von GitHub laden (separate, sichere Datei)
   if(gh.tok&&gh.own&&gh.repo){setTimeout(()=>loadBarcodeCacheFromGH().catch(e=>console.log('[BarcodeCache] Startup-Fehler:',e.message)),100);}
+  if(gh.tok&&gh.own&&gh.repo){setTimeout(()=>alexaEingangAnwenden().catch(e=>console.log('[Alexa] Startup:',e.message)),1500);}
 }
 // Beim App-Start: Auto-Check welcher Datenstamm neuer ist (Lokal vs GitHub)
 async function checkDataVersionOnStartup(){
@@ -1320,6 +1322,76 @@ async function ghReq(path,method,body){
   return r.status===204?null:r.json();
 }
 async function ghGet(path){try{return await ghReq('/contents/'+path);}catch(e){return null;}}
+
+/* ═══ v23.16: Alexa-Eingang ═══════════════════════════════════════════
+   Der Alexa-Skill schreibt Befehle in «alexa-einkauf.json» im GitHub-Repo:
+   {"befehle":[{"id":"…","typ":"add"|"remove","text":"Milch","menge":"2","einheit":"Stk","zeit":1730000000000}]}
+   Die App übernimmt sie in die Einkaufsliste. Geleert wird die Datei erst nach erfolgreichem Sync
+   (doSync), damit alle Geräte die Einträge über haushaltbuch.json erhalten. Doppelte Anwendung
+   verhindert die Befehls-ID (alexaId am Listeneintrag bzw. S.alexaErledigt). */
+const ALEXA_DATEI='alexa-einkauf.json';
+let _alexaLetzterCheck=0;
+function alexaNorm(t){return String(t||'').toLowerCase().replace(/\s+/g,' ').trim();}
+async function alexaEingangAnwenden(sofort){
+  if(!gh.tok||!gh.own||!gh.repo||navigator.onLine===false)return null;
+  if(!sofort&&Date.now()-_alexaLetzterCheck<20000)return null;
+  _alexaLetzterCheck=Date.now();
+  const f=await ghGet(ALEXA_DATEI);
+  if(!f||!f.content)return null;
+  let d;try{d=JSON.parse(b64DecodeUtf8(f.content.replace(/\n/g,'')));}catch(e){return null;}
+  const befehle=(Array.isArray(d.befehle)?d.befehle:[]).slice().sort((a,b)=>(a.zeit||0)-(b.zeit||0));
+  if(!befehle.length)return new Set();
+  if(!S.alexaErledigt)S.alexaErledigt=[];
+  const erledigt=new Set(S.alexaErledigt);
+  const ids=new Set();let neu=0,weg=0;
+  befehle.forEach(b=>{
+    if(!b||!b.id)return;
+    ids.add(b.id);
+    if(erledigt.has(b.id)||S.ek.some(e=>e.alexaId===b.id))return;
+    const text=String(b.text||'').trim();
+    if(b.typ==='add'&&text){
+      const vorhanden=S.ek.find(e=>!e.checked&&alexaNorm(e.text)===alexaNorm(text));
+      if(vorhanden){
+        // gleicher Artikel schon notiert → Menge erhöhen statt doppelt
+        const m=(parseDecimal(vorhanden.menge)||1)+(parseDecimal(b.menge)||1);
+        vorhanden.menge=String(Math.round(m*1000)/1000);
+      }else{
+        S.ek.push({id:Date.now()+Math.floor(Math.random()*1000),text:text.charAt(0).toUpperCase()+text.slice(1),menge:String(b.menge||'1'),einheit:b.einheit||'Stk',checked:false,quelle:'alexa',alexaId:b.id});
+      }
+      neu++;
+    }else if(b.typ==='remove'&&text){
+      const n=alexaNorm(text);
+      const idx=S.ek.findIndex(e=>!e.checked&&(alexaNorm(e.text)===n||alexaNorm(e.text).includes(n)||n.includes(alexaNorm(e.text))));
+      if(idx>=0){S.ek.splice(idx,1);weg++;}
+      else{
+        // automatischer Eintrag (unter Mindestbestand) → von der Liste entfernen
+        const a=ekAutoListe(false).find(x=>alexaNorm(x.name)===n||alexaNorm(x.name).includes(n));
+        if(a){if(!S.eko)S.eko={};(S.eko[a.id]||(S.eko[a.id]={})).ausgeblendet=true;weg++;}
+      }
+    }
+    erledigt.add(b.id);
+  });
+  S.alexaErledigt=[...erledigt].slice(-300);
+  if(neu||weg){
+    saveL();
+    if(typeof cur!=='undefined'&&cur==='s-einkauf')renderEk();else nav();
+    toast('🗣️ Alexa: '+(neu?neu+' Artikel hinzugefügt':'')+(neu&&weg?', ':'')+(weg?weg+' entfernt':''));
+  }
+  return ids;
+}
+// Nach erfolgreichem Upload: übernommene Befehle aus der Datei entfernen (neue, inzwischen gesprochene bleiben)
+async function alexaEingangLeeren(ids){
+  if(!ids||!ids.size)return;
+  for(let v=0;v<3;v++){
+    const f=await ghGet(ALEXA_DATEI);
+    if(!f||!f.content)return;
+    let d;try{d=JSON.parse(b64DecodeUtf8(f.content.replace(/\n/g,'')));}catch(e){return;}
+    const rest=(d.befehle||[]).filter(b=>!ids.has(b.id));
+    if(rest.length===(d.befehle||[]).length)return;
+    try{await ghPut(ALEXA_DATEI,JSON.stringify({befehle:rest},null,1),'Alexa-Eingang übernommen',f.sha);return;}
+    catch(e){if(!String(e.message).includes('409'))return;await new Promise(r=>setTimeout(r,700));}
+  }
+}
 function b64DecodeUtf8(b64){
   // Mirrors the encode side (encodeURIComponent → unescape → btoa) in reverse,
   // so umlauts and other non-ASCII characters survive the round-trip through GitHub.
@@ -1508,6 +1580,10 @@ async function doSync(){
       }catch(e){/* Backup-Fehler nicht kritisch */}
     }
 
+    // v23.16: Alexa-Einträge vor dem Hochladen übernehmen
+    let alexaIds=null;
+    try{alexaIds=await alexaEingangAnwenden(true);}catch(e){console.warn('[Alexa]',e.message);}
+
     // 🎯 FIX v22.83: Stelle sicher dass alle Mengen vor dem Upload aktuell sind!
     S.a.forEach(a => syncMenge(a));
     
@@ -1548,6 +1624,8 @@ async function doSync(){
         }else throw e;
       }
     }
+    // v23.16: hochgeladene Alexa-Befehle aus der Eingangsdatei entfernen
+    if(putRes&&alexaIds&&alexaIds.size){try{await alexaEingangLeeren(alexaIds);}catch(e){console.warn('[Alexa] Leeren:',e.message);}}
     // Kurz warten dann zurücklesen zur Verifikation
     await new Promise(r=>setTimeout(r,1000));
     const verify=await ghGet('haushaltbuch.json');
@@ -1663,6 +1741,8 @@ async function loadFromGH(){
     }
     // Barcode-Cache von GitHub laden (separate, sichere Datei)
     try{await loadBarcodeCacheFromGH();}catch(e){console.log('[BarcodeCache] Fehler beim Laden:',e.message);}
+    // v23.16: noch nicht synchronisierte Alexa-Einträge wieder anwenden
+    try{S.alexaErledigt=(S.alexaErledigt||[]).filter(id=>S.ek.some(e=>e.alexaId===id));await alexaEingangAnwenden(true);}catch(e){}
     sdot('ok');hideLdr();toast('Daten von GitHub geladen ('+S.a.length+' Artikel)');renderLager();
   }catch(err){hideLdr();toast('Fehler: '+err.message.slice(0,50));}
 }
@@ -2127,7 +2207,7 @@ function goScreen(id){
   if(id==='s-rezepte')renderRezepte();
   if(id==='s-uebersicht')renderUeb();
   if(id==='s-statistik')renderStat();
-  if(id==='s-einkauf')renderEk();
+  if(id==='s-einkauf'){renderEk();alexaEingangAnwenden().catch(()=>{});}
   if(id==='s-settings')renderSt();
   setTimeout(()=>suppressAutofill(document.getElementById(id)),0);
 }
@@ -6348,7 +6428,7 @@ function renderEk(){
   S.ek.forEach(e=>{
     const matchA=S.a.find(a=>a.name.toLowerCase()===e.text.toLowerCase());
     h+='<div class="ei'+(e.checked?' ck':'')+'" id="eim-'+e.id+'"><input type="checkbox" '+(e.checked?'checked':'')+' onchange="ckM('+e.id+',this.checked)"/>'+
-    '<div class="eit" style="flex:1;min-width:0;'+(matchA?'color:var(--ac);cursor:pointer':'')+ '"'+(matchA?' onclick="showEkArtikelInfo('+matchA.id+')"':'')+'>'+esc(e.text)+'</div>'+
+    '<div class="eit" style="flex:1;min-width:0;'+(matchA?'color:var(--ac);cursor:pointer':'')+ '"'+(matchA?' onclick="showEkArtikelInfo('+matchA.id+')"':'')+'>'+esc(e.text)+(e.quelle==='alexa'?' <span title="per Alexa hinzugefügt" style="font-size:11px">🗣️</span>':'')+'</div>'+
     '<input type="text" inputmode="decimal" value="'+esc(e.menge||'')+'" placeholder="Mge" onchange="setEkMenge('+e.id+',this.value)" onclick="event.stopPropagation()" style="width:54px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);text-align:right;flex-shrink:0"/>'+
     '<select onchange="setEkEinheit('+e.id+',this.value)" onclick="event.stopPropagation()" style="width:66px;padding:6px 4px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);flex-shrink:0">'+ekEinheitOptions(e.einheit||'')+'</select>'+
     '<button class="eid" onclick="delM('+e.id+')">&#x2715;</button></div>';
@@ -12554,6 +12634,7 @@ function handleBack(){
   exitDlg.addEventListener('click',e=>{if(e.target===exitDlg)exitDlg.remove();});
   document.body.appendChild(exitDlg);
 }
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')alexaEingangAnwenden().catch(()=>{});}); // v23.16
 function setupBackButton(){
   // Schutz bei jeder Interaktion sicherstellen (Chrome «history manipulation intervention»)
   // Touch: Aktivierung erst bei touchend/click; Maus/Tastatur: pointerdown/keydown
