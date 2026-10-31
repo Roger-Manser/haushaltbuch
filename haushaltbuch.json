@@ -12709,7 +12709,7 @@
       "name": "113003 Aechmea Blue Rain P12 c",
       "marke": "",
       "kat": "Diverses",
-      "lager": "Küche",
+      "lager": "Obergeschoss",
       "kaufort": "Landi",
       "menge": 1,
       "einheit": "Stk",
@@ -12751,7 +12751,7 @@
       "name": "C7398 Basilikum gross P14 cm",
       "marke": "",
       "kat": "Diverses",
-      "lager": "Küche",
+      "lager": "Obergeschoss",
       "kaufort": "Landi",
       "menge": 1,
       "einheit": "Stk",
@@ -13035,7 +13035,7 @@
       "name": "Tempo Classic Taschentücher XXL",
       "marke": "",
       "kat": "Reinigung & Pflege",
-      "lager": "Küche",
+      "lager": "Obergeschoss",
       "kaufort": "Lidl",
       "menge": 1,
       "einheit": "Pkg",
@@ -13219,7 +13219,7 @@
       "name": "Wellauer Original 140g (9436)",
       "marke": "",
       "kat": "Genussmittel",
-      "lager": "Küche",
+      "lager": "Obergeschoss",
       "kaufort": "Wellauer",
       "menge": 1,
       "einheit": "Dose",
@@ -13260,24 +13260,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": ""
-        },
-        {
-          "datum": "2026-10-31",
-          "preis": 26.9,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Wellauer"
-        },
-        {
-          "datum": "2026-10-31",
-          "preis": 26.9,
-          "menge": 1,
-          "einheit": "Dose",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Wellauer"
         }
       ],
       "quittungAliase": [],
@@ -13289,7 +13271,7 @@
       "name": "187 Pod Miami Vice 2ml (16021)",
       "marke": "",
       "kat": "Genussmittel",
-      "lager": "Küche",
+      "lager": "Obergeschoss",
       "kaufort": "Wellauer",
       "menge": 1,
       "einheit": "Stk",
@@ -13321,15 +13303,6 @@
           "aktion": false,
           "kaufort": "Wellauer",
           "betrag": 4.9
-        },
-        {
-          "datum": "2026-10-31",
-          "preis": 4.9,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Wellauer"
         }
       ],
       "quittungAliase": [],
@@ -13341,7 +13314,7 @@
       "name": "187 Device Graffiti (16688)",
       "marke": "",
       "kat": "Genussmittel",
-      "lager": "Küche",
+      "lager": "Obergeschoss",
       "kaufort": "Wellauer",
       "menge": 1,
       "einheit": "Stk",
@@ -13373,15 +13346,6 @@
           "aktion": false,
           "kaufort": "Wellauer",
           "betrag": 8.9
-        },
-        {
-          "datum": "2026-10-31",
-          "preis": 8.9,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Wellauer"
         }
       ],
       "quittungAliase": [],
@@ -13393,7 +13357,7 @@
       "name": "Wellauer High Volume Classic 74 (9481)",
       "marke": "",
       "kat": "Diverses",
-      "lager": "Küche",
+      "lager": "Obergeschoss",
       "kaufort": "Wellauer",
       "menge": 1,
       "einheit": "Pkg",
@@ -28416,5 +28380,5 @@
       "kaufort": "Wellauer"
     }
   ],
-  "aktualisiert": "2026-10-31T10:37:48.666Z"
+  "aktualisiert": "2026-10-31T10:45:17.089Z"
 }
