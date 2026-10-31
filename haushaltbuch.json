@@ -13251,15 +13251,6 @@
           "aktion": false,
           "kaufort": "Wellauer",
           "betrag": 26.9
-        },
-        {
-          "datum": "2026-10-31",
-          "preis": 26.9,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": ""
         }
       ],
       "quittungAliase": [],
@@ -13380,15 +13371,6 @@
         }
       ],
       "preisHistorie": [
-        {
-          "datum": "2026-10-31",
-          "preis": 14.9,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": ""
-        },
         {
           "datum": "2026-10-31",
           "preis": 14.9,
@@ -28380,5 +28362,5 @@
       "kaufort": "Wellauer"
     }
   ],
-  "aktualisiert": "2026-10-31T10:45:17.089Z"
+  "aktualisiert": "2026-10-31T10:46:27.166Z"
 }
