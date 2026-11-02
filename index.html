@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.16 — Alexa: Einkaufsliste per Sprache (Eingang alexa-einkauf.json) -->
+<!-- HAUSHALTBUCH v23.17 — Alexa-Einträge mit Lagerliste abgleichen -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.16"/>
+<meta name="app-version" content="23.17"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.16';
+const APP_VERSION='23.17';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.17',d:'02.11.2026',items:['🗣️ Alexa-Einträge werden mit der Lagerliste abgeglichen','✅ Treffer: Name + Einheit aus dem Lager, Eintrag mit Artikel verknüpft (grün, antippbar), «gesagt: …» darunter','✅ Artikel schon unter Mindestbestand → keine doppelte Zeile, genannte Menge wird übernommen, ✕-Ausblendung aufgehoben','🔍 Eindeutig → automatisch verknüpft; mehrdeutig (z.B. «Milch») → Vorschläge «Lager: …» zum Antippen','🧠 Gewählte Zuordnung wird gemerkt – nächstes Mal automatisch','🔧 Ignoriert Marke und Beifügungen («mit Speck», «nach griech. Art»); «Kaffee-Filter» ≠ Kaffee','✅ «Lösche …» nutzt denselben Abgleich']},
   {v:'23.16',d:'31.10.2026',items:['🗣️ NEU: Alexa-Anbindung – «Alexa, öffne mein Haushaltbuch» → «Füge Milch hinzu»','✅ Alexa schreibt in alexa-einkauf.json; die App übernimmt Einträge beim Start, beim Öffnen der Einkaufsliste und beim Zurückkehren in die App','✅ Gleicher Artikel nochmals → Menge wird erhöht; «Lösche …» entfernt Einträge (auch automatische)','✅ Datei wird erst nach erfolgreichem Sync geleert → alle Geräte erhalten die Einträge, keine Doppelten','🗣️ Per Alexa hinzugefügte Einträge sind markiert']},
   {v:'23.15',d:'31.10.2026',items:['🔎 NEU: Produktsuche nach Name – für Artikel, deren Barcode nicht erfasst ist','✅ Artikel bearbeiten: Knopf «🔎 Nach Name suchen» neben «Produktdaten online suchen»','✅ Quittung → neuer Artikel: «🔎 Bild per Name suchen» im Erstell-Dialog','🖼️ Trefferliste mit Bildern (Lebensmittel + Haushalt), antippen übernimmt Bild (und Name/Marke, falls leer)','✅ Barcode des Artikels bleibt unverändert','🔧 Überlastete Suche (503) wird automatisch 1× wiederholt']},
   {v:'23.14',d:'31.10.2026',items:['🔴 Ursache gefunden: Open Food Facts sperrt nach ~10 schnellen Anfragen (HTTP 429) – im Browser als «keine Verbindung» sichtbar','✅ Mindestabstand 1.2 s zwischen Anfragen, keine Mehrfach-Wiederholungen mehr','✅ Bei Sperre: klare Meldung «zu viele Anfragen – in ca. 60 s nochmals» und 1 Minute Pause','✅ Bereits gesuchte Barcodes werden pro Sitzung nicht erneut abgefragt','✅ Produktname auch aus anderen Sprachen (z.B. wenn nur französisch erfasst)','🔧 Barcode-Einkauf nutzt dieselbe gedrosselte Suche']},
@@ -1332,6 +1333,82 @@ async function ghGet(path){try{return await ghReq('/contents/'+path);}catch(e){r
 const ALEXA_DATEI='alexa-einkauf.json';
 let _alexaLetzterCheck=0;
 function alexaNorm(t){return String(t||'').toLowerCase().replace(/\s+/g,' ').trim();}
+// v23.17: Gesprochenen Artikel mit der Lagerliste abgleichen.
+// Eindeutig → verknüpfen; mehrdeutig → Vorschläge in der Einkaufsliste; gewählte Zuordnung wird gelernt (alexaAliase).
+function lagerNorm(t){
+  return String(t||'').toLowerCase()
+    .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss').replace(/[éèê]/g,'e').replace(/[àâ]/g,'a')
+    .replace(/\(.*?\)/g,' ')
+    .replace(/(\w)-(\w)/g,'$1$2')                       // Bindestrich-Wörter zusammen: Kaffee-Filter → kaffeefilter
+    .replace(/[^a-z0-9 ]+/g,' ').replace(/\s+/g,' ').trim();
+}
+function lagerAliase(a){
+  const l=[];
+  const add=v=>{if(!v)return;(typeof v==='string'?v.split('\n'):v).forEach(x=>{if(x&&String(x).trim())l.push(String(x));});};
+  add(a.quittungAliase);add(a.alias);add(a.alexaAliase);
+  return l;
+}
+const LAGER_VERBINDER=new Set(['mit','und','an','auf','ohne','nach','in','im','zum','zur','fuer']);
+function lagerKern(a){
+  // Kernwörter: ohne Marke, ohne Codes/Grössen, ohne Beifügungen («mit Speck», «nach griechischer Art»)
+  const marke=new Set(lagerNorm(a.marke||'').split(' ').filter(Boolean));
+  const kern=[];
+  for(const w of lagerNorm(a.name).split(' ')){
+    if(LAGER_VERBINDER.has(w))break;
+    if(/\d/.test(w)||marke.has(w)||w.length<2)continue;
+    kern.push(w);
+  }
+  return kern;
+}
+function lagerScore(a,q,qw){
+  const n=lagerNorm(a.name);
+  if(n===q||n.replace(/ /g,'')===q.replace(/ /g,'')||lagerAliase(a).some(x=>{const xn=lagerNorm(x);return xn===q||xn.replace(/ /g,'')===q.replace(/ /g,'');}))return 100;
+  const k=lagerKern(a);if(!k.length)return 0;
+  const extra=Math.max(0,k.length-qw.length)*5;
+  if(k.join(' ')===q)return 90;
+  if(qw.every(w=>k.includes(w)))return (k[0]===qw[0]?80:68)-extra;           // alle gesagten Wörter im Kern
+  if(qw.length===1&&q.length>=4){
+    if(k[0].length>q.length&&k[0].endsWith(q))return 66-extra;                 // Wortende: Vollmilch, Kochspeck, Kristallzucker
+    if(k[0].length>=q.length+3&&k[0].startsWith(q))return 55-extra;            // Wortanfang (mehrdeutig): Kaffeepulver, Speckwürfel
+  }
+  const d=levenshteinDistance(n,q),sim=1-d/Math.max(n.length,q.length);
+  if(sim>=0.85)return 60+Math.round((sim-0.85)*100);                          // falsch verstanden / Tippfehler
+  return 0;
+}
+// Ergebnis: {art} wenn eindeutig, sonst {vorschlaege:[id,…]} (max. 4)
+function alexaLagerMatch(text){
+  const q=lagerNorm(text);if(!q)return {art:null,vorschlaege:[]};
+  const qw=q.split(' ');
+  const liste=S.a.map(a=>({a,sc:lagerScore(a,q,qw)})).filter(x=>x.sc>=45)
+    .sort((x,y)=>y.sc-x.sc||((Date.parse(y.a.kaufdatum)||0)-(Date.parse(x.a.kaufdatum)||0)));
+  if(!liste.length)return {art:null,vorschlaege:[]};
+  const best=liste[0],zweit=liste[1];
+  const eindeutig=best.sc>=100||(best.sc>=70&&(!zweit||best.sc-zweit.sc>=8))||(best.sc>=60&&(!zweit||zweit.sc<50));
+  if(eindeutig)return {art:best.a,vorschlaege:[]};
+  return {art:null,vorschlaege:liste.slice(0,4).map(x=>x.a.id)};
+}
+// Vorschlag in der Einkaufsliste antippen → verknüpfen + lernen
+function ekVerknuepfen(ekId,artikelId){
+  const e=S.ek.find(x=>x.id===ekId);const a=S.a.find(x=>x.id===artikelId);
+  if(!e||!a)return;
+  const gesagt=e.gesagt||e.text;
+  if(!Array.isArray(a.alexaAliase))a.alexaAliase=[];
+  if(lagerNorm(gesagt)!==lagerNorm(a.name)&&!a.alexaAliase.some(x=>lagerNorm(x)===lagerNorm(gesagt)))a.alexaAliase.push(gesagt);
+  if(a.menge<a.mindest){
+    // steht schon automatisch auf der Liste → manuelle Zeile entfernen, Menge übernehmen
+    if(!S.eko)S.eko={};const ov=S.eko[a.id]||(S.eko[a.id]={});
+    delete ov.ausgeblendet;ov.alexa=true;
+    if(e.menge&&String(e.menge)!=='1')ov.menge=String(e.menge);
+    S.ek=S.ek.filter(x=>x.id!==ekId);
+  }else{
+    e.artikelId=a.id;e.text=a.name;delete e.vorschlaege;
+    if(lagerNorm(gesagt)!==lagerNorm(a.name))e.gesagt=gesagt;
+    if((e.einheit||'Stk')==='Stk'&&a.einheit&&!(isDecUnit(a.einheit)&&String(e.menge||'1')!=='1'))e.einheit=a.einheit;
+  }
+  saveL();renderEk();
+  toast('🔗 «'+gesagt+'» → «'+a.name+'» (wird gemerkt)');
+}
+function ekVorschlaegeWeg(ekId){const e=S.ek.find(x=>x.id===ekId);if(e){delete e.vorschlaege;saveL();renderEk();}}
 async function alexaEingangAnwenden(sofort){
   if(!gh.tok||!gh.own||!gh.repo||navigator.onLine===false)return null;
   if(!sofort&&Date.now()-_alexaLetzterCheck<20000)return null;
@@ -1350,22 +1427,41 @@ async function alexaEingangAnwenden(sofort){
     if(erledigt.has(b.id)||S.ek.some(e=>e.alexaId===b.id))return;
     const text=String(b.text||'').trim();
     if(b.typ==='add'&&text){
-      const vorhanden=S.ek.find(e=>!e.checked&&alexaNorm(e.text)===alexaNorm(text));
+      const treffer=alexaLagerMatch(text);   // v23.17: Abgleich mit Lagerliste
+      const art=treffer.art;
+      if(art&&art.menge<art.mindest){
+        // steht schon automatisch auf der Liste (unter Mindestbestand) → keine doppelte Zeile
+        if(!S.eko)S.eko={};
+        const ov=S.eko[art.id]||(S.eko[art.id]={});
+        delete ov.ausgeblendet;
+        if(b.menge&&String(b.menge)!=='1'){ov.menge=String(b.menge);if(b.einheit&&b.einheit!=='Stk')ov.einheit=b.einheit;}
+        ov.alexa=true;
+        neu++;erledigt.add(b.id);return;
+      }
+      const einheit=(b.einheit&&b.einheit!=='Stk')?b.einheit:(art&&art.einheit&&!(isDecUnit(art.einheit)&&String(b.menge||'1')!=='1')?art.einheit:'Stk');
+      const name=art?art.name:text.charAt(0).toUpperCase()+text.slice(1);
+      const vorhanden=S.ek.find(e=>!e.checked&&((art&&e.artikelId===art.id)||alexaNorm(e.text)===alexaNorm(name)));
       if(vorhanden){
         // gleicher Artikel schon notiert → Menge erhöhen statt doppelt
         const m=(parseDecimal(vorhanden.menge)||1)+(parseDecimal(b.menge)||1);
         vorhanden.menge=String(Math.round(m*1000)/1000);
       }else{
-        S.ek.push({id:Date.now()+Math.floor(Math.random()*1000),text:text.charAt(0).toUpperCase()+text.slice(1),menge:String(b.menge||'1'),einheit:b.einheit||'Stk',checked:false,quelle:'alexa',alexaId:b.id});
+        const eintrag={id:Date.now()+Math.floor(Math.random()*1000),text:name,menge:String(b.menge||'1'),einheit,checked:false,quelle:'alexa',alexaId:b.id};
+        if(art){eintrag.artikelId=art.id;if(alexaNorm(text)!==alexaNorm(art.name))eintrag.gesagt=text;}
+        else if(treffer.vorschlaege.length)eintrag.vorschlaege=treffer.vorschlaege;
+        S.ek.push(eintrag);
       }
       neu++;
     }else if(b.typ==='remove'&&text){
       const n=alexaNorm(text);
-      const idx=S.ek.findIndex(e=>!e.checked&&(alexaNorm(e.text)===n||alexaNorm(e.text).includes(n)||n.includes(alexaNorm(e.text))));
+      const art=alexaLagerMatch(text).art;   // v23.17: Abgleich mit Lagerliste
+      let idx=art?S.ek.findIndex(e=>!e.checked&&e.artikelId===art.id):-1;
+      if(idx<0)idx=S.ek.findIndex(e=>!e.checked&&(alexaNorm(e.text)===n||alexaNorm(e.text).includes(n)||n.includes(alexaNorm(e.text))||(art&&alexaNorm(e.text)===alexaNorm(art.name))));
       if(idx>=0){S.ek.splice(idx,1);weg++;}
       else{
         // automatischer Eintrag (unter Mindestbestand) → von der Liste entfernen
-        const a=ekAutoListe(false).find(x=>alexaNorm(x.name)===n||alexaNorm(x.name).includes(n));
+        const auto=ekAutoListe(false);
+        const a=(art&&auto.find(x=>x.id===art.id))||auto.find(x=>alexaNorm(x.name)===n||alexaNorm(x.name).includes(n));
         if(a){if(!S.eko)S.eko={};(S.eko[a.id]||(S.eko[a.id]={})).ausgeblendet=true;weg++;}
       }
     }
@@ -6417,7 +6513,7 @@ function renderEk(){
     const mg=ov.menge!==undefined?ov.menge:String(Math.max(1,(a.mindest||0)-a.menge));
     const eh=ov.einheit||a.einheit||'Stk';
     return '<div class="ei" id="eia-'+a.id+'"><input type="checkbox" onchange="ckA('+a.id+',this.checked)"/>'+
-      '<div style="flex:1;min-width:0" onclick="showEkArtikelInfo('+a.id+')"><div class="eit" style="color:var(--ac)">'+esc(a.name)+'</div><div class="eis">'+esc(a.lager)+(a.kaufort?' · '+esc(a.kaufort):'')+'</div></div>'+
+      '<div style="flex:1;min-width:0" onclick="showEkArtikelInfo('+a.id+')"><div class="eit" style="color:var(--ac)">'+esc(a.name)+(ov.alexa?' <span title="per Alexa bestätigt" style="font-size:11px">🗣️</span>':'')+'</div><div class="eis">'+esc(a.lager)+(a.kaufort?' · '+esc(a.kaufort):'')+'</div></div>'+
       '<input type="text" inputmode="decimal" value="'+esc(mg)+'" onchange="setEkoMenge('+a.id+',this.value)" onclick="event.stopPropagation()" style="width:54px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);text-align:right;flex-shrink:0"/>'+
       '<select onchange="setEkoEinheit('+a.id+',this.value)" onclick="event.stopPropagation()" style="width:66px;padding:6px 4px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);flex-shrink:0">'+ekEinheitOptions(eh)+'</select>'+
       '<button class="eid" title="Von Liste entfernen (nicht einbuchen)" onclick="event.stopPropagation();ekAusblenden('+a.id+')">&#x2715;</button>'+
@@ -6426,9 +6522,12 @@ function renderEk(){
 
   h+='<div class="sh">Manuell</div><div class="mir"><input type="text" id="mi-i" placeholder="Artikel hinzufügen..." onkeydown="if(event.key===\'Enter\')addM()"/><button onclick="addM()">+</button></div><div id="mi-l">';
   S.ek.forEach(e=>{
-    const matchA=S.a.find(a=>a.name.toLowerCase()===e.text.toLowerCase());
+    const matchA=(e.artikelId!=null&&S.a.find(a=>a.id===e.artikelId))||S.a.find(a=>a.name.toLowerCase()===e.text.toLowerCase()); // v23.17
     h+='<div class="ei'+(e.checked?' ck':'')+'" id="eim-'+e.id+'"><input type="checkbox" '+(e.checked?'checked':'')+' onchange="ckM('+e.id+',this.checked)"/>'+
-    '<div class="eit" style="flex:1;min-width:0;'+(matchA?'color:var(--ac);cursor:pointer':'')+ '"'+(matchA?' onclick="showEkArtikelInfo('+matchA.id+')"':'')+'>'+esc(e.text)+(e.quelle==='alexa'?' <span title="per Alexa hinzugefügt" style="font-size:11px">🗣️</span>':'')+'</div>'+
+    '<div class="eit" style="flex:1;min-width:0;'+(matchA?'color:var(--ac);cursor:pointer':'')+ '"'+(matchA?' onclick="showEkArtikelInfo('+matchA.id+')"':'')+'>'+esc(e.text)+(e.quelle==='alexa'?' <span title="per Alexa hinzugefügt" style="font-size:11px">🗣️</span>':'')+(e.gesagt?'<div style="font-size:11px;color:var(--t3);font-weight:400">gesagt: «'+esc(e.gesagt)+'»</div>':'')+
+    (!matchA&&Array.isArray(e.vorschlaege)&&e.vorschlaege.length?'<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;font-weight:400" onclick="event.stopPropagation()"><span style="font-size:11px;color:var(--t3);align-self:center">Lager:</span>'+
+      e.vorschlaege.map(id=>S.a.find(a=>a.id===id)).filter(Boolean).map(a=>'<button type="button" onclick="ekVerknuepfen('+e.id+','+a.id+')" style="font-size:11px;padding:2px 8px;border:1px solid var(--ac);border-radius:10px;background:var(--bg);color:var(--ac);cursor:pointer">'+esc(a.name)+'</button>').join('')+
+      '<button type="button" title="Keiner davon" onclick="ekVorschlaegeWeg('+e.id+')" style="font-size:11px;padding:2px 6px;border:none;background:none;color:var(--t3);cursor:pointer">✕</button></div>':'')+'</div>'+
     '<input type="text" inputmode="decimal" value="'+esc(e.menge||'')+'" placeholder="Mge" onchange="setEkMenge('+e.id+',this.value)" onclick="event.stopPropagation()" style="width:54px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);text-align:right;flex-shrink:0"/>'+
     '<select onchange="setEkEinheit('+e.id+',this.value)" onclick="event.stopPropagation()" style="width:66px;padding:6px 4px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);flex-shrink:0">'+ekEinheitOptions(e.einheit||'')+'</select>'+
     '<button class="eid" onclick="delM('+e.id+')">&#x2715;</button></div>';
