@@ -1,12 +1,3 @@
 {
- "befehle": [
-  {
-   "id": "mvzjytt8v5x6cy",
-   "typ": "add",
-   "text": "Mozzarella gewürz",
-   "menge": "1",
-   "einheit": "Stk",
-   "zeit": 1793641716332
-  }
- ]
+ "befehle": []
 }
