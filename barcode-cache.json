@@ -332,7 +332,24 @@
         "generic_name": ""
       },
       "addedAt": 1793879699125
+    },
+    "4335619391307": {
+      "barcode": "4335619391307",
+      "name": "Suhi datlji Deglet Nour",
+      "marke": "Lidl",
+      "kategorien": "Χουρμάδες",
+      "description": "Suhi datlji Deglet Nour",
+      "image": "https://images.openfoodfacts.org/images/products/433/561/939/1307/front_en.4.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "Suhi datlji Deglet Nour",
+        "brands": "Lidl",
+        "categories": "Χουρμάδες",
+        "quantity": "",
+        "generic_name": ""
+      },
+      "addedAt": 1793879724410
     }
   },
-  "lastUpdated": 1793879699126
+  "lastUpdated": 1793879724412
 }
