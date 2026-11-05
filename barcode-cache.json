@@ -315,7 +315,24 @@
       "source": "Open Food Facts",
       "offData": {},
       "addedAt": 1793528178736
+    },
+    "4335619201859": {
+      "barcode": "4335619201859",
+      "name": "Dubai Style Schokolade",
+      "marke": "LIDL",
+      "kategorien": "Bars, Milk chocolates, Chocolates stuffed with pistachio paste",
+      "description": "Dubai chocolate",
+      "image": "https://images.openfoodfacts.org/images/products/433/561/920/1859/front_en.45.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "Dubai chocolate",
+        "brands": "LIDL",
+        "categories": "Bars, Milk chocolates, Chocolates stuffed with pistachio paste",
+        "quantity": "122g",
+        "generic_name": ""
+      },
+      "addedAt": 1793879699125
     }
   },
-  "lastUpdated": 1793642397705
+  "lastUpdated": 1793879699126
 }
