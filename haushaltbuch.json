@@ -1221,14 +1221,14 @@
       "marke": "Lidl",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "4056489147268",
       "preis": 2.95,
       "packMenge": 125,
       "packEinheit": "g",
-      "kaufdatum": "2026-08-29",
+      "kaufdatum": "2026-11-05",
       "ablaufdatum": "2026-08-30",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782551885501_off.jpg?t=1791130431730",
@@ -1305,12 +1305,30 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-05",
+          "preis": 2.95,
+          "betrag": 2.95,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "kaufort": "Lidl",
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 4,
+          "menge": 1,
+          "kaufdatum": "2026-11-05",
+          "ablaufdatum": ""
+        }
+      ],
       "alias": [
-        "ASC Ger. Forellenfilets"
+        "ASC Ger. Forellenfilets",
+        "ASC Lachsforelle"
       ]
     },
     {
@@ -1319,14 +1337,14 @@
       "marke": "Lidl",
       "kat": "Gemüse & Früchte",
       "lager": "Kühlschrank oben",
-      "menge": 2,
+      "menge": 3,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "20228675",
-      "preis": 2.99,
+      "preis": 1.89,
       "packMenge": 500,
       "packEinheit": "g",
-      "kaufdatum": "2026-10-24",
+      "kaufdatum": "2026-11-05",
       "ablaufdatum": "2026-09-30",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782541986317_off.jpg?t=1791130431730",
@@ -1384,6 +1402,16 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-05",
+          "preis": 1.89,
+          "betrag": 1.89,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -1398,10 +1426,19 @@
           "menge": 1,
           "kaufdatum": "2026-10-24",
           "ablaufdatum": ""
+        },
+        {
+          "id": 12,
+          "menge": 1,
+          "kaufdatum": "2026-11-05",
+          "ablaufdatum": ""
         }
       ],
       "kaufort": "Lidl",
-      "barcodes": []
+      "barcodes": [],
+      "alias": [
+        "Dattelcherrytomaten 500g"
+      ]
     },
     {
       "id": 35,
@@ -2832,14 +2869,14 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 2,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "20238469",
       "preis": 4.95,
       "packMenge": 3,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-10-24",
+      "kaufdatum": "2026-11-05",
       "ablaufdatum": "2026-09-27",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783147999247_off.jpg?t=1791130431730",
@@ -2888,6 +2925,16 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-05",
+          "preis": 4.95,
+          "betrag": 4.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
@@ -2895,6 +2942,12 @@
           "id": 13,
           "menge": 1,
           "kaufdatum": "2026-10-24",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 8,
+          "menge": 1,
+          "kaufdatum": "2026-11-05",
           "ablaufdatum": ""
         }
       ],
@@ -2959,14 +3012,14 @@
       "kat": "Gemüse & Früchte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
-      "preis": 2.05,
+      "preis": 1.99,
       "packMenge": 512,
       "packEinheit": "g",
-      "kaufdatum": "2026-07-04",
+      "kaufdatum": "2026-11-05",
       "ablaufdatum": "2026-07-18",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783148356120_17831483388918595940673296879545.jpg?t=1791130431730",
@@ -2997,10 +3050,30 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-05",
+          "preis": 1.99,
+          "betrag": 1.99,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
-      "packungen": [],
-      "ownCode": "HB-000068"
+      "packungen": [
+        {
+          "id": 10,
+          "menge": 1,
+          "kaufdatum": "2026-11-05",
+          "ablaufdatum": ""
+        }
+      ],
+      "ownCode": "HB-000068",
+      "alias": [
+        "Bio Zucchini"
+      ]
     },
     {
       "id": 68,
@@ -8190,14 +8263,14 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 3,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
       "preis": 2.99,
       "packMenge": 0,
       "packEinheit": "",
-      "kaufdatum": "2026-10-24",
+      "kaufdatum": "2026-11-05",
       "ablaufdatum": "2026-09-30",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542043787_off.jpg?t=1791130431730",
@@ -8207,6 +8280,12 @@
           "id": 17,
           "menge": 1,
           "kaufdatum": "2026-10-24",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 11,
+          "menge": 2,
+          "kaufdatum": "2026-11-05",
           "ablaufdatum": ""
         }
       ],
@@ -8348,6 +8427,16 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-05",
+          "preis": 2.99,
+          "betrag": 5.98,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "barcodes": [
@@ -8365,14 +8454,14 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 2,
+      "menge": 3,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
       "preis": 6.89,
       "packMenge": 330,
       "packEinheit": "g",
-      "kaufdatum": "2026-10-24",
+      "kaufdatum": "2026-11-05",
       "ablaufdatum": "2026-09-23",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542205864_off.jpg?t=1791130431730",
@@ -8388,6 +8477,12 @@
           "id": 14,
           "menge": 1,
           "kaufdatum": "2026-10-24",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-11-05",
           "ablaufdatum": ""
         }
       ],
@@ -8568,6 +8663,16 @@
         {
           "datum": "2026-10-24",
           "preis": 6.89,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-05",
+          "preis": 6.89,
+          "betrag": 6.89,
           "menge": 1,
           "einheit": "Stk",
           "typ": "ein",
@@ -9622,14 +9727,14 @@
       "kat": "Gemüse & Früchte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1.048,
+      "menge": 2.25,
       "einheit": "kg",
       "mindest": 0,
       "barcode": "4335619493513",
-      "preis": 2.69,
+      "preis": 1.21,
       "packMenge": 0,
       "packEinheit": "dl",
-      "kaufdatum": "2026-10-24",
+      "kaufdatum": "2026-11-05",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1786607232912_17866072255603719976396906354021.jpg?t=1791130431730",
@@ -9639,6 +9744,12 @@
           "id": 18,
           "menge": 1.048,
           "kaufdatum": "2026-10-24",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 13,
+          "menge": 1.202,
+          "kaufdatum": "2026-11-05",
           "ablaufdatum": ""
         }
       ],
@@ -9683,6 +9794,16 @@
           "datum": "2026-10-24",
           "preis": 2.8,
           "menge": 1.048,
+          "einheit": "kg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-05",
+          "preis": 1.21,
+          "betrag": 1.45,
+          "menge": 1.202,
           "einheit": "kg",
           "typ": "ein",
           "aktion": false,
@@ -11270,15 +11391,15 @@
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
-      "menge": 1,
+      "menge": 2,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "7610100504686",
       "barcodes": [],
-      "preis": 1.95,
+      "preis": 1.99,
       "packMenge": 200,
       "packEinheit": "g",
-      "kaufdatum": "2026-09-17",
+      "kaufdatum": "2026-11-05",
       "ablaufdatum": "2026-09-20",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1788593214799_17885932018743395167375184480276.jpg?t=1791130431730",
@@ -11310,6 +11431,16 @@
           "typ": "ein",
           "aktion": true,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-05",
+          "preis": 1.99,
+          "betrag": 1.99,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "letzteEingangHeute": "09:27",
@@ -11319,7 +11450,16 @@
           "menge": 1,
           "kaufdatum": "2026-09-17",
           "ablaufdatum": "2026-09-20"
+        },
+        {
+          "id": 6,
+          "menge": 1,
+          "kaufdatum": "2026-11-05",
+          "ablaufdatum": ""
         }
+      ],
+      "alias": [
+        "Nestlé Hirz Hüttenkäse S"
       ]
     },
     {
@@ -13407,6 +13547,226 @@
       "fotoPath": "1793528179683_off.jpg",
       "preisHistorie": [],
       "packungen": []
+    },
+    {
+      "id": 330,
+      "name": "Dubai Style Schokolade",
+      "marke": "LIDL",
+      "kat": "Diverses",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4335619201859",
+      "barcodes": [],
+      "preis": 3.99,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-11-05",
+      "notiz": "Von Quittung erstellt (Open Food Facts)",
+      "foto": "https://images.openfoodfacts.org/images/products/433/561/920/1859/front_en.45.400.jpg",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 1,
+          "menge": 1,
+          "kaufdatum": "2026-11-05",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-11-05",
+          "preis": 3.99,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Lidl",
+          "betrag": 3.99
+        }
+      ],
+      "quittungAliase": [
+        "Dubai Schokolade"
+      ],
+      "letzteEingangHeute": "12:55"
+    },
+    {
+      "id": 331,
+      "name": "Dateln",
+      "marke": "Lidl",
+      "kat": "Diverses",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4335619391307",
+      "barcodes": [],
+      "preis": 1.56,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-11-05",
+      "notiz": "Von Quittung erstellt (Open Food Facts)",
+      "foto": "https://images.openfoodfacts.org/images/products/433/561/939/1307/front_en.4.400.jpg",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-11-05",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-11-05",
+          "preis": 1.56,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Lidl",
+          "betrag": 1.56
+        }
+      ],
+      "quittungAliase": [
+        "Datteln ohne Stein"
+      ],
+      "letzteEingangHeute": "12:55"
+    },
+    {
+      "id": 332,
+      "name": "Langkorn- & Wildreis",
+      "marke": "Deluxe",
+      "kat": "Diverses",
+      "lager": "Vorratsschrank",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4056489331223",
+      "barcodes": [],
+      "preis": 3.69,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-11-05",
+      "notiz": "Von Quittung erstellt (Open Food Facts)",
+      "foto": "https://images.openfoodfacts.org/images/products/405/648/933/1223/front_de.4.400.jpg",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 3,
+          "menge": 1,
+          "kaufdatum": "2026-11-05",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-11-05",
+          "preis": 3.69,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl",
+          "betrag": 3.69
+        }
+      ],
+      "quittungAliase": [
+        "Wildreis Mischung"
+      ],
+      "letzteEingangHeute": "12:56"
+    },
+    {
+      "id": 333,
+      "name": "Mascarpone",
+      "marke": "Milbona",
+      "kat": "Diverses",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 2,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4056489098591",
+      "barcodes": [],
+      "preis": 1.35,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-11-05",
+      "notiz": "Von Quittung erstellt (Open Food Facts)",
+      "foto": "https://images.openfoodfacts.org/images/products/405/648/909/8591/front_en.123.400.jpg",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 7,
+          "menge": 2,
+          "kaufdatum": "2026-11-05",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-11-05",
+          "preis": 1.35,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl",
+          "betrag": 2.7
+        }
+      ],
+      "quittungAliase": [
+        "Mascarpone 41% Fett"
+      ],
+      "letzteEingangHeute": "12:56"
+    },
+    {
+      "id": 334,
+      "name": "Luzerner Rahmkäse",
+      "marke": "Emmi",
+      "kat": "Diverses",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Lidl",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "7610900205929",
+      "barcodes": [],
+      "preis": 6.95,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-11-05",
+      "notiz": "Von Quittung erstellt (Open Food Facts)",
+      "foto": "https://images.openfoodfacts.org/images/products/761/090/020/5929/front_fr.9.400.jpg",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 9,
+          "menge": 1,
+          "kaufdatum": "2026-11-05",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-11-05",
+          "preis": 6.95,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl",
+          "betrag": 6.95
+        }
+      ],
+      "quittungAliase": [
+        "Emmi Luzerner Rahmkäse"
+      ],
+      "letzteEingangHeute": "12:57"
     }
   ],
   "lagerorte": [
@@ -28383,7 +28743,176 @@
       "k": "Diverses",
       "aktion": false,
       "kaufort": "Wellauer"
+    },
+    {
+      "t": "ein",
+      "aid": 330,
+      "name": "Dubai Style Schokolade",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 3.99,
+      "aktion": false,
+      "datum": "2026-11-05",
+      "zeit": 1793879710513
+    },
+    {
+      "t": "ein",
+      "aid": 331,
+      "name": "Dateln",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 1.56,
+      "aktion": false,
+      "datum": "2026-11-05",
+      "zeit": 1793879749025
+    },
+    {
+      "t": "ein",
+      "aid": 332,
+      "name": "Langkorn- & Wildreis",
+      "lager": "Vorratsschrank",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 3.69,
+      "aktion": false,
+      "datum": "2026-11-05",
+      "zeit": 1793879785476
+    },
+    {
+      "t": "ein",
+      "aid": 32,
+      "name": "Forellenfilets",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.95,
+      "aktion": false,
+      "datum": "2026-11-05",
+      "zeit": 1793879785793
+    },
+    {
+      "t": "ein",
+      "aid": 223,
+      "name": "Pouletbrust Minutenschnitzel",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 6.89,
+      "aktion": false,
+      "datum": "2026-11-05",
+      "zeit": 1793879785798
+    },
+    {
+      "t": "ein",
+      "aid": 279,
+      "name": "Cottage Cheese / Hüttenkäse",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 1.99,
+      "aktion": false,
+      "datum": "2026-11-05",
+      "zeit": 1793879785798
+    },
+    {
+      "t": "ein",
+      "aid": 333,
+      "name": "Mascarpone",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 1.35,
+      "aktion": false,
+      "datum": "2026-11-05",
+      "zeit": 1793879810093
+    },
+    {
+      "t": "ein",
+      "aid": 65,
+      "name": "Salametti Milano",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 4.95,
+      "aktion": false,
+      "datum": "2026-11-05",
+      "zeit": 1793879810403
+    },
+    {
+      "t": "ein",
+      "aid": 334,
+      "name": "Luzerner Rahmkäse",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 6.95,
+      "aktion": false,
+      "datum": "2026-11-05",
+      "zeit": 1793879830372
+    },
+    {
+      "t": "ein",
+      "aid": 67,
+      "name": "Zucchetti",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 1.99,
+      "aktion": false,
+      "datum": "2026-11-05",
+      "zeit": 1793879830693
+    },
+    {
+      "t": "ein",
+      "aid": 222,
+      "name": "Mozzarella Stange",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 2,
+      "einheit": "Stk",
+      "preis": 2.99,
+      "aktion": false,
+      "datum": "2026-11-05",
+      "zeit": 1793879830694
+    },
+    {
+      "t": "ein",
+      "aid": 33,
+      "name": "Dattelcherrytomaten",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 1.89,
+      "aktion": false,
+      "datum": "2026-11-05",
+      "zeit": 1793879830694
+    },
+    {
+      "t": "ein",
+      "aid": 245,
+      "name": "Bananen",
+      "lager": "Kühlschrank oben",
+      "kat": "Gemüse & Früchte",
+      "menge": 1.202,
+      "einheit": "kg",
+      "preis": 1.21,
+      "aktion": false,
+      "datum": "2026-11-05",
+      "zeit": 1793879830694
     }
   ],
-  "aktualisiert": "2026-11-02T17:59:52.974Z"
+  "aktualisiert": "2026-11-05T12:01:11.898Z"
 }
