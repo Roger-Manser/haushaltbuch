@@ -349,7 +349,24 @@
         "generic_name": ""
       },
       "addedAt": 1793879724410
+    },
+    "4056489331223": {
+      "barcode": "4056489331223",
+      "name": "Langkorn- & Wildreis",
+      "marke": "Deluxe",
+      "kategorien": "Reise",
+      "description": "Langkorn- & Wildreis",
+      "image": "https://images.openfoodfacts.org/images/products/405/648/933/1223/front_de.4.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "Langkorn- & Wildreis",
+        "brands": "Deluxe",
+        "categories": "Reise",
+        "quantity": "1kg",
+        "generic_name": ""
+      },
+      "addedAt": 1793879773613
     }
   },
-  "lastUpdated": 1793879724412
+  "lastUpdated": 1793879773613
 }
