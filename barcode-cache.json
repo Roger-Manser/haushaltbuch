@@ -400,7 +400,18 @@
         "generic_name": ""
       },
       "addedAt": 1793879817262
+    },
+    "5410041472509": {
+      "barcode": "5410041472509",
+      "name": "Tuc oignons et crème",
+      "marke": "Tuc",
+      "kategorien": "",
+      "description": "",
+      "image": "https://images.openfoodfacts.org/images/products/541/004/147/2509/front_nb.93.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {},
+      "addedAt": 1793896889747
     }
   },
-  "lastUpdated": 1793880076937
+  "lastUpdated": 1793896889750
 }
