@@ -366,7 +366,24 @@
         "generic_name": ""
       },
       "addedAt": 1793879773613
+    },
+    "4056489098591": {
+      "barcode": "4056489098591",
+      "name": "Mascarpone",
+      "marke": "Milbona",
+      "kategorien": "Queso fresco, Mascarpone",
+      "description": "Mascarpone",
+      "image": "https://images.openfoodfacts.org/images/products/405/648/909/8591/front_en.123.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "Mascarpone",
+        "brands": "Milbona, Lidl",
+        "categories": "Queso fresco, Mascarpone",
+        "quantity": "250 g",
+        "generic_name": "Queso mascarpone"
+      },
+      "addedAt": 1793879804304
     }
   },
-  "lastUpdated": 1793879773613
+  "lastUpdated": 1793879804305
 }
