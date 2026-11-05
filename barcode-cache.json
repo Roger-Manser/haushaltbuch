@@ -383,7 +383,24 @@
         "generic_name": "Queso mascarpone"
       },
       "addedAt": 1793879804304
+    },
+    "7610900205929": {
+      "barcode": "7610900205929",
+      "name": "Luzerner",
+      "marke": "Emmi",
+      "kategorien": "Fromages",
+      "description": "Luzerner",
+      "image": "https://images.openfoodfacts.org/images/products/761/090/020/5929/front_fr.9.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "Luzerner",
+        "brands": "Emmi",
+        "categories": "Fromages",
+        "quantity": "",
+        "generic_name": ""
+      },
+      "addedAt": 1793879817262
     }
   },
-  "lastUpdated": 1793879804305
+  "lastUpdated": 1793879817263
 }
