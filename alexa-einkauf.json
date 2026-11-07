@@ -1,3 +1,12 @@
 {
- "befehle": []
+ "befehle": [
+  {
+   "id": "mw6ls8yk2bw7d6",
+   "typ": "add",
+   "text": "Zitronenabrieb",
+   "menge": "1",
+   "einheit": "Stk",
+   "zeit": 1794068031836
+  }
+ ]
 }
