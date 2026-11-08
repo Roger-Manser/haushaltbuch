@@ -15,6 +15,14 @@
    "menge": "1",
    "einheit": "Stk",
    "zeit": 1794068046577
+  },
+  {
+   "id": "mw7hamal7llo7x",
+   "typ": "add",
+   "text": "Milch",
+   "menge": "1",
+   "einheit": "Stk",
+   "zeit": 1794120957021
   }
  ]
 }
