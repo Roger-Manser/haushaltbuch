@@ -13767,6 +13767,29 @@
         "Emmi Luzerner Rahmkäse"
       ],
       "letzteEingangHeute": "12:57"
+    },
+    {
+      "id": 335,
+      "name": "Tuc Sauercreme mit Zwiebel",
+      "marke": "Tuc",
+      "kat": "Süsswaren",
+      "lager": "Vorratsschrank",
+      "kaufort": "",
+      "menge": 0,
+      "einheit": "Pkg",
+      "mindest": 0,
+      "barcode": "5410041472509",
+      "barcodes": [],
+      "preis": 0,
+      "packMenge": 100,
+      "packEinheit": "g",
+      "kaufdatum": "2026-11-05",
+      "ablaufdatum": "",
+      "notiz": "Nutri-Score E\nPro 100g/ml: 503 kcal, Fett 24g, KH 63.3333333333333g, Eiweiss 7g",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1793896902214_off.jpg?t=1793896975350",
+      "fotoPath": "1793896902214_off.jpg",
+      "preisHistorie": [],
+      "packungen": []
     }
   ],
   "lagerorte": [
@@ -13845,6 +13868,38 @@
       "menge": "1",
       "einheit": "Stk",
       "checked": false
+    },
+    {
+      "id": 1794069667747,
+      "text": "Zitronenabrieb",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false,
+      "quelle": "alexa",
+      "alexaId": "mw6ls8yk2bw7d6"
+    },
+    {
+      "id": 1794069667753,
+      "text": "Orangen harpy",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false,
+      "quelle": "alexa",
+      "alexaId": "mw6lskc1w26sep"
+    },
+    {
+      "id": 1794374813522,
+      "text": "Milch",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false,
+      "quelle": "alexa",
+      "alexaId": "mw7hamal7llo7x",
+      "vorschlaege": [
+        1,
+        265,
+        63
+      ]
     }
   ],
   "einkaufOverrides": {
@@ -28912,7 +28967,150 @@
       "aktion": false,
       "datum": "2026-11-05",
       "zeit": 1793879830694
+    },
+    {
+      "aid": 32,
+      "d": "2026-11-05",
+      "m": 1,
+      "p": 2.95,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 33,
+      "d": "2026-11-05",
+      "m": 1,
+      "p": 1.89,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 65,
+      "d": "2026-11-05",
+      "m": 1,
+      "p": 4.95,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 67,
+      "d": "2026-11-05",
+      "m": 1,
+      "p": 1.99,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 222,
+      "d": "2026-11-05",
+      "m": 2,
+      "p": 2.99,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 223,
+      "d": "2026-11-05",
+      "m": 1,
+      "p": 6.89,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 245,
+      "d": "2026-11-05",
+      "m": 1.202,
+      "p": 1.21,
+      "t": "ein",
+      "e": "kg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 279,
+      "d": "2026-11-05",
+      "m": 1,
+      "p": 1.99,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 330,
+      "d": "2026-11-05",
+      "m": 1,
+      "p": 3.99,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": true,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 331,
+      "d": "2026-11-05",
+      "m": 1,
+      "p": 1.56,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": true,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 332,
+      "d": "2026-11-05",
+      "m": 1,
+      "p": 3.69,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 333,
+      "d": "2026-11-05",
+      "m": 2,
+      "p": 1.35,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 334,
+      "d": "2026-11-05",
+      "m": 1,
+      "p": 6.95,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-11-05T12:01:11.898Z"
+  "aktualisiert": "2026-11-11T05:26:57.085Z"
 }
