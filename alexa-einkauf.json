@@ -1,28 +1,3 @@
 {
- "befehle": [
-  {
-   "id": "mw6ls8yk2bw7d6",
-   "typ": "add",
-   "text": "Zitronenabrieb",
-   "menge": "1",
-   "einheit": "Stk",
-   "zeit": 1794068031836
-  },
-  {
-   "id": "mw6lskc1w26sep",
-   "typ": "add",
-   "text": "Orangen harpy",
-   "menge": "1",
-   "einheit": "Stk",
-   "zeit": 1794068046577
-  },
-  {
-   "id": "mw7hamal7llo7x",
-   "typ": "add",
-   "text": "Milch",
-   "menge": "1",
-   "einheit": "Stk",
-   "zeit": 1794120957021
-  }
- ]
+ "befehle": []
 }
