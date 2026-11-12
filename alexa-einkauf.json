@@ -1,3 +1,12 @@
 {
- "befehle": []
+ "befehle": [
+  {
+   "id": "mwd1gf9ef44qac",
+   "typ": "add",
+   "text": "Abfallsäcke",
+   "menge": "1",
+   "einheit": "Stk",
+   "zeit": 1794457151043
+  }
+ ]
 }
