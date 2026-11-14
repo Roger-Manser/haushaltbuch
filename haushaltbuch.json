@@ -14468,6 +14468,94 @@
       ],
       "letzteEingangHeute": "12:22",
       "ablaufdatum": ""
+    },
+    {
+      "id": 344,
+      "name": "CURRY Maharani",
+      "marke": "Wiberg",
+      "kat": "Gewürze & Saucen",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Spar",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "9002540088693",
+      "barcodes": [],
+      "preis": 5.95,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-11-14",
+      "notiz": "Von Quittung erstellt",
+      "foto": "",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 20,
+          "menge": 1,
+          "kaufdatum": "2026-11-14",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-11-14",
+          "preis": 5.95,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar",
+          "betrag": 5.95
+        }
+      ],
+      "quittungAliase": [
+        "WIBERG CURRY FRU."
+      ],
+      "letzteEingangHeute": "12:28"
+    },
+    {
+      "id": 345,
+      "name": "TOMATEN-MOZZARELLA Gewürz",
+      "marke": "Butty",
+      "kat": "Gewürze & Saucen",
+      "lager": "Küche",
+      "kaufort": "Spar",
+      "menge": 42,
+      "einheit": "g",
+      "mindest": 0,
+      "barcode": "7610071046598",
+      "barcodes": [],
+      "preis": 0.05,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-11-14",
+      "notiz": "Von Quittung erstellt",
+      "foto": "",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 21,
+          "menge": 42,
+          "kaufdatum": "2026-11-14",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-11-14",
+          "preis": 0.05,
+          "menge": 42,
+          "einheit": "g",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar",
+          "betrag": 2.3
+        }
+      ],
+      "quittungAliase": [
+        "TOMATEN-MOZZ."
+      ],
+      "letzteEingangHeute": "12:29"
     }
   ],
   "lagerorte": [
@@ -31133,7 +31221,33 @@
       "aktion": false,
       "datum": "2026-11-14",
       "zeit": 1794655346637
+    },
+    {
+      "t": "ein",
+      "aid": 344,
+      "name": "CURRY Maharani",
+      "lager": "Kühlschrank oben",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 5.95,
+      "aktion": false,
+      "datum": "2026-11-14",
+      "zeit": 1794655719193
+    },
+    {
+      "t": "ein",
+      "aid": 345,
+      "name": "TOMATEN-MOZZARELLA Gewürz",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 42,
+      "einheit": "g",
+      "preis": 0.05,
+      "aktion": false,
+      "datum": "2026-11-14",
+      "zeit": 1794655770278
     }
   ],
-  "aktualisiert": "2026-11-14T11:26:47.937Z"
+  "aktualisiert": "2026-11-14T11:29:38.443Z"
 }
