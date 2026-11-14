@@ -29,6 +29,23 @@
       },
       "addedAt": 1792328689621
     },
+    "20614096": {
+      "barcode": "20614096",
+      "name": "Maasdam Moelleux",
+      "marke": "Milbona",
+      "kategorien": "Fromages pasteurisés, Fromages en tranches, Maasdam",
+      "description": "Maasdam Moelleux",
+      "image": "https://images.openfoodfacts.org/images/products/000/002/061/4096/front_fr.41.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "Maasdam Moelleux",
+        "brands": "Milbona",
+        "categories": "Fromages pasteurisés, Fromages en tranches, Maasdam",
+        "quantity": "200 g",
+        "generic_name": ""
+      },
+      "addedAt": 1794655235386
+    },
     "20828387": {
       "barcode": "20828387",
       "name": "Carnesi poulet",
@@ -475,5 +492,5 @@
       "addedAt": 1794655207711
     }
   },
-  "lastUpdated": 1794655207715
+  "lastUpdated": 1794655235386
 }
