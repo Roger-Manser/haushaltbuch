@@ -13093,7 +13093,7 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Breitenmoser",
-      "menge": 544,
+      "menge": 0.5439999999999827,
       "einheit": "g",
       "mindest": 0,
       "barcode": "2100555017954",
@@ -13107,8 +13107,8 @@
       "fotoPath": "1792824607073_1000072647.jpg",
       "packungen": [
         {
-          "id": 4,
-          "menge": 544,
+          "id": 1,
+          "menge": 0.5439999999999827,
           "kaufdatum": "2026-11-14",
           "ablaufdatum": ""
         }
@@ -13122,12 +13122,21 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Breitenmoser"
+        },
+        {
+          "datum": "2026-11-14",
+          "preis": 9.76,
+          "menge": 544,
+          "einheit": "g",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Breitenmoser"
         }
       ],
       "quittungAliase": [],
-      "letzteEingangHeute": "08:53",
+      "letzteEingangHeute": "10:40",
       "ablaufdatum": "",
-      "preisProKg": 33
+      "preisProKg": 17.95
     },
     {
       "id": 318,
@@ -13955,6 +13964,13 @@
       "checked": false,
       "quelle": "alexa",
       "alexaId": "mw6lskc1w26sep"
+    },
+    {
+      "id": 1794649158539,
+      "text": "Hackfleisch zweierlei",
+      "menge": "1",
+      "einheit": "g",
+      "checked": false
     }
   ],
   "einkaufOverrides": {
@@ -30286,7 +30302,20 @@
       "k": "Milchprodukte",
       "aktion": true,
       "kaufort": "Migros"
+    },
+    {
+      "t": "ein",
+      "aid": 317,
+      "name": "Hackfleisch zweierlei",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 544,
+      "einheit": "g",
+      "preis": 9.76,
+      "aktion": false,
+      "datum": "2026-11-14",
+      "zeit": 1794649234338
     }
   ],
-  "aktualisiert": "2026-11-14T09:38:31.524Z"
+  "aktualisiert": "2026-11-14T09:45:31.442Z"
 }
