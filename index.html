@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.29 — Verlauf löschen: kaufdatum bleibt erhalten -->
+<!-- HAUSHALTBUCH v23.31 — Quittungsscan: JSON-Extraktion robuster -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.29"/>
+<meta name="app-version" content="23.31"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.29';
+const APP_VERSION='23.31';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,8 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.31',d:'14.11.2026',items:['🐛 Quittungsscan: JSON Parse Fehler behoben — KI-Antwort wird jetzt robust extrahiert (erstes { bis letztes })','📄 PDF-Support: PDFs werden korrekt als type:document an die Claude API gesendet','✅ Galerie-Auswahl akzeptiert jetzt auch PDF-Dateien']},
+  {v:'23.30',d:'14.11.2026',items:['📄 Quittungsscan: PDF-Uploads werden nun korrekt verarbeitet (Claude API type:document statt type:image)','✅ Galerie-Auswahl akzeptiert jetzt auch PDF-Dateien','🐛 Fix: JSON Parse Fehler beim PDF-Upload behoben']},
   {v:'23.29',d:'14.11.2026',items:['🐛 BUGFIX: Verlauf-Eintrag löschen verschob Artikel fälschlicherweise auf heute — kaufdatum bleibt jetzt unverändert','✅ Gesamtpreis in der Logbuch-Gruppe erscheint wieder korrekt']},
   {v:'23.28',d:'14.11.2026',items:['🗑️ Verlauf-Eintrag löschen: zugehörige Packung wird nun automatisch mitgelöscht und Bestand neu berechnet','🔢 Packungen-Anzeige: Floating-Point-Fehler behoben (z.B. «0.5439999...g» → «0.544 g»)']},
   {v:'23.27',d:'14.11.2026',items:['🐛 Gewichtsartikel (g/kg/ml/l): «≈ 544 kg gesamt» und «1 kg pro g» nicht mehr angezeigt (packInfo/packTotal deaktiviert für Gewichtseinheiten)','📐 Menge-Eingabefeld im Korrektur-Dialog breiter (min-width:80px) — besser auf Mobile','🏷️ Einheit-Selector im Korrektur-Dialog feste Breite 72px']},
@@ -8014,7 +8016,7 @@ async function formFotoKiAnalyse(){
     const data=await res.json();
     if(data.usage)trackAiUsage(data.usage.input_tokens||0,data.usage.output_tokens||0,((data.usage.input_tokens||0)*3+(data.usage.output_tokens||0)*15)/1000000*0.88);
     const text=data.content?.[0]?.text||'';
-    let parsed;try{parsed=JSON.parse(text.replace(/```json|```/g,'').trim());}catch(e){toast('KI-Antwort nicht lesbar');return;}
+    let parsed;try{let _c=text.replace(/```json|```/g,'').trim();const _s=_c.indexOf('{'),_e=_c.lastIndexOf('}');if(_s!==-1&&_e>_s)_c=_c.slice(_s,_e+1);parsed=JSON.parse(_c);}catch(e){toast('KI-Antwort nicht lesbar');return;}
 
     // Felder füllen — nur leere Felder überschreiben
     if(parsed.name){const nm=document.getElementById('f-nm');if(nm&&!nm.value){nm.value=parsed.name;checkDupHint(parsed.name);checkFrischeHint(parsed.name);}}
@@ -8142,7 +8144,7 @@ async function _kiScanAnalyse(){
     const data=await res.json();
     if(data.usage)trackAiUsage(data.usage.input_tokens||0,data.usage.output_tokens||0,((data.usage.input_tokens||0)*3+(data.usage.output_tokens||0)*15)/1000000*0.88);
     const text=data.content?.[0]?.text||'';
-    let parsed;try{parsed=JSON.parse(text.replace(/```json|```/g,'').trim());}catch(e){toast('KI-Antwort nicht lesbar');return;}
+    let parsed;try{let _c=text.replace(/```json|```/g,'').trim();const _s=_c.indexOf('{'),_e=_c.lastIndexOf('}');if(_s!==-1&&_e>_s)_c=_c.slice(_s,_e+1);parsed=JSON.parse(_c);}catch(e){toast('KI-Antwort nicht lesbar');return;}
     if(parsed.name){const nm=document.getElementById('f-nm');if(nm&&!nm.value){nm.value=parsed.name;checkDupHint(parsed.name);checkFrischeHint(parsed.name);}}
     if(parsed.marke){const mk=document.getElementById('f-mk');if(mk&&!mk.value)mk.value=parsed.marke;}
     if(parsed.kat){document.querySelectorAll('#f-ka .chip[data-kat]').forEach(c=>{if(c.dataset.kat===parsed.kat){document.querySelectorAll('#f-ka .chip[data-kat]').forEach(x=>x.classList.remove('on'));c.classList.add('on');}});}
@@ -11266,7 +11268,7 @@ function captureQuittungFromCamera() {
 function captureQuittungFromGallery() {
   const input = document.createElement('input');
   input.type = 'file';
-  input.accept = 'image/*';
+  input.accept = 'image/*,application/pdf'; // v23.30: auch PDF erlaubt
   input.onchange = handleQuittungFile;
   input.click();
 }
@@ -11302,14 +11304,18 @@ async function handleQuittungFile(e) {
     console.log('[Quittung] Bild geladen:', b64.length, 'bytes');
 
     // Schritt 2: Bild-Typ erkennen
-    let mediaType = file.type || 'image/jpeg';
-    if (b64.startsWith('/9j/')) mediaType = 'image/jpeg';
-    else if (b64.startsWith('iVBOR')) mediaType = 'image/png';
-    else if (b64.startsWith('R0lGO')) mediaType = 'image/gif';
-    else if (b64.startsWith('UklGR')) mediaType = 'image/webp';
+    // v23.30: PDF-Erkennung (application/pdf → type:'document' in der API)
+    const isPdf = file.type === 'application/pdf' || b64.startsWith('JVBERi');
+    let mediaType = isPdf ? 'application/pdf' : (file.type || 'image/jpeg');
+    if (!isPdf) {
+      if (b64.startsWith('/9j/')) mediaType = 'image/jpeg';
+      else if (b64.startsWith('iVBOR')) mediaType = 'image/png';
+      else if (b64.startsWith('R0lGO')) mediaType = 'image/gif';
+      else if (b64.startsWith('UklGR')) mediaType = 'image/webp';
+    }
 
-    toast('🖼️ Format: ' + mediaType);
-    console.log('[Quittung] Bild-Typ:', mediaType);
+    toast((isPdf ? '📄' : '🖼️') + ' Format: ' + mediaType);
+    console.log('[Quittung] Datei-Typ:', mediaType, isPdf ? '(PDF → document)' : '(Bild → image)');
 
     // Schritt 3: API-Key prüfen
     const aiKey = localStorage.getItem('hb_ai_key') || '';
@@ -11364,7 +11370,10 @@ async function handleQuittungFile(e) {
           messages: [{
             role: 'user',
             content: [
-              { type: 'image', source: { type: 'base64', media_type: mediaType, data: b64 } },
+              // v23.30: PDFs als type:'document', Bilder als type:'image'
+              isPdf
+                ? { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: b64 } }
+                : { type: 'image', source: { type: 'base64', media_type: mediaType, data: b64 } },
               { type: 'text', text: prompt }
             ]
           }]
@@ -11395,7 +11404,11 @@ async function handleQuittungFile(e) {
 
     toast('📝 Parse KI-Antwort...');
 
-    const clean = text.replace(/```json|```/g, '').trim();
+    // v23.31: Robusteres JSON-Extrahieren — erstes { bis letztes } herausschneiden
+    let clean = text.replace(/```json|```/g, '').trim();
+    const jStart = clean.indexOf('{');
+    const jEnd = clean.lastIndexOf('}');
+    if (jStart !== -1 && jEnd > jStart) clean = clean.slice(jStart, jEnd + 1);
 
     // Schritt 5: JSON parsen
     let parsed;
@@ -11406,8 +11419,8 @@ async function handleQuittungFile(e) {
       toast('✅ ' + anzahl + ' Artikel erkannt');
     } catch (pe) {
       console.error('[Quittung] JSON Parse Fehler:', pe.message);
-      console.error('[Quittung] Raw text:', text);
-      toast('❌ JSON Parse Fehler: ' + pe.message);
+      console.error('[Quittung] Raw text:', text.slice(0, 300));
+      toast('❌ KI-Antwort nicht lesbar — bitte erneut versuchen');
       barcodeEinkaufState.quittungText = '';
       return;
     }
@@ -12045,8 +12058,8 @@ function openQuittung(){
 function _openQuittungDo(preselectedInput){
   quittungItems=[];quittungIdx=0;quittungGeschaeft='';
   document.getElementById('quittung-body').innerHTML=
-    '<input type="file" id="quittung-file" accept="image/*" style="display:none" onchange="handleQuittungFile(this)"/>'+
-    '<input type="file" id="quittung-file-cam" accept="image/*" capture="environment" style="display:none" onchange="handleQuittungFile(this)"/>';
+    '<input type="file" id="quittung-file" accept="image/*,application/pdf" style="display:none" onchange="handleQuittungFile(this)"/>'+
+    '<input type="file" id="quittung-file-cam" accept="image/*" capture="environment" style="display:none" onchange="handleQuittungFile(this)"/>'; // v23.30: Galerie-Input auch PDF
   document.getElementById('quittung-overlay').style.display='flex';
   // Wenn direkt aus Info-Dialog ein Bild gewählt: sofort verarbeiten
   if(preselectedInput&&preselectedInput.files&&preselectedInput.files[0]){
