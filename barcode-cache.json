@@ -29,6 +29,23 @@
       },
       "addedAt": 1792328689621
     },
+    "20828387": {
+      "barcode": "20828387",
+      "name": "Carnesi poulet",
+      "marke": "Carnesi",
+      "kategorien": "",
+      "description": "Carnesi poulet",
+      "image": "https://images.openfoodfacts.org/images/products/000/002/082/8387/front_fr.3.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "Carnesi poulet",
+        "brands": "Carnesi",
+        "categories": "",
+        "quantity": "",
+        "generic_name": ""
+      },
+      "addedAt": 1794655149714
+    },
     "7623900204786": {
       "barcode": "7623900204786",
       "name": "",
@@ -441,5 +458,5 @@
       "addedAt": 1794634800699
     }
   },
-  "lastUpdated": 1794654931945
+  "lastUpdated": 1794655149715
 }
