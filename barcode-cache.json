@@ -428,7 +428,18 @@
         "generic_name": ""
       },
       "addedAt": 1794634600752
+    },
+    "7613404535318": {
+      "barcode": "7613404535318",
+      "name": "Milch UHT",
+      "marke": "Valflora",
+      "kategorien": "",
+      "description": "",
+      "image": "https://images.openfoodfacts.org/images/products/761/340/453/5318/front_fr.40.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {},
+      "addedAt": 1794634800699
     }
   },
-  "lastUpdated": 1794634600755
+  "lastUpdated": 1794634800700
 }
