@@ -411,7 +411,24 @@
       "source": "Open Food Facts",
       "offData": {},
       "addedAt": 1793896889747
+    },
+    "7613404637524": {
+      "barcode": "7613404637524",
+      "name": "Raclettfestival",
+      "marke": "",
+      "kategorien": "",
+      "description": "Raclettfestival",
+      "image": "",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "Raclettfestival",
+        "brands": "",
+        "categories": "",
+        "quantity": "",
+        "generic_name": ""
+      },
+      "addedAt": 1794634600752
     }
   },
-  "lastUpdated": 1794374823310
+  "lastUpdated": 1794634600755
 }
