@@ -541,7 +541,19 @@
         "generic_name": "Mandeln blanchiert und gestiftet"
       },
       "addedAt": 1794655309817
+    },
+    "4335619473966": {
+      "barcode": "4335619473966",
+      "name": "",
+      "marke": "",
+      "kategorien": "",
+      "description": "",
+      "image": "",
+      "source": "Gescannt (noch nicht gesucht)",
+      "offData": {},
+      "addedAt": 1794655346640,
+      "scannedOnly": true
     }
   },
-  "lastUpdated": 1794655309818
+  "lastUpdated": 1794655346642
 }
