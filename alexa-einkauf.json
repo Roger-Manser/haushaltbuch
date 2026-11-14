@@ -1,20 +1,3 @@
 {
- "befehle": [
-  {
-   "id": "mwd1gf9ef44qac",
-   "typ": "add",
-   "text": "Abfallsäcke",
-   "menge": "1",
-   "einheit": "Stk",
-   "zeit": 1794457151043
-  },
-  {
-   "id": "mwezkijb11wuyl",
-   "typ": "add",
-   "text": "Kartoffeln",
-   "menge": "1",
-   "einheit": "Stk",
-   "zeit": 1794574915031
-  }
- ]
+ "befehle": []
 }
