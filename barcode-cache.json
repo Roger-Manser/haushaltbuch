@@ -456,7 +456,24 @@
       "source": "Open Food Facts",
       "offData": {},
       "addedAt": 1794634800699
+    },
+    "4056489110125": {
+      "barcode": "4056489110125",
+      "name": "Creme Joghurt Stracciatella",
+      "marke": "Envia",
+      "kategorien": "Chocolate chunks yogurts",
+      "description": "Stracciatella",
+      "image": "https://images.openfoodfacts.org/images/products/405/648/911/0125/front_de.99.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "Stracciatella",
+        "brands": "Envia",
+        "categories": "Chocolate chunks yogurts",
+        "quantity": "1 kg",
+        "generic_name": ""
+      },
+      "addedAt": 1794655207711
     }
   },
-  "lastUpdated": 1794655149715
+  "lastUpdated": 1794655207715
 }
