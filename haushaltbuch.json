@@ -759,7 +759,7 @@
       "marke": "Nixe",
       "kat": "Fleisch & Fisch",
       "lager": "Vorratsschrank",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "4056489254683",
@@ -771,12 +771,16 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782210777021_off.jpg?t=1791130431730",
       "fotoPath": "1782210777021_off.jpg",
-      "packungen": [
+      "packungen": [],
+      "preisHistorie": [
         {
-          "id": 2,
+          "datum": "2026-11-14",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-08-29",
-          "ablaufdatum": ""
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": ""
         }
       ]
     },
@@ -4378,7 +4382,7 @@
       "kat": "Konserven & Trockenware",
       "lager": "Schlof",
       "kaufort": "Migros",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 1,
       "barcode": "7613312525043",
@@ -4391,15 +4395,18 @@
       "notiz": "Pro 100g/ml: 349 kcal, Fett 1.3g, KH 74g, Eiweiss 8g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783751788988_off.jpg?t=1791130431730",
       "fotoPath": "1783751788988_off.jpg",
-      "preisHistorie": [],
-      "packungen": [
+      "preisHistorie": [
         {
-          "id": 1,
+          "datum": "2026-11-14",
+          "preis": 0,
           "menge": 1,
-          "kaufdatum": "2026-07-11",
-          "ablaufdatum": "2027-04-30"
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Migros"
         }
-      ]
+      ],
+      "packungen": []
     },
     {
       "id": 106,
@@ -5685,7 +5692,7 @@
       "kat": "Reinigung & Pflege",
       "lager": "Küche",
       "kaufort": "Coop",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Rolle",
       "mindest": 1,
       "barcode": "7629999001688",
@@ -5697,14 +5704,7 @@
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784370238968_17843702292053351732228893764645.jpg?t=1791130431730",
       "fotoPath": "1784370238968_17843702292053351732228893764645.jpg",
-      "packungen": [
-        {
-          "id": 4,
-          "menge": 1,
-          "kaufdatum": "2026-07-18",
-          "ablaufdatum": ""
-        }
-      ],
+      "packungen": [],
       "preisHistorie": [
         {
           "datum": "2026-07-18",
@@ -5712,6 +5712,15 @@
           "menge": 1,
           "einheit": "Stk",
           "typ": "ein",
+          "aktion": false,
+          "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-11-14",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Rolle",
+          "typ": "aus",
           "aktion": false,
           "kaufort": "Coop"
         }
@@ -29743,7 +29752,46 @@
       "aktion": false,
       "datum": "2026-11-14",
       "zeit": 1794635616087
+    },
+    {
+      "t": "aus",
+      "aid": 16,
+      "name": "Fisch Thunfisch Filets in eigenem Saft",
+      "lager": "Vorratsschrank",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-11-14",
+      "zeit": 1794635689936
+    },
+    {
+      "t": "aus",
+      "aid": 105,
+      "name": "Wild Rice Mix Reis",
+      "lager": "Schlof",
+      "kat": "Konserven & Trockenware",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-11-14",
+      "zeit": 1794635725061
+    },
+    {
+      "t": "aus",
+      "aid": 136,
+      "name": "Gebührenkehrichtsack Region St. Gallen",
+      "lager": "Küche",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Rolle",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-11-14",
+      "zeit": 1794635743771
     }
   ],
-  "aktualisiert": "2026-11-14T05:54:24.505Z"
+  "aktualisiert": "2026-11-14T05:56:00.400Z"
 }
