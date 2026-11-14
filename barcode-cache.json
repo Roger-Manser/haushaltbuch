@@ -490,7 +490,24 @@
         "generic_name": ""
       },
       "addedAt": 1794655207711
+    },
+    "4056489077954": {
+      "barcode": "4056489077954",
+      "name": "Bratspeck",
+      "marke": "Maestade",
+      "kategorien": "",
+      "description": "Bratspeck",
+      "image": "https://images.openfoodfacts.org/images/products/405/648/907/7954/front_fr.3.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "Bratspeck",
+        "brands": "Maestade",
+        "categories": "",
+        "quantity": "140g",
+        "generic_name": ""
+      },
+      "addedAt": 1794655265116
     }
   },
-  "lastUpdated": 1794655235386
+  "lastUpdated": 1794655265118
 }
