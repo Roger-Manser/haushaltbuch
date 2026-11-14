@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.19 — Einheit beim Eingang/Ausgang wählbar; Sortierung normalisiert (g→kg) -->
+<!-- HAUSHALTBUCH v23.20 — Einkaufsliste nach Kategorie; Ladenmodus nur abhaken; Wake Lock -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.19"/>
+<meta name="app-version" content="23.20"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.19';
+const APP_VERSION='23.20';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.20',d:'14.11.2026',items:['📋 Einkaufsliste: automatische Artikel nach Kategorie sortiert (wie im Ladenmodus), mit Kategorieüberschriften','🛒 Ladenmodus: nur noch abhaken — kein Kauf-Dialog, kein Einbuchen mehr; abgehakte Artikel werden ausgeblendet','📱 Ladenmodus: Bildschirm bleibt aktiv (Wake Lock), solange der Ladenmodus offen ist']},
   {v:'23.19',d:'14.11.2026',items:['⚖️ Sortierung «Nach Bestand» normalisiert: g-Artikel werden in kg umgerechnet (z.B. 544 g = 0.544 kg) → korrekte Einreihung zwischen kg-Artikeln','📦 +/− bei Gewichtsartikeln (kg, g, ml, l): Menge und Einheit eingeben statt pauschal +1/−1','✅ Einheit-Auswahl im Bestand-Dialog: g↔kg oder ml↔l umschalten möglich']},
   {v:'23.18',d:'14.11.2026',items:['🔴 BUGFIX «Nach Bestand»: sortierte nach Abstand zum Mindestbestand statt nach Bestand → Reihenfolge wirkte zufällig','✅ Sortiert jetzt nach tatsächlichem Bestand, grösster zuerst (↓); nochmals antippen = kleinster zuerst (↑)','✅ Gleicher Bestand → alphabetisch']},
   {v:'23.17',d:'02.11.2026',items:['🗣️ Alexa-Einträge werden mit der Lagerliste abgeglichen','✅ Treffer: Name + Einheit aus dem Lager, Eintrag mit Artikel verknüpft (grün, antippbar), «gesagt: …» darunter','✅ Artikel schon unter Mindestbestand → keine doppelte Zeile, genannte Menge wird übernommen, ✕-Ausblendung aufgehoben','🔍 Eindeutig → automatisch verknüpft; mehrdeutig (z.B. «Milch») → Vorschläge «Lager: …» zum Antippen','🧠 Gewählte Zuordnung wird gemerkt – nächstes Mal automatisch','🔧 Ignoriert Marke und Beifügungen («mit Speck», «nach griech. Art»); «Kaffee-Filter» ≠ Kaffee','✅ «Lösche …» nutzt denselben Abgleich']},
@@ -6664,17 +6665,32 @@ function renderEk(){
     h+='<button onclick="openLadenModus()" style="width:100%;padding:14px;margin-bottom:14px;background:var(--ac);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">🛒 Laden-Modus starten</button>';
   }
   h+='<div class="sh">Automatisch — unter Mindestbestand'+(ekShopFilter!=='alle'?' · '+esc(ekShopFilter):'')+'</div>';
-  h+=auto.length?auto.map(a=>{
-    const ov=(S.eko||{})[a.id]||{};
-    const mg=ov.menge!==undefined?ov.menge:String(Math.max(1,(a.mindest||0)-a.menge));
-    const eh=ov.einheit||a.einheit||'Stk';
-    return '<div class="ei" id="eia-'+a.id+'"><input type="checkbox" onchange="ckA('+a.id+',this.checked)"/>'+
-      '<div style="flex:1;min-width:0" onclick="showEkArtikelInfo('+a.id+')"><div class="eit" style="color:var(--ac)">'+esc(a.name)+(ov.alexa?' <span title="per Alexa bestätigt" style="font-size:11px">🗣️</span>':'')+'</div><div class="eis">'+esc(a.lager)+(a.kaufort?' · '+esc(a.kaufort):'')+'</div></div>'+
-      '<input type="text" inputmode="decimal" value="'+esc(mg)+'" onchange="setEkoMenge('+a.id+',this.value)" onclick="event.stopPropagation()" style="width:54px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);text-align:right;flex-shrink:0"/>'+
-      '<select onchange="setEkoEinheit('+a.id+',this.value)" onclick="event.stopPropagation()" style="width:66px;padding:6px 4px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);flex-shrink:0">'+ekEinheitOptions(eh)+'</select>'+
-      '<button class="eid" title="Von Liste entfernen (nicht einbuchen)" onclick="event.stopPropagation();ekAusblenden('+a.id+')">&#x2715;</button>'+
-    '</div>';
-  }).join(''):'<div style="color:var(--t3);font-size:13px;padding:4px 0 12px">Alle Artikel im Soll</div>';
+  if(auto.length){
+    // v23.20: nach Kategorie sortieren (gleiche Reihenfolge wie Ladenmodus)
+    const sortedAuto=auto.slice().sort((a,b)=>{
+      const ia=LADEN_REIHENFOLGE.indexOf(a.kat),ib=LADEN_REIHENFOLGE.indexOf(b.kat);
+      const ci=(ia<0?99:ia)-(ib<0?99:ib);
+      return ci||a.name.localeCompare(b.name,'de');
+    });
+    let lastKatEk='';
+    h+=sortedAuto.map(a=>{
+      const ov=(S.eko||{})[a.id]||{};
+      const mg=ov.menge!==undefined?ov.menge:String(Math.max(1,(a.mindest||0)-a.menge));
+      const eh=ov.einheit||a.einheit||'Stk';
+      const isNewKat=a.kat!==lastKatEk;
+      if(isNewKat)lastKatEk=a.kat;
+      const katHeader=isNewKat?'<div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;padding:10px 0 4px">'+esc(a.kat||'Sonstiges')+'</div>':'';
+      return katHeader+
+        '<div class="ei" id="eia-'+a.id+'"><input type="checkbox" onchange="ckA('+a.id+',this.checked)"/>'+
+        '<div style="flex:1;min-width:0" onclick="showEkArtikelInfo('+a.id+')"><div class="eit" style="color:var(--ac)">'+esc(a.name)+(ov.alexa?' <span title="per Alexa bestätigt" style="font-size:11px">🗣️</span>':'')+'</div><div class="eis">'+esc(a.lager)+(a.kaufort?' · '+esc(a.kaufort):'')+'</div></div>'+
+        '<input type="text" inputmode="decimal" value="'+esc(mg)+'" onchange="setEkoMenge('+a.id+',this.value)" onclick="event.stopPropagation()" style="width:54px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);text-align:right;flex-shrink:0"/>'+
+        '<select onchange="setEkoEinheit('+a.id+',this.value)" onclick="event.stopPropagation()" style="width:66px;padding:6px 4px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);flex-shrink:0">'+ekEinheitOptions(eh)+'</select>'+
+        '<button class="eid" title="Von Liste entfernen (nicht einbuchen)" onclick="event.stopPropagation();ekAusblenden('+a.id+')">&#x2715;</button>'+
+      '</div>';
+    }).join('');
+  }else{
+    h+='<div style="color:var(--t3);font-size:13px;padding:4px 0 12px">Alle Artikel im Soll</div>';
+  }
 
   h+='<div class="sh">Manuell</div><div class="mir"><input type="text" id="mi-i" placeholder="Artikel hinzufügen..." onkeydown="if(event.key===\'Enter\')addM()"/><button onclick="addM()">+</button></div><div id="mi-l">';
   S.ek.forEach(e=>{
@@ -6697,14 +6713,21 @@ function renderEk(){
 // Typische Laden-Reihenfolge nach Kategorie
 const LADEN_REIHENFOLGE=['Gemüse & Früchte','Backwaren & Brot','Fleisch & Fisch','Milchprodukte','Konserven & Trockenware','Gewürze & Saucen','Süsswaren','Getränke','Tiefkühl','Reinigung & Pflege','Diverses'];
 let ladenChecked={}; // {artikelId oder 'm'+manualId: true}
+let ladenWakeLock=null; // v23.20: Screen Wake Lock
 
-function openLadenModus(){
+async function openLadenModus(){
   ladenChecked={};
   renderLadenModus();
   document.getElementById('laden-overlay').style.display='flex';
+  // v23.20: Bildschirm aktiv halten
+  if('wakeLock' in navigator){
+    try{ladenWakeLock=await navigator.wakeLock.request('screen');}catch(e){/* ignorieren wenn verweigert */}
+  }
 }
 function closeLadenModus(){
   document.getElementById('laden-overlay').style.display='none';
+  // v23.20: Wake Lock freigeben
+  if(ladenWakeLock){try{ladenWakeLock.release();}catch(e){}ladenWakeLock=null;}
   renderEk();
 }
 function renderLadenModus(){
@@ -6721,7 +6744,7 @@ function renderLadenModus(){
   let h='<div style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:var(--sf);z-index:10">'+
     '<div><div style="font-weight:700;font-size:17px">🛒 Einkaufen'+(ekShopFilter!=='alle'?' · '+esc(ekShopFilter):'')+'</div>'+
     '<div style="font-size:12px;color:var(--t2)">'+done+' von '+total+' erledigt</div></div>'+
-    '<button onclick="finishLadenModus()" style="background:var(--ok);color:#fff;border:none;border-radius:var(--rs);padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer">Fertig</button>'+
+    '<button onclick="finishLadenModus()" style="background:var(--ok);color:#fff;border:none;border-radius:var(--rs);padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer">✓ Fertig</button>'+
   '</div>'+
   // Fortschrittsbalken
   '<div style="height:4px;background:var(--bd)"><div style="height:100%;background:var(--ok);width:'+(total?Math.round(done/total*100):0)+'%;transition:width .2s"></div></div>'+
@@ -6738,10 +6761,12 @@ function renderLadenModus(){
     const ovL=(S.eko||{})[a.id]||{};
     const brauche=ovL.menge!==undefined?ovL.menge:Math.max(1,a.mindest-a.menge);
     const braucheEh=ovL.einheit||a.einheit||'Stk';
+    // v23.20: kein Kauf-Dialog mehr, nur abhaken
     h+='<div onclick="toggleLaden('+a.id+')" style="display:flex;align-items:center;gap:14px;padding:16px 12px;background:'+(ck?'var(--ol)':'var(--sf)')+';border:1px solid '+(ck?'var(--ok)':'var(--bd)')+';border-radius:var(--r);margin-bottom:8px;cursor:pointer;transition:all .15s">'+
       '<div style="width:32px;height:32px;border-radius:50%;border:2.5px solid '+(ck?'var(--ok)':'var(--b2)')+';background:'+(ck?'var(--ok)':'transparent')+';display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:18px;font-weight:700">'+(ck?'✓':'')+'</div>'+
       '<div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:600;'+(ck?'text-decoration:line-through;color:var(--t3)':'')+'">'+esc(a.name)+'</div>'+
-      '<div style="font-size:13px;color:var(--t2)">'+(ck&&typeof ladenChecked[a.id]==='object'?'✓ '+fmtMenge(ladenChecked[a.id].menge)+' '+esc(a.einheit||'Stk')+' · CHF '+ladenChecked[a.id].preis.toFixed(2)+(ladenChecked[a.id].kaufort?' · '+esc(ladenChecked[a.id].kaufort):''):esc(String(brauche))+' '+esc(braucheEh)+(a.preis?' · zuletzt CHF '+a.preis.toFixed(2):''))+'</div></div>'+
+      '<div style="font-size:13px;color:var(--t2)">'+esc(String(brauche))+' '+esc(braucheEh)+(a.preis?' · zuletzt CHF '+a.preis.toFixed(2):'')+'</div></div>'+
+      (ck?'':'<button onclick="event.stopPropagation();ladenNichtGekauft('+a.id+')" style="background:none;border:none;color:var(--t3);font-size:18px;cursor:pointer;padding:4px;line-height:1" title="Nicht kaufen">✕</button>')+
     '</div>';
   });
 
@@ -6765,15 +6790,10 @@ function renderLadenModus(){
   document.getElementById('laden-content').innerHTML=h;
 }
 function toggleLaden(id){
-  if(ladenChecked[id]){
-    // Abwählen: Kaufdaten verwerfen
-    delete ladenChecked[id];
-    if(navigator.vibrate)navigator.vibrate(40);
-    renderLadenModus();
-    return;
-  }
-  // Anwählen: Kauf-Dialog mit vorbefüllten Daten
-  showLadenKaufDialog(id);
+  // v23.20: einfaches An/Abwählen, kein Kauf-Dialog mehr
+  ladenChecked[id]=!ladenChecked[id];
+  if(navigator.vibrate)navigator.vibrate(40);
+  renderLadenModus();
 }
 
 function showLadenKaufDialog(id){
@@ -6843,29 +6863,19 @@ function toggleLadenM(id){
   renderLadenModus();
 }
 function finishLadenModus(){
-  // Abgehakte automatische Artikel: mit bestätigten Kaufdaten buchen
-  const autoChecked=S.a.filter(a=>ladenChecked[a.id]&&typeof ladenChecked[a.id]==='object');
+  // v23.20: kein Einbuchen mehr — abgehakte automatische Artikel ausblenden
+  // (werden beim nächsten Einkauf via Quittungsscan eingebucht)
+  const autoCheckedIds=S.a.filter(a=>ladenChecked[a.id]).map(a=>a.id);
+  autoCheckedIds.forEach(id=>ekAusblenden(id)); // ekAusblenden speichert und updated renderEk intern nicht nochmal
   // Abgehakte manuelle → aus Liste entfernen
   const manualCheckedIds=S.ek.filter(e=>ladenChecked['m'+e.id]).map(e=>e.id);
-  S.ek=S.ek.filter(e=>!manualCheckedIds.includes(e.id));
-
-  autoChecked.forEach(a=>{
-    const k=ladenChecked[a.id]; // {menge,datum,preis,kaufort}
-    if(S.eko&&S.eko[a.id])delete S.eko[a.id];
-    ensurePackungen(a);
-    a.packungen.push({id:newPackId(),menge:k.menge,kaufdatum:k.datum,ablaufdatum:''});
-    syncMenge(a);
-    a.kaufdatum=k.datum;
-    if(k.kaufort)a.kaufort=k.kaufort;
-    if(!a.preisHistorie)a.preisHistorie=[];
-    a.preisHistorie.push({datum:k.datum,preis:k.preis,betrag:['kg','g'].includes(a.einheit)?rundeBetrag(k.preis*(a.einheit==='g'?k.menge/1000:k.menge),k.kaufort||a.kaufort):Math.round(k.preis*k.menge*100)/100,menge:k.menge,einheit:a.einheit||'Stk',typ:'ein',aktion:false,kaufort:k.kaufort||''});
-    if(k.preis>0)a.preis=k.preis;
-    addLogEntry('ein',a.id,a.name,a.lager,a.kat,k.menge,a.einheit,k.preis,false,true);
-  });
-  saveL();
-  if(autoChecked.length)toast('✓ '+autoChecked.length+' Artikel als Eingang gebucht');
+  if(manualCheckedIds.length){
+    S.ek=S.ek.filter(e=>!manualCheckedIds.includes(e.id));
+    saveL();
+  }
+  const total=autoCheckedIds.length+manualCheckedIds.length;
+  if(total)toast('✓ '+total+' Artikel als gekauft markiert');
   closeLadenModus();
-  renderLager();
 }
 function ckA(id,v){const el=document.getElementById('eia-'+id);if(el)el.classList.toggle('ck',v);}
 // v23.1: Automatische Einträge (unter Mindestbestand) ohne Einbuchen von der Liste entfernen.
