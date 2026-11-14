@@ -13961,8 +13961,8 @@
       "barcode": "4056489098591",
       "barcodes": [],
       "preis": 1.35,
-      "packMenge": 0,
-      "packEinheit": "",
+      "packMenge": 250,
+      "packEinheit": "g",
       "kaufdatum": "2026-11-05",
       "notiz": "Von Quittung erstellt (Open Food Facts)",
       "foto": "https://images.openfoodfacts.org/images/products/405/648/909/8591/front_en.123.400.jpg",
@@ -13985,12 +13985,22 @@
           "aktion": false,
           "kaufort": "Lidl",
           "betrag": 2.7
+        },
+        {
+          "datum": "2026-11-05",
+          "preis": 1.35,
+          "menge": 2,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "quittungAliase": [
         "Mascarpone 41% Fett"
       ],
-      "letzteEingangHeute": "12:56"
+      "letzteEingangHeute": "12:56",
+      "ablaufdatum": ""
     },
     {
       "id": 334,
@@ -31280,5 +31290,5 @@
       "zeit": 1794655853670
     }
   ],
-  "aktualisiert": "2026-11-14T11:34:52.311Z"
+  "aktualisiert": "2026-11-14T13:02:27.014Z"
 }
