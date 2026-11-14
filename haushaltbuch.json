@@ -13093,29 +13093,23 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Breitenmoser",
-      "menge": 545,
+      "menge": 544,
       "einheit": "g",
       "mindest": 0,
       "barcode": "2100555017954",
       "barcodes": [],
-      "preis": 33,
+      "preis": 17.95,
       "packMenge": 1,
       "packEinheit": "kg",
-      "kaufdatum": "2026-10-24",
+      "kaufdatum": "2026-11-14",
       "notiz": "Von Quittung erstellt",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1792824607073_1000072647.jpg?t=1792824637974",
       "fotoPath": "1792824607073_1000072647.jpg",
       "packungen": [
         {
-          "id": 3,
-          "menge": 1,
-          "kaufdatum": "2026-10-24",
-          "ablaufdatum": ""
-        },
-        {
           "id": 4,
           "menge": 544,
-          "kaufdatum": "2026-10-24",
+          "kaufdatum": "2026-11-14",
           "ablaufdatum": ""
         }
       ],
@@ -13954,13 +13948,6 @@
   ],
   "einkauf": [
     {
-      "id": 1793368192791,
-      "text": "mozzarella Gewürz",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
       "id": 1794069667753,
       "text": "Orangen harpy",
       "menge": "1",
@@ -13968,26 +13955,6 @@
       "checked": false,
       "quelle": "alexa",
       "alexaId": "mw6lskc1w26sep"
-    },
-    {
-      "id": 1794573919311,
-      "text": "Abfallsäcke",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false,
-      "quelle": "alexa",
-      "alexaId": "mwd1gf9ef44qac"
-    },
-    {
-      "id": 1794574978795,
-      "text": "Kartoffeln festkochend",
-      "menge": "1",
-      "einheit": "kg",
-      "checked": false,
-      "quelle": "alexa",
-      "alexaId": "mwezkijb11wuyl",
-      "artikelId": 319,
-      "gesagt": "Kartoffeln"
     }
   ],
   "einkaufOverrides": {
@@ -13996,8 +13963,17 @@
       "ausgeblendetMenge": 0,
       "ausgeblendetMindest": 1
     },
+    "16": {
+      "ausgeblendet": true
+    },
+    "79": {
+      "ausgeblendet": true
+    },
+    "105": {
+      "ausgeblendet": true
+    },
     "221": {
-      "menge": "2"
+      "ausgeblendet": true
     }
   },
   "log": [
@@ -29791,7 +29767,20 @@
       "aktion": false,
       "datum": "2026-11-14",
       "zeit": 1794635743771
+    },
+    {
+      "t": "aus",
+      "aid": 317,
+      "name": "Hackfleisch zweierlei",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 545,
+      "einheit": "g",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-11-14",
+      "zeit": 1794636387146
     }
   ],
-  "aktualisiert": "2026-11-14T05:56:00.400Z"
+  "aktualisiert": "2026-11-14T09:24:33.068Z"
 }
