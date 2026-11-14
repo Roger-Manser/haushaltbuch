@@ -798,15 +798,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-11-14",
-          "preis": 1.29,
-          "menge": 2,
-          "einheit": "Dose",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "alias": [
@@ -14204,15 +14195,6 @@
           "aktion": false,
           "kaufort": "Lidl",
           "betrag": 2.85
-        },
-        {
-          "datum": "2026-11-14",
-          "preis": 2.85,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "quittungAliase": [
@@ -14302,15 +14284,6 @@
           "aktion": false,
           "kaufort": "Lidl",
           "betrag": 3.29
-        },
-        {
-          "datum": "2026-11-14",
-          "preis": 3.29,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "quittungAliase": [
@@ -14356,15 +14329,6 @@
           "aktion": false,
           "kaufort": "Lidl",
           "betrag": 0.99
-        },
-        {
-          "datum": "2026-11-14",
-          "preis": 0.99,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "quittungAliase": [
@@ -14452,15 +14416,6 @@
           "aktion": false,
           "kaufort": "Lidl",
           "betrag": 2.99
-        },
-        {
-          "datum": "2026-11-14",
-          "preis": 2.99,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "quittungAliase": [
@@ -14474,20 +14429,20 @@
       "name": "CURRY Maharani",
       "marke": "Wiberg",
       "kat": "Gewürze & Saucen",
-      "lager": "Kühlschrank oben",
+      "lager": "Küche",
       "kaufort": "Spar",
       "menge": 1,
-      "einheit": "Stk",
+      "einheit": "Pkg",
       "mindest": 0,
       "barcode": "9002540088693",
       "barcodes": [],
       "preis": 5.95,
-      "packMenge": 0,
-      "packEinheit": "",
+      "packMenge": 65,
+      "packEinheit": "g",
       "kaufdatum": "2026-11-14",
       "notiz": "Von Quittung erstellt",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1794655916651_17946559065882697348317935999607.jpg?t=1794655942001",
+      "fotoPath": "1794655916651_17946559065882697348317935999607.jpg",
       "packungen": [
         {
           "id": 20,
@@ -14511,7 +14466,8 @@
       "quittungAliase": [
         "WIBERG CURRY FRU."
       ],
-      "letzteEingangHeute": "12:28"
+      "letzteEingangHeute": "12:28",
+      "ablaufdatum": ""
     },
     {
       "id": 345,
@@ -14520,22 +14476,22 @@
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
       "kaufort": "Spar",
-      "menge": 42,
-      "einheit": "g",
-      "mindest": 0,
+      "menge": 1,
+      "einheit": "Glas",
+      "mindest": 1,
       "barcode": "7610071046598",
       "barcodes": [],
-      "preis": 0.05,
-      "packMenge": 0,
-      "packEinheit": "",
+      "preis": 2.3,
+      "packMenge": 42,
+      "packEinheit": "g",
       "kaufdatum": "2026-11-14",
       "notiz": "Von Quittung erstellt",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1794655965769_1794655960161225465762983085934.jpg?t=1794655996380",
+      "fotoPath": "1794655965769_1794655960161225465762983085934.jpg",
       "packungen": [
         {
           "id": 21,
-          "menge": 42,
+          "menge": 1,
           "kaufdatum": "2026-11-14",
           "ablaufdatum": ""
         }
@@ -14550,12 +14506,74 @@
           "aktion": false,
           "kaufort": "Spar",
           "betrag": 2.3
+        },
+        {
+          "datum": "2026-11-14",
+          "preis": 0.05,
+          "menge": 1,
+          "einheit": "Glas",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
+        },
+        {
+          "datum": "2026-11-14",
+          "preis": 2.3,
+          "menge": 1,
+          "einheit": "Glas",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Spar"
         }
       ],
       "quittungAliase": [
         "TOMATEN-MOZZ."
       ],
-      "letzteEingangHeute": "12:29"
+      "letzteEingangHeute": "12:29",
+      "ablaufdatum": ""
+    },
+    {
+      "id": 346,
+      "name": "Weekend Espress Martini 50cl",
+      "marke": "",
+      "kat": "Genussmittel",
+      "lager": "Obergeschoss",
+      "kaufort": "Denner",
+      "menge": 1,
+      "einheit": "Flasche",
+      "mindest": 0,
+      "barcode": "5430001970395",
+      "barcodes": [],
+      "preis": 14.95,
+      "packMenge": 500,
+      "packEinheit": "ml",
+      "kaufdatum": "2026-11-14",
+      "notiz": "Von Quittung erstellt",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1794655871232_17946558642235072785194163930111.jpg?t=1794655893259",
+      "fotoPath": "1794655871232_17946558642235072785194163930111.jpg",
+      "packungen": [
+        {
+          "id": 22,
+          "menge": 1,
+          "kaufdatum": "2026-11-14",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-11-14",
+          "preis": 14.95,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Denner",
+          "betrag": 14.95
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "12:30",
+      "ablaufdatum": ""
     }
   ],
   "lagerorte": [
@@ -31247,7 +31265,20 @@
       "aktion": false,
       "datum": "2026-11-14",
       "zeit": 1794655770278
+    },
+    {
+      "t": "ein",
+      "aid": 346,
+      "name": "Weekend Espress Martini 50cl",
+      "lager": "Obergeschoss",
+      "kat": "Genussmittel",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 14.95,
+      "aktion": false,
+      "datum": "2026-11-14",
+      "zeit": 1794655853670
     }
   ],
-  "aktualisiert": "2026-11-14T11:29:38.443Z"
+  "aktualisiert": "2026-11-14T11:34:52.311Z"
 }
