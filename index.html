@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.20 — Einkaufsliste nach Kategorie; Ladenmodus nur abhaken; Wake Lock -->
+<!-- HAUSHALTBUCH v23.23 — Einkaufsliste: Mikrofon-Diktieren für manuelle Einträge -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.20"/>
+<meta name="app-version" content="23.23"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.20';
+const APP_VERSION='23.23';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,9 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.23',d:'14.11.2026',items:['🎤 Einkaufsliste: Mikrofon-Button zum Diktieren — sprich einen oder mehrere Artikel (durch Komma/«und» getrennt), sie werden automatisch hinzugefügt','✅ Sprache: Schweizerdeutsch/Deutsch (de-CH); Button wird rot während Aufnahme, nochmals antippen stoppt','📱 Verfügbar wo die Web Speech API unterstützt wird (Android Chrome, Safari iOS 16.4+)']},
+  {v:'23.22',d:'14.11.2026',items:['🛒 Einkaufsliste: Artikel die in der Übersicht manuell angehakt werden, landen direkt in der richtigen Kategorie','✅ Kategorie-Sortierung gilt für alle Einträge mit bekannter Kategorie (auto + manuell aus Übersicht)','📝 Nur noch Freitext-Einträge ohne Bezug zu einem Lagerartikel erscheinen unter «Ohne Kategorie»']},
+  {v:'23.21',d:'14.11.2026',items:['🐛 BUGFIX Gewichtsartikel: Preis pro kg wurde beim Öffnen des Dialogs fälschlicherweise ×1000 angezeigt (z.B. 17.95 → 17950)','📦 Eingang/Ausgang-Dialog: Preis pro kg + berechneter Kaufpreis jetzt sichtbar, korrekt umgerechnet (g oder kg)','✅ Menge-Eingabefeld grösser, Standardwert vorausgefüllt (100 für g/ml, 1 für kg/l)']},
   {v:'23.20',d:'14.11.2026',items:['📋 Einkaufsliste: automatische Artikel nach Kategorie sortiert (wie im Ladenmodus), mit Kategorieüberschriften','🛒 Ladenmodus: nur noch abhaken — kein Kauf-Dialog, kein Einbuchen mehr; abgehakte Artikel werden ausgeblendet','📱 Ladenmodus: Bildschirm bleibt aktiv (Wake Lock), solange der Ladenmodus offen ist']},
   {v:'23.19',d:'14.11.2026',items:['⚖️ Sortierung «Nach Bestand» normalisiert: g-Artikel werden in kg umgerechnet (z.B. 544 g = 0.544 kg) → korrekte Einreihung zwischen kg-Artikeln','📦 +/− bei Gewichtsartikeln (kg, g, ml, l): Menge und Einheit eingeben statt pauschal +1/−1','✅ Einheit-Auswahl im Bestand-Dialog: g↔kg oder ml↔l umschalten möglich']},
   {v:'23.18',d:'14.11.2026',items:['🔴 BUGFIX «Nach Bestand»: sortierte nach Abstand zum Mindestbestand statt nach Bestand → Reihenfolge wirkte zufällig','✅ Sortiert jetzt nach tatsächlichem Bestand, grösster zuerst (↓); nochmals antippen = kleinster zuerst (↑)','✅ Gleicher Bestand → alphabetisch']},
@@ -3214,6 +3217,8 @@ function chgBMengeDialog(a,typ){
   const dlg=document.createElement('div');
   dlg.id='pack-dlg';
   dlg.style.cssText='position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:8500;display:flex;align-items:flex-end;justify-content:center';
+  const istGewichtChgb=['kg','g'].includes(a.einheit);
+  const defVal=a.einheit==='g'?'100':a.einheit==='ml'?'100':'1';
   dlg.innerHTML=
     '<div style="background:var(--sf);border-radius:var(--r) var(--r) 0 0;width:100%;max-width:min(90vw,420px);padding:16px 16px calc(16px + env(safe-area-inset-bottom))">'+
       '<div style="font-weight:700;font-size:16px;margin-bottom:4px">'+titel+'</div>'+
@@ -3221,10 +3226,18 @@ function chgBMengeDialog(a,typ){
       '<div class="tc" style="margin-bottom:16px">'+
         '<div class="fd"><label>Menge</label>'+
           '<div class="ur">'+
-            '<input type="text" inputmode="decimal" id="chgb-menge" value="" placeholder="z.B. 0.5" style="flex:1;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:17px;text-align:right;font-weight:600"/>'+
-            '<select id="chgb-einheit" style="padding:11px 8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;min-width:60px">'+einheitSelect+'</select>'+
+            '<input type="text" inputmode="decimal" id="chgb-menge" value="'+defVal+'" placeholder="z.B. 0.5" oninput="chgbKalkulieren('+a.id+')" style="flex:1;min-width:0;padding:12px 10px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:19px;text-align:right;font-weight:700"/>'+
+            '<select id="chgb-einheit" onchange="chgbEinheitWechsel('+a.id+')" style="padding:12px 8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;min-width:65px">'+einheitSelect+'</select>'+
           '</div>'+
         '</div>'+
+        (istGewichtChgb?
+          '<div class="fd"><label>Preis pro kg (CHF)</label>'+
+            '<input type="text" inputmode="decimal" id="chgb-kgpreis" placeholder="z.B. 17.95" value="'+(a.preis?(a.preis).toFixed(2):'')+'" oninput="chgbKalkulieren('+a.id+')" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/>'+
+          '</div>'+
+          '<div class="fd"><label>Kaufpreis (CHF)</label>'+
+            '<input type="text" inputmode="decimal" id="chgb-kaufpreis" placeholder="wird berechnet" value="" style="width:100%;padding:11px;border:1px solid var(--ok);border-radius:var(--rs);background:var(--bg);color:var(--ok);font-size:17px;text-align:right;font-weight:700"/>'+
+          '</div>'
+        :'')+
       '</div>'+
       '<div style="display:flex;flex-direction:column;gap:8px">'+
         (isAusgang?
@@ -3248,10 +3261,41 @@ function chgBMengeDialog(a,typ){
   document.addEventListener('keydown',escHandler);
 }
 
+function chgbEinheitWechsel(artikelId){
+  const eiEl=document.getElementById('chgb-einheit');
+  const mgEl=document.getElementById('chgb-menge');
+  if(!eiEl||!mgEl)return;
+  const ei=eiEl.value;
+  if(ei==='g')mgEl.value='100';
+  else if(ei==='kg')mgEl.value='1';
+  else if(ei==='ml')mgEl.value='100';
+  else if(ei==='l')mgEl.value='1';
+  chgbKalkulieren(artikelId);
+}
+function chgbKalkulieren(artikelId){
+  const a=S.a.find(x=>x.id===artikelId);if(!a)return;
+  const kgEl=document.getElementById('chgb-kgpreis');
+  const kpEl=document.getElementById('chgb-kaufpreis');
+  const mgEl=document.getElementById('chgb-menge');
+  const eiEl=document.getElementById('chgb-einheit');
+  if(!kgEl||!kpEl||!mgEl)return;
+  const kgPreis=parseDecimal(kgEl.value)||0;
+  const menge=parseDecimal(mgEl.value)||0;
+  const einheitGew=eiEl?eiEl.value:(a.einheit||'kg');
+  if(kgPreis>0&&menge>0){
+    const faktor=(einheitGew==='g'||einheitGew==='ml')?menge/1000:menge;
+    kpEl.value=(kgPreis*faktor).toFixed(2);
+    kpEl.style.color='var(--ok)';
+  }else{
+    kpEl.value='';
+  }
+}
 function chgBMengeSpeichern(id,typ){
   const a=S.a.find(x=>x.id===id);if(!a)return;
   const mgEl=document.getElementById('chgb-menge');
   const eiEl=document.getElementById('chgb-einheit');
+  const kgEl=document.getElementById('chgb-kgpreis');
+  const kpEl=document.getElementById('chgb-kaufpreis');
   if(!mgEl)return;
   let menge=parseDecimal(mgEl.value);
   const einheitGew=eiEl?eiEl.value:(a.einheit||'kg');
@@ -3259,16 +3303,23 @@ function chgBMengeSpeichern(id,typ){
   // Umrechnen in Artikel-Einheit
   let mengeInArtikel=menge;
   if(einheitGew!==a.einheit){
-    // g→kg oder kg→g oder ml→l oder l→ml
     if((einheitGew==='g'&&a.einheit==='kg')||(einheitGew==='ml'&&a.einheit==='l'))mengeInArtikel=menge/1000;
     else if((einheitGew==='kg'&&a.einheit==='g')||(einheitGew==='l'&&a.einheit==='ml'))mengeInArtikel=menge*1000;
+  }
+  // Preis: kg-Preis speichern, Kaufpreis für Log
+  let kaufpreis=0;
+  if(kgEl&&kgEl.value){
+    const kgPreis=parseDecimal(kgEl.value)||0;
+    if(kgPreis>0){a.preis=kgPreis;a.preisProKg=kgPreis;}
+    if(kpEl&&kpEl.value)kaufpreis=parseDecimal(kpEl.value)||0;
+    else{const faktor=(einheitGew==='g'||einheitGew==='ml')?mengeInArtikel/1000:mengeInArtikel;kaufpreis=kgPreis*faktor;}
   }
   const dlg=document.getElementById('pack-dlg');if(dlg)dlg.remove();
   ensurePackungen(a);
   if(typ==='eingang'){
     a.packungen.push({id:newPackId(),menge:mengeInArtikel,kaufdatum:todayISO(),ablaufdatum:''});
     syncMenge(a);
-    addLogEntry('ein',a.id,a.name,a.lager,a.kat,mengeInArtikel,a.einheit,0);
+    addLogEntry('ein',a.id,a.name,a.lager,a.kat,mengeInArtikel,a.einheit,kaufpreis);
     saveL();
     toast('📦 +'+fmtMenge(menge)+' '+esc(einheitGew)+' eingelagert');
   }else if(typ==='korrektur-ein'){
@@ -3276,13 +3327,12 @@ function chgBMengeSpeichern(id,typ){
     syncMenge(a);saveL();
     toast('📝 Bestand korrigiert (+'+fmtMenge(menge)+' '+esc(einheitGew)+')');
   }else if(typ==='ausgang'){
-    // Älteste Packung reduzieren
     const aktive=a.packungen.filter(p=>p.menge>0);
     aktive.sort((x,y)=>(x.ablaufdatum||'9999').localeCompare(y.ablaufdatum||'9999'));
     let rest=mengeInArtikel;
     for(const p of aktive){if(rest<=0)break;const ab=Math.min(p.menge,rest);p.menge=Math.max(0,p.menge-ab);rest-=ab;}
     syncMenge(a);
-    addLogEntry('aus',a.id,a.name,a.lager,a.kat,mengeInArtikel,a.einheit,0);
+    addLogEntry('aus',a.id,a.name,a.lager,a.kat,mengeInArtikel,a.einheit,kaufpreis);
     saveL();
     toast('📤 −'+fmtMenge(menge)+' '+esc(einheitGew)+' entnommen');
   }else if(typ==='korrektur-aus'){
@@ -3316,7 +3366,7 @@ function showEingangMhdDialog(a){
         '<div class="fd"><label>Menge</label><div class="ur"><input type="text" inputmode="decimal" id="eingang-schnell-mg" value="'+(a.einheit==='g'?'100':'1')+'" oninput="eingangKalkulieren('+a.id+')" style="flex:1;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:17px;text-align:right;font-weight:600"/>'+einheitSelect+'</div></div>'+
         (istGewicht&&['kg','g'].includes(a.einheit)?
           '<div class="fd"><label>Preis pro kg (CHF)</label>'+
-            '<input type="text" inputmode="decimal" id="eingang-kgpreis" placeholder="z.B. 3.90" value="'+(a.einheit==='g'&&a.preis?((a.preis||0)*1000).toFixed(2):a.preis||'')+'" oninput="eingangKalkulieren('+a.id+')" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/>'+
+            '<input type="text" inputmode="decimal" id="eingang-kgpreis" placeholder="z.B. 3.90" value="'+(a.preis?(a.preis).toFixed(2):'')+'" oninput="eingangKalkulieren('+a.id+')" style="width:100%;padding:11px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;text-align:right"/>'+
           '</div>'+
           '<div class="fd"><label>Kaufpreis (CHF)</label>'+
             '<input type="text" inputmode="decimal" id="eingang-schnell-pr" placeholder="wird berechnet" value="" style="width:100%;padding:11px;border:1px solid var(--ok);border-radius:var(--rs);background:var(--bg);color:var(--ok);font-size:17px;text-align:right;font-weight:700"/>'+
@@ -3734,7 +3784,7 @@ function toEk(id){
     }
   }
   const fehlmenge=Math.max(1,(a.mindest||0)-a.menge);
-  S.ek.push({id:Date.now(),text:a.name,menge:String(fehlmenge),einheit:a.einheit||'Stk',checked:false});
+  S.ek.push({id:Date.now(),text:a.name,artikelId:a.id,kat:a.kat||'',menge:String(fehlmenge),einheit:a.einheit||'Stk',checked:false});
   saveL();toast('🛒 «'+a.name+'» zur Einkaufsliste hinzugefügt');
   renderLager();
 }
@@ -6664,44 +6714,92 @@ function renderEk(){
   if(hasItems){
     h+='<button onclick="openLadenModus()" style="width:100%;padding:14px;margin-bottom:14px;background:var(--ac);color:#fff;border:none;border-radius:var(--r);font-size:15px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px">🛒 Laden-Modus starten</button>';
   }
-  h+='<div class="sh">Automatisch — unter Mindestbestand'+(ekShopFilter!=='alle'?' · '+esc(ekShopFilter):'')+'</div>';
-  if(auto.length){
-    // v23.20: nach Kategorie sortieren (gleiche Reihenfolge wie Ladenmodus)
-    const sortedAuto=auto.slice().sort((a,b)=>{
-      const ia=LADEN_REIHENFOLGE.indexOf(a.kat),ib=LADEN_REIHENFOLGE.indexOf(b.kat);
-      const ci=(ia<0?99:ia)-(ib<0?99:ib);
-      return ci||a.name.localeCompare(b.name,'de');
-    });
-    let lastKatEk='';
-    h+=sortedAuto.map(a=>{
-      const ov=(S.eko||{})[a.id]||{};
-      const mg=ov.menge!==undefined?ov.menge:String(Math.max(1,(a.mindest||0)-a.menge));
-      const eh=ov.einheit||a.einheit||'Stk';
-      const isNewKat=a.kat!==lastKatEk;
-      if(isNewKat)lastKatEk=a.kat;
-      const katHeader=isNewKat?'<div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;padding:10px 0 4px">'+esc(a.kat||'Sonstiges')+'</div>':'';
-      return katHeader+
-        '<div class="ei" id="eia-'+a.id+'"><input type="checkbox" onchange="ckA('+a.id+',this.checked)"/>'+
-        '<div style="flex:1;min-width:0" onclick="showEkArtikelInfo('+a.id+')"><div class="eit" style="color:var(--ac)">'+esc(a.name)+(ov.alexa?' <span title="per Alexa bestätigt" style="font-size:11px">🗣️</span>':'')+'</div><div class="eis">'+esc(a.lager)+(a.kaufort?' · '+esc(a.kaufort):'')+'</div></div>'+
-        '<input type="text" inputmode="decimal" value="'+esc(mg)+'" onchange="setEkoMenge('+a.id+',this.value)" onclick="event.stopPropagation()" style="width:54px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);text-align:right;flex-shrink:0"/>'+
-        '<select onchange="setEkoEinheit('+a.id+',this.value)" onclick="event.stopPropagation()" style="width:66px;padding:6px 4px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);flex-shrink:0">'+ekEinheitOptions(eh)+'</select>'+
-        '<button class="eid" title="Von Liste entfernen (nicht einbuchen)" onclick="event.stopPropagation();ekAusblenden('+a.id+')">&#x2715;</button>'+
-      '</div>';
+  // v23.22: Auto + Manuelle MIT Kategorie gemeinsam nach Kategorie sortiert rendern
+  // sortedAuto für combined berechnen
+  const sortedAuto=auto.slice().sort((a,b)=>{
+    const ia=LADEN_REIHENFOLGE.indexOf(a.kat),ib=LADEN_REIHENFOLGE.indexOf(b.kat);
+    const ci=(ia<0?99:ia)-(ib<0?99:ib);
+    return ci||a.name.localeCompare(b.name,'de');
+  });
+
+  // v23.22: Manuelle Einträge MIT Kategorie → in die Kategorie-Sortierung einreihen
+  const ekMitKat=S.ek.filter(e=>!e.checked&&e.kat);
+  const ekOhneKat=S.ek.filter(e=>!e.checked&&!e.kat);
+  const ekErledigt=S.ek.filter(e=>e.checked);
+  // Kombinierte Liste: auto-Artikel + manuelle MIT Kategorie, nach Kategorie sortiert
+  const combined=[
+    ...sortedAuto.map(a=>({typ:'auto',a})),
+    ...ekMitKat.map(e=>({typ:'manuell',e}))
+  ].sort((x,y)=>{
+    const ka=x.typ==='auto'?x.a.kat:x.e.kat;
+    const kb=y.typ==='auto'?y.a.kat:y.e.kat;
+    const ia=LADEN_REIHENFOLGE.indexOf(ka),ib=LADEN_REIHENFOLGE.indexOf(kb);
+    const ci=(ia<0?99:ia)-(ib<0?99:ib);
+    if(ci!==0)return ci;
+    const na=x.typ==='auto'?x.a.name:x.e.text;
+    const nb=y.typ==='auto'?y.a.name:y.e.text;
+    return na.localeCompare(nb,'de');
+  });
+  // Kategorie-Gruppen-Render
+  if(combined.length){
+    let lastKatComb='';
+    h+=combined.map(item=>{
+      if(item.typ==='auto'){
+        const a=item.a;
+        const ov=(S.eko||{})[a.id]||{};
+        const mg=ov.menge!==undefined?ov.menge:String(Math.max(1,(a.mindest||0)-a.menge));
+        const eh=ov.einheit||a.einheit||'Stk';
+        const isNewKat=a.kat!==lastKatComb;
+        if(isNewKat)lastKatComb=a.kat;
+        const katHeader=isNewKat?'<div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;padding:10px 0 4px">'+esc(a.kat||'Sonstiges')+'</div>':'';
+        return katHeader+
+          '<div class="ei" id="eia-'+a.id+'"><input type="checkbox" onchange="ckA('+a.id+',this.checked)"/>'+
+          '<div style="flex:1;min-width:0" onclick="showEkArtikelInfo('+a.id+')"><div class="eit" style="color:var(--ac)">'+esc(a.name)+(ov.alexa?' <span title="per Alexa bestätigt" style="font-size:11px">🗣️</span>':'')+'</div><div class="eis">'+esc(a.lager)+(a.kaufort?' · '+esc(a.kaufort):'')+'</div></div>'+
+          '<input type="text" inputmode="decimal" value="'+esc(mg)+'" onchange="setEkoMenge('+a.id+',this.value)" onclick="event.stopPropagation()" style="width:54px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);text-align:right;flex-shrink:0"/>'+
+          '<select onchange="setEkoEinheit('+a.id+',this.value)" onclick="event.stopPropagation()" style="width:66px;padding:6px 4px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);flex-shrink:0">'+ekEinheitOptions(eh)+'</select>'+
+          '<button class="eid" title="Von Liste entfernen (nicht einbuchen)" onclick="event.stopPropagation();ekAusblenden('+a.id+')">&#x2715;</button>'+
+        '</div>';
+      }else{
+        const e=item.e;
+        const matchA=(e.artikelId!=null&&S.a.find(a=>a.id===e.artikelId))||S.a.find(a=>a.name.toLowerCase()===e.text.toLowerCase());
+        const isNewKat=e.kat!==lastKatComb;
+        if(isNewKat)lastKatComb=e.kat;
+        const katHeader=isNewKat?'<div style="font-size:11px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;padding:10px 0 4px">'+esc(e.kat||'Sonstiges')+'</div>':'';
+        return katHeader+
+          '<div class="ei" id="eim-'+e.id+'"><input type="checkbox" onchange="ckM('+e.id+',this.checked)"/>'+
+          '<div class="eit" style="flex:1;min-width:0;'+(matchA?'color:var(--ac);cursor:pointer':'')+'"'+(matchA?' onclick="showEkArtikelInfo('+matchA.id+')"':'')+'>'+esc(e.text)+(e.quelle==='alexa'?' <span style="font-size:11px">🗣️</span>':'')+'</div>'+
+          '<input type="text" inputmode="decimal" value="'+esc(e.menge||'')+'" placeholder="Mge" onchange="setEkMenge('+e.id+',this.value)" onclick="event.stopPropagation()" style="width:54px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);text-align:right;flex-shrink:0"/>'+
+          '<select onchange="setEkEinheit('+e.id+',this.value)" onclick="event.stopPropagation()" style="width:66px;padding:6px 4px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);flex-shrink:0">'+ekEinheitOptions(e.einheit||'')+'</select>'+
+          '<button class="eid" onclick="delM('+e.id+')">&#x2715;</button></div>';
+      }
     }).join('');
   }else{
     h+='<div style="color:var(--t3);font-size:13px;padding:4px 0 12px">Alle Artikel im Soll</div>';
   }
-
-  h+='<div class="sh">Manuell</div><div class="mir"><input type="text" id="mi-i" placeholder="Artikel hinzufügen..." onkeydown="if(event.key===\'Enter\')addM()"/><button onclick="addM()">+</button></div><div id="mi-l">';
-  S.ek.forEach(e=>{
-    const matchA=(e.artikelId!=null&&S.a.find(a=>a.id===e.artikelId))||S.a.find(a=>a.name.toLowerCase()===e.text.toLowerCase()); // v23.17
-    h+='<div class="ei'+(e.checked?' ck':'')+'" id="eim-'+e.id+'"><input type="checkbox" '+(e.checked?'checked':'')+' onchange="ckM('+e.id+',this.checked)"/>'+
+  // Ohne Kategorie (Freitext-Einträge) + Eingabefeld
+  if(ekOhneKat.length||ekErledigt.length){
+    h+='<div class="sh">Ohne Kategorie</div>';
+  }else{
+    h+='<div class="sh" style="margin-top:4px"> </div>';
+  }
+  h+='<div class="mir"><input type="text" id="mi-i" placeholder="Artikel hinzufügen..." onkeydown="if(event.key===\'Enter\')addM()"/>'+
+    ('SpeechRecognition' in window||'webkitSpeechRecognition' in window?'<button onclick="startMikrofon()" id="mi-mic" title="Per Mikrofon diktieren" style="background:none;border:1px solid var(--bd);border-radius:var(--rs);padding:0 10px;font-size:18px;cursor:pointer;color:var(--t2);flex-shrink:0">🎤</button>':'')+
+    '<button onclick="addM()">+</button></div><div id="mi-l">';
+  ekOhneKat.forEach(e=>{
+    const matchA=(e.artikelId!=null&&S.a.find(a=>a.id===e.artikelId))||S.a.find(a=>a.name.toLowerCase()===e.text.toLowerCase());
+    h+='<div class="ei" id="eim-'+e.id+'"><input type="checkbox" onchange="ckM('+e.id+',this.checked)"/>'+
     '<div class="eit" style="flex:1;min-width:0;'+(matchA?'color:var(--ac);cursor:pointer':'')+ '"'+(matchA?' onclick="showEkArtikelInfo('+matchA.id+')"':'')+'>'+esc(e.text)+(e.quelle==='alexa'?' <span title="per Alexa hinzugefügt" style="font-size:11px">🗣️</span>':'')+(e.gesagt?'<div style="font-size:11px;color:var(--t3);font-weight:400">gesagt: «'+esc(e.gesagt)+'»</div>':'')+
     (!matchA&&Array.isArray(e.vorschlaege)&&e.vorschlaege.length?'<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;font-weight:400" onclick="event.stopPropagation()"><span style="font-size:11px;color:var(--t3);align-self:center">Lager:</span>'+
       e.vorschlaege.map(id=>S.a.find(a=>a.id===id)).filter(Boolean).map(a=>'<button type="button" onclick="ekVerknuepfen('+e.id+','+a.id+')" style="font-size:11px;padding:2px 8px;border:1px solid var(--ac);border-radius:10px;background:var(--bg);color:var(--ac);cursor:pointer">'+esc(a.name)+'</button>').join('')+
       '<button type="button" title="Keiner davon" onclick="ekVorschlaegeWeg('+e.id+')" style="font-size:11px;padding:2px 6px;border:none;background:none;color:var(--t3);cursor:pointer">✕</button></div>':'')+'</div>'+
     '<input type="text" inputmode="decimal" value="'+esc(e.menge||'')+'" placeholder="Mge" onchange="setEkMenge('+e.id+',this.value)" onclick="event.stopPropagation()" style="width:54px;padding:6px 8px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);text-align:right;flex-shrink:0"/>'+
     '<select onchange="setEkEinheit('+e.id+',this.value)" onclick="event.stopPropagation()" style="width:66px;padding:6px 4px;border:1px solid var(--bd);border-radius:var(--rs);font-size:13px;background:var(--bg);color:var(--tx);flex-shrink:0">'+ekEinheitOptions(e.einheit||'')+'</select>'+
+    '<button class="eid" onclick="delM('+e.id+')">&#x2715;</button></div>';
+  });
+  // Erledigte Einträge
+  ekErledigt.forEach(e=>{
+    h+='<div class="ei ck" id="eim-'+e.id+'"><input type="checkbox" checked onchange="ckM('+e.id+',this.checked)"/>'+
+    '<div class="eit" style="flex:1;min-width:0">'+esc(e.text)+'</div>'+
     '<button class="eid" onclick="delM('+e.id+')">&#x2715;</button></div>';
   });
   h+='</div>';
@@ -6750,37 +6848,53 @@ function renderLadenModus(){
   '<div style="height:4px;background:var(--bd)"><div style="height:100%;background:var(--ok);width:'+(total?Math.round(done/total*100):0)+'%;transition:width .2s"></div></div>'+
   '<div style="padding:8px 16px calc(24px + env(safe-area-inset-bottom));overflow-y:auto;flex:1">';
 
-  // Automatische Artikel nach Kategorie gruppiert
-  let lastKat='';
-  sorted.forEach(a=>{
-    if(a.kat!==lastKat){
-      h+='<div style="font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin:16px 0 6px">'+esc(a.kat||'Sonstiges')+'</div>';
-      lastKat=a.kat;
-    }
-    const ck=!!ladenChecked[a.id];
-    const ovL=(S.eko||{})[a.id]||{};
-    const brauche=ovL.menge!==undefined?ovL.menge:Math.max(1,a.mindest-a.menge);
-    const braucheEh=ovL.einheit||a.einheit||'Stk';
-    // v23.20: kein Kauf-Dialog mehr, nur abhaken
-    h+='<div onclick="toggleLaden('+a.id+')" style="display:flex;align-items:center;gap:14px;padding:16px 12px;background:'+(ck?'var(--ol)':'var(--sf)')+';border:1px solid '+(ck?'var(--ok)':'var(--bd)')+';border-radius:var(--r);margin-bottom:8px;cursor:pointer;transition:all .15s">'+
-      '<div style="width:32px;height:32px;border-radius:50%;border:2.5px solid '+(ck?'var(--ok)':'var(--b2)')+';background:'+(ck?'var(--ok)':'transparent')+';display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:18px;font-weight:700">'+(ck?'✓':'')+'</div>'+
-      '<div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:600;'+(ck?'text-decoration:line-through;color:var(--t3)':'')+'">'+esc(a.name)+'</div>'+
-      '<div style="font-size:13px;color:var(--t2)">'+esc(String(brauche))+' '+esc(braucheEh)+(a.preis?' · zuletzt CHF '+a.preis.toFixed(2):'')+'</div></div>'+
-      (ck?'':'<button onclick="event.stopPropagation();ladenNichtGekauft('+a.id+')" style="background:none;border:none;color:var(--t3);font-size:18px;cursor:pointer;padding:4px;line-height:1" title="Nicht kaufen">✕</button>')+
-    '</div>';
+  // v23.22: Auto + Manuelle MIT Kategorie gemeinsam sortiert
+  const manMitKat=manual.filter(e=>e.kat);
+  const manOhneKat=manual.filter(e=>!e.kat);
+  // Kombiniert: auto + manuell MIT kat, nach Laden-Reihenfolge sortiert
+  const combinedLaden=[
+    ...sorted.map(a=>({typ:'auto',a})),
+    ...manMitKat.map(e=>({typ:'m',e}))
+  ].sort((x,y)=>{
+    const ka=x.typ==='auto'?x.a.kat:x.e.kat;
+    const kb=y.typ==='auto'?y.a.kat:y.e.kat;
+    const ia=LADEN_REIHENFOLGE.indexOf(ka),ib=LADEN_REIHENFOLGE.indexOf(kb);
+    return (ia<0?99:ia)-(ib<0?99:ib);
   });
-
-  // Manuelle Einträge
-  if(manual.length){
-    h+='<div style="font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin:16px 0 6px">Manuell notiert</div>';
-    manual.forEach(e=>{
-      const key='m'+e.id;
-      const ck=!!ladenChecked[key];
+  let lastKatL='';
+  combinedLaden.forEach(item=>{
+    if(item.typ==='auto'){
+      const a=item.a;
+      if(a.kat!==lastKatL){h+='<div style="font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin:16px 0 6px">'+esc(a.kat||'Sonstiges')+'</div>';lastKatL=a.kat;}
+      const ck=!!ladenChecked[a.id];
+      const ovL=(S.eko||{})[a.id]||{};
+      const brauche=ovL.menge!==undefined?ovL.menge:Math.max(1,a.mindest-a.menge);
+      const braucheEh=ovL.einheit||a.einheit||'Stk';
+      h+='<div onclick="toggleLaden('+a.id+')" style="display:flex;align-items:center;gap:14px;padding:16px 12px;background:'+(ck?'var(--ol)':'var(--sf)')+';border:1px solid '+(ck?'var(--ok)':'var(--bd)')+';border-radius:var(--r);margin-bottom:8px;cursor:pointer;transition:all .15s">'+
+        '<div style="width:32px;height:32px;border-radius:50%;border:2.5px solid '+(ck?'var(--ok)':'var(--b2)')+';background:'+(ck?'var(--ok)':'transparent')+';display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:18px;font-weight:700">'+(ck?'✓':'')+'</div>'+
+        '<div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:600;'+(ck?'text-decoration:line-through;color:var(--t3)':'')+'">'+esc(a.name)+'</div>'+
+        '<div style="font-size:13px;color:var(--t2)">'+esc(String(brauche))+' '+esc(braucheEh)+(a.preis?' · zuletzt CHF '+a.preis.toFixed(2):'')+'</div></div>'+
+        (ck?'':'<button onclick="event.stopPropagation();ladenNichtGekauft('+a.id+')" style="background:none;border:none;color:var(--t3);font-size:18px;cursor:pointer;padding:4px;line-height:1" title="Nicht kaufen">✕</button>')+
+      '</div>';
+    }else{
+      const e=item.e;
+      if(e.kat!==lastKatL){h+='<div style="font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin:16px 0 6px">'+esc(e.kat||'Sonstiges')+'</div>';lastKatL=e.kat;}
+      const key='m'+e.id;const ck=!!ladenChecked[key];
       h+='<div onclick="toggleLadenM('+e.id+')" style="display:flex;align-items:center;gap:14px;padding:16px 12px;background:'+(ck?'var(--ol)':'var(--sf)')+';border:1px solid '+(ck?'var(--ok)':'var(--bd)')+';border-radius:var(--r);margin-bottom:8px;cursor:pointer">'+
         '<div style="width:32px;height:32px;border-radius:50%;border:2.5px solid '+(ck?'var(--ok)':'var(--b2)')+';background:'+(ck?'var(--ok)':'transparent')+';display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:18px;font-weight:700">'+(ck?'✓':'')+'</div>'+
         '<div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:600;'+(ck?'text-decoration:line-through;color:var(--t3)':'')+'">'+esc(e.text)+'</div>'+
-        (e.menge?'<div style="font-size:13px;color:var(--t2)">'+esc(e.menge)+'</div>':'')+'</div>'+
-      '</div>';
+        (e.menge?'<div style="font-size:13px;color:var(--t2)">'+esc(e.menge)+'</div>':'')+'</div></div>';
+    }
+  });
+  // Ohne Kategorie (Freitext)
+  if(manOhneKat.length){
+    h+='<div style="font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin:16px 0 6px">Ohne Kategorie</div>';
+    manOhneKat.forEach(e=>{
+      const key='m'+e.id;const ck=!!ladenChecked[key];
+      h+='<div onclick="toggleLadenM('+e.id+')" style="display:flex;align-items:center;gap:14px;padding:16px 12px;background:'+(ck?'var(--ol)':'var(--sf)')+';border:1px solid '+(ck?'var(--ok)':'var(--bd)')+';border-radius:var(--r);margin-bottom:8px;cursor:pointer">'+
+        '<div style="width:32px;height:32px;border-radius:50%;border:2.5px solid '+(ck?'var(--ok)':'var(--b2)')+';background:'+(ck?'var(--ok)':'transparent')+';display:flex;align-items:center;justify-content:center;flex-shrink:0;color:#fff;font-size:18px;font-weight:700">'+(ck?'✓':'')+'</div>'+
+        '<div style="flex:1;min-width:0"><div style="font-size:17px;font-weight:600;'+(ck?'text-decoration:line-through;color:var(--t3)':'')+'">'+esc(e.text)+'</div>'+
+        (e.menge?'<div style="font-size:13px;color:var(--t2)">'+esc(e.menge)+'</div>':'')+'</div></div>';
     });
   }
 
@@ -6940,6 +7054,48 @@ function addGeschaeft(btn){
   chip.classList.add('on');
 }
 function addM(){const i=document.getElementById('mi-i');const t=i.value.trim();if(!t)return;S.ek.push({id:Date.now(),text:t,menge:'1',einheit:'Stk',checked:false});i.value='';saveL();renderEk();}
+let _mikrofon=null;
+function startMikrofon(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){toast('Mikrofon wird auf diesem Gerät nicht unterstützt');return;}
+  const btn=document.getElementById('mi-mic');
+  // Laufende Aufnahme abbrechen
+  if(_mikrofon){_mikrofon.abort();_mikrofon=null;if(btn){btn.textContent='🎤';btn.style.color='var(--t2)';}return;}
+  const r=new SR();
+  r.lang='de-CH';
+  r.interimResults=false;
+  r.maxAlternatives=1;
+  _mikrofon=r;
+  if(btn){btn.textContent='⏹';btn.style.color='var(--dg)';}
+  const inp=document.getElementById('mi-i');
+  if(inp){inp.placeholder='Höre zu…';}
+  r.onresult=e=>{
+    const text=(e.results[0][0].transcript||'').trim();
+    if(!text)return;
+    // Mehrere durch Komma/«und» getrennte Artikel aufsplitten
+    const teile=text.split(/,|\bund\b/i).map(s=>s.trim()).filter(Boolean);
+    teile.forEach(t=>{
+      if(t)S.ek.push({id:Date.now()+Math.random(),text:t.charAt(0).toUpperCase()+t.slice(1),menge:'1',einheit:'Stk',checked:false});
+    });
+    saveL();renderEk();
+    toast('🎤 '+teile.join(', ')+' hinzugefügt');
+  };
+  r.onerror=e=>{
+    if(e.error==='aborted')return;
+    const msg={
+      'not-allowed':'Mikrofonzugriff verweigert — bitte in den Browser-Einstellungen erlauben',
+      'no-speech':'Nichts gehört — bitte nochmals versuchen',
+      'network':'Netzwerkfehler bei der Spracherkennung',
+    }[e.error]||('Fehler: '+e.error);
+    toast(msg);
+  };
+  r.onend=()=>{
+    _mikrofon=null;
+    const b=document.getElementById('mi-mic');if(b){b.textContent='🎤';b.style.color='var(--t2)';}
+    const fi=document.getElementById('mi-i');if(fi){fi.placeholder='Artikel hinzufügen...';}
+  };
+  r.start();
+}
 function ckM(id,v){
   const e=S.ek.find(x=>x.id===id);if(!e)return;
   if(!v){
