@@ -507,7 +507,24 @@
         "generic_name": ""
       },
       "addedAt": 1794655265116
+    },
+    "4056489754558": {
+      "barcode": "4056489754558",
+      "name": "Proteinreicher Pudding mit Vanillegeschmack",
+      "marke": "Belbake",
+      "kategorien": "Млечни десерти, Пудинг",
+      "description": "Смес за пудинг с вкус на ванилия",
+      "image": "https://images.openfoodfacts.org/images/products/405/648/975/4558/front_en.44.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "Смес за пудинг с вкус на ванилия",
+        "brands": "Belbake, Lidl",
+        "categories": "Млечни десерти, Пудинг",
+        "quantity": "44 g ℮",
+        "generic_name": ""
+      },
+      "addedAt": 1794655288321
     }
   },
-  "lastUpdated": 1794655265118
+  "lastUpdated": 1794655288322
 }
