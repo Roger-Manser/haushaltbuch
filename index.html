@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.23 — Einkaufsliste: Mikrofon-Diktieren für manuelle Einträge -->
+<!-- HAUSHALTBUCH v23.26 — Quittungsdatum vom Kassenbon verwenden -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.23"/>
+<meta name="app-version" content="23.26"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.23';
+const APP_VERSION='23.26';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,9 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.26',d:'14.11.2026',items:['📅 Quittungsscan: Einkaufsdatum vom Kassenbon wird automatisch erkannt und verwendet','✏️ Datum ist in der Quittungs-Übersicht editierbar (falls KI falsch erkannt hat)','🕐 Nützlich wenn Quittungen erst später eingescannt werden']},
+  {v:'23.25',d:'14.11.2026',items:['➖ Ausbuchen direkt in der Artikelliste: «−» Button in jeder Zeile öffnet den Ausgangs-Dialog (Grund: Verbraucht / Korrektur)','⚖️ Gewichtsartikel: Menge-Dialog mit Einheit-Selector','🔢 Bestand-Badge in der Liste ist jetzt direkt antippbar für Bestand-Korrektur']},
+  {v:'23.24',d:'14.11.2026',items:['⚖️ Gewichtsartikel (kg/g/ml/l): Klick auf Bestand öffnet jetzt den Einheit-Dialog (mit Einheit-Selector, grossen Eingabefeldern und Preis)','📝 Editiermodus: Einheit-Select neben Anfangsbestand optisch hervorgehoben (blau umrandet, fett)','🔢 Nicht-Gewichtsartikel: Einheit wird direkt neben dem Bestand-Eingabefeld angezeigt']},
   {v:'23.23',d:'14.11.2026',items:['🎤 Einkaufsliste: Mikrofon-Button zum Diktieren — sprich einen oder mehrere Artikel (durch Komma/«und» getrennt), sie werden automatisch hinzugefügt','✅ Sprache: Schweizerdeutsch/Deutsch (de-CH); Button wird rot während Aufnahme, nochmals antippen stoppt','📱 Verfügbar wo die Web Speech API unterstützt wird (Android Chrome, Safari iOS 16.4+)']},
   {v:'23.22',d:'14.11.2026',items:['🛒 Einkaufsliste: Artikel die in der Übersicht manuell angehakt werden, landen direkt in der richtigen Kategorie','✅ Kategorie-Sortierung gilt für alle Einträge mit bekannter Kategorie (auto + manuell aus Übersicht)','📝 Nur noch Freitext-Einträge ohne Bezug zu einem Lagerartikel erscheinen unter «Ohne Kategorie»']},
   {v:'23.21',d:'14.11.2026',items:['🐛 BUGFIX Gewichtsartikel: Preis pro kg wurde beim Öffnen des Dialogs fälschlicherweise ×1000 angezeigt (z.B. 17.95 → 17950)','📦 Eingang/Ausgang-Dialog: Preis pro kg + berechneter Kaufpreis jetzt sichtbar, korrekt umgerechnet (g oder kg)','✅ Menge-Eingabefeld grösser, Standardwert vorausgefüllt (100 für g/ml, 1 für kg/l)']},
@@ -2600,7 +2603,13 @@ function arRow(a){
         ?'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:19px;height:19px"><polyline points="20 6 9 17 4 12"/></svg>'
         :'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" style="width:19px;height:19px"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>')+
     '</button>'+
-    '<div class="abs"><div class="bn '+bc+'">'+a.menge+'</div><div class="bu">'+unitLabel+'</div></div></div>';
+    '<button onclick="event.stopPropagation();arAusgang('+a.id+')" title="Ausbuchen" style="background:none;border:none;cursor:pointer;padding:8px 4px;color:var(--t3);flex-shrink:0;display:flex;align-items:center;font-size:20px;line-height:1;font-weight:300">−</button>'+
+    '<div class="abs"><div class="bn '+bc+'" onclick="event.stopPropagation();bestandManuellDialog('+a.id+')" style="cursor:pointer">'+a.menge+'</div><div class="bu">'+unitLabel+'</div></div></div>';
+}
+function arAusgang(id){
+  const a=S.a.find(x=>x.id===id);if(!a)return;
+  ensurePackungen(a);
+  chgBAusgangGrund(a,a.packungen.filter(p=>p.menge>0));
 }
 function setLF(f){lf=f;renderLager();}
 function togSec(h){const it=h.nextElementSibling;const op=h.classList.toggle('open');it.classList.toggle('hide',!op);}
@@ -2973,6 +2982,8 @@ function syncMenge(a){
 
 function bestandManuellDialog(id){
   const a=S.a.find(x=>x.id===id);if(!a)return;
+  // Gewichtsartikel → direkt in chgBMengeDialog (hat Einheit-Selector)
+  if(['kg','g','ml','l'].includes(a.einheit)){chgBMengeDialog(a,'korrektur');return;}
   const existing=document.getElementById('bestand-dlg');if(existing)existing.remove();
   const dlg=document.createElement('div');
   dlg.id='bestand-dlg';
@@ -2982,7 +2993,10 @@ function bestandManuellDialog(id){
       '<div style="font-weight:700;font-size:16px;margin-bottom:2px">Bestand anpassen</div>'+
       '<div style="font-size:13px;color:var(--t2);margin-bottom:14px">«'+esc(a.name)+'» — aktuell: <strong>'+fmtMenge(a.menge)+' '+esc(a.einheit||'Stk')+'</strong></div>'+
       '<div class="ghf"><label>Neuer Bestand</label>'+
-        '<input type="text" inputmode="decimal" id="bestand-neu" value="'+fmtMenge(a.menge)+'" style="width:100%;padding:12px;border:2px solid var(--ac);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:22px;font-weight:700;text-align:right"/>'+
+        '<div style="display:flex;align-items:center;gap:8px">'+
+          '<input type="text" inputmode="decimal" id="bestand-neu" value="'+fmtMenge(a.menge)+'" style="flex:1;padding:12px;border:2px solid var(--ac);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:22px;font-weight:700;text-align:right"/>'+
+          '<span style="font-size:16px;color:var(--t2);font-weight:600;white-space:nowrap;padding:0 4px">'+esc(a.einheit||'Stk')+'</span>'+
+        '</div>'+
       '</div>'+
       '<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">'+
         '<button onclick="bestandManuellSpeichern('+id+',\'korrektur\')" style="padding:12px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--rs);font-size:14px;cursor:pointer;color:var(--t2);text-align:left">📝 Korrektur — Fehleingabe / Inventur (kein Log-Eintrag)</button>'+
@@ -3855,7 +3869,7 @@ function openForm(id){
   '<div class="fd"><label>Bezeichnung *</label><input type="text" id="f-nm" placeholder="z.B. Vollmilch 3.5%" value="'+(a?esc(a.name):'')+'" oninput="checkDupHint(this.value);checkFrischeHint(this.value)"/><div id="dup-hint" style="display:none;font-size:12px;color:var(--wn);background:var(--wl);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div><div id="frische-hint" style="display:none;font-size:12px;color:var(--ok);background:var(--ol);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div></div>'+
   '<div class="fd"><label>Marke</label><input type="text" id="f-mk" placeholder="z.B. Emmi" value="'+(a?esc(a.marke||''):'')+'"/></div>'+
   '<div class="fd"><label>Kategorie</label><div class="lcw" id="f-ka">'+kc+'</div></div>'+
-  '<div class="tc"><div class="fd"><label>Anfangsbestand</label><div class="ur"><input type="number" id="f-mg" min="0" value="'+(a?a.menge:1)+'"/><select id="f-ei" onchange="if(this.value===\'__add__\')addEinheit(this)">'+eo+'<option value="__add__">+ Neue Einheit...</option></select></div></div><div class="fd"><label>Mindestbestand</label><input type="number" id="f-mn" min="0" value="'+(a?a.mindest:0)+'"/></div></div>'+
+  '<div class="tc"><div class="fd"><label>Anfangsbestand</label><div class="ur"><input type="number" id="f-mg" min="0" value="'+(a?a.menge:1)+'" style="max-width:120px"/><select id="f-ei" onchange="document.getElementById(\'f-ei-lbl\').textContent=this.value===\'__add__\'?\'\':(this.options[this.selectedIndex].text||this.value);if(this.value===\'__add__\')addEinheit(this)" style="font-weight:700;color:var(--ac);border:2px solid var(--ac)">'+eo+'<option value="__add__">+ Neue Einheit...</option></select><span id="f-ei-lbl" style="display:none"></span></div></div><div class="fd"><label>Mindestbestand</label><input type="number" id="f-mn" min="0" value="'+(a?a.mindest:0)+'"/></div></div>'+
   '<div class="fd"><label>Packungsgrösse <span style="color:var(--t3);font-weight:400">(optional, z.B. 2.5 dl pro Stück)</span></label><div class="ur"><input type="text" inputmode="decimal" id="f-pg" placeholder="z.B. 2.5" value="'+(a&&a.packMenge&&a.packMenge!=='undefined'&&!isNaN(parseFloat(a.packMenge))?esc(a.packMenge):'')+'"/><select id="f-pe">'+epo+'</select></div></div>'+
   '<div class="fd"><label>Kaufpreis pro '+(a&&['kg','g'].includes(a.einheit)?'kg':'Einheit')+' (CHF)</label><input type="text" inputmode="decimal" id="f-pr" placeholder="z.B. 1.95" value="'+(a?esc(a.preisProKg||a.preis||''):'')+'"/><label style="display:flex;align-items:center;gap:8px;margin-top:8px;cursor:pointer;padding:9px 12px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg)"><input type="checkbox" id="f-aktion" style="width:18px;height:18px;accent-color:var(--wn);cursor:pointer"/><div><div style="font-size:14px;font-weight:500;color:var(--tx)">Aktionspreis</div><div style="font-size:12px;color:var(--t2)">Wird als Aktion geloggt, kein neuer Standardpreis</div></div></label></div>'+
   '<div class="fd"><label>Lagerort</label><div class="lcw" id="f-lo">'+lc+'</div></div>'+
@@ -11303,11 +11317,13 @@ async function handleQuittungFile(e) {
       'Antworte NUR mit JSON (kein Markdown):\n' +
       '{\n' +
       '  "geschaeft": "Name des Geschäfts/Händlers (z.B. Migros, Coop, Lidl) oder leer",\n' +
+      '  "datum": "YYYY-MM-DD oder leer wenn nicht erkennbar",\n' +
       '  "artikel": [\n' +
       '    {"name":"Artikel-Name","menge":1,"preis_brutto":10.50,"rabatt":0,"preis_netto":10.50,"einheit":"Stk"}\n' +
       '  ]\n' +
       '}\n\n' +
       'Regeln:\n' +
+      '- datum: Einkaufsdatum vom Kassenbon (z.B. "2026-11-10"), leer lassen wenn nicht lesbar\n' +
       '- name: Produktname von der Quittung (WICHTIG: Barcode-nummern wenn sichtbar!)\n' +
       '- menge: Anzahl/Gewicht (Standard 1)\n' +
       '- preis_brutto: GESAMT-PREIS vor Rabatt\n' +
@@ -11398,6 +11414,14 @@ async function handleQuittungFile(e) {
       barcodeEinkaufState.geschaeft = umMatchGeschaeft(parsed.geschaeft);
       console.log('[Quittung] Geschäft erkannt: ' + parsed.geschaeft + ' → ' + barcodeEinkaufState.geschaeft);
       if (barcodeEinkaufState.geschaeft) toast('🏪 Geschäft: ' + barcodeEinkaufState.geschaeft);
+    }
+    // v23.26: Einkaufsdatum von Quittung übernehmen
+    if (parsed.datum && /^\d{4}-\d{2}-\d{2}$/.test(parsed.datum)) {
+      barcodeEinkaufState.quittungDatum = parsed.datum;
+      console.log('[Quittung] Datum erkannt: ' + parsed.datum);
+      toast('📅 Datum: ' + fmtDateCH(parsed.datum));
+    } else {
+      barcodeEinkaufState.quittungDatum = '';
     }
 
     // Speichere die erkannten Artikel für Review
@@ -12021,6 +12045,12 @@ function closeQuittung(){
 }
 
 function renderQuittungUebersicht(datum){
+  // v23.26: Quittungsdatum aus barcodeEinkaufState übernehmen wenn kein Datum übergeben
+  if(!datum||datum===todayISO()){
+    if(barcodeEinkaufState&&barcodeEinkaufState.quittungDatum){
+      datum=barcodeEinkaufState.quittungDatum;
+    }
+  }
   const body=document.getElementById('quittung-body');
   // Trainingsmodus-Banner oben einfügen
   const qbody=document.getElementById('quittung-body');
@@ -12059,11 +12089,13 @@ function renderQuittungUebersicht(datum){
   // Normaler Modus: Zeige Artikel-Liste
   if(!body)return; // Sicherheit falls körper weg ist
   const ge=quittungGeschaeft;
+  // v23.26: Datum in body.dataset.datum speichern damit Folgeaufrufe es weiterverwenden
+  if(datum)body.dataset.datum=datum;
   let h='<div style="display:flex;gap:10px;margin-bottom:14px">'+
     '<div style="background:var(--ol);border-radius:var(--rs);padding:10px 14px;font-size:13px;flex:1">'+
       '✓ <strong>'+quittungItems.length+' Artikel</strong> erkannt'+
       (ge?' · '+esc(ge):'')+
-      (datum?' · '+fmtDateCH(datum):'')+
+      ' · 📅 <input type="date" id="quittung-datum-input" value="'+esc(datum||todayISO())+'" onchange="document.getElementById(\'quittung-body\').dataset.datum=this.value" style="font-size:13px;border:none;background:transparent;color:var(--tx);cursor:pointer;padding:0;font-family:inherit"/>'+
     '</div>'+
     '<button onclick="openDebugInterface(debugState.rawResponse)" style="background:var(--ac);color:#fff;border:none;padding:10px 14px;border-radius:var(--rs);cursor:pointer;font-weight:600;font-size:13px;white-space:nowrap">🔧 Debug</button>'+
   '</div>';
@@ -12356,8 +12388,9 @@ function saveFullArtikelDialog(){
   
   document.getElementById('full-artikel-dlg').remove();
   toast('✓ '+name+' erstellt');
-  // Zurück zur Quittung
-  renderQuittungUebersicht(todayISO());
+  // Zurück zur Quittung – v23.26: Quittungsdatum beibehalten
+  const _datum=document.getElementById('quittung-body')?document.getElementById('quittung-body').dataset.datum:'';
+  renderQuittungUebersicht(_datum||barcodeEinkaufState.quittungDatum||todayISO());
 }
 
 function autoConfirmQuittungArtikel(idx){
