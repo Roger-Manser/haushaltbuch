@@ -524,7 +524,24 @@
         "generic_name": ""
       },
       "addedAt": 1794655288321
+    },
+    "4056489540168": {
+      "barcode": "4056489540168",
+      "name": "Mandeln gestiftet",
+      "marke": "Belbake",
+      "kategorien": "Mandeln",
+      "description": "Mandeln gestiftet",
+      "image": "https://images.openfoodfacts.org/images/products/405/648/954/0168/front_de.9.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "Mandeln gestiftet",
+        "brands": "Belbake, Lidl",
+        "categories": "Mandeln",
+        "quantity": "200g",
+        "generic_name": "Mandeln blanchiert und gestiftet"
+      },
+      "addedAt": 1794655309817
     }
   },
-  "lastUpdated": 1794655288322
+  "lastUpdated": 1794655309818
 }
