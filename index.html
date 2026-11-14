@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.26 — Quittungsdatum vom Kassenbon verwenden -->
+<!-- HAUSHALTBUCH v23.29 — Verlauf löschen: kaufdatum bleibt erhalten -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.26"/>
+<meta name="app-version" content="23.29"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.26';
+const APP_VERSION='23.29';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,9 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.29',d:'14.11.2026',items:['🐛 BUGFIX: Verlauf-Eintrag löschen verschob Artikel fälschlicherweise auf heute — kaufdatum bleibt jetzt unverändert','✅ Gesamtpreis in der Logbuch-Gruppe erscheint wieder korrekt']},
+  {v:'23.28',d:'14.11.2026',items:['🗑️ Verlauf-Eintrag löschen: zugehörige Packung wird nun automatisch mitgelöscht und Bestand neu berechnet','🔢 Packungen-Anzeige: Floating-Point-Fehler behoben (z.B. «0.5439999...g» → «0.544 g»)']},
+  {v:'23.27',d:'14.11.2026',items:['🐛 Gewichtsartikel (g/kg/ml/l): «≈ 544 kg gesamt» und «1 kg pro g» nicht mehr angezeigt (packInfo/packTotal deaktiviert für Gewichtseinheiten)','📐 Menge-Eingabefeld im Korrektur-Dialog breiter (min-width:80px) — besser auf Mobile','🏷️ Einheit-Selector im Korrektur-Dialog feste Breite 72px']},
   {v:'23.26',d:'14.11.2026',items:['📅 Quittungsscan: Einkaufsdatum vom Kassenbon wird automatisch erkannt und verwendet','✏️ Datum ist in der Quittungs-Übersicht editierbar (falls KI falsch erkannt hat)','🕐 Nützlich wenn Quittungen erst später eingescannt werden']},
   {v:'23.25',d:'14.11.2026',items:['➖ Ausbuchen direkt in der Artikelliste: «−» Button in jeder Zeile öffnet den Ausgangs-Dialog (Grund: Verbraucht / Korrektur)','⚖️ Gewichtsartikel: Menge-Dialog mit Einheit-Selector','🔢 Bestand-Badge in der Liste ist jetzt direkt antippbar für Bestand-Korrektur']},
   {v:'23.24',d:'14.11.2026',items:['⚖️ Gewichtsartikel (kg/g/ml/l): Klick auf Bestand öffnet jetzt den Einheit-Dialog (mit Einheit-Selector, grossen Eingabefeldern und Preis)','📝 Editiermodus: Einheit-Select neben Anfangsbestand optisch hervorgehoben (blau umrandet, fett)','🔢 Nicht-Gewichtsartikel: Einheit wird direkt neben dem Bestand-Eingabefeld angezeigt']},
@@ -2749,7 +2752,7 @@ function showDet(id){
     '<div class="ir" style="border-bottom:1px solid var(--bd);font-weight:600;font-size:13px">📦 Packungen ('+sortedPack.length+')</div>'+
     sortedPack.map((p,i)=>{
       const fi=i===0?'👉 ':'';
-      return '<div class="ir"><div style="flex:1"><div style="font-size:13px;font-weight:500">'+fi+p.menge+' '+esc(a.einheit||'Stk')+'</div>'+
+      return '<div class="ir"><div style="flex:1"><div style="font-size:13px;font-weight:500">'+fi+fmtMenge(p.menge)+' '+esc(a.einheit||'Stk')+'</div>'+
         '<div style="font-size:11px;color:var(--t2)">Kauf: '+(p.kaufdatum?fmtDateCH(p.kaufdatum):'—')+(i===0?' · zuerst verbrauchen':'')+'</div></div>'+
       '</div>';
     }).join('')+
@@ -2912,6 +2915,17 @@ async function delPreisHistorie(artikelId,idx){
   const h=a.preisHistorie[idx];
   if(!await confirmDialog('Preis-Eintrag CHF '+h.preis.toFixed(2)+' vom '+fmtDateCH(h.datum)+' löschen?','Ja, löschen','Nein, behalten'))return;
   a.preisHistorie.splice(idx,1);
+  // v23.28: Zugehörige Packung mitlöschen (bei Eingangs-Einträgen)
+  // v23.29: syncMenge() NICHT verwenden — das würde a.kaufdatum auf heute überschreiben
+  //         und den Artikel in die falsche Logbuch-Gruppe verschieben
+  if(h.typ==='ein'&&h.datum&&a.packungen&&a.packungen.length){
+    const vorher=a.packungen.length;
+    a.packungen=a.packungen.filter(p=>!(p.kaufdatum===h.datum&&Math.abs((p.menge||0)-(h.menge||0))<0.001));
+    if(a.packungen.length<vorher){
+      // Nur Menge neu berechnen, kaufdatum/ablaufdatum NICHT ändern
+      a.menge=a.packungen.reduce((s,p)=>s+(p.menge||0),0);
+    }
+  }
   // Standardpreis auf letzten Nicht-Aktionspreis setzen
   const letzte=a.preisHistorie.filter(e=>!e.aktion);
   if(letzte.length)a.preis=letzte[letzte.length-1].preis;
@@ -3240,8 +3254,8 @@ function chgBMengeDialog(a,typ){
       '<div class="tc" style="margin-bottom:16px">'+
         '<div class="fd"><label>Menge</label>'+
           '<div class="ur">'+
-            '<input type="text" inputmode="decimal" id="chgb-menge" value="'+defVal+'" placeholder="z.B. 0.5" oninput="chgbKalkulieren('+a.id+')" style="flex:1;min-width:0;padding:12px 10px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:19px;text-align:right;font-weight:700"/>'+
-            '<select id="chgb-einheit" onchange="chgbEinheitWechsel('+a.id+')" style="padding:12px 8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;min-width:65px">'+einheitSelect+'</select>'+
+            '<input type="text" inputmode="decimal" id="chgb-menge" value="'+defVal+'" placeholder="z.B. 0.5" oninput="chgbKalkulieren('+a.id+')" style="flex:1;min-width:80px;padding:12px 10px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:19px;text-align:right;font-weight:700"/>'+
+            '<select id="chgb-einheit" onchange="chgbEinheitWechsel('+a.id+')" style="padding:12px 8px;border:1px solid var(--bd);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-size:16px;width:72px;flex-shrink:0">'+einheitSelect+'</select>'+
           '</div>'+
         '</div>'+
         (istGewichtChgb?
@@ -12735,6 +12749,8 @@ function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').
 function packInfo(a){
   const pmNum=parseFloat(a.packMenge);
   if(!pmNum||pmNum<=0||isNaN(pmNum))return '';
+  // v23.27: Gewichtsartikel haben keine sinnvolle Packungsgrösse
+  if(['kg','g','ml','l'].includes(a.einheit||''))return '';
   const pm=pmNum%1===0?pmNum:pmNum.toFixed(1);
   let pe=a.packEinheit;
   if(!pe||pe==='undefined'||pe==='null')pe='dl';
@@ -12743,9 +12759,11 @@ function packInfo(a){
 }
 function packTotal(a){
   if(!a.packMenge||a.packMenge<=0)return '';
+  // v23.27: Für Gewichtsartikel (g/kg/ml/l) ergibt packTotal keinen Sinn — weglassen
+  if(['kg','g','ml','l'].includes(a.einheit||''))return '';
   const total=a.menge*a.packMenge;
   const tot=total%1===0?total:total.toFixed(1);
-  return tot+' '+(a.packEinheit||'dl')+' gesamt';
+  return tot+' '+(a.packEinheit||a.einheit||'dl')+' gesamt';
 }
 function parseDecimal(v){return parseFloat(String(v).replace(',','.'))||0;}
 const DEC_UNITS=['kg','g','l','dl','ml'];
