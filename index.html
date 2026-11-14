@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.32 — Quittungsscan: KI-Antwort im Toast für Diagnose -->
+<!-- HAUSHALTBUCH v23.34 — Quittungsscan: max_tokens 1500→4096 -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.32"/>
+<meta name="app-version" content="23.34"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.32';
+const APP_VERSION='23.34';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,8 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.34',d:'14.11.2026',items:['🐛 Quittungsscan: max_tokens von 1500 auf 4096 erhöht — grosse Quittungen wurden mitten im JSON abgeschnitten → Parse-Fehler']},
+  {v:'23.33',d:'14.11.2026',items:['🔍 Quittungsscan: Diagnose-Toast zeigt Start UND Ende der KI-Antwort; BOM-Zeichen werden entfernt']},
   {v:'23.32',d:'14.11.2026',items:['🔍 Quittungsscan: Bei Parse-Fehler zeigt der Toast jetzt die ersten 80 Zeichen der KI-Antwort — hilft bei der Diagnose']},
   {v:'23.31',d:'14.11.2026',items:['🐛 Quittungsscan: JSON Parse Fehler behoben — KI-Antwort wird jetzt robust extrahiert (erstes { bis letztes })','📄 PDF-Support: PDFs werden korrekt als type:document an die Claude API gesendet','✅ Galerie-Auswahl akzeptiert jetzt auch PDF-Dateien']},
   {v:'23.30',d:'14.11.2026',items:['📄 Quittungsscan: PDF-Uploads werden nun korrekt verarbeitet (Claude API type:document statt type:image)','✅ Galerie-Auswahl akzeptiert jetzt auch PDF-Dateien','🐛 Fix: JSON Parse Fehler beim PDF-Upload behoben']},
@@ -11367,7 +11369,7 @@ async function handleQuittungFile(e) {
         },
         body: JSON.stringify({
           model: 'claude-sonnet-4-6',
-          max_tokens: 1500,
+          max_tokens: 4096, // v23.34: von 1500 auf 4096 erhöht — grosse Quittungen wurden abgeschnitten
           messages: [{
             role: 'user',
             content: [
@@ -11406,10 +11408,16 @@ async function handleQuittungFile(e) {
     toast('📝 Parse KI-Antwort...');
 
     // v23.31: Robusteres JSON-Extrahieren — erstes { bis letztes } herausschneiden
-    let clean = text.replace(/```json|```/g, '').trim();
+    // v23.33: Auch BOM und unsichtbare Zeichen entfernen; indexOf nach replace
+    let clean = text.replace(/```json|```/g, '').replace(/^﻿/, '').trim();
     const jStart = clean.indexOf('{');
     const jEnd = clean.lastIndexOf('}');
-    if (jStart !== -1 && jEnd > jStart) clean = clean.slice(jStart, jEnd + 1);
+    if (jStart !== -1 && jEnd > jStart) {
+      clean = clean.slice(jStart, jEnd + 1);
+    } else {
+      // Fallback: alles was nicht JSON-Zeichen sind vom Anfang/Ende wegschneiden
+      clean = clean.replace(/^[^{]*/, '').replace(/[^}]*$/, '');
+    }
 
     // Schritt 5: JSON parsen
     let parsed;
@@ -11421,9 +11429,10 @@ async function handleQuittungFile(e) {
     } catch (pe) {
       console.error('[Quittung] JSON Parse Fehler:', pe.message);
       console.error('[Quittung] Raw text:', text.slice(0, 300));
-      // v23.32: Antwort-Anfang im Toast zeigen für Diagnose
-      const preview = text.slice(0, 80).replace(/\n/g, ' ');
-      toast('❌ KI: «' + preview + '»');
+      // v23.32: Antwort-Anfang + Ende im Toast zeigen für Diagnose
+      const preview = text.slice(0, 60).replace(/\n/g, ' ');
+      const ending = text.slice(-30).replace(/\n/g, ' ');
+      toast('❌ Start: «' + preview + '» … Ende: «' + ending + '»');
       barcodeEinkaufState.quittungText = '';
       return;
     }
