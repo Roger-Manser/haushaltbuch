@@ -13961,13 +13961,6 @@
       "checked": false,
       "quelle": "alexa",
       "alexaId": "mw6lskc1w26sep"
-    },
-    {
-      "id": 1794649158539,
-      "text": "Hackfleisch zweierlei",
-      "menge": "1",
-      "einheit": "g",
-      "checked": false
     }
   ],
   "einkaufOverrides": {
@@ -30314,5 +30307,5 @@
       "zeit": 1794649234338
     }
   ],
-  "aktualisiert": "2026-11-14T09:46:32.913Z"
+  "aktualisiert": "2026-11-14T10:10:39.801Z"
 }
