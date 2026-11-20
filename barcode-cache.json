@@ -628,16 +628,16 @@
     },
     "4061462824692": {
       "barcode": "4061462824692",
-      "name": "",
-      "marke": "",
+      "name": "Französischer Brie",
+      "marke": "Roi de trefle",
       "kategorien": "",
       "description": "",
-      "image": "",
-      "source": "Gescannt (noch nicht gesucht)",
+      "image": "https://images.openfoodfacts.org/images/products/406/146/282/4692/front_de.4.400.jpg",
+      "source": "Open Food Facts",
       "offData": {},
       "addedAt": 1795193651744,
-      "scannedOnly": true
+      "scannedOnly": false
     }
   },
-  "lastUpdated": 1795193651746
+  "lastUpdated": 1795193755865
 }
