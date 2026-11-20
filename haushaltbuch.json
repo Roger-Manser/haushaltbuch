@@ -14772,6 +14772,15 @@
       "menge": "1",
       "einheit": "Stk",
       "checked": false
+    },
+    {
+      "id": 1795157196806,
+      "text": "Cottage Cheese / Hüttenkäse",
+      "artikelId": 279,
+      "kat": "Milchprodukte",
+      "menge": "1",
+      "einheit": "Pkg",
+      "checked": false
     }
   ],
   "einkaufOverrides": {
@@ -31833,5 +31842,5 @@
       "zeit": 1795154972391
     }
   ],
-  "aktualisiert": "2026-11-20T06:14:59.792Z"
+  "aktualisiert": "2026-11-20T06:46:57.224Z"
 }
