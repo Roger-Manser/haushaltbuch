@@ -1465,15 +1465,6 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
-        },
-        {
-          "datum": "2026-11-20",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Lidl"
         }
       ],
       "packungen": [],
@@ -14780,6 +14771,13 @@
       "kat": "Milchprodukte",
       "menge": "1",
       "einheit": "Pkg",
+      "checked": false
+    },
+    {
+      "id": 1795170851987.5684,
+      "text": "Meerrettich",
+      "menge": "1",
+      "einheit": "Stk",
       "checked": false
     }
   ],
@@ -31752,19 +31750,6 @@
     },
     {
       "t": "aus",
-      "aid": 33,
-      "name": "Dattelcherrytomaten",
-      "lager": "Kühlschrank oben",
-      "kat": "Gemüse & Früchte",
-      "menge": 1,
-      "einheit": "Pkg",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-11-20",
-      "zeit": 1795154895234
-    },
-    {
-      "t": "aus",
       "aid": 38,
       "name": "Vollrahm",
       "lager": "Kühlschrank oben",
@@ -31840,7 +31825,150 @@
       "aktion": false,
       "datum": "2026-11-20",
       "zeit": 1795154972391
+    },
+    {
+      "aid": 33,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 37,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 38,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 67,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 130,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 222,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 236,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Gemüse & Früchte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 249,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 333,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 334,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 337,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 338,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
+    },
+    {
+      "aid": 339,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Lidl"
     }
   ],
-  "aktualisiert": "2026-11-20T06:46:57.224Z"
+  "aktualisiert": "2026-11-20T10:35:57.609Z"
 }
