@@ -637,7 +637,18 @@
       "offData": {},
       "addedAt": 1795193651744,
       "scannedOnly": false
+    },
+    "4099200011547": {
+      "barcode": "4099200011547",
+      "name": "Heringsfilets, asiatische Art",
+      "marke": "Almare",
+      "kategorien": "",
+      "description": "",
+      "image": "https://images.openfoodfacts.org/images/products/409/920/001/1547/front_de.26.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {},
+      "addedAt": 1795194153831
     }
   },
-  "lastUpdated": 1795193858931
+  "lastUpdated": 1795194153837
 }
