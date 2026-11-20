@@ -592,15 +592,15 @@
     },
     "4069366244783": {
       "barcode": "4069366244783",
-      "name": "",
+      "name": "Bresola Rindfleischaufschnitt",
       "marke": "",
       "kategorien": "",
       "description": "",
       "image": "",
-      "source": "Gescannt (noch nicht gesucht)",
+      "source": "Open Food Facts",
       "offData": {},
       "addedAt": 1795193569407,
-      "scannedOnly": true
+      "scannedOnly": false
     },
     "4061464218741": {
       "barcode": "4061464218741",
@@ -639,5 +639,5 @@
       "scannedOnly": false
     }
   },
-  "lastUpdated": 1795193827767
+  "lastUpdated": 1795193858931
 }
