@@ -14256,7 +14256,7 @@
       "id": 339,
       "name": "Maasdam Moelleux Käse",
       "marke": "Milbona",
-      "kat": "Diverses",
+      "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Lidl",
       "menge": 0,
@@ -14266,7 +14266,7 @@
       "barcodes": [],
       "preis": 2.59,
       "packMenge": 0,
-      "packEinheit": "",
+      "packEinheit": "dl",
       "kaufdatum": "2026-11-14",
       "notiz": "Von Quittung erstellt (Open Food Facts)",
       "foto": "https://images.openfoodfacts.org/images/products/000/002/061/4096/front_fr.41.400.jpg",
@@ -14291,12 +14291,22 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-14",
+          "preis": 2.59,
+          "menge": 0,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "quittungAliase": [
         "Maasdamer Delacrème"
       ],
-      "letzteEingangHeute": "12:20"
+      "letzteEingangHeute": "12:20",
+      "ablaufdatum": ""
     },
     {
       "id": 340,
@@ -14711,7 +14721,7 @@
       "text": "Forellenfilets",
       "artikelId": 32,
       "kat": "Fleisch & Fisch",
-      "menge": "1",
+      "menge": "2",
       "einheit": "Stk",
       "checked": false
     },
@@ -14738,6 +14748,27 @@
       "text": "Maasdam Moelleux Käse",
       "artikelId": 339,
       "kat": "Diverses",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1795155144926.0674,
+      "text": "Pastateig",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1795155156325.6135,
+      "text": "Dill",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1795155246399.789,
+      "text": "Petersilie",
       "menge": "1",
       "einheit": "Stk",
       "checked": false
@@ -31802,5 +31833,5 @@
       "zeit": 1795154972391
     }
   ],
-  "aktualisiert": "2026-11-20T06:09:37.874Z"
+  "aktualisiert": "2026-11-20T06:14:59.792Z"
 }
