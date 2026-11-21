@@ -592,27 +592,27 @@
     },
     "4069366244783": {
       "barcode": "4069366244783",
-      "name": "Bresola Rindfleischaufschnitt",
+      "name": "",
       "marke": "",
       "kategorien": "",
       "description": "",
       "image": "",
-      "source": "Open Food Facts",
+      "source": "Gescannt (noch nicht gesucht)",
       "offData": {},
       "addedAt": 1795193569407,
-      "scannedOnly": false
+      "scannedOnly": true
     },
     "4061464218741": {
       "barcode": "4061464218741",
-      "name": "Frischkäse grüner Pfeffer",
-      "marke": "Fraicho",
+      "name": "",
+      "marke": "",
       "kategorien": "",
       "description": "",
-      "image": "https://images.openfoodfacts.org/images/products/406/146/421/8741/front_de.3.400.jpg",
-      "source": "Open Food Facts",
+      "image": "",
+      "source": "Gescannt (noch nicht gesucht)",
       "offData": {},
       "addedAt": 1795193599101,
-      "scannedOnly": false
+      "scannedOnly": true
     },
     "4061463067807": {
       "barcode": "4061463067807",
@@ -650,5 +650,5 @@
       "addedAt": 1795194153831
     }
   },
-  "lastUpdated": 1795194153837
+  "lastUpdated": 1795251464915
 }
