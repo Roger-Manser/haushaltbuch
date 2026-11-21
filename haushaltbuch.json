@@ -14892,22 +14892,22 @@
     {
       "id": 348,
       "name": "463875 Fraicho 150g",
-      "marke": "",
+      "marke": "Fraicho",
       "kat": "Diverses",
       "lager": "Kühlschrank oben",
       "kaufort": "Aldi",
       "menge": 1,
-      "einheit": "Stk",
+      "einheit": "g",
       "mindest": 0,
       "barcode": "4061464218741",
       "barcodes": [],
       "preis": 0.99,
-      "packMenge": 0,
-      "packEinheit": "",
+      "packMenge": 150,
+      "packEinheit": "g",
       "kaufdatum": "2026-11-20",
       "notiz": "Von Quittung erstellt",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1795253485569_off.jpg?t=1795253489611",
+      "fotoPath": "1795253485569_off.jpg",
       "packungen": [
         {
           "id": 12,
@@ -14926,10 +14926,20 @@
           "aktion": false,
           "kaufort": "Aldi",
           "betrag": 0.99
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 0.99,
+          "menge": 1,
+          "einheit": "g",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
         }
       ],
       "quittungAliase": [],
-      "letzteEingangHeute": "17:53"
+      "letzteEingangHeute": "17:53",
+      "ablaufdatum": ""
     },
     {
       "id": 349,
@@ -14948,8 +14958,8 @@
       "packEinheit": "dl",
       "kaufdatum": "2026-11-20",
       "notiz": "Von Quittung erstellt",
-      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1795252526456_1000074314.jpg?t=1795252533704",
-      "fotoPath": "1795252526456_1000074314.jpg",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1795253472196_1000074314.jpg?t=1795253477198",
+      "fotoPath": "1795253472196_1000074314.jpg",
       "packungen": [
         {
           "id": 14,
@@ -15062,6 +15072,29 @@
       "checked": false,
       "quelle": "alexa",
       "alexaId": "mw6lskc1w26sep"
+    },
+    {
+      "id": 1795155144926.0674,
+      "text": "Pastateig",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1795155156325.6135,
+      "text": "Dill",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1795157196806,
+      "text": "Cottage Cheese / Hüttenkäse",
+      "artikelId": 279,
+      "kat": "Milchprodukte",
+      "menge": "1",
+      "einheit": "Pkg",
+      "checked": false
     },
     {
       "id": 1795170851987.5684,
@@ -32596,5 +32629,5 @@
       "kaufort": "Aldi"
     }
   ],
-  "aktualisiert": "2026-11-21T09:15:39.745Z"
+  "aktualisiert": "2026-11-21T09:31:34.272Z"
 }
