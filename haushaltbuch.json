@@ -6,14 +6,14 @@
       "marke": "Landi",
       "kat": "Genussmittel",
       "lager": "Schlof",
-      "menge": 3,
+      "menge": 5,
       "einheit": "Kiste",
       "mindest": 2,
       "barcode": "7611703611962",
       "preis": 25.2,
       "packMenge": 6,
       "packEinheit": "Flasche",
-      "kaufdatum": "2026-10-19",
+      "kaufdatum": "2026-11-20",
       "ablaufdatum": "2052-09-30",
       "notiz": "DE - Nährwert und Zutatenverzeichnis Zutaten: Trauben, rektifiziertes Traubenmostkonzentrat, Saccharose, Säureregulatoren: Apfelsäure, Milchsäure, Weinsäure, Stabilisatoren: Citronensäure, Hefe-Mannoproteine zur Weinsteinstabilisierung, Kaliumpolyaspartat, Metaweinsäure, Antioxidantien: Kaliumsorbat, L-Ascorbinsäure, Sulfite, Gase und Packgase: unter Schutzatmosphäre abgefüllt\n 100 ml enthalten durchschnittlich Energie Fett ..davon gesättigte Fettsäuren Kohlenhydrate ..davon Zucker Eiweiss Salz 307 kJ (73 kcal) 0 g 0 g 1.3 g 0.5 g 0 g 0 g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1781961271197_17819612557295906724604013972.jpg?t=1791130431730",
@@ -178,6 +178,16 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 25.2,
+          "betrag": 50.4,
+          "menge": 2,
+          "einheit": "Kiste",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
       "packungen": [
@@ -192,6 +202,12 @@
           "menge": 1,
           "kaufdatum": "2026-10-19",
           "ablaufdatum": ""
+        },
+        {
+          "id": 4,
+          "menge": 2,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
         }
       ],
       "kaufort": "Landi",
@@ -199,7 +215,8 @@
         "7611703211964"
       ],
       "alias": [
-        "25998 Grüner Veltliner 6x75cl"
+        "25998 Grüner Veltliner 6x75cl",
+        "25993 Grüner Veltliner 6x75cl"
       ]
     },
     {
@@ -1244,14 +1261,14 @@
       "marke": "Lidl",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "menge": 0,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "4056489147268",
       "preis": 2.95,
       "packMenge": 125,
       "packEinheit": "g",
-      "kaufdatum": "2026-11-05",
+      "kaufdatum": "2026-11-20",
       "ablaufdatum": "2026-08-30",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782551885501_off.jpg?t=1791130431730",
@@ -1347,13 +1364,31 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 2.95,
+          "betrag": 2.95,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
         }
       ],
-      "kaufort": "Lidl",
-      "packungen": [],
+      "kaufort": "Aldi",
+      "packungen": [
+        {
+          "id": 16,
+          "menge": 1,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
+        }
+      ],
       "alias": [
         "ASC Ger. Forellenfilets",
-        "ASC Lachsforelle"
+        "ASC Lachsforelle",
+        "113828 Forellenfil. 125g"
       ]
     },
     {
@@ -2949,15 +2984,15 @@
       "marke": "",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "kaufort": "Lidl",
-      "menge": 0,
+      "kaufort": "Aldi",
+      "menge": 2,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "20238469",
       "preis": 4.95,
       "packMenge": 3,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-11-05",
+      "kaufdatum": "2026-11-20",
       "ablaufdatum": "2026-09-27",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783147999247_off.jpg?t=1791130431730",
@@ -3025,11 +3060,35 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 4.95,
+          "betrag": 4.95,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
         }
       ],
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 10,
+          "menge": 1,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 11,
+          "menge": 1,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
+        }
+      ],
       "alias": [
-        "Salametto Milano"
+        "Salametto Milano",
+        "589368 Salametti 3x70g"
       ],
       "quittungAliase": [
         "Salametto Milano"
@@ -3225,15 +3284,15 @@
       "marke": "",
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
-      "kaufort": "Lidl",
-      "menge": 0,
+      "kaufort": "Aldi",
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
-      "preis": 0.99,
+      "preis": 2.99,
       "packMenge": 2,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-08-13",
+      "kaufdatum": "2026-11-20",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783249810246_17832498025133846087262185417538.jpg?t=1791130431730",
@@ -3265,10 +3324,30 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 2.99,
+          "betrag": 2.99,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
         }
       ],
-      "packungen": [],
-      "ownCode": "HB-000069"
+      "packungen": [
+        {
+          "id": 15,
+          "menge": 1,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
+        }
+      ],
+      "ownCode": "HB-000069",
+      "alias": [
+        "588578 Küchenkräuter"
+      ]
     },
     {
       "id": 70,
@@ -5823,20 +5902,27 @@
       "marke": "",
       "kat": "Reinigung & Pflege",
       "lager": "Küche",
-      "kaufort": "Coop",
-      "menge": 0,
+      "kaufort": "Landi",
+      "menge": 1,
       "einheit": "Rolle",
       "mindest": 1,
       "barcode": "7629999001688",
       "preis": 20,
       "packMenge": 10,
       "packEinheit": "Stk",
-      "kaufdatum": "2026-07-18",
+      "kaufdatum": "2026-11-20",
       "ablaufdatum": "",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1784370238968_17843702292053351732228893764645.jpg?t=1791130431730",
       "fotoPath": "1784370238968_17843702292053351732228893764645.jpg",
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 2,
+          "menge": 1,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
+        }
+      ],
       "preisHistorie": [
         {
           "datum": "2026-07-18",
@@ -5855,9 +5941,22 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 20,
+          "betrag": 20,
+          "menge": 1,
+          "einheit": "Rolle",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
-      "barcodes": []
+      "barcodes": [],
+      "alias": [
+        "Kehrichtsack A-Region 35lt"
+      ]
     },
     {
       "id": 137,
@@ -8634,20 +8733,27 @@
       "marke": "",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "kaufort": "Lidl",
-      "menge": 0,
+      "kaufort": "Aldi",
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "",
       "preis": 6.89,
       "packMenge": 330,
       "packEinheit": "g",
-      "kaufdatum": "2026-11-05",
+      "kaufdatum": "2026-11-20",
       "ablaufdatum": "2026-09-23",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1782542205864_off.jpg?t=1791130431730",
       "fotoPath": "1782542205864_off.jpg",
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 7,
+          "menge": 1,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
+        }
+      ],
       "preisHistorie": [
         {
           "datum": "2026-06-27",
@@ -8849,6 +8955,16 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 6.89,
+          "betrag": 6.89,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
         }
       ],
       "barcodes": [
@@ -8860,7 +8976,8 @@
       ],
       "alias": [
         "Hähnchenbr. Schnitzel dü",
-        "Hähnchenbrustschnitzel dü"
+        "Hähnchenbrustschnitzel dü",
+        "290581 Poulet Schnitzel"
       ]
     },
     {
@@ -8903,7 +9020,10 @@
           "kaufort": "Lidl"
         }
       ],
-      "barcodes": []
+      "barcodes": [],
+      "alias": [
+        "113930 MSC Lachsfilet 200g"
+      ]
     },
     {
       "id": 225,
@@ -11596,8 +11716,8 @@
       "marke": "Hirz",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "kaufort": "Lidl",
-      "menge": 0,
+      "kaufort": "Aldi",
+      "menge": 1,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "7610100504686",
@@ -11605,7 +11725,7 @@
       "preis": 1.99,
       "packMenge": 200,
       "packEinheit": "g",
-      "kaufdatum": "2026-11-05",
+      "kaufdatum": "2026-11-20",
       "ablaufdatum": "2026-09-20",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1788593214799_17885932018743395167375184480276.jpg?t=1791130431730",
@@ -11656,12 +11776,30 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 1.99,
+          "betrag": 1.99,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
         }
       ],
       "letzteEingangHeute": "09:27",
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 17,
+          "menge": 1,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
+        }
+      ],
       "alias": [
-        "Nestlé Hirz Hüttenkäse S"
+        "Nestlé Hirz Hüttenkäse S",
+        "603631 Hirz Hüttenkäse"
       ]
     },
     {
@@ -12180,16 +12318,16 @@
       "marke": "Milbona",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "kaufort": "Lidl",
-      "menge": 0,
+      "kaufort": "Aldi",
+      "menge": 1,
       "einheit": "Stange",
       "mindest": 0,
       "barcode": "4056489973911",
       "barcodes": [],
-      "preis": 2.25,
+      "preis": 2.99,
       "packMenge": 400,
       "packEinheit": "g",
-      "kaufdatum": "2026-09-17",
+      "kaufdatum": "2026-11-20",
       "ablaufdatum": "2026-10-08",
       "notiz": "Nutri-Score D\nPro 100g/ml: 251 kcal, Fett 19g, KH 1g, Eiweiss 19g",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1789654642830_off.jpg?t=1791130431730",
@@ -12212,10 +12350,30 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 2.99,
+          "betrag": 2.99,
+          "menge": 1,
+          "einheit": "Stange",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
         }
       ],
       "letzteEingangHeute": "16:18",
-      "packungen": []
+      "packungen": [
+        {
+          "id": 13,
+          "menge": 1,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
+        }
+      ],
+      "alias": [
+        "288530 Mozzarella 300g"
+      ]
     },
     {
       "id": 293,
@@ -12435,15 +12593,15 @@
       "kat": "Genussmittel",
       "lager": "Schlof",
       "kaufort": "Landi",
-      "menge": 3,
+      "menge": 5,
       "einheit": "Kiste",
       "mindest": 0,
       "barcode": "7611330258981",
       "barcodes": [],
-      "preis": 0,
+      "preis": 27,
       "packMenge": 6,
       "packEinheit": "Flasche",
-      "kaufdatum": "2026-10-24",
+      "kaufdatum": "2026-11-20",
       "ablaufdatum": "2049-09-30",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1789810025163_17898100158268291851405590605948.jpg?t=1791130431730",
@@ -12485,6 +12643,16 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Landi"
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 27,
+          "betrag": 54,
+          "menge": 2,
+          "einheit": "Kiste",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Landi"
         }
       ],
       "letzteEingangHeute": "11:28",
@@ -12499,6 +12667,12 @@
           "id": 2,
           "menge": 2,
           "kaufdatum": "2026-10-24",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 3,
+          "menge": 2,
+          "kaufdatum": "2026-11-20",
           "ablaufdatum": ""
         }
       ],
@@ -14146,20 +14320,33 @@
       "marke": "Carnesi",
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
-      "kaufort": "Lidl",
-      "menge": 0,
+      "kaufort": "Aldi",
+      "menge": 2,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "20828387",
       "barcodes": [],
-      "preis": 5.39,
+      "preis": 6.75,
       "packMenge": 350,
       "packEinheit": "g",
-      "kaufdatum": "2026-11-14",
+      "kaufdatum": "2026-11-20",
       "notiz": "Von Quittung erstellt (Open Food Facts)",
       "foto": "https://images.openfoodfacts.org/images/products/000/002/082/8387/front_fr.3.400.jpg",
       "fotoPath": "",
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 5,
+          "menge": 1,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
+        },
+        {
+          "id": 6,
+          "menge": 1,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
+        }
+      ],
       "preisHistorie": [
         {
           "datum": "2026-11-14",
@@ -14188,13 +14375,26 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 6.75,
+          "betrag": 6.75,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
         }
       ],
       "quittungAliase": [
         "Hähnchenbrustinnenf."
       ],
       "letzteEingangHeute": "12:19",
-      "ablaufdatum": ""
+      "ablaufdatum": "",
+      "alias": [
+        "288375 Pouletbrust 300g"
+      ]
     },
     {
       "id": 338,
@@ -14249,20 +14449,27 @@
       "marke": "Milbona",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "kaufort": "Lidl",
-      "menge": 0,
+      "kaufort": "Aldi",
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 0,
       "barcode": "20614096",
       "barcodes": [],
-      "preis": 2.59,
+      "preis": 2.79,
       "packMenge": 0,
       "packEinheit": "dl",
-      "kaufdatum": "2026-11-14",
+      "kaufdatum": "2026-11-20",
       "notiz": "Von Quittung erstellt (Open Food Facts)",
       "foto": "https://images.openfoodfacts.org/images/products/000/002/061/4096/front_fr.41.400.jpg",
       "fotoPath": "",
-      "packungen": [],
+      "packungen": [
+        {
+          "id": 8,
+          "menge": 1,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
+        }
+      ],
       "preisHistorie": [
         {
           "datum": "2026-11-14",
@@ -14291,13 +14498,26 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 2.79,
+          "betrag": 2.79,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
         }
       ],
       "quittungAliase": [
         "Maasdamer Delacrème"
       ],
       "letzteEingangHeute": "12:20",
-      "ablaufdatum": ""
+      "ablaufdatum": "",
+      "alias": [
+        "623696 Maasdamer Sch."
+      ]
     },
     {
       "id": 340,
@@ -14626,6 +14846,132 @@
       "quittungAliase": [],
       "letzteEingangHeute": "12:30",
       "ablaufdatum": ""
+    },
+    {
+      "id": 347,
+      "name": "757425 Bresaola 80g",
+      "marke": "",
+      "kat": "Diverses",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Aldi",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4069366244783",
+      "barcodes": [],
+      "preis": 2.17,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-11-20",
+      "notiz": "Von Quittung erstellt",
+      "foto": "",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 9,
+          "menge": 1,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-11-20",
+          "preis": 2.17,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Aldi",
+          "betrag": 2.17
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "17:52"
+    },
+    {
+      "id": 348,
+      "name": "463875 Fraicho 150g",
+      "marke": "",
+      "kat": "Diverses",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Aldi",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4061464218741",
+      "barcodes": [],
+      "preis": 0.99,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-11-20",
+      "notiz": "Von Quittung erstellt",
+      "foto": "",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 12,
+          "menge": 1,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-11-20",
+          "preis": 0.99,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi",
+          "betrag": 0.99
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "17:53"
+    },
+    {
+      "id": 349,
+      "name": "568665 Tomaten Spez. 300g",
+      "marke": "",
+      "kat": "Diverses",
+      "lager": "Kühlschrank oben",
+      "kaufort": "Aldi",
+      "menge": 1,
+      "einheit": "Stk",
+      "mindest": 0,
+      "barcode": "4061463067807",
+      "barcodes": [],
+      "preis": 2.49,
+      "packMenge": 0,
+      "packEinheit": "",
+      "kaufdatum": "2026-11-20",
+      "notiz": "Von Quittung erstellt",
+      "foto": "",
+      "fotoPath": "",
+      "packungen": [
+        {
+          "id": 14,
+          "menge": 1,
+          "kaufdatum": "2026-11-20",
+          "ablaufdatum": ""
+        }
+      ],
+      "preisHistorie": [
+        {
+          "datum": "2026-11-20",
+          "preis": 2.49,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi",
+          "betrag": 2.49
+        }
+      ],
+      "quittungAliase": [],
+      "letzteEingangHeute": "17:53"
     }
   ],
   "lagerorte": [
@@ -14708,42 +15054,6 @@
       "alexaId": "mw6lskc1w26sep"
     },
     {
-      "id": 1795154696370,
-      "text": "Forellenfilets",
-      "artikelId": 32,
-      "kat": "Fleisch & Fisch",
-      "menge": "2",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1795154705793,
-      "text": "Pouletbrust Minutenschnitzel",
-      "artikelId": 223,
-      "kat": "Fleisch & Fisch",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1795154743703,
-      "text": "Salametti Nostrani",
-      "artikelId": 130,
-      "kat": "Fleisch & Fisch",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1795154843746,
-      "text": "Maasdam Moelleux Käse",
-      "artikelId": 339,
-      "kat": "Diverses",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
       "id": 1795155144926.0674,
       "text": "Pastateig",
       "menge": "1",
@@ -14753,13 +15063,6 @@
     {
       "id": 1795155156325.6135,
       "text": "Dill",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1795155246399.789,
-      "text": "Petersilie",
       "menge": "1",
       "einheit": "Stk",
       "checked": false
@@ -31968,7 +32271,343 @@
       "k": "Milchprodukte",
       "aktion": false,
       "kaufort": "Lidl"
+    },
+    {
+      "t": "ein",
+      "aid": 136,
+      "name": "Gebührenkehrichtsack Region St. Gallen",
+      "lager": "Küche",
+      "kat": "Reinigung & Pflege",
+      "menge": 1,
+      "einheit": "Rolle",
+      "preis": 20,
+      "aktion": false,
+      "datum": "2026-11-20",
+      "zeit": 1795186809827
+    },
+    {
+      "t": "ein",
+      "aid": 298,
+      "name": "Weisswein Lemanic",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 2,
+      "einheit": "Kiste",
+      "preis": 27,
+      "aktion": false,
+      "datum": "2026-11-20",
+      "zeit": 1795186814828
+    },
+    {
+      "t": "ein",
+      "aid": 2,
+      "name": "Grüner Veltliner",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 2,
+      "einheit": "Kiste",
+      "preis": 25.2,
+      "aktion": false,
+      "datum": "2026-11-20",
+      "zeit": 1795186814828
+    },
+    {
+      "t": "ein",
+      "aid": 337,
+      "name": "Pouletfilets",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 6.75,
+      "aktion": false,
+      "datum": "2026-11-20",
+      "zeit": 1795193535385
+    },
+    {
+      "t": "ein",
+      "aid": 223,
+      "name": "Pouletbrust Minutenschnitzel",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 6.89,
+      "aktion": false,
+      "datum": "2026-11-20",
+      "zeit": 1795193535386
+    },
+    {
+      "t": "ein",
+      "aid": 339,
+      "name": "Maasdam Moelleux Käse",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.79,
+      "aktion": false,
+      "datum": "2026-11-20",
+      "zeit": 1795193535386
+    },
+    {
+      "t": "ein",
+      "aid": 347,
+      "name": "757425 Bresaola 80g",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.17,
+      "aktion": false,
+      "datum": "2026-11-20",
+      "zeit": 1795193569396
+    },
+    {
+      "t": "ein",
+      "aid": 65,
+      "name": "Salametti Milano",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 4.95,
+      "aktion": false,
+      "datum": "2026-11-20",
+      "zeit": 1795193569742
+    },
+    {
+      "t": "ein",
+      "aid": 348,
+      "name": "463875 Fraicho 150g",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0.99,
+      "aktion": false,
+      "datum": "2026-11-20",
+      "zeit": 1795193599099
+    },
+    {
+      "t": "ein",
+      "aid": 292,
+      "name": "Mozzarella",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stange",
+      "preis": 2.99,
+      "aktion": false,
+      "datum": "2026-11-20",
+      "zeit": 1795193599424
+    },
+    {
+      "t": "ein",
+      "aid": 349,
+      "name": "568665 Tomaten Spez. 300g",
+      "lager": "Kühlschrank oben",
+      "kat": "Diverses",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.49,
+      "aktion": false,
+      "datum": "2026-11-20",
+      "zeit": 1795193631964
+    },
+    {
+      "t": "ein",
+      "aid": 69,
+      "name": "Petersilie",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.99,
+      "aktion": false,
+      "datum": "2026-11-20",
+      "zeit": 1795193632295
+    },
+    {
+      "t": "ein",
+      "aid": 32,
+      "name": "Forellenfilets",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 2.95,
+      "aktion": false,
+      "datum": "2026-11-20",
+      "zeit": 1795193632295
+    },
+    {
+      "t": "ein",
+      "aid": 279,
+      "name": "Cottage Cheese / Hüttenkäse",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 1.99,
+      "aktion": false,
+      "datum": "2026-11-20",
+      "zeit": 1795193632296
+    },
+    {
+      "aid": 2,
+      "d": "2026-11-20",
+      "m": 2,
+      "p": 25.2,
+      "t": "ein",
+      "e": "Kiste",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Landi"
+    },
+    {
+      "aid": 32,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 2.95,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Aldi"
+    },
+    {
+      "aid": 65,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 4.95,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Aldi"
+    },
+    {
+      "aid": 69,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 2.99,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gewürze & Saucen",
+      "aktion": false,
+      "kaufort": "Aldi"
+    },
+    {
+      "aid": 136,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 20,
+      "t": "ein",
+      "e": "Rolle",
+      "k": "Reinigung & Pflege",
+      "aktion": false,
+      "kaufort": "Landi"
+    },
+    {
+      "aid": 223,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 6.89,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Aldi"
+    },
+    {
+      "aid": 279,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 1.99,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Aldi"
+    },
+    {
+      "aid": 292,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 2.99,
+      "t": "ein",
+      "e": "Stange",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Aldi"
+    },
+    {
+      "aid": 298,
+      "d": "2026-11-20",
+      "m": 2,
+      "p": 27,
+      "t": "ein",
+      "e": "Kiste",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Landi"
+    },
+    {
+      "aid": 337,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 6.75,
+      "t": "ein",
+      "e": "Pkg",
+      "k": "Fleisch & Fisch",
+      "aktion": false,
+      "kaufort": "Aldi"
+    },
+    {
+      "aid": 339,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 2.79,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Milchprodukte",
+      "aktion": false,
+      "kaufort": "Aldi"
+    },
+    {
+      "aid": 347,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 2.17,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": true,
+      "kaufort": "Aldi"
+    },
+    {
+      "aid": 348,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 0.99,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Aldi"
+    },
+    {
+      "aid": 349,
+      "d": "2026-11-20",
+      "m": 1,
+      "p": 2.49,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Diverses",
+      "aktion": false,
+      "kaufort": "Aldi"
     }
   ],
-  "aktualisiert": "2026-11-20T10:35:57.609Z"
+  "aktualisiert": "2026-11-21T08:57:40.637Z"
 }
