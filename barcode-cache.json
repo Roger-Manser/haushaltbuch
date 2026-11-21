@@ -604,15 +604,15 @@
     },
     "4061464218741": {
       "barcode": "4061464218741",
-      "name": "",
-      "marke": "",
+      "name": "Frischkäse grüner Pfeffer",
+      "marke": "Fraicho",
       "kategorien": "",
       "description": "",
-      "image": "",
-      "source": "Gescannt (noch nicht gesucht)",
+      "image": "https://images.openfoodfacts.org/images/products/406/146/421/8741/front_de.3.400.jpg",
+      "source": "Open Food Facts",
       "offData": {},
       "addedAt": 1795193599101,
-      "scannedOnly": true
+      "scannedOnly": false
     },
     "4061463067807": {
       "barcode": "4061463067807",
@@ -650,5 +650,5 @@
       "addedAt": 1795194153831
     }
   },
-  "lastUpdated": 1795252543905
+  "lastUpdated": 1795252557281
 }
