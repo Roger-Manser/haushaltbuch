@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.37 — Sync-Datenverlust: SHA-Konflikt retried Upload nach loadFromGH; localStorage-Diagnose beim Start -->
+<!-- HAUSHALTBUCH v23.38 — Einkaufsliste: sofortiges DOM-Update beim Hinzufügen/Entfernen, Scroll zu neuem Artikel -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.37"/>
+<meta name="app-version" content="23.38"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.37';
+const APP_VERSION='23.38';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.38',d:'22.11.2026',items:['🐛 Einkaufsliste: Artikel hinzufügen scrollt jetzt sofort zum neuen Eintrag','🐛 Einkaufsliste: × entfernen aktualisiert die Liste sofort (kein Warten auf Render)','🔍 Diagnose-Logging in renderEk() für einfachere Fehlersuche']},
   {v:'23.37',d:'22.11.2026',items:['🐛 Sync-Datenverlust: SHA-Konflikt nach 3 Versuchen → loadFromGH() + erneuter Upload statt Abbruch','🔍 Diagnose-Logging beim App-Start und beim Sync für einfachere Fehlersuche']},
   {v:'23.36',d:'21.11.2026',items:['🐛 Quittungsscan: OFF-Session-Cache speichert «notfound» nicht mehr — erneute Suche klappt nach OFF-Drosselung','⏳ Hinweis-Toast wenn OFF kurzzeitig gesperrt ist (zu viele Anfragen)']},
   {v:'23.35',d:'21.11.2026',items:['🐛 Ausbuchen (−) in der Artikelliste: nach dem Ausbuchen bleibt die Ansicht in der Übersicht (kein Sprung ins Detail mehr)']},
@@ -6774,6 +6775,8 @@ function renderCategorySpendChart(entries){
 let ekShopFilter='alle';
 function setEkShopFilter(g){ekShopFilter=g;renderEk();}
 function renderEk(){
+  // v23.38: Diagnose-Logging
+  diagLog('renderEk: S.ek='+S.ek.length+' manuell, auto='+ekAutoListe(false).length+' unter Mindest');
   // Shop-Filter Chips
   const shopChipsEl=document.getElementById('ek-shop-chips');
   if(shopChipsEl){
@@ -6881,7 +6884,8 @@ function renderEk(){
     '<button class="eid" onclick="delM('+e.id+')">&#x2715;</button></div>';
   });
   h+='</div>';
-  document.getElementById('ek-body').innerHTML=h;
+  const ekBodyEl=document.getElementById('ek-body');
+  if(ekBodyEl){ekBodyEl.innerHTML=h;}else{diagLog('renderEk FEHLER: ek-body nicht gefunden!');}
   nav(); // v23.10: Zähler in der Leiste sofort aktualisieren
 }
 
@@ -7098,6 +7102,9 @@ function ekAusblenden(id){
   const ov=S.eko[id]||(S.eko[id]={});
   ov.ausgeblendet=true;
   delete ov.menge;delete ov.einheit;
+  // v23.38: Sofortiges DOM-Update (kein Warten auf renderEk)
+  const el=document.getElementById('eia-'+id);if(el)el.remove();
+  diagLog('ekAusblenden: '+a.name+' (id='+id+') ausgeblendet');
   saveL();renderEk();
   toast('🗑 «'+a.name+'» von der Einkaufsliste entfernt');
 }
@@ -7131,7 +7138,7 @@ function addGeschaeft(btn){
   document.querySelectorAll('#f-ge .chip[data-ge]').forEach(c=>c.classList.remove('on'));
   chip.classList.add('on');
 }
-function addM(){const i=document.getElementById('mi-i');const t=i.value.trim();if(!t)return;S.ek.push({id:Date.now(),text:t,menge:'1',einheit:'Stk',checked:false});i.value='';saveL();renderEk();}
+function addM(){const i=document.getElementById('mi-i');const t=i.value.trim();if(!t)return;const nid=Date.now();S.ek.push({id:nid,text:t,menge:'1',einheit:'Stk',checked:false});i.value='';saveL();renderEk();diagLog('addM: "'+t+'" hinzugefügt → rendere #eim-'+nid);setTimeout(()=>{const el=document.getElementById('eim-'+nid);if(el){el.scrollIntoView({behavior:'smooth',block:'nearest'});}},50);}
 let _mikrofon=null;
 function startMikrofon(){
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
@@ -7413,7 +7420,12 @@ function ekEinheitOptions(sel){
   if(sel&&!base.includes(sel))base.unshift(sel);
   return base.map(u=>'<option value="'+esc(u)+'"'+(u===sel?' selected':'')+'>'+esc(u)+'</option>').join('');
 }
-function delM(id){S.ek=S.ek.filter(x=>x.id!==id);saveL();renderEk();}
+function delM(id){
+  // v23.38: Sofortiges DOM-Update (kein Warten auf renderEk)
+  const el=document.getElementById('eim-'+id);if(el)el.remove();
+  diagLog('delM: id='+id+' entfernt');
+  S.ek=S.ek.filter(x=>x.id!==id);saveL();renderEk();
+}
 function clearCk(){
   // Button oben rechts: Abhaken + einbuchen der gehakten Artikel
   // Sammle gehakte Artikel aus BEIDEN Listen (Automatisch + Manuell)
