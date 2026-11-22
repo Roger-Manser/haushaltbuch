@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.39 — Einkaufsliste: alexaErledigt beim Start korrekt laden; mehr Diagnose-Logging -->
+<!-- HAUSHALTBUCH v23.40 — SW-Update erzwingen beim Start; diagLog-Ausgabe im Diagnose-Log sicherstellen -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,9 +9,9 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.39"/>
-<!-- CACHE BUST v2309 -->
-<link rel="manifest" href="manifest.json?v=2309"/>
+<meta name="app-version" content="23.40"/>
+<!-- CACHE BUST v2340 -->
+<link rel="manifest" href="manifest.json?v=2340"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png"/>
 <title>Haushaltbuch</title>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.39';
+const APP_VERSION='23.40';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.40',d:'22.11.2026',items:['🔧 SW-Update beim Start erzwingen (neue Version wird sofort geladen)']},
   {v:'23.39',d:'22.11.2026',items:['🐛 Einkaufsliste: alexaErledigt beim App-Start korrekt laden (verhindert re-add gelöschter Artikel)','🔍 Mehr Diagnose-Logging für Einkaufsliste-Bugs']},
   {v:'23.38',d:'22.11.2026',items:['🐛 Einkaufsliste: Artikel hinzufügen scrollt jetzt sofort zum neuen Eintrag','🐛 Einkaufsliste: × entfernen aktualisiert die Liste sofort (kein Warten auf Render)','🔍 Diagnose-Logging in renderEk() für einfachere Fehlersuche']},
   {v:'23.37',d:'22.11.2026',items:['🐛 Sync-Datenverlust: SHA-Konflikt nach 3 Versuchen → loadFromGH() + erneuter Upload statt Abbruch','🔍 Diagnose-Logging beim App-Start und beim Sync für einfachere Fehlersuche']},
@@ -13256,8 +13257,9 @@ if('serviceWorker' in navigator){
         const newWorker=reg.installing;
         if(!newWorker)return;
         newWorker.addEventListener('statechange',()=>{
-          if(newWorker.state==='installed'&&navigator.serviceWorker.controller){
-            showUpdateBanner();
+          if(newWorker.state==='installed'){
+            // v23.40: Sofort aktivieren (kein Banner nötig — App hat kein offenes State-Problem)
+            newWorker.postMessage({type:'SKIP_WAITING'});
           }
         });
       });
