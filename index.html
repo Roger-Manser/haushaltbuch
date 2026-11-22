@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.38 — Einkaufsliste: sofortiges DOM-Update beim Hinzufügen/Entfernen, Scroll zu neuem Artikel -->
+<!-- HAUSHALTBUCH v23.39 — Einkaufsliste: alexaErledigt beim Start korrekt laden; mehr Diagnose-Logging -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.38"/>
+<meta name="app-version" content="23.39"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.38';
+const APP_VERSION='23.39';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.39',d:'22.11.2026',items:['🐛 Einkaufsliste: alexaErledigt beim App-Start korrekt laden (verhindert re-add gelöschter Artikel)','🔍 Mehr Diagnose-Logging für Einkaufsliste-Bugs']},
   {v:'23.38',d:'22.11.2026',items:['🐛 Einkaufsliste: Artikel hinzufügen scrollt jetzt sofort zum neuen Eintrag','🐛 Einkaufsliste: × entfernen aktualisiert die Liste sofort (kein Warten auf Render)','🔍 Diagnose-Logging in renderEk() für einfachere Fehlersuche']},
   {v:'23.37',d:'22.11.2026',items:['🐛 Sync-Datenverlust: SHA-Konflikt nach 3 Versuchen → loadFromGH() + erneuter Upload statt Abbruch','🔍 Diagnose-Logging beim App-Start und beim Sync für einfachere Fehlersuche']},
   {v:'23.36',d:'21.11.2026',items:['🐛 Quittungsscan: OFF-Session-Cache speichert «notfound» nicht mehr — erneute Suche klappt nach OFF-Drosselung','⏳ Hinweis-Toast wenn OFF kurzzeitig gesperrt ist (zu viele Anfragen)']},
@@ -1228,7 +1229,10 @@ function showDiagLog(){
 }
 
 function loadL(){
-  try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ge=d.ge||[...GD];S.geOhneRundung=d.geOhneRundung||[...GE_OHNE_RUNDUNG];S.ek=d.ek||[];S.eko=d.eko||{};S.rz=d.rz||[];S.log=d.log||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);diagLog('START loadL OK: '+S.a.length+' Artikel');}else{diagLog('START loadL: kein hb3 in localStorage');}}catch(e){diagLog('START loadL FEHLER: '+e.message);}
+  try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ge=d.ge||[...GD];S.geOhneRundung=d.geOhneRundung||[...GE_OHNE_RUNDUNG];S.ek=d.ek||[];S.eko=d.eko||{};S.rz=d.rz||[];S.log=d.log||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);
+  // v23.39: alexaErledigt laden damit Alexa-Befehle nach Neustart nicht nochmals verarbeitet werden
+  S.alexaErledigt=d.alexaErledigt||[];
+  diagLog('START loadL OK: '+S.a.length+' Artikel, S.ek='+S.ek.length+' manuell, S.eko keys='+Object.keys(S.eko||{}).length+', alexaErledigt='+S.alexaErledigt.length);}else{diagLog('START loadL: kein hb3 in localStorage');}}catch(e){diagLog('START loadL FEHLER: '+e.message);}
   // Migration: alte kombinierte Mengen-Strings ("1,5 dl") in menge+einheit trennen
   (S.ek||[]).forEach(e=>{
     if(e.menge&&!e.einheit){
@@ -1253,7 +1257,7 @@ function loadL(){
   // checkDataVersionOnStartup().catch(e=>console.error('Data version check fehlgeschlagen:',e));
   // Barcode-Cache von GitHub laden (separate, sichere Datei)
   if(gh.tok&&gh.own&&gh.repo){setTimeout(()=>loadBarcodeCacheFromGH().catch(e=>console.log('[BarcodeCache] Startup-Fehler:',e.message)),100);}
-  if(gh.tok&&gh.own&&gh.repo){setTimeout(()=>alexaEingangAnwenden().catch(e=>console.log('[Alexa] Startup:',e.message)),1500);}
+  if(gh.tok&&gh.own&&gh.repo){setTimeout(()=>{diagLog('START alexaEingangAnwenden läuft (1.5s nach Start)');alexaEingangAnwenden().catch(e=>console.log('[Alexa] Startup:',e.message));},1500);}
 }
 // Beim App-Start: Auto-Check welcher Datenstamm neuer ist (Lokal vs GitHub)
 async function checkDataVersionOnStartup(){
@@ -1458,10 +1462,12 @@ async function alexaEingangAnwenden(sofort){
   if(!gh.tok||!gh.own||!gh.repo||navigator.onLine===false)return null;
   if(!sofort&&Date.now()-_alexaLetzterCheck<20000)return null;
   _alexaLetzterCheck=Date.now();
+  diagLog('alexaEingangAnwenden: prüfe alexa-einkauf.json (alexaErledigt='+((S.alexaErledigt||[]).length)+')');
   const f=await ghGet(ALEXA_DATEI);
   if(!f||!f.content)return null;
   let d;try{d=JSON.parse(b64DecodeUtf8(f.content.replace(/\n/g,'')));}catch(e){return null;}
   const befehle=(Array.isArray(d.befehle)?d.befehle:[]).slice().sort((a,b)=>(a.zeit||0)-(b.zeit||0));
+  diagLog('alexaEingangAnwenden: '+befehle.length+' Befehle in alexa-einkauf.json');
   if(!befehle.length)return new Set();
   if(!S.alexaErledigt)S.alexaErledigt=[];
   const erledigt=new Set(S.alexaErledigt);
@@ -1478,6 +1484,7 @@ async function alexaEingangAnwenden(sofort){
         // steht schon automatisch auf der Liste (unter Mindestbestand) → keine doppelte Zeile
         if(!S.eko)S.eko={};
         const ov=S.eko[art.id]||(S.eko[art.id]={});
+        if(ov.ausgeblendet)diagLog('ALEXA add: «'+art.name+'» war ausgeblendet → wird wieder angezeigt (Alexa-Befehl id='+b.id+')');
         delete ov.ausgeblendet;
         if(b.menge&&String(b.menge)!=='1'){ov.menge=String(b.menge);if(b.einheit&&b.einheit!=='Stk')ov.einheit=b.einheit;}
         ov.alexa=true;
