@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.40 — SW-Update erzwingen beim Start; diagLog-Ausgabe im Diagnose-Log sicherstellen -->
+<!-- HAUSHALTBUCH v23.41 — Versions-Check beim Start: gecachte alte Version → automatisch Hard-Reload -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.40"/>
+<meta name="app-version" content="23.41"/>
 <!-- CACHE BUST v2340 -->
 <link rel="manifest" href="manifest.json?v=2340"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.40';
+const APP_VERSION='23.41';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.41',d:'22.11.2026',items:['🔧 Versions-Check beim App-Start: veraltete gecachte Version → automatisch Hard-Reload']},
   {v:'23.40',d:'22.11.2026',items:['🔧 SW-Update beim Start erzwingen (neue Version wird sofort geladen)']},
   {v:'23.39',d:'22.11.2026',items:['🐛 Einkaufsliste: alexaErledigt beim App-Start korrekt laden (verhindert re-add gelöschter Artikel)','🔍 Mehr Diagnose-Logging für Einkaufsliste-Bugs']},
   {v:'23.38',d:'22.11.2026',items:['🐛 Einkaufsliste: Artikel hinzufügen scrollt jetzt sofort zum neuen Eintrag','🐛 Einkaufsliste: × entfernen aktualisiert die Liste sofort (kein Warten auf Render)','🔍 Diagnose-Logging in renderEk() für einfachere Fehlersuche']},
@@ -1259,6 +1260,28 @@ function loadL(){
   // Barcode-Cache von GitHub laden (separate, sichere Datei)
   if(gh.tok&&gh.own&&gh.repo){setTimeout(()=>loadBarcodeCacheFromGH().catch(e=>console.log('[BarcodeCache] Startup-Fehler:',e.message)),100);}
   if(gh.tok&&gh.own&&gh.repo){setTimeout(()=>{diagLog('START alexaEingangAnwenden läuft (1.5s nach Start)');alexaEingangAnwenden().catch(e=>console.log('[Alexa] Startup:',e.message));},1500);}
+  // v23.41: Versions-Check beim Start — wenn gecachte Version veraltet, Hard-Reload
+  setTimeout(()=>{
+    fetch('version.json?t='+Date.now(),{cache:'no-store'})
+      .then(r=>r.json())
+      .then(data=>{
+        const sv=String(data.version||'').trim();
+        const av=String(APP_VERSION||'').trim();
+        if(sv&&sv!==av){
+          diagLog('VERSION-CHECK: Server='+sv+' App='+av+' → Hard-Reload');
+          // SW-Cache leeren + Seite neu laden
+          if('serviceWorker' in navigator){
+            navigator.serviceWorker.getRegistration().then(reg=>{
+              if(reg&&reg.waiting)reg.waiting.postMessage({type:'SKIP_WAITING'});
+            });
+          }
+          setTimeout(()=>window.location.reload(true),300);
+        }else{
+          diagLog('VERSION-CHECK: v'+av+' aktuell ✓');
+        }
+      })
+      .catch(()=>{});
+  },2000);
 }
 // Beim App-Start: Auto-Check welcher Datenstamm neuer ist (Lokal vs GitHub)
 async function checkDataVersionOnStartup(){
