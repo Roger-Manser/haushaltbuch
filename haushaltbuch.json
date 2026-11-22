@@ -9590,7 +9590,7 @@
     },
     {
       "id": 236,
-      "name": "Paprika rot",
+      "name": "Paprika rot  Peperoni",
       "marke": "LIDL",
       "kat": "Gemüse & Früchte",
       "lager": "Kühlschrank oben",
@@ -9604,7 +9604,7 @@
       "packMenge": 3,
       "packEinheit": "Stk",
       "kaufdatum": "2026-11-14",
-      "ablaufdatum": "2026-08-14",
+      "ablaufdatum": "",
       "notiz": "Nutri-Score A",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1785841416550_off.jpg?t=1795354280569",
       "fotoPath": "1785841416550_off.jpg",
@@ -9661,6 +9661,15 @@
           "menge": 1,
           "einheit": "Pkg",
           "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-14",
+          "preis": 1.89,
+          "menge": 0,
+          "einheit": "Pkg",
+          "typ": "ein",
           "aktion": false,
           "kaufort": "Lidl"
         }
@@ -32660,5 +32669,5 @@
       "zeit": 1795355041488
     }
   ],
-  "aktualisiert": "2026-11-22T13:44:14.311Z"
+  "aktualisiert": "2026-11-22T13:45:04.591Z"
 }
