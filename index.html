@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.36 — OFF-Cache: notfound nicht cachen; Ausbuchen bleibt in Übersicht -->
+<!-- HAUSHALTBUCH v23.37 — Sync-Datenverlust: SHA-Konflikt retried Upload nach loadFromGH; localStorage-Diagnose beim Start -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.36"/>
+<meta name="app-version" content="23.37"/>
 <!-- CACHE BUST v2309 -->
 <link rel="manifest" href="manifest.json?v=2309"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.36';
+const APP_VERSION='23.37';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.37',d:'22.11.2026',items:['🐛 Sync-Datenverlust: SHA-Konflikt nach 3 Versuchen → loadFromGH() + erneuter Upload statt Abbruch','🔍 Diagnose-Logging beim App-Start und beim Sync für einfachere Fehlersuche']},
   {v:'23.36',d:'21.11.2026',items:['🐛 Quittungsscan: OFF-Session-Cache speichert «notfound» nicht mehr — erneute Suche klappt nach OFF-Drosselung','⏳ Hinweis-Toast wenn OFF kurzzeitig gesperrt ist (zu viele Anfragen)']},
   {v:'23.35',d:'21.11.2026',items:['🐛 Ausbuchen (−) in der Artikelliste: nach dem Ausbuchen bleibt die Ansicht in der Übersicht (kein Sprung ins Detail mehr)']},
   {v:'23.34',d:'14.11.2026',items:['🐛 Quittungsscan: max_tokens von 1500 auf 4096 erhöht — grosse Quittungen wurden mitten im JSON abgeschnitten → Parse-Fehler']},
@@ -1201,8 +1202,32 @@ function saveInvBuffer(){try{localStorage.setItem('hb_inv_buffer',JSON.stringify
 loadInvBuffer();
 let dirty=localStorage.getItem('hb_dirty')==='1';
 
+// v23.37: In-App Diagnose-Log (kein Console nötig)
+function diagLog(msg){
+  try{
+    const logs=JSON.parse(localStorage.getItem('hb_diag')||'[]');
+    const ts=new Date().toLocaleString('de-CH',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    logs.unshift('['+ts+'] '+msg);
+    if(logs.length>50)logs.length=50; // max 50 Einträge
+    localStorage.setItem('hb_diag',JSON.stringify(logs));
+  }catch(e){}
+}
+function showDiagLog(){
+  const box=document.getElementById('diag-log-box');
+  if(!box)return;
+  if(box.style.display==='none'){
+    try{
+      const logs=JSON.parse(localStorage.getItem('hb_diag')||'[]');
+      box.textContent=logs.length?logs.join('\n'):'(noch keine Einträge)';
+    }catch(e){box.textContent='Fehler beim Laden';}
+    box.style.display='block';
+  }else{
+    box.style.display='none';
+  }
+}
+
 function loadL(){
-  try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ge=d.ge||[...GD];S.geOhneRundung=d.geOhneRundung||[...GE_OHNE_RUNDUNG];S.ek=d.ek||[];S.eko=d.eko||{};S.rz=d.rz||[];S.log=d.log||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);}}catch(e){}
+  try{const r=localStorage.getItem('hb3');if(r){const d=JSON.parse(r);S.a=d.a||[];S.lo=d.lo||[...LD];S.ka=d.ka||[...KD];S.ei=d.ei||[...ED];S.ge=d.ge||[...GD];S.geOhneRundung=d.geOhneRundung||[...GE_OHNE_RUNDUNG];S.ek=d.ek||[];S.eko=d.eko||{};S.rz=d.rz||[];S.log=d.log||[];S.nid=d.nid||(S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1);diagLog('START loadL OK: '+S.a.length+' Artikel');}else{diagLog('START loadL: kein hb3 in localStorage');}}catch(e){diagLog('START loadL FEHLER: '+e.message);}
   // Migration: alte kombinierte Mengen-Strings ("1,5 dl") in menge+einheit trennen
   (S.ek||[]).forEach(e=>{
     if(e.menge&&!e.einheit){
@@ -1619,6 +1644,7 @@ function repairLogFromPreisHistorie(){
 
 async function doSync(){
   if(!gh.tok||!gh.own||!gh.repo){toast('GitHub noch nicht konfiguriert');goScreen('s-settings');return;}
+  diagLog('SYNC START: '+S.a.length+' Artikel lokal');
   ldr('Synchronisiere mit GitHub...');sdot('sy');
   try{
     // Nachträglicher Foto-Upload: Artikel, deren Foto noch lokal als Base64 vorliegt
@@ -1721,17 +1747,20 @@ async function doSync(){
         if(e.message&&e.message.includes('409')){
           attempts++;
           if(attempts>=3){
-            // Nach 3 Versuchen: SHA-Konflikt nicht lösbar ohne neu laden
-            hideLdr();sdot('dt');
-            const wahl=await confirmDialog(
-              '⚠️ Sync-Konflikt (SHA veraltet)\n\n'+
-              'Die lokale Version stimmt nicht mehr mit GitHub überein.\n\n'+
-              'Empfehlung: Zuerst «Von GitHub laden» um den aktuellen Stand zu holen, dann erneut synchronisieren.',
-              'Von GitHub laden',
-              'Abbrechen'
-            );
-            if(wahl){await loadFromGH();}
-            return;
+            // v23.37: Nach 3 Versuchen → automatisch SHA erneuern und letzten Versuch wagen
+            // (kein Dialog mehr, kein loadFromGH() der lokale Daten überschreiben würde)
+            console.warn('[Sync] SHA-Konflikt nach 3 Versuchen — hole frisches SHA und versuche nochmals');
+            ldr('SHA-Konflikt — hole aktuelles SHA…');
+            try{
+              ex=await ghGet('haushaltbuch.json');
+              putRes=await ghPut('haushaltbuch.json',expJson,'Haushaltbuch Update',ex?ex.sha:undefined);
+              break; // Erfolg
+            }catch(e2){
+              // Auch nach frischem SHA gescheitert → Benutzer informieren
+              hideLdr();sdot('dt');
+              toast('⚠️ Sync fehlgeschlagen (SHA-Konflikt) — bitte «Von GitHub laden» dann nochmals synchronisieren');
+              return;
+            }
           }
           ldr('SHA-Konflikt — neues SHA holen ('+attempts+'/3)...');
           await new Promise(r=>setTimeout(r,800));
@@ -1767,6 +1796,7 @@ async function doSync(){
     dirty=false;localStorage.removeItem('hb_dirty');
     // Nach Sync: lokalen Timestamp aktualisieren
     localStorage.setItem('hb_lastModified',String(Date.now()));
+    diagLog('SYNC OK: '+S.a.length+' Artikel hochgeladen');
     sdot('ok');hideLdr();
     toast('Synchronisiert: '+S.a.length+' Artikel auf GitHub geschrieben');
 
@@ -1797,6 +1827,7 @@ async function doSync(){
 
 async function loadFromGH(){
   if(!gh.tok||!gh.own||!gh.repo)return;
+  diagLog('LOAD_FROM_GH START: vorher '+S.a.length+' Artikel lokal');
   ldr('Lade von GitHub...');
   try{
     const f=await ghGet('haushaltbuch.json');
@@ -1848,6 +1879,7 @@ async function loadFromGH(){
         }
       });
       S.nid=S.a.length?Math.max(...S.a.map(x=>x.id||0))+1:1;
+      diagLog('LOAD_FROM_GH OK: '+S.a.length+' Artikel geladen');
       saveL();
     }
     const rzf=await ghGet('rezepte.json');
@@ -8775,6 +8807,8 @@ function renderSt(){
     '<button class="db-btn" onclick="saveGHcfg()">'+I.gh+' Verbindung speichern</button>'+
     '<button class="db-btn" onclick="loadFromGH()">'+I.dl+' Daten von GitHub laden</button>'+
     '<button class="db-btn" onclick="doSync()"><svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:18px;height:18px;stroke:var(--ac)"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.21-4.45"/></svg> Jetzt synchronisieren</button>'+
+    '<button class="bg2" style="width:100%;margin-top:8px;font-size:13px" onclick="showDiagLog()">🔍 Sync-Diagnose anzeigen</button>'+
+    '<div id="diag-log-box" style="display:none;margin-top:8px;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:10px;font-size:11px;font-family:monospace;color:var(--t2);max-height:200px;overflow-y:auto;white-space:pre-wrap"></div>'+
     '<p style="font-size:12px;color:var(--t3);margin-top:6px;line-height:1.6">Token braucht <strong>repo</strong> Scope.</p>';
 
   document.getElementById('st-body').innerHTML=
