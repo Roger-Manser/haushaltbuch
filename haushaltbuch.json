@@ -14945,11 +14945,11 @@
       "barcodes": [],
       "preis": 2.49,
       "packMenge": 0,
-      "packEinheit": "",
+      "packEinheit": "dl",
       "kaufdatum": "2026-11-20",
       "notiz": "Von Quittung erstellt",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1795349159268_1000074314.jpg?t=1795349165995",
+      "fotoPath": "1795349159268_1000074314.jpg",
       "packungen": [
         {
           "id": 14,
@@ -14968,10 +14968,20 @@
           "aktion": false,
           "kaufort": "Aldi",
           "betrag": 2.49
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 2.49,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
         }
       ],
       "quittungAliase": [],
-      "letzteEingangHeute": "17:53"
+      "letzteEingangHeute": "17:53",
+      "ablaufdatum": ""
     }
   ],
   "lagerorte": [
@@ -32609,5 +32619,5 @@
       "kaufort": "Aldi"
     }
   ],
-  "aktualisiert": "2026-11-22T12:05:39.457Z"
+  "aktualisiert": "2026-11-22T12:06:10.099Z"
 }
