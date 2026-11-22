@@ -14892,15 +14892,6 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Aldi"
-        },
-        {
-          "datum": "2026-11-20",
-          "preis": 2.17,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Aldi"
         }
       ],
       "quittungAliase": [],
@@ -14944,15 +14935,6 @@
           "aktion": false,
           "kaufort": "Aldi",
           "betrag": 0.99
-        },
-        {
-          "datum": "2026-11-20",
-          "preis": 0.99,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Aldi"
         }
       ],
       "quittungAliase": [],
@@ -32663,5 +32645,5 @@
       "kaufort": "Aldi"
     }
   ],
-  "aktualisiert": "2026-11-22T13:35:27.698Z"
+  "aktualisiert": "2026-11-22T13:35:51.128Z"
 }
