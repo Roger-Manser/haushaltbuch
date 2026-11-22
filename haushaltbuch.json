@@ -1683,7 +1683,7 @@
       "marke": "Milbona",
       "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "4056489975267",
@@ -1788,15 +1788,18 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Lidl"
+        },
+        {
+          "datum": "2026-11-22",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Lidl"
         }
       ],
       "packungen": [
-        {
-          "id": 17,
-          "menge": 1,
-          "kaufdatum": "2026-08-29",
-          "ablaufdatum": "2026-12-02"
-        },
         {
           "id": 4,
           "menge": 1,
@@ -15079,6 +15082,15 @@
     {
       "id": 1795170851987.5684,
       "text": "Meerrettich",
+      "menge": "1",
+      "einheit": "Stk",
+      "checked": false
+    },
+    {
+      "id": 1795341136021,
+      "text": "Vollrahm",
+      "artikelId": 38,
+      "kat": "Milchprodukte",
       "menge": "1",
       "einheit": "Stk",
       "checked": false
@@ -32607,7 +32619,20 @@
       "k": "Diverses",
       "aktion": false,
       "kaufort": "Aldi"
+    },
+    {
+      "t": "aus",
+      "aid": 38,
+      "name": "Vollrahm",
+      "lager": "Kühlschrank oben",
+      "kat": "Milchprodukte",
+      "menge": 1,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-11-22",
+      "zeit": 1795341150433
     }
   ],
-  "aktualisiert": "2026-11-22T09:52:01.474Z"
+  "aktualisiert": "2026-11-22T09:52:36.676Z"
 }
