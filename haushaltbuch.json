@@ -14384,15 +14384,6 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Aldi"
-        },
-        {
-          "datum": "2026-11-22",
-          "preis": 0,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "aus",
-          "aktion": false,
-          "kaufort": "Aldi"
         }
       ],
       "quittungAliase": [
@@ -14976,15 +14967,6 @@
           "aktion": false,
           "kaufort": "Aldi",
           "betrag": 2.49
-        },
-        {
-          "datum": "2026-11-20",
-          "preis": 2.49,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Aldi"
         }
       ],
       "quittungAliase": [],
@@ -32618,19 +32600,6 @@
     },
     {
       "t": "aus",
-      "aid": 337,
-      "name": "Pouletfilets",
-      "lager": "Kühlschrank oben",
-      "kat": "Fleisch & Fisch",
-      "menge": 1,
-      "einheit": "Pkg",
-      "preis": 0,
-      "aktion": false,
-      "datum": "2026-11-22",
-      "zeit": 1795354380524
-    },
-    {
-      "t": "aus",
       "aid": 65,
       "name": "Salametti Milano",
       "lager": "Kühlschrank oben",
@@ -32643,5 +32612,5 @@
       "zeit": 1795354387516
     }
   ],
-  "aktualisiert": "2026-11-22T13:33:10.677Z"
+  "aktualisiert": "2026-11-22T13:33:26.935Z"
 }
