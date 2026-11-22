@@ -15054,29 +15054,6 @@
       "alexaId": "mw6lskc1w26sep"
     },
     {
-      "id": 1795155144926.0674,
-      "text": "Pastateig",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1795155156325.6135,
-      "text": "Dill",
-      "menge": "1",
-      "einheit": "Stk",
-      "checked": false
-    },
-    {
-      "id": 1795157196806,
-      "text": "Cottage Cheese / Hüttenkäse",
-      "artikelId": 279,
-      "kat": "Milchprodukte",
-      "menge": "1",
-      "einheit": "Pkg",
-      "checked": false
-    },
-    {
       "id": 1795170851987.5684,
       "text": "Meerrettich",
       "menge": "1",
@@ -32609,5 +32586,5 @@
       "kaufort": "Aldi"
     }
   ],
-  "aktualisiert": "2026-11-22T12:30:17.764Z"
+  "aktualisiert": "2026-11-22T12:42:29.873Z"
 }
