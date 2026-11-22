@@ -14933,23 +14933,23 @@
     },
     {
       "id": 349,
-      "name": "568665 Tomaten Spez. 300g",
+      "name": "Tomaten Spez.",
       "marke": "",
-      "kat": "Diverses",
+      "kat": "Gemüse & Früchte",
       "lager": "Kühlschrank oben",
       "kaufort": "Aldi",
       "menge": 1,
-      "einheit": "Stk",
+      "einheit": "Pkg",
       "mindest": 0,
       "barcode": "4061463067807",
       "barcodes": [],
       "preis": 2.49,
-      "packMenge": 0,
-      "packEinheit": "",
+      "packMenge": 300,
+      "packEinheit": "g",
       "kaufdatum": "2026-11-20",
       "notiz": "Von Quittung erstellt",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1795354330283_1000074314.jpg?t=1795354361368",
+      "fotoPath": "1795354330283_1000074314.jpg",
       "packungen": [
         {
           "id": 14,
@@ -14968,10 +14968,20 @@
           "aktion": false,
           "kaufort": "Aldi",
           "betrag": 2.49
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 2.49,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
         }
       ],
       "quittungAliase": [],
-      "letzteEingangHeute": "17:53"
+      "letzteEingangHeute": "17:53",
+      "ablaufdatum": ""
     }
   ],
   "lagerorte": [
@@ -32586,5 +32596,5 @@
       "kaufort": "Aldi"
     }
   ],
-  "aktualisiert": "2026-11-22T13:31:51.512Z"
+  "aktualisiert": "2026-11-22T13:32:46.489Z"
 }
