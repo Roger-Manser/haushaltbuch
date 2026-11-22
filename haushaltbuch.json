@@ -14853,7 +14853,7 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Aldi",
-      "menge": 1,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "4069366244783",
@@ -14865,14 +14865,7 @@
       "notiz": "Von Quittung erstellt",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1795354516861_1000074311.jpg?t=1795354521316",
       "fotoPath": "1795354516861_1000074311.jpg",
-      "packungen": [
-        {
-          "id": 9,
-          "menge": 1,
-          "kaufdatum": "2026-11-20",
-          "ablaufdatum": ""
-        }
-      ],
+      "packungen": [],
       "preisHistorie": [
         {
           "datum": "2026-11-20",
@@ -14890,6 +14883,15 @@
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
+        },
+        {
+          "datum": "2026-11-22",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
           "aktion": false,
           "kaufort": "Aldi"
         }
@@ -32643,7 +32645,20 @@
       "k": "Fleisch & Fisch",
       "aktion": false,
       "kaufort": "Aldi"
+    },
+    {
+      "t": "aus",
+      "aid": 347,
+      "name": "Bresaola Rindfleischaufschnitt",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-11-22",
+      "zeit": 1795355041488
     }
   ],
-  "aktualisiert": "2026-11-22T13:43:49.943Z"
+  "aktualisiert": "2026-11-22T13:44:14.311Z"
 }
