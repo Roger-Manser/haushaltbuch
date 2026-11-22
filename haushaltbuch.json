@@ -14891,23 +14891,23 @@
     },
     {
       "id": 348,
-      "name": "463875 Fraicho 150g",
-      "marke": "",
-      "kat": "Diverses",
+      "name": "463875 Fraicho Frischkäse",
+      "marke": "Fraicho",
+      "kat": "Milchprodukte",
       "lager": "Kühlschrank oben",
       "kaufort": "Aldi",
       "menge": 1,
-      "einheit": "Stk",
+      "einheit": "Pkg",
       "mindest": 0,
       "barcode": "4061464218741",
       "barcodes": [],
       "preis": 0.99,
-      "packMenge": 0,
-      "packEinheit": "",
+      "packMenge": 150,
+      "packEinheit": "g",
       "kaufdatum": "2026-11-20",
       "notiz": "Von Quittung erstellt",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1795349188410_off.jpg?t=1795349223313",
+      "fotoPath": "1795349188410_off.jpg",
       "packungen": [
         {
           "id": 12,
@@ -14926,10 +14926,20 @@
           "aktion": false,
           "kaufort": "Aldi",
           "betrag": 0.99
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 0.99,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
         }
       ],
       "quittungAliase": [],
-      "letzteEingangHeute": "17:53"
+      "letzteEingangHeute": "17:53",
+      "ablaufdatum": ""
     },
     {
       "id": 349,
@@ -32619,5 +32629,5 @@
       "kaufort": "Aldi"
     }
   ],
-  "aktualisiert": "2026-11-22T12:06:10.099Z"
+  "aktualisiert": "2026-11-22T12:07:08.493Z"
 }
