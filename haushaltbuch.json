@@ -2985,7 +2985,7 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Aldi",
-      "menge": 2,
+      "menge": 1,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "20238469",
@@ -3070,15 +3070,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Aldi"
+        },
+        {
+          "datum": "2026-11-22",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Aldi"
         }
       ],
       "packungen": [
-        {
-          "id": 10,
-          "menge": 1,
-          "kaufdatum": "2026-11-20",
-          "ablaufdatum": ""
-        },
         {
           "id": 11,
           "menge": 1,
@@ -14321,7 +14324,7 @@
       "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Aldi",
-      "menge": 2,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "20828387",
@@ -14333,20 +14336,7 @@
       "notiz": "Von Quittung erstellt (Open Food Facts)",
       "foto": "https://images.openfoodfacts.org/images/products/000/002/082/8387/front_fr.3.400.jpg",
       "fotoPath": "",
-      "packungen": [
-        {
-          "id": 5,
-          "menge": 1,
-          "kaufdatum": "2026-11-20",
-          "ablaufdatum": ""
-        },
-        {
-          "id": 6,
-          "menge": 1,
-          "kaufdatum": "2026-11-20",
-          "ablaufdatum": ""
-        }
-      ],
+      "packungen": [],
       "preisHistorie": [
         {
           "datum": "2026-11-14",
@@ -14383,6 +14373,15 @@
           "menge": 1,
           "einheit": "Pkg",
           "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
+        },
+        {
+          "datum": "2026-11-22",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
           "aktion": false,
           "kaufort": "Aldi"
         }
@@ -14851,29 +14850,22 @@
       "id": 347,
       "name": "757425 Bresaola 80g",
       "marke": "",
-      "kat": "Diverses",
+      "kat": "Fleisch & Fisch",
       "lager": "Kühlschrank oben",
       "kaufort": "Aldi",
-      "menge": 1,
-      "einheit": "Stk",
+      "menge": 0,
+      "einheit": "Pkg",
       "mindest": 0,
       "barcode": "4069366244783",
       "barcodes": [],
       "preis": 2.17,
-      "packMenge": 0,
-      "packEinheit": "",
+      "packMenge": 80,
+      "packEinheit": "g",
       "kaufdatum": "2026-11-20",
       "notiz": "Von Quittung erstellt",
-      "foto": "",
-      "fotoPath": "",
-      "packungen": [
-        {
-          "id": 9,
-          "menge": 1,
-          "kaufdatum": "2026-11-20",
-          "ablaufdatum": ""
-        }
-      ],
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1795349243560_1000074311.jpg?t=1795349267246",
+      "fotoPath": "1795349243560_1000074311.jpg",
+      "packungen": [],
       "preisHistorie": [
         {
           "datum": "2026-11-20",
@@ -14884,10 +14876,29 @@
           "aktion": true,
           "kaufort": "Aldi",
           "betrag": 2.17
+        },
+        {
+          "datum": "2026-11-20",
+          "preis": 2.17,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "ein",
+          "aktion": false,
+          "kaufort": "Aldi"
+        },
+        {
+          "datum": "2026-11-22",
+          "preis": 0,
+          "menge": 1,
+          "einheit": "Pkg",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Aldi"
         }
       ],
       "quittungAliase": [],
-      "letzteEingangHeute": "17:52"
+      "letzteEingangHeute": "17:52",
+      "ablaufdatum": ""
     },
     {
       "id": 348,
@@ -14926,15 +14937,6 @@
           "aktion": false,
           "kaufort": "Aldi",
           "betrag": 0.99
-        },
-        {
-          "datum": "2026-11-20",
-          "preis": 0.99,
-          "menge": 1,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Aldi"
         }
       ],
       "quittungAliase": [],
@@ -14978,15 +14980,6 @@
           "aktion": false,
           "kaufort": "Aldi",
           "betrag": 2.49
-        },
-        {
-          "datum": "2026-11-20",
-          "preis": 2.49,
-          "menge": 1,
-          "einheit": "Stk",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Aldi"
         }
       ],
       "quittungAliase": [],
@@ -32627,7 +32620,46 @@
       "k": "Diverses",
       "aktion": false,
       "kaufort": "Aldi"
+    },
+    {
+      "t": "aus",
+      "aid": 337,
+      "name": "Pouletfilets",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-11-22",
+      "zeit": 1795349295171
+    },
+    {
+      "t": "aus",
+      "aid": 347,
+      "name": "757425 Bresaola 80g",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-11-22",
+      "zeit": 1795349304856
+    },
+    {
+      "t": "aus",
+      "aid": 65,
+      "name": "Salametti Milano",
+      "lager": "Kühlschrank oben",
+      "kat": "Fleisch & Fisch",
+      "menge": 1,
+      "einheit": "Pkg",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-11-22",
+      "zeit": 1795349309140
     }
   ],
-  "aktualisiert": "2026-11-22T12:07:08.493Z"
+  "aktualisiert": "2026-11-22T12:08:43.156Z"
 }
