@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.42 — Direkter diagLog beim allerersten Script-Start zum Testen ob neue Version läuft -->
+<!-- HAUSHALTBUCH v23.43 — Spracheingabe (🎤) für Bezeichnung, Marke und Notiz im Artikel-Formular -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.42"/>
+<meta name="app-version" content="23.43"/>
 <!-- CACHE BUST v2340 -->
 <link rel="manifest" href="manifest.json?v=2340"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.42';
+const APP_VERSION='23.43';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.43',d:'22.11.2026',items:['🎤 Spracheingabe für Bezeichnung, Marke und Notiz im Artikel-Formular (Web Speech API, keine externe API)']},
   {v:'23.42',d:'22.11.2026',items:['🔍 Direkter diagLog beim allerersten Script-Start (Diagnose ob neue Version aktiv)']},
   {v:'23.41',d:'22.11.2026',items:['🔧 Versions-Check beim App-Start: veraltete gecachte Version → automatisch Hard-Reload']},
   {v:'23.40',d:'22.11.2026',items:['🔧 SW-Update beim Start erzwingen (neue Version wird sofort geladen)']},
@@ -3963,8 +3964,8 @@ function openForm(id){
   '<button type="button" onclick="addExtraBarcode()" style="width:100%;margin-top:8px;padding:9px;background:var(--bg);border:1px dashed var(--bd);border-radius:var(--rs);font-size:13px;color:var(--ac);cursor:pointer">+ Weiteren Barcode hinzufügen</button>'+
   '</div>'+
   '<div class="fd"><label>Foto</label><div id="pz" class="pz" onclick="showFotoWahl()">'+I.cam+'<span>Von Kamera oder Galerie</span><small>Wird auf GitHub gespeichert</small><input type="file" id="fph" accept="image/*" style="display:none" onchange="onPh(event)"/><input type="file" id="fph-cam" accept="image/*" capture="environment" style="display:none" onchange="onPh(event)"/></div>'+(!a&&localStorage.getItem('hb_ai_key')?'<div id="ki-analyse-btn" style="display:none"><button type="button" onclick="formFotoKiAnalyse()" style="width:100%;margin-top:8px;padding:10px;background:var(--ol);border:1px solid var(--ok);border-radius:var(--rs);color:var(--ok);font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px">🤖 KI-Felder aus Foto ausfüllen</button></div>':'')+'<div id="ppw" class="ppw" style="'+(a&&a.foto?'display:block':'')+'"><img id="ppi" src="'+(a?esc(a.foto||''):'')+'" alt=""/><button class="rph" onclick="rmPh()">&#x2715;</button></div></div>'+
-  '<div class="fd"><label>Bezeichnung *</label><input type="text" id="f-nm" placeholder="z.B. Vollmilch 3.5%" value="'+(a?esc(a.name):'')+'" oninput="checkDupHint(this.value);checkFrischeHint(this.value)"/><div id="dup-hint" style="display:none;font-size:12px;color:var(--wn);background:var(--wl);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div><div id="frische-hint" style="display:none;font-size:12px;color:var(--ok);background:var(--ol);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div></div>'+
-  '<div class="fd"><label>Marke</label><input type="text" id="f-mk" placeholder="z.B. Emmi" value="'+(a?esc(a.marke||''):'')+'"/></div>'+
+  '<div class="fd"><label>Bezeichnung *</label><div style="display:flex;gap:4px;align-items:center"><input type="text" id="f-nm" placeholder="z.B. Vollmilch 3.5%" value="'+(a?esc(a.name):'')+'" oninput="checkDupHint(this.value);checkFrischeHint(this.value)" style="flex:1"/>'+'<span id="vb-nm"></span>'+'</div><div id="dup-hint" style="display:none;font-size:12px;color:var(--wn);background:var(--wl);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div><div id="frische-hint" style="display:none;font-size:12px;color:var(--ok);background:var(--ol);border-radius:var(--rs);padding:6px 10px;margin-top:4px"></div></div>'+
+  '<div class="fd"><label>Marke</label><div style="display:flex;gap:4px;align-items:center"><input type="text" id="f-mk" placeholder="z.B. Emmi" value="'+(a?esc(a.marke||''):'')+'" style="flex:1"/>'+'<span id="vb-mk"></span>'+'</div></div>'+
   '<div class="fd"><label>Kategorie</label><div class="lcw" id="f-ka">'+kc+'</div></div>'+
   '<div class="tc"><div class="fd"><label>Anfangsbestand</label><div class="ur"><input type="number" id="f-mg" min="0" value="'+(a?a.menge:1)+'" style="max-width:120px"/><select id="f-ei" onchange="document.getElementById(\'f-ei-lbl\').textContent=this.value===\'__add__\'?\'\':(this.options[this.selectedIndex].text||this.value);if(this.value===\'__add__\')addEinheit(this)" style="font-weight:700;color:var(--ac);border:2px solid var(--ac)">'+eo+'<option value="__add__">+ Neue Einheit...</option></select><span id="f-ei-lbl" style="display:none"></span></div></div><div class="fd"><label>Mindestbestand</label><input type="number" id="f-mn" min="0" value="'+(a?a.mindest:0)+'"/></div></div>'+
   '<div class="fd"><label>Packungsgrösse <span style="color:var(--t3);font-weight:400">(optional, z.B. 2.5 dl pro Stück)</span></label><div class="ur"><input type="text" inputmode="decimal" id="f-pg" placeholder="z.B. 2.5" value="'+(a&&a.packMenge&&a.packMenge!=='undefined'&&!isNaN(parseFloat(a.packMenge))?esc(a.packMenge):'')+'"/><select id="f-pe">'+epo+'</select></div></div>'+
@@ -3973,10 +3974,16 @@ function openForm(id){
   '<div class="fd"><label>Kaufdatum</label>'+dateField('f-kd',a?a.kaufdatum||todayISO():todayISO())+'</div>'+'<div style="display:none">'+dateField('f-ad','')+'</div>'+
   '<div class="fd" style="display:none"><label>Haltbarkeit über MHD <span style="color:var(--t3);font-weight:400">(optional, Tage — Richtwert)</span></label><input type="text" inputmode="numeric" id="f-puffer" placeholder="'+(a?getPuffer(a):0)+' (Kategorie-Standard)" value="'+(a&&typeof a.puffer==="number"?a.puffer:"")+'"/><div style="font-size:11px;color:var(--t3);margin-top:4px">Leer = Kategorie-Standard. Richtwerte (Tafel/Verbraucherzentrale): Konserven/Reis/Nudeln/Mehl +365, Butter +21, H-Milch +28, Käse ~14, Brot +2, Wurst/Schinken +5, Eier +21. Fleisch &amp; Fisch sowie frisches Gemüse/Obst: immer 0 (Verbrauchsdatum beachten).</div></div>'+
   '<div class="fd"><label>Wo gekauft</label><div class="lcw" id="f-ge">'+S.ge.map(g=>'<button class="chip'+(a&&a.kaufort===g?' on':'')+'" data-ge="'+esc(g)+'" onclick="document.querySelectorAll(\'#f-ge .chip[data-ge]\').forEach(c=>c.classList.remove(\'on\'));this.classList.add(\'on\')">'+esc(g)+'</button>').join('')+'<button class="chip" onclick="addGeschaeft(this)">+ Neu...</button></div></div>'+
-  '<div class="fd"><label>Notiz</label><textarea id="f-nt" placeholder="z.B. Bio, Lieblingsmarke...">'+(a?esc(a.notiz||''):'')+'</textarea></div>'+
+  '<div class="fd"><label style="display:flex;justify-content:space-between;align-items:center">Notiz<span id="vb-nt"></span></label><textarea id="f-nt" placeholder="z.B. Bio, Lieblingsmarke...">'+(a?esc(a.notiz||''):'')+'</textarea></div>'+
   '<div class="br"><button class="bg2" onclick="closeForm()">Abbrechen</button>'+(a?'<button class="bg2" style="color:var(--dg);border-color:var(--dl)" onclick="closeForm();delA('+a.id+')">'+I.trash+' Löschen</button>':'')+'<button class="bp" onclick="saveForm()">'+(a?'Speichern':'Hinzufügen')+'</button></div>';
   goScreen('s-form');
   renderExtraBarcodes();
+  // v23.43: Voice-Buttons einsetzen (nur wenn Web Speech API verfügbar)
+  if('webkitSpeechRecognition' in window||'SpeechRecognition' in window){
+    const vbNm=document.getElementById('vb-nm');if(vbNm)vbNm.innerHTML=voiceBtn('f-nm');
+    const vbMk=document.getElementById('vb-mk');if(vbMk)vbMk.innerHTML=voiceBtn('f-mk');
+    const vbNt=document.getElementById('vb-nt');if(vbNt)vbNt.innerHTML=voiceBtn('f-nt');
+  }
 }
 function addEinheit(sel){
   const n=prompt('Neue Einheit (z.B. Sack, Karton):');
@@ -4354,6 +4361,31 @@ function checkDupHint(val){
   }
 }
 
+// v23.43: Spracheingabe für Textfelder (Web Speech API, keine externe API)
+function voiceInput(fieldId){
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
+    toast('⚠️ Spracheingabe nicht unterstützt (Chrome empfohlen)');return;
+  }
+  const btn=document.getElementById('voice-btn-'+fieldId);
+  if(btn&&btn._rec){btn._rec.stop();return;}
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  const rec=new SR();
+  rec.lang='de-CH';rec.continuous=false;rec.interimResults=false;
+  if(btn){btn._rec=rec;btn.style.color='var(--dg)';btn.textContent='⏹';}
+  rec.onresult=e=>{
+    const t=e.results[0][0].transcript;
+    const el=document.getElementById(fieldId);
+    if(el){el.value=(el.value?el.value+' ':'')+t;el.dispatchEvent(new Event('input'));}
+    if(btn){btn._rec=null;btn.style.color='var(--t2)';btn.textContent='🎤';}
+  };
+  rec.onerror=()=>{if(btn){btn._rec=null;btn.style.color='var(--t2)';btn.textContent='🎤';}toast('⚠️ Spracheingabe fehlgeschlagen');};
+  rec.onend=()=>{if(btn){btn._rec=null;btn.style.color='var(--t2)';btn.textContent='🎤';}};
+  rec.start();
+  toast('🎤 Sprechen…');
+}
+function voiceBtn(fieldId){
+  return '<button type="button" id="voice-btn-'+fieldId+'" onclick="voiceInput(\''+fieldId+'\')" title="Spracheingabe" style="background:none;border:none;font-size:18px;cursor:pointer;padding:4px 6px;color:var(--t2);flex-shrink:0;line-height:1">🎤</button>';
+}
 async function saveForm(){
   const name=document.getElementById('f-nm').value.trim();
   if(!name){alert('Bitte eine Bezeichnung eingeben.');return;}
