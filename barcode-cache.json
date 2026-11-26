@@ -665,7 +665,24 @@
         "generic_name": ""
       },
       "addedAt": 1795736903330
+    },
+    "8076809587686": {
+      "barcode": "8076809587686",
+      "name": "Tomaten Balsamico Pesto",
+      "marke": "Barilla",
+      "kategorien": "Sauces pour pâtes, en:Cooking Sauces, Sauces Pesto Rosso",
+      "description": "sauce pesto rosso vegan Barilla 200g",
+      "image": "https://images.openfoodfacts.org/images/products/807/680/958/7686/front_fr.21.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "sauce pesto rosso vegan Barilla 200g",
+        "brands": "Barilla",
+        "categories": "Sauces pour pâtes, en:Cooking Sauces, Sauces Pesto Rosso",
+        "quantity": "200 g",
+        "generic_name": "Sauce pesto végétalienne avec tomate et vinaigre balsamique “aceto balsamico di modena\" igp"
+      },
+      "addedAt": 1795736938650
     }
   },
-  "lastUpdated": 1795736903332
+  "lastUpdated": 1795736938651
 }
