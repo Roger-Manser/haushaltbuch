@@ -648,7 +648,24 @@
       "source": "Open Food Facts",
       "offData": {},
       "addedAt": 1795194153831
+    },
+    "7613413452989": {
+      "barcode": "7613413452989",
+      "name": "Filet d'anchois",
+      "marke": "Sapori",
+      "kategorien": "Filets d'anchois",
+      "description": "Filet d'anchois",
+      "image": "https://images.openfoodfacts.org/images/products/761/341/345/2989/front_fr.16.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {
+        "product_name": "Filet d'anchois",
+        "brands": "Sapori",
+        "categories": "Filets d'anchois",
+        "quantity": "160 g",
+        "generic_name": ""
+      },
+      "addedAt": 1795736903330
     }
   },
-  "lastUpdated": 1795355161939
+  "lastUpdated": 1795736903332
 }
