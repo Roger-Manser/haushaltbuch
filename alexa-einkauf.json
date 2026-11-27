@@ -1,12 +1,3 @@
 {
- "befehle": [
-  {
-   "id": "mwyenaozbozt8q",
-   "typ": "add",
-   "text": "Milch",
-   "menge": "1",
-   "einheit": "Stk",
-   "zeit": 1795749096419
-  }
- ]
+ "befehle": []
 }
