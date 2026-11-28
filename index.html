@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.45 — confirmDialog: Loader wird versteckt + z-index erhöht (nicht mehr blockiert) -->
+<!-- HAUSHALTBUCH v23.46 — Preis-Eintrag beim Bearbeiten nur bei Preisänderung; Log-Datum-Update korrekte Feldnamen -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.45"/>
+<meta name="app-version" content="23.46"/>
 <!-- CACHE BUST v2340 -->
 <link rel="manifest" href="manifest.json?v=2340"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.45';
+const APP_VERSION='23.46';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.46',d:'28.11.2026',items:['🐛 Gesamtpreis in Einkaufsgruppe korrekt: beim Bearbeiten wird nur bei echtem Preisänderung ein neuer Verlauf-Eintrag angelegt','🐛 Datum im Verlauf-Eintrag bearbeiten aktualisiert jetzt auch die Übersicht (Gruppen-Header)']},
   {v:'23.45',d:'28.11.2026',items:['🐛 Bestätigungs-Dialog (Duplikat, Barcode) wird nicht mehr vom Lade-Overlay verdeckt']},
   {v:'23.44',d:'28.11.2026',items:['🐛 Artikel mit leerem Lagerort (null/undefined) können jetzt geöffnet und bearbeitet werden']},
   {v:'23.43',d:'22.11.2026',items:['🎤 Spracheingabe für Bezeichnung, Marke und Notiz im Artikel-Formular (Web Speech API, keine externe API)']},
@@ -2964,20 +2965,29 @@ function doEditPreisHistorie(artikelId,idx){
   }
   a.preisHistorie[idx]={...h,preis:p,datum,menge,aktion};
   if(idx===a.preisHistorie.length-1&&!aktion&&!istGewicht)a.preis=p;
-  
-  // Log-Eintrag auch aktualisieren (für Statistiken)
+  // v23.46: kaufdatum des Artikels aktualisieren wenn der neueste Eintrag geändert wurde → Gruppen-Header in Übersicht stimmt
+  if(idx===a.preisHistorie.length-1&&datum!==h.datum){
+    // Neuestes Kaufdatum aus allen Eingangs-Einträgen ermitteln
+    const neuestes=a.preisHistorie.filter(x=>(x.typ||'ein')==='ein').map(x=>x.datum).filter(Boolean).sort().pop();
+    if(neuestes)a.kaufdatum=neuestes;
+  }
+
+  // v23.46: Log-Eintrag aktualisieren — korrekte Feldnamen (datum/preis/menge/t statt d/p/m)
   if(S.log){
-    // Suche das entsprechende Log-Entry: gleiche Artikel-ID, ähnliches Datum und Menge
     const logEntry=S.log.find(l=>
       l.aid===artikelId&&
-      l.d===h.datum&&
-      Math.abs(l.m-h.menge)<0.01&&
-      l.t===h.typ
+      l.datum===h.datum&&
+      Math.abs((l.menge||l.m||0)-(h.menge||0))<0.01&&
+      (l.t===h.typ||(l.t==='ein'&&(h.typ||'ein')==='ein'))
     );
     if(logEntry){
-      logEntry.p=p;
-      logEntry.m=menge;
-      logEntry.d=datum;
+      logEntry.preis=p;
+      logEntry.menge=menge;
+      logEntry.datum=datum;
+      // Kompatibilität mit alten Einträgen die .m/.p/.d verwenden
+      if('p' in logEntry)logEntry.p=p;
+      if('m' in logEntry)logEntry.m=menge;
+      if('d' in logEntry)logEntry.d=datum;
     }
   }
   
@@ -4455,11 +4465,19 @@ async function saveForm(){
     // Neuer Artikel: Preis-Historie anlegen wenn Preis angegeben
     d.preisHistorie=preis>0?[{datum:kaufdatum,preis,menge:d.menge,einheit:d.einheit,typ:'ein',aktion:isAktion||false,kaufort:kaufort||''}]:[];
   }else{
-    // Artikel bearbeiten: bestehende Historie behalten, immer neuen Eintrag hinzufügen
+    // Artikel bearbeiten: bestehende Historie behalten
+    // v23.46: neuen Eintrag NUR hinzufügen wenn Preis sich gegenüber dem letzten Eintrag geändert hat
     const ex=S.a.find(x=>x.id===editId);
     d.preisHistorie=ex&&ex.preisHistorie?[...ex.preisHistorie]:[];
     if(preis>0){
-      d.preisHistorie.push({datum:kaufdatum,preis,menge:d.menge,einheit:d.einheit,typ:'ein',aktion:isAktion||false,kaufort:kaufort||''});
+      const letzterH=d.preisHistorie.length?d.preisHistorie[d.preisHistorie.length-1]:null;
+      const preisGeaendert=!letzterH||Math.abs((letzterH.preis||0)-preis)>0.001||(letzterH.aktion||false)!==(isAktion||false);
+      if(preisGeaendert){
+        d.preisHistorie.push({datum:kaufdatum,preis,menge:d.menge,einheit:d.einheit,typ:'ein',aktion:isAktion||false,kaufort:kaufort||''});
+      }else{
+        // Preis gleich: letzten Eintrag mit neuem Kaufdatum/Kaufort/Menge aktualisieren (kein Doppeleintrag)
+        if(letzterH){d.preisHistorie[d.preisHistorie.length-1]={...letzterH,datum:kaufdatum,menge:d.menge,kaufort:kaufort||letzterH.kaufort||''};}
+      }
     }
   }
   if(editId){
