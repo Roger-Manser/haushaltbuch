@@ -682,7 +682,18 @@
         "generic_name": "Sauce pesto végétalienne avec tomate et vinaigre balsamique “aceto balsamico di modena\" igp"
       },
       "addedAt": 1795736938650
+    },
+    "4056489122906": {
+      "barcode": "4056489122906",
+      "name": "Viola Espresso",
+      "marke": "Bellarom",
+      "kategorien": "",
+      "description": "",
+      "image": "https://images.openfoodfacts.org/images/products/405/648/912/2906/front_fr.8.400.jpg",
+      "source": "Open Food Facts",
+      "offData": {},
+      "addedAt": 1795861831995
     }
   },
-  "lastUpdated": 1795861807361
+  "lastUpdated": 1795861831998
 }
