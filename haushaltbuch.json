@@ -539,7 +539,7 @@
       "marke": "Quöllfrisch",
       "kat": "Genussmittel",
       "lager": "Schlof",
-      "menge": 18,
+      "menge": 12,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7611889110686",
@@ -563,7 +563,7 @@
           "kaufort": "Coop"
         },
         {
-          "datum": "2026-11-27",
+          "datum": "2026-11-26",
           "preis": 8.75,
           "betrag": 35,
           "menge": 4,
@@ -571,15 +571,18 @@
           "typ": "ein",
           "aktion": false,
           "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-11-28",
+          "preis": 0,
+          "menge": 6,
+          "einheit": "Stk",
+          "typ": "aus",
+          "aktion": false,
+          "kaufort": "Coop"
         }
       ],
       "packungen": [
-        {
-          "id": 1,
-          "menge": 6,
-          "kaufdatum": "2026-06-23",
-          "ablaufdatum": ""
-        },
         {
           "id": 2,
           "menge": 8,
@@ -1932,10 +1935,10 @@
           "kaufort": "Lidl"
         },
         {
-          "datum": "2026-11-26",
+          "datum": "2026-11-27",
           "preis": 6.7,
           "betrag": 6.7,
-          "menge": 1,
+          "menge": 2,
           "einheit": "Stk",
           "typ": "ein",
           "aktion": false,
@@ -3639,15 +3642,15 @@
       "kat": "Gewürze & Saucen",
       "lager": "Küche",
       "kaufort": "Coop",
-      "menge": 1,
+      "menge": 6,
       "einheit": "Stk",
       "mindest": 1,
       "barcode": "7610071221063",
       "barcodes": [],
-      "preis": 0,
+      "preis": 4.95,
       "packMenge": 0,
       "packEinheit": "dl",
-      "kaufdatum": "2026-07-18",
+      "kaufdatum": "2026-11-27",
       "ablaufdatum": "2029-04-08",
       "notiz": "",
       "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1783260709238_off.jpg?t=1795354280569",
@@ -3695,6 +3698,15 @@
           "typ": "aus",
           "aktion": false,
           "kaufort": "Coop"
+        },
+        {
+          "datum": "2026-11-27",
+          "preis": 3.7,
+          "menge": 6,
+          "einheit": "Stk",
+          "typ": "ein",
+          "aktion": true,
+          "kaufort": "Coop"
         }
       ],
       "packungen": [
@@ -3703,6 +3715,12 @@
           "menge": 1,
           "kaufdatum": "2026-07-18",
           "ablaufdatum": "2029-04-08"
+        },
+        {
+          "id": 1,
+          "menge": 5,
+          "kaufdatum": "2026-11-27",
+          "ablaufdatum": ""
         }
       ]
     },
@@ -8088,12 +8106,12 @@
       "kat": "Gewürze & Saucen",
       "lager": "Vorratsschrank",
       "kaufort": "Coop",
-      "menge": 6,
+      "menge": 0,
       "einheit": "Pkg",
       "mindest": 0,
       "barcode": "5017689002732",
       "barcodes": [],
-      "preis": 3.7,
+      "preis": 0,
       "packMenge": 100,
       "packEinheit": "g",
       "kaufdatum": "2026-11-27",
@@ -8109,26 +8127,9 @@
           "einheit": "Pkg",
           "typ": "weg",
           "aktion": false
-        },
-        {
-          "datum": "2026-11-27",
-          "preis": 3.7,
-          "betrag": 22.2,
-          "menge": 6,
-          "einheit": "Pkg",
-          "typ": "ein",
-          "aktion": false,
-          "kaufort": "Coop"
         }
       ],
-      "packungen": [
-        {
-          "id": 8,
-          "menge": 6,
-          "kaufdatum": "2026-11-27",
-          "ablaufdatum": ""
-        }
-      ],
+      "packungen": [],
       "alias": [
         "McCormick Curry Madras mild"
       ]
@@ -13311,8 +13312,8 @@
       "id": 304,
       "name": "Viola Espresso",
       "marke": "Bellarom",
-      "kat": "Cafés en dosettes compatible Nespresso",
-      "lager": 0,
+      "kat": "Getränke",
+      "lager": "Schlof",
       "kaufort": "Lidl",
       "menge": 4,
       "einheit": "Stk",
@@ -13323,12 +13324,12 @@
       ],
       "preis": 5.28,
       "packMenge": 0,
-      "packEinheit": "",
+      "packEinheit": "dl",
       "kaufdatum": "2026-11-27",
       "ablaufdatum": "",
       "notiz": "Internet-Quelle: Open Food Facts",
-      "foto": "",
-      "fotoPath": "",
+      "foto": "https://raw.githubusercontent.com/roger-manser/haushaltbuch/main/bilder/1795862751609_off.jpg?t=1795862766119",
+      "fotoPath": "1795862751609_off.jpg",
       "packungen": [
         {
           "id": 5,
@@ -13352,7 +13353,8 @@
       "quittungAliase": [],
       "alias": [
         "Espressokapseln Viola XX"
-      ]
+      ],
+      "barcodes": []
     },
     {
       "id": 306,
@@ -15540,6 +15542,15 @@
       "text": "Kalbsschulter",
       "menge": "1",
       "einheit": "kg",
+      "checked": false
+    },
+    {
+      "id": 1795863642914,
+      "text": "Bier",
+      "artikelId": 11,
+      "kat": "Genussmittel",
+      "menge": "1",
+      "einheit": "Stk",
       "checked": false
     }
   ],
@@ -33293,7 +33304,7 @@
     },
     {
       "aid": 11,
-      "d": "2026-11-27",
+      "d": "2026-11-26",
       "m": 4,
       "p": 8.75,
       "t": "ein",
@@ -33326,8 +33337,8 @@
     },
     {
       "aid": 38,
-      "d": "2026-11-26",
-      "m": 1,
+      "d": "2026-11-27",
+      "m": 2,
       "p": 6.7,
       "t": "ein",
       "e": "Stk",
@@ -33775,7 +33786,33 @@
       "k": "Fleisch & Fisch",
       "aktion": false,
       "kaufort": "Lidl"
+    },
+    {
+      "t": "ein",
+      "aid": 71,
+      "name": "Curry Madras Fort Mc Cormick 38 Gr, 1 Bocal",
+      "lager": "Küche",
+      "kat": "Gewürze & Saucen",
+      "menge": 6,
+      "einheit": "Stk",
+      "preis": 4.95,
+      "aktion": false,
+      "datum": "2026-11-28",
+      "zeit": 1795862705061
+    },
+    {
+      "t": "aus",
+      "aid": 11,
+      "name": "Bier",
+      "lager": "Schlof",
+      "kat": "Genussmittel",
+      "menge": 6,
+      "einheit": "Stk",
+      "preis": 0,
+      "aktion": false,
+      "datum": "2026-11-28",
+      "zeit": 1795862820684
     }
   ],
-  "aktualisiert": "2026-11-28T10:42:38.248Z"
+  "aktualisiert": "2026-11-28T11:01:33.770Z"
 }
