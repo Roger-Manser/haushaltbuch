@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.47 — Löschen Verlauf-Eintrag: kaufdatum neu berechnet + Log-Eintrag mitgelöscht -->
+<!-- HAUSHALTBUCH v23.48 — Gruppen-Summe: Fallback wenn preisHistorie.datum von a.kaufdatum abweicht -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.47"/>
+<meta name="app-version" content="23.48"/>
 <!-- CACHE BUST v2340 -->
 <link rel="manifest" href="manifest.json?v=2340"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.47';
+const APP_VERSION='23.48';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.48',d:'28.11.2026',items:['🐛 Gruppen-Summe CHF 0.00: Fallback wenn preisHistorie-Datum vom Kaufdatum abweicht (z.B. nach manueller Korrektur)']},
   {v:'23.47',d:'28.11.2026',items:['🐛 Verlauf-Eintrag löschen: Kaufdatum des Artikels wird neu berechnet (Gruppe verschwindet aus Übersicht wenn leer)','🐛 Verlauf-Eintrag löschen: zugehöriger Log-Eintrag wird ebenfalls gelöscht']},
   {v:'23.46',d:'28.11.2026',items:['🐛 Gesamtpreis in Einkaufsgruppe korrekt: beim Bearbeiten wird nur bei echter Preisänderung ein neuer Verlauf-Eintrag angelegt','🐛 Datum im Verlauf-Eintrag bearbeiten aktualisiert jetzt auch die Übersicht (Gruppen-Header)']},
   {v:'23.45',d:'28.11.2026',items:['🐛 Bestätigungs-Dialog (Duplikat, Barcode) wird nicht mehr vom Lade-Overlay verdeckt']},
@@ -2563,14 +2564,26 @@ function renderLager(){
     // Gruppen in sortierten Reihenfolge rendern
     Object.values(gruppen).forEach(g=>{
       const datumStr=g.datum==='???'?'Datum unbekannt':fmtDateCH(g.datum);
-      // v23.8: ALLE Einkäufe des Tages beim Laden zählen (2× Speck mit verschiedenem Gewicht) – mit bezahltem Betrag
+      // v23.8/v23.47: ALLE Einkäufe der Gruppe zählen – mit bezahltem Betrag
+      // v23.47: Datum-Toleranz: Artikel wird nach a.kaufdatum gruppiert, preisHistorie.datum kann abweichen
+      //         → suche zuerst exact match, dann letzten Eingangs-Eintrag als Fallback
       let positionen=0;
       const gesamtpreis=Math.round(g.artikel.reduce((sum,a)=>{
-        const eintraege=(a.preisHistorie||[]).filter(h=>
-          (h.typ||'ein')==='ein'&&
+        const alle=(a.preisHistorie||[]).filter(h=>(h.typ||'ein')==='ein');
+        // 1. Exakt: datum + kaufort stimmen überein
+        let eintraege=alle.filter(h=>
           (h.datum===g.datum||h.kaufdatum===g.datum)&&
           (!h.kaufort||h.kaufort===g.ort||g.ort==='unbekannt')
         );
+        // 2. Fallback: a.kaufdatum stimmt mit Gruppe überein, aber preisHistorie.datum weicht ab
+        //    → neuesten Eingangs-Eintrag verwenden (Kaufdatum wurde manuell korrigiert)
+        if(!eintraege.length&&a.kaufdatum===g.datum){
+          const kaufortOk=!a.kaufort||a.kaufort===g.ort||g.ort==='unbekannt';
+          if(kaufortOk&&alle.length){
+            const letzter=alle[alle.length-1];
+            eintraege=[letzter];
+          }
+        }
         positionen+=eintraege.length;
         return sum+eintraege.reduce((s2,h)=>s2+positionsBetrag(a,h),0);
       },0)*100)/100;
