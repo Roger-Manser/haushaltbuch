@@ -1,4 +1,4 @@
-<!-- HAUSHALTBUCH v23.48 — Gruppen-Summe: Fallback wenn preisHistorie.datum von a.kaufdatum abweicht -->
+<!-- HAUSHALTBUCH v23.49 — Migration beim Start: kaufdatum aus preisHistorie neu berechnen (Gruppen-Datum korrekt) -->
 <!DOCTYPE html>
 <html lang="de-CH">
 <head>
@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Haushaltbuch"/>
 <meta name="mobile-web-app-capable" content="yes"/>
 <meta name="theme-color" content="#2563EB"/>
-<meta name="app-version" content="23.48"/>
+<meta name="app-version" content="23.49"/>
 <!-- CACHE BUST v2340 -->
 <link rel="manifest" href="manifest.json?v=2340"/>
 <link rel="icon" type="image/png" sizes="64x64" href="icons/favicon-64.png"/>
@@ -560,7 +560,7 @@ globe:'<svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" style="width:17p
 xc:'<svg viewBox="0 0 24 24" fill="none" stroke-width="2" style="width:15px;height:15px;stroke:currentColor"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>',
 };
 const LMAP={Kuehlschrank:I.snow,Gefrierschrank:I.freeze,Vorratsschrank:I.archive,Keller:I.house,Kueche:I.soup};
-const APP_VERSION='23.48';
+const APP_VERSION='23.49';
 
 // Globaler Error Handler für diagnostische Zwecke
 window.addEventListener('error', (event) => {
@@ -573,6 +573,7 @@ window.addEventListener('unhandledrejection', (event) => {
 
 /* ── Versionshistorie ─────────────────────────────────────────────── */
 const VERSION_HISTORY=[
+  {v:'23.49',d:'28.11.2026',items:['🔧 Migration beim App-Start: kaufdatum wird automatisch aus preisHistorie korrigiert — bestehende Artikel mit falschem Datum werden sofort in die richtige Gruppe verschoben']},
   {v:'23.48',d:'28.11.2026',items:['🐛 Gruppen-Summe CHF 0.00: Fallback wenn preisHistorie-Datum vom Kaufdatum abweicht (z.B. nach manueller Korrektur)']},
   {v:'23.47',d:'28.11.2026',items:['🐛 Verlauf-Eintrag löschen: Kaufdatum des Artikels wird neu berechnet (Gruppe verschwindet aus Übersicht wenn leer)','🐛 Verlauf-Eintrag löschen: zugehöriger Log-Eintrag wird ebenfalls gelöscht']},
   {v:'23.46',d:'28.11.2026',items:['🐛 Gesamtpreis in Einkaufsgruppe korrekt: beim Bearbeiten wird nur bei echter Preisänderung ein neuer Verlauf-Eintrag angelegt','🐛 Datum im Verlauf-Eintrag bearbeiten aktualisiert jetzt auch die Übersicht (Gruppen-Header)']},
@@ -1258,6 +1259,12 @@ function loadL(){
     if(a.marke==='undefined'||a.marke==='null')a.marke='';
     // 🎯 FIX v22.84: syncMenge aufrufen um menge mit packungen zu synchronisieren!
     syncMenge(a);
+    // v23.49: kaufdatum aus preisHistorie neu berechnen wenn nötig
+    // → stellt sicher dass a.kaufdatum immer dem neuesten Eingangs-Eintrag entspricht
+    if(a.preisHistorie&&a.preisHistorie.length){
+      const neuestesH=a.preisHistorie.filter(h=>(h.typ||'ein')==='ein').map(h=>h.datum).filter(Boolean).sort().pop();
+      if(neuestesH&&neuestesH!==a.kaufdatum)a.kaufdatum=neuestesH;
+    }
   });
   try{const r=localStorage.getItem('hbgh');if(r)gh=JSON.parse(r);}catch(e){}
   try{const c=localStorage.getItem('hb_ai_cache');if(c)aiMatchCache=JSON.parse(c);}catch(e){}
