@@ -3700,7 +3700,7 @@
           "kaufort": "Coop"
         },
         {
-          "datum": "2026-11-27",
+          "datum": "2026-11-26",
           "preis": 3.7,
           "menge": 6,
           "einheit": "Stk",
@@ -33812,7 +33812,29 @@
       "aktion": false,
       "datum": "2026-11-28",
       "zeit": 1795862820684
+    },
+    {
+      "aid": 11,
+      "d": "2026-11-28",
+      "m": 6,
+      "p": 0,
+      "t": "aus",
+      "e": "Stk",
+      "k": "Genussmittel",
+      "aktion": false,
+      "kaufort": "Coop"
+    },
+    {
+      "aid": 71,
+      "d": "2026-11-26",
+      "m": 6,
+      "p": 3.7,
+      "t": "ein",
+      "e": "Stk",
+      "k": "Gewürze & Saucen",
+      "aktion": true,
+      "kaufort": "Coop"
     }
   ],
-  "aktualisiert": "2026-11-28T11:01:33.770Z"
+  "aktualisiert": "2026-11-28T11:32:36.111Z"
 }
